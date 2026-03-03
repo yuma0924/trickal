@@ -1,0 +1,25 @@
+name: Recalculate Rankings
+
+on:
+  schedule:
+    # 毎日0時JST (15:00 UTC)
+    - cron: "0 15 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  recalculate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call recalculate-rankings API
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.SITE_URL }}/api/admin/recalculate-rankings")
+
+          if [ "$response" -ne 200 ]; then
+            echo "Failed with status code: $response"
+            exit 1
+          fi
+
+          echo "Rankings recalculated successfully"
