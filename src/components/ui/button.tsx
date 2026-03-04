@@ -10,10 +10,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: "bg-accent text-accent-text hover:bg-accent-hover",
+  primary:
+    "bg-gradient-to-r from-[#fb64b6] to-[#ffa1ad] text-white hover:opacity-90",
   secondary:
     "bg-bg-tertiary text-text-primary border border-border-primary hover:bg-bg-card-hover",
-  ghost: "text-text-secondary hover:text-text-primary hover:bg-bg-tertiary",
+  ghost: "text-text-tertiary hover:text-text-primary",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -32,7 +33,7 @@ export function Button({
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center rounded-lg font-medium transition-colors cursor-pointer",
+        "inline-flex items-center justify-center rounded-2xl font-medium transition-colors cursor-pointer",
         "disabled:cursor-not-allowed disabled:opacity-50",
         variantStyles[variant],
         sizeStyles[size],

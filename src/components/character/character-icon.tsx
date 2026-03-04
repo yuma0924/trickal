@@ -41,7 +41,7 @@ export function CharacterIcon({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-lg border-2",
+        "relative overflow-hidden rounded-full border-2",
         element ? ELEMENT_BORDER[element] : "border-border-primary",
         isHidden && "opacity-40 grayscale",
         container,

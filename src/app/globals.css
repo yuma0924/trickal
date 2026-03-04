@@ -2,7 +2,8 @@
 
 /* ============================
    テーマシステム（ダーク/ライト/自動）
-   標準テーマ: ダーク
+   標準テーマ: ダーク（パープル×ピンク）
+   Figma準拠デザイン
    ============================ */
 
 @custom-variant dark (&:is(.dark *));
@@ -38,37 +39,40 @@
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-text: var(--accent-text);
+  --color-accent-secondary: var(--accent-secondary);
 
   --color-star: var(--star);
   --color-thumbs-up: var(--thumbs-up);
   --color-thumbs-down: var(--thumbs-down);
 
   /* フォントファミリー */
-  --font-sans: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP",
-    "Yu Gothic", "Meiryo", sans-serif;
+  --font-sans: var(--font-zen-maru-gothic), "Hiragino Sans",
+    "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", "Meiryo",
+    sans-serif;
 }
 
-/* ダークテーマ（デフォルト） */
+/* ダークテーマ（デフォルト） - パープル×ピンク */
 :root {
-  --bg-primary: #0f0f0f;
-  --bg-secondary: #1a1a1a;
-  --bg-tertiary: #252525;
-  --bg-card: #1e1e1e;
-  --bg-card-hover: #2a2a2a;
-  --bg-input: #1a1a1a;
+  --bg-primary: #1a1225;
+  --bg-secondary: #1e1530;
+  --bg-tertiary: #241b35;
+  --bg-card: #241b35;
+  --bg-card-hover: #2d2242;
+  --bg-input: #1e1530;
 
-  --text-primary: #f5f5f5;
-  --text-secondary: #a3a3a3;
-  --text-tertiary: #737373;
-  --text-muted: #525252;
-  --text-inverse: #0f0f0f;
+  --text-primary: #fce7f3;
+  --text-secondary: rgba(252, 231, 243, 0.8);
+  --text-tertiary: #a893c0;
+  --text-muted: #8b7aab;
+  --text-inverse: #1a1225;
 
-  --border-primary: #333333;
-  --border-secondary: #262626;
+  --border-primary: rgba(249, 168, 212, 0.1);
+  --border-secondary: rgba(249, 168, 212, 0.05);
 
-  --accent: #6366f1;
-  --accent-hover: #818cf8;
+  --accent: #fb64b6;
+  --accent-hover: #ffa1ad;
   --accent-text: #ffffff;
+  --accent-secondary: #f9a8d4;
 
   --star: #fbbf24;
   --thumbs-up: #22c55e;
@@ -77,25 +81,26 @@
 
 /* ライトテーマ */
 .light {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f9fafb;
-  --bg-tertiary: #f3f4f6;
+  --bg-primary: #fdf2f8;
+  --bg-secondary: #fce7f3;
+  --bg-tertiary: #fbcfe8;
   --bg-card: #ffffff;
-  --bg-card-hover: #f9fafb;
-  --bg-input: #f9fafb;
+  --bg-card-hover: #fdf2f8;
+  --bg-input: #fce7f3;
 
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --text-tertiary: #9ca3af;
-  --text-muted: #d1d5db;
-  --text-inverse: #ffffff;
+  --text-primary: #1a1225;
+  --text-secondary: #4a3660;
+  --text-tertiary: #8b7aab;
+  --text-muted: #c4b5d9;
+  --text-inverse: #fce7f3;
 
-  --border-primary: #e5e7eb;
-  --border-secondary: #f3f4f6;
+  --border-primary: rgba(251, 100, 182, 0.15);
+  --border-secondary: rgba(251, 100, 182, 0.08);
 
-  --accent: #4f46e5;
-  --accent-hover: #6366f1;
+  --accent: #e84da0;
+  --accent-hover: #fb64b6;
   --accent-text: #ffffff;
+  --accent-secondary: #be185d;
 
   --star: #f59e0b;
   --thumbs-up: #16a34a;
@@ -104,25 +109,26 @@
 
 /* .dark クラスが明示的に付いた場合 */
 .dark {
-  --bg-primary: #0f0f0f;
-  --bg-secondary: #1a1a1a;
-  --bg-tertiary: #252525;
-  --bg-card: #1e1e1e;
-  --bg-card-hover: #2a2a2a;
-  --bg-input: #1a1a1a;
+  --bg-primary: #1a1225;
+  --bg-secondary: #1e1530;
+  --bg-tertiary: #241b35;
+  --bg-card: #241b35;
+  --bg-card-hover: #2d2242;
+  --bg-input: #1e1530;
 
-  --text-primary: #f5f5f5;
-  --text-secondary: #a3a3a3;
-  --text-tertiary: #737373;
-  --text-muted: #525252;
-  --text-inverse: #0f0f0f;
+  --text-primary: #fce7f3;
+  --text-secondary: rgba(252, 231, 243, 0.8);
+  --text-tertiary: #a893c0;
+  --text-muted: #8b7aab;
+  --text-inverse: #1a1225;
 
-  --border-primary: #333333;
-  --border-secondary: #262626;
+  --border-primary: rgba(249, 168, 212, 0.1);
+  --border-secondary: rgba(249, 168, 212, 0.05);
 
-  --accent: #6366f1;
-  --accent-hover: #818cf8;
+  --accent: #fb64b6;
+  --accent-hover: #ffa1ad;
   --accent-text: #ffffff;
+  --accent-secondary: #f9a8d4;
 
   --star: #fbbf24;
   --thumbs-up: #22c55e;

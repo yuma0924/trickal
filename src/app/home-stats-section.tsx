@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Tab } from "@/components/ui/tab";
 import { CharacterIcon } from "@/components/character/character-icon";
 import { StarRatingDisplay } from "@/components/ui/star-rating";
-import { cn } from "@/lib/utils";
 import type { Element } from "@/lib/constants";
 
 interface StatsCharacter {
@@ -58,9 +57,6 @@ export function HomeStatsSection({ characters }: HomeStatsSectionProps) {
       .slice(0, PREVIEW_COUNT);
   }, [characters, selectedStat, searchQuery]);
 
-  const selectedLabel =
-    STAT_TABS.find((s) => s.value === selectedStat)?.label ?? "";
-
   return (
     <div className="space-y-3">
       {/* 検索 */}
@@ -69,7 +65,7 @@ export function HomeStatsSection({ characters }: HomeStatsSectionProps) {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         placeholder="キャラ名で検索..."
-        className="w-full rounded-lg bg-bg-input border border-border-primary px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+        className="w-full rounded-2xl bg-bg-input border border-border-primary px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
       />
 
       {/* ステータスタブ */}
@@ -83,7 +79,7 @@ export function HomeStatsSection({ characters }: HomeStatsSectionProps) {
             <Link
               key={char.id}
               href={`/characters/${char.slug}`}
-              className="flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-bg-card-hover cursor-pointer"
+              className="flex items-center gap-2 rounded-2xl bg-bg-card border border-border-primary px-3 py-2 transition-colors hover:bg-bg-card-hover cursor-pointer"
             >
               <span className="w-6 text-center text-xs font-bold text-text-tertiary">
                 {index + 1}

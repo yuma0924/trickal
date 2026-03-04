@@ -49,7 +49,7 @@ export function CommentCard({
 
   if (isDeleted) {
     return (
-      <div className={cn("rounded-lg bg-bg-card p-3 opacity-50", className)}>
+      <div className={cn("rounded-2xl bg-bg-card/30 border border-border-primary p-4 opacity-50", className)}>
         <p className="text-sm text-text-tertiary">このコメントは削除されました</p>
       </div>
     );
@@ -58,28 +58,33 @@ export function CommentCard({
   return (
     <div
       className={cn(
-        "rounded-lg bg-bg-card p-3",
+        "rounded-2xl bg-bg-card/30 border border-border-primary p-4",
         karmaClass,
         className
       )}
     >
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-text-primary">
-          {displayName}
-        </span>
+        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-[#fb64b6] to-[#ffa1ad] flex-shrink-0" />
+        <div className="flex flex-col">
+          <span className="text-sm font-medium text-text-primary">
+            {displayName}
+          </span>
+          <span className="text-xs text-text-muted">
+            {new Date(createdAt).toLocaleDateString("ja-JP")}
+          </span>
+        </div>
         {commentType === "vote" && rating !== null && rating !== undefined && (
-          <StarRatingDisplay rating={rating} size="sm" showValue={false} />
+          <div className="ml-auto">
+            <StarRatingDisplay rating={rating} size="sm" showValue={false} />
+          </div>
         )}
-        <span className="ml-auto text-[10px] text-text-tertiary">
-          {new Date(createdAt).toLocaleDateString("ja-JP")}
-        </span>
       </div>
 
-      <p className="mt-1.5 whitespace-pre-wrap text-sm text-text-secondary leading-relaxed">
+      <p className="mt-2 whitespace-pre-wrap text-sm text-text-secondary leading-relaxed">
         {body}
       </p>
 
-      <div className="mt-2 flex items-center justify-between">
+      <div className="mt-3 flex items-center gap-4 text-text-muted text-xs">
         <ThumbsUpDown
           thumbsUpCount={thumbsUpCount}
           thumbsDownCount={thumbsDownCount}
@@ -90,7 +95,7 @@ export function CommentCard({
           <button
             type="button"
             onClick={() => onReport(id)}
-            className="text-[10px] text-text-muted hover:text-thumbs-down transition-colors cursor-pointer"
+            className="text-[10px] text-text-muted hover:text-thumbs-down transition-colors cursor-pointer ml-auto"
           >
             通報
           </button>

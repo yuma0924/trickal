@@ -243,6 +243,8 @@ export function BuildsClient() {
       <div id="build-form">
         <BuildPostForm mode={mode} onPosted={() => fetchBuilds()} />
       </div>
+
+      {/* ナビリンクはサーバーコンポーネント側で表示 */}
     </div>
   );
 }
@@ -269,7 +271,7 @@ function BuildCard({
   return (
     <div
       className={cn(
-        "rounded-lg border border-border-primary bg-bg-card p-3",
+        "rounded-2xl border border-border-primary bg-bg-card p-4",
         karmaClass
       )}
     >
@@ -299,21 +301,25 @@ function BuildCard({
         </div>
 
         {/* キャラアイコン並び */}
-        <div className="mb-2 flex gap-1.5 overflow-x-auto">
+        <div className="mb-2 flex gap-2 overflow-x-auto">
           {build.members_detail.map((char, i) => (
-            <CharacterIcon
-              key={`${char.id}-${i}`}
-              name={char.name}
-              imageUrl={char.image_url}
-              element={char.element as Element | undefined}
-              isHidden={char.is_hidden}
-              size="sm"
-            />
+            <div key={`${char.id}-${i}`} className="flex flex-col items-center gap-0.5">
+              <CharacterIcon
+                name={char.name}
+                imageUrl={char.image_url}
+                element={char.element as Element | undefined}
+                isHidden={char.is_hidden}
+                size="sm"
+              />
+              <span className="max-w-12 truncate text-[10px] text-text-tertiary">
+                {char.name}
+              </span>
+            </div>
           ))}
         </div>
 
         {/* コメント */}
-        <p className="whitespace-pre-wrap text-sm text-text-secondary">
+        <p className="whitespace-pre-wrap text-sm text-text-secondary leading-relaxed">
           {displayComment}
         </p>
       </Link>
@@ -323,7 +329,7 @@ function BuildCard({
           onClick={() => setExpanded(!expanded)}
           className="mt-1 text-xs text-accent hover:underline cursor-pointer"
         >
-          {expanded ? "閉じる" : "もっと読む"}
+          {expanded ? "閉じる" : "続きを読む"}
         </button>
       )}
 
@@ -351,7 +357,7 @@ function BuildCard({
  */
 function EmptyState() {
   return (
-    <div className="rounded-lg border border-border-primary bg-bg-card p-8 text-center">
+    <div className="rounded-2xl border border-border-primary bg-bg-card p-8 text-center">
       <p className="text-text-secondary">まだ投稿がありません</p>
       <p className="mt-2 text-sm text-text-tertiary">
         最初の投稿者になろう!
@@ -500,7 +506,7 @@ function BuildPostForm({
   };
 
   return (
-    <div className="rounded-lg border border-border-primary bg-bg-card p-4">
+    <div className="rounded-2xl border border-border-primary bg-bg-card p-4">
       <h2 className="mb-4 text-lg font-bold text-text-primary">
         編成を投稿
       </h2>
@@ -517,7 +523,7 @@ function BuildPostForm({
             onChange={(e) => setTitle(e.target.value)}
             placeholder="例: 火属性PvP編成"
             maxLength={100}
-            className="w-full rounded-lg border border-border-primary bg-bg-input px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
           />
         </div>
 
@@ -562,10 +568,10 @@ function BuildPostForm({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="キャラ名で検索..."
-                className="w-full rounded-lg border border-border-primary bg-bg-input px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+                className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
               />
               {searchResults.length > 0 && searchQuery && (
-                <div className="mt-1 max-h-40 overflow-y-auto rounded-lg border border-border-primary bg-bg-card">
+                <div className="mt-1 max-h-40 overflow-y-auto rounded-2xl border border-border-primary bg-bg-card">
                   {searchResults.map((char) => (
                     <button
                       key={char.id}
@@ -605,7 +611,7 @@ function BuildPostForm({
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder="名無しの教主"
             maxLength={50}
-            className="w-full rounded-lg border border-border-primary bg-bg-input px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
           />
         </div>
 
@@ -623,7 +629,7 @@ function BuildPostForm({
             placeholder="この編成のポイントを教えてください"
             maxLength={200}
             rows={3}
-            className="w-full rounded-lg border border-border-primary bg-bg-input px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none resize-none"
+            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none resize-none"
           />
         </div>
 

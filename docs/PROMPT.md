@@ -2,400 +2,585 @@
 > Fetch the complete documentation index at: https://code.claude.com/docs/llms.txt
 > Use this file to discover all available pages before exploring further.
 
-# Claude Code セッションのチームを調整する
+# Claude Code のベストプラクティス
 
-> 複数の Claude Code インスタンスがチームとして連携して動作するように調整します。共有タスク、エージェント間メッセージング、一元管理を備えています。
+> 環境設定から並列セッションでのスケーリングまで、Claude Code を最大限に活用するためのヒントとパターン。
 
-<Warning>
-  エージェントチームは実験的機能であり、デフォルトでは無効です。`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` を [settings.json](/ja/settings) または環境に追加して有効にしてください。エージェントチームには、セッション再開、タスク調整、シャットダウン動作に関する [既知の制限](#limitations) があります。
-</Warning>
+Claude Code は agentic coding 環境です。質問に答えて待つチャットボットとは異なり、Claude Code はファイルを読み取り、コマンドを実行し、変更を加え、あなたが見守ったり、方向を変えたり、完全に任せたりしながら、自律的に問題を解決できます。
 
-エージェントチームを使用すると、複数の Claude Code インスタンスが連携して動作するように調整できます。1 つのセッションがチームリーダーとして機能し、作業を調整し、タスクを割り当て、結果を統合します。チームメイトは独立して動作し、それぞれ独自のコンテキストウィンドウで動作し、互いに直接通信します。
+これはあなたの作業方法を変えます。自分でコードを書いて Claude にレビューしてもらう代わりに、何をしたいかを説明すると、Claude がそれをどのように構築するかを考え出します。Claude は探索し、計画し、実装します。
 
-単一セッション内で実行され、メインエージェントにのみ報告できる [subagents](/ja/sub-agents) とは異なり、リーダーを経由せずに個別のチームメイトと直接対話することもできます。
+しかし、この自律性にも学習曲線があります。Claude は理解する必要がある特定の制約の中で動作します。
 
-このページでは、以下について説明します。
+このガイドでは、Anthropic の内部チームと、様々なコードベース、言語、環境で Claude Code を使用しているエンジニアの間で効果的であることが証明されたパターンについて説明します。agentic ループがどのように機能するかについては、[Claude Code の仕組み](/ja/how-claude-code-works)を参照してください。
 
-* [エージェントチームを使用する場合](#when-to-use-agent-teams)。ベストユースケースと subagents との比較を含みます
-* [チームを開始する](#start-your-first-agent-team)
-* [チームメイトを制御する](#control-your-agent-team)。表示モード、タスク割り当て、委任を含みます
-* [並列作業のベストプラクティス](#best-practices)
+***
 
-## エージェントチームを使用する場合
+ほとんどのベストプラクティスは 1 つの制約に基づいています。Claude のコンテキストウィンドウはすぐにいっぱいになり、満杯になるにつれてパフォーマンスが低下します。
 
-エージェントチームは、並列探索が実際の価値を追加するタスクに最も効果的です。完全なシナリオについては、[ユースケース例](#use-case-examples) を参照してください。最も強力なユースケースは以下の通りです。
+Claude のコンテキストウィンドウは、すべてのメッセージ、Claude が読み取ったすべてのファイル、およびすべてのコマンド出力を含む、会話全体を保持します。ただし、これはすぐにいっぱいになる可能性があります。単一のデバッグセッションまたはコードベース探索でも、数万トークンを生成および消費する可能性があります。
 
-* **研究とレビュー**: 複数のチームメイトが問題のさまざまな側面を同時に調査し、その後、互いの発見を共有して異議を唱えることができます
-* **新しいモジュールまたは機能**: チームメイトは、互いに干渉することなく、個別のピースを所有できます
-* **競合する仮説でのデバッグ**: チームメイトは異なる理論を並列でテストし、より速く答えに収束します
-* **クロスレイヤー調整**: フロントエンド、バックエンド、テストにまたがる変更。各チームメイトが異なる部分を所有します
+LLM のパフォーマンスはコンテキストが満杯になるにつれて低下するため、これは重要です。コンテキストウィンドウがいっぱいになると、Claude は以前の指示を「忘れる」か、より多くの間違いを犯す可能性があります。コンテキストウィンドウは管理する最も重要なリソースです。[カスタムステータスライン](/ja/statusline)でコンテキスト使用量を継続的に追跡し、[トークン使用量を削減](/ja/costs#reduce-token-usage)でトークン使用量を削減するための戦略を参照してください。
 
-エージェントチームは調整オーバーヘッドを追加し、単一セッションよりも大幅に多くのトークンを使用します。チームメイトが独立して動作できる場合に最適です。順序付きタスク、同じファイルの編集、または多くの依存関係を持つ作業の場合、単一セッションまたは [subagents](/ja/sub-agents) がより効果的です。
+***
 
-### subagents との比較
-
-エージェントチームと [subagents](/ja/sub-agents) の両方を使用すると、作業を並列化できますが、動作方法が異なります。ワーカーが互いに通信する必要があるかどうかに基づいて選択してください。
-
-<Frame caption="Subagents は結果をメインエージェントに報告するだけで、互いに話しません。エージェントチームでは、チームメイトがタスクリストを共有し、作業を要求し、互いに直接通信します。">
-  <img src="https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-light.png?fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=2f8db9b4f3705dd3ab931fbe2d96e42a" className="dark:hidden" alt="Subagent とエージェントチームアーキテクチャを比較する図。Subagent はメインエージェントによって生成され、作業を実行し、結果を報告します。エージェントチームは共有タスクリストを通じて調整し、チームメイトが互いに直接通信します。" data-og-width="4245" width="4245" data-og-height="1615" height="1615" data-path="images/subagents-vs-agent-teams-light.png" data-optimize="true" data-opv="3" srcset="https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-light.png?w=280&fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=a2cfe413c2084b477be40ac8723d9d40 280w, https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-light.png?w=560&fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=c642c09a4c211b10b35eee7d7d0d149f 560w, https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-light.png?w=840&fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=40d286f77c8a4075346b4fcaa2b36248 840w, https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-light.png?w=1100&fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=923986caa23c0ef2c27d7e45f4dce6d1 1100w, https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-light.png?w=1650&fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=17a730a070db6d71d029a98b074c68e8 1650w, https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-light.png?w=2500&fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=e402533fc9e8b5e8d26a835cc4aa1742 2500w" />
-
-  <img src="https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-dark.png?fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=d573a037540f2ada6a9ae7d8285b46fd" className="hidden dark:block" alt="Subagent とエージェントチームアーキテクチャを比較する図。Subagent はメインエージェントによって生成され、作業を実行し、結果を報告します。エージェントチームは共有タスクリストを通じて調整し、チームメイトが互いに直接通信します。" data-og-width="4245" width="4245" data-og-height="1615" height="1615" data-path="images/subagents-vs-agent-teams-dark.png" data-optimize="true" data-opv="3" srcset="https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-dark.png?w=280&fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=06ca5b18b232855acc488357d8d01fa7 280w, https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-dark.png?w=560&fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=3d34daee83994781eb74b74d1ed511c4 560w, https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-dark.png?w=840&fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=82ea35ac837de7d674002de69689b9cf 840w, https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-dark.png?w=1100&fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=3653085214a9fc65d1f589044894a296 1100w, https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-dark.png?w=1650&fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=8e74b42694e428570e876d34f29e6ad6 1650w, https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-dark.png?w=2500&fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=3be00c56c6a0dcccbe15640020be0128 2500w" />
-</Frame>
-
-|             | Subagents                    | エージェントチーム                     |
-| :---------- | :--------------------------- | :---------------------------- |
-| **コンテキスト**  | 独自のコンテキストウィンドウ。結果は呼び出し元に返される | 独自のコンテキストウィンドウ。完全に独立          |
-| **通信**      | メインエージェントにのみ結果を報告            | チームメイトが互いに直接メッセージを送信          |
-| **調整**      | メインエージェントがすべての作業を管理          | 自己調整を備えた共有タスクリスト              |
-| **最適な用途**   | 結果のみが重要な焦点を絞ったタスク            | 議論と協力が必要な複雑な作業                |
-| **トークンコスト** | 低い: 結果がメインコンテキストに要約される       | 高い: 各チームメイトは個別の Claude インスタンス |
-
-結果を報告する必要がある迅速で焦点を絞ったワーカーが必要な場合は subagents を使用してください。チームメイトが発見を共有し、互いに異議を唱え、独立して調整する必要がある場合は、エージェントチームを使用してください。
-
-## エージェントチームを有効にする
-
-エージェントチームはデフォルトでは無効です。`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` 環境変数を `1` に設定して有効にします。シェル環境または [settings.json](/ja/settings) を通じて設定できます。
-
-```json settings.json theme={null}
-{
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
-  }
-}
-```
-
-## 最初のエージェントチームを開始する
-
-エージェントチームを有効にした後、Claude に対してエージェントチームを作成するよう指示し、自然言語でタスクとチーム構造を説明してください。Claude はチームを作成し、チームメイトを生成し、プロンプトに基づいて作業を調整します。
-
-この例は、3 つのロールが独立しており、互いに待つことなく問題を探索できるため、うまく機能します。
-
-```text  theme={null}
-I'm designing a CLI tool that helps developers track TODO comments across
-their codebase. Create an agent team to explore this from different angles: one
-teammate on UX, one on technical architecture, one playing devil's advocate.
-```
-
-そこから、Claude は [共有タスクリスト](/ja/interactive-mode#task-list) を備えたチームを作成し、各視点のチームメイトを生成し、問題を探索させ、発見を統合し、完了時に [チームをクリーンアップ](#clean-up-the-team) しようとします。
-
-リーダーのターミナルには、すべてのチームメイトと彼らが取り組んでいることが表示されます。Shift+Down を使用してチームメイトをサイクルして、直接メッセージを送信してください。最後のチームメイトの後、Shift+Down はリーダーに戻ります。
-
-各チームメイトを独自の分割ペインに配置したい場合は、[表示モードを選択](#choose-a-display-mode) を参照してください。
-
-## チームメイトを制御する
-
-リーダーに自然言語で何をしたいかを伝えてください。指示に基づいて、チーム調整、タスク割り当て、委任を処理します。
-
-### 表示モードを選択する
-
-エージェントチームは 2 つの表示モードをサポートしています。
-
-* **インプロセス**: すべてのチームメイトがメインターミナル内で実行されます。Shift+Down を使用してチームメイトをサイクルして、直接メッセージを入力してください。任意のターミナルで動作し、追加のセットアップは不要です。
-* **分割ペイン**: 各チームメイトが独自のペインを取得します。すべてのユーザーの出力を一度に表示でき、ペインをクリックして直接対話できます。tmux または iTerm2 が必要です。
-
-<Note>
-  `tmux` には特定のオペレーティングシステムでの既知の制限があり、従来は macOS で最適に動作します。iTerm2 で `tmux -CC` を使用することが、`tmux` への推奨エントリーポイントです。
-</Note>
-
-デフォルトは `"auto"` です。これは、既に tmux セッション内で実行している場合は分割ペインを使用し、そうでない場合はインプロセスを使用します。`"tmux"` 設定は分割ペインモードを有効にし、ターミナルに基づいて tmux または iTerm2 を使用するかどうかを自動検出します。オーバーライドするには、[settings.json](/ja/settings) で `teammateMode` を設定してください。
-
-```json  theme={null}
-{
-  "teammateMode": "in-process"
-}
-```
-
-単一セッションのインプロセスモードを強制するには、フラグとして渡してください。
-
-```bash  theme={null}
-claude --teammate-mode in-process
-```
-
-分割ペインモードには、[tmux](https://github.com/tmux/tmux/wiki) または [`it2` CLI](https://github.com/mkusaka/it2) を備えた iTerm2 が必要です。手動でインストールするには、以下を実行してください。
-
-* **tmux**: システムのパッケージマネージャーを通じてインストールしてください。プラットフォーム固有の手順については、[tmux wiki](https://github.com/tmux/tmux/wiki/Installing) を参照してください。
-* **iTerm2**: [`it2` CLI](https://github.com/mkusaka/it2) をインストールしてから、**iTerm2 → Settings → General → Magic → Enable Python API** で Python API を有効にしてください。
-
-### チームメイトとモデルを指定する
-
-Claude はタスクに基づいてスポーンするチームメイトの数を決定するか、正確に何をしたいかを指定できます。
-
-```text  theme={null}
-Create a team with 4 teammates to refactor these modules in parallel.
-Use Sonnet for each teammate.
-```
-
-### チームメイトのプラン承認を要求する
-
-複雑またはリスクの高いタスクの場合、チームメイトが実装する前にプランを立てることを要求できます。チームメイトは、リーダーがアプローチを承認するまで、読み取り専用プランモードで動作します。
-
-```text  theme={null}
-Spawn an architect teammate to refactor the authentication module.
-Require plan approval before they make any changes.
-```
-
-チームメイトがプランを完了すると、リーダーにプラン承認リクエストを送信します。リーダーはプランをレビューして、承認するか、フィードバック付きで却下するかのいずれかを行います。却下された場合、チームメイトはプランモードのままで、フィードバックに基づいて修正し、再送信します。承認されると、チームメイトはプランモードを終了し、実装を開始します。
-
-リーダーは自律的に承認決定を下します。リーダーの判断に影響を与えるには、プロンプトに「テストカバレッジを含むプランのみを承認する」や「データベーススキーマを変更するプランを却下する」などの基準を指定してください。
-
-### チームメイトと直接話す
-
-各チームメイトは、完全で独立した Claude Code セッションです。任意のチームメイトに直接メッセージを送信して、追加の指示を与えたり、フォローアップの質問をしたり、アプローチをリダイレクトしたりできます。
-
-* **インプロセスモード**: Shift+Down を使用してチームメイトをサイクルして、メッセージを入力してください。Enter キーを押してチームメイトのセッションを表示し、Escape キーを押して現在のターンを中断してください。Ctrl+T を押してタスクリストを切り替えてください。
-* **分割ペインモード**: チームメイトのペインをクリックして、セッションと直接対話してください。各チームメイトは独自のターミナルの完全なビューを持っています。
-
-### タスクを割り当てて要求する
-
-共有タスクリストはチーム全体の作業を調整します。リーダーはタスクを作成し、チームメイトはそれらを処理します。タスクには 3 つの状態があります。保留中、進行中、完了。タスクは他のタスクに依存することもできます。未解決の依存関係を持つ保留中のタスクは、それらの依存関係が完了するまで要求できません。
-
-リーダーはタスクを明示的に割り当てるか、チームメイトが自己要求できます。
-
-* **リーダーが割り当てる**: リーダーに、どのタスクをどのチームメイトに与えるかを伝えてください
-* **自己要求**: タスクを完了した後、チームメイトは次の割り当てられていない、ブロックされていないタスクを独立して選択します
-
-タスク要求はファイルロックを使用して、複数のチームメイトが同じタスクを同時に要求しようとするときの競合状態を防ぎます。
-
-### チームメイトをシャットダウンする
-
-チームメイトのセッションを適切に終了するには、以下を実行してください。
-
-```text  theme={null}
-Ask the researcher teammate to shut down
-```
-
-リーダーはシャットダウンリクエストを送信します。チームメイトは承認して適切に終了するか、説明付きで却下できます。
-
-### チームをクリーンアップする
-
-完了したら、リーダーにクリーンアップするよう依頼してください。
-
-```text  theme={null}
-Clean up the team
-```
-
-これにより、共有チームリソースが削除されます。リーダーがクリーンアップを実行すると、アクティブなチームメイトをチェックし、まだ実行中の場合は失敗するため、最初にシャットダウンしてください。
-
-<Warning>
-  常にリーダーを使用してクリーンアップしてください。チームメイトはクリーンアップを実行しないでください。チームメイトのチームコンテキストが正しく解決されない可能性があり、リソースが不整合な状態のままになる可能性があります。
-</Warning>
-
-### hooks で品質ゲートを実施する
-
-[hooks](/ja/hooks) を使用して、チームメイトが作業を完了したときまたはタスクが完了したときのルールを実施してください。
-
-* [`TeammateIdle`](/ja/hooks#teammateidle): チームメイトがアイドル状態になろうとしているときに実行されます。終了コード 2 でフィードバックを送信し、チームメイトを動作させ続けてください。
-* [`TaskCompleted`](/ja/hooks#taskcompleted): タスクが完了としてマークされているときに実行されます。終了コード 2 で完了を防止し、フィードバックを送信してください。
-
-## エージェントチームの仕組み
-
-このセクションでは、エージェントチームの背後にあるアーキテクチャとメカニクスについて説明します。使用を開始したい場合は、上記の [チームメイトを制御する](#control-your-agent-team) を参照してください。
-
-### Claude がエージェントチームを開始する方法
-
-エージェントチームが開始される方法は 2 つあります。
-
-* **チームをリクエストする**: 並列作業から利益を得るタスクを Claude に与え、明示的にエージェントチームをリクエストしてください。Claude は指示に基づいてチームを作成します。
-* **Claude がチームを提案する**: Claude がタスクが並列作業から利益を得ると判断した場合、チームの作成を提案する可能性があります。進行する前に確認してください。
-
-どちらの場合でも、制御は維持されます。Claude は承認なしにチームを作成しません。
-
-### アーキテクチャ
-
-エージェントチームは以下で構成されています。
-
-| コンポーネント     | ロール                                             |
-| :---------- | :---------------------------------------------- |
-| **チームリーダー** | チームを作成し、チームメイトを生成し、作業を調整するメイン Claude Code セッション |
-| **チームメイト**  | 割り当てられたタスクで動作する個別の Claude Code インスタンス           |
-| **タスクリスト**  | チームメイトが要求して完了する共有作業項目リスト                        |
-| **メールボックス** | エージェント間の通信用メッセージングシステム                          |
-
-表示設定オプションについては、[表示モードを選択](#choose-a-display-mode) を参照してください。チームメイトメッセージは自動的にリーダーに到着します。
-
-システムはタスク依存関係を自動的に管理します。チームメイトが他のタスクが依存するタスクを完了すると、ブロックされたタスクは手動介入なしにブロック解除されます。
-
-チームとタスクはローカルに保存されます。
-
-* **チーム設定**: `~/.claude/teams/{team-name}/config.json`
-* **タスクリスト**: `~/.claude/tasks/{team-name}/`
-
-チーム設定には、各チームメイトの名前、エージェント ID、エージェントタイプを含む `members` 配列が含まれています。チームメイトはこのファイルを読み取って、他のチームメンバーを発見できます。
-
-### 権限
-
-チームメイトはリーダーの権限設定で開始します。リーダーが `--dangerously-skip-permissions` で実行される場合、すべてのチームメイトも同様です。生成後、個別のチームメイトモードを変更できますが、生成時にチームメイトごとのモードを設定することはできません。
-
-### コンテキストと通信
-
-各チームメイトは独自のコンテキストウィンドウを持っています。生成されると、チームメイトは通常のセッションと同じプロジェクトコンテキストをロードします。CLAUDE.md、MCP サーバー、スキル。また、リーダーからのスポーンプロンプトも受け取ります。リーダーの会話履歴は引き継がれません。
-
-**チームメイトが情報を共有する方法:**
-
-* **自動メッセージ配信**: チームメイトがメッセージを送信すると、受信者に自動的に配信されます。リーダーは更新をポーリングする必要はありません。
-* **アイドル通知**: チームメイトが完了して停止すると、自動的にリーダーに通知します。
-* **共有タスクリスト**: すべてのエージェントはタスクステータスを表示でき、利用可能な作業を要求できます。
-
-**チームメイトメッセージング:**
-
-* **message**: 1 つの特定のチームメイトにメッセージを送信します
-* **broadcast**: すべてのチームメイトに同時に送信します。チームサイズでコストがスケールするため、控えめに使用してください。
-
-### トークン使用量
-
-エージェントチームは単一セッションよりも大幅に多くのトークンを使用します。各チームメイトは独自のコンテキストウィンドウを持ち、トークン使用量はアクティブなチームメイトの数でスケールします。研究、レビュー、新機能作業の場合、追加のトークンは通常価値があります。ルーチンタスクの場合、単一セッションがより費用効果的です。使用ガイダンスについては、[エージェントチームトークンコスト](/ja/costs#agent-team-token-costs) を参照してください。
-
-## ユースケース例
-
-これらの例は、並列探索が価値を追加するタスクをエージェントチームがどのように処理するかを示しています。
-
-### 並列コードレビューを実行する
-
-単一のレビュアーは、一度に 1 つのタイプの問題に向かう傾向があります。レビュー基準を独立したドメインに分割することで、セキュリティ、パフォーマンス、テストカバレッジがすべて同時に徹底的に注意を受けます。プロンプトは各チームメイトに異なるレンズを割り当てるため、重複しません。
-
-```text  theme={null}
-Create an agent team to review PR #142. Spawn three reviewers:
-- One focused on security implications
-- One checking performance impact
-- One validating test coverage
-Have them each review and report findings.
-```
-
-各レビュアーは同じ PR から動作しますが、異なるフィルターを適用します。リーダーは、3 人全員が完了した後、すべてのレビュアーの発見を統合します。
-
-### 競合する仮説で調査する
-
-根本原因が不明な場合、単一のエージェントは 1 つのもっともらしい説明を見つけて、探索を停止する傾向があります。プロンプトは、チームメイトを明示的に敵対的にすることでこれと戦います。各チームメイトの仕事は、独自の理論を調査するだけでなく、他の理論に異議を唱えることです。
-
-```text  theme={null}
-Users report the app exits after one message instead of staying connected.
-Spawn 5 agent teammates to investigate different hypotheses. Have them talk to
-each other to try to disprove each other's theories, like a scientific
-debate. Update the findings doc with whatever consensus emerges.
-```
-
-議論構造はここでの重要なメカニズムです。順序付き調査はアンカリングに悩まされます。1 つの理論が探索されると、その後の調査はそれに向かってバイアスされます。
-
-複数の独立した調査官が互いに積極的に反証しようとしている場合、生き残る理論は実際の根本原因である可能性がはるかに高くなります。
-
-## ベストプラクティス
-
-### チームメイトに十分なコンテキストを提供する
-
-チームメイトはプロジェクトコンテキストを自動的にロードします。CLAUDE.md、MCP サーバー、スキルを含みます。ただし、リーダーの会話履歴は継承しません。詳細については、[コンテキストと通信](#context-and-communication) を参照してください。スポーンプロンプトにタスク固有の詳細を含めてください。
-
-```text  theme={null}
-Spawn a security reviewer teammate with the prompt: "Review the authentication module
-at src/auth/ for security vulnerabilities. Focus on token handling, session
-management, and input validation. The app uses JWT tokens stored in
-httpOnly cookies. Report any issues with severity ratings."
-```
-
-### 適切なチームサイズを選択する
-
-チームメイトの数に厳しい制限はありませんが、実際の制約が適用されます。
-
-* **トークンコストは線形にスケール**: 各チームメイトは独自のコンテキストウィンドウを持ち、独立してトークンを消費します。詳細については、[エージェントチームトークンコスト](/ja/costs#agent-team-token-costs) を参照してください。
-* **調整オーバーヘッドが増加**: より多くのチームメイトは、より多くの通信、タスク調整、および競合の可能性を意味します
-* **収益逓減**: ある時点を超えると、追加のチームメイトは作業を比例的に高速化しません
-
-ほとんどのワークフローでは、3～5 人のチームメイトで開始してください。これは並列作業と管理可能な調整のバランスを取ります。このガイドの例では、3～5 人のチームメイトを使用しています。その範囲はさまざまなタスクタイプ全体でうまく機能するためです。
-
-チームメイトあたり 5～6 個の [タスク](/ja/agent-teams#architecture) を持つことで、過度なコンテキストスイッチングなしに、すべてを生産的に保ちます。15 個の独立したタスクがある場合、3 人のチームメイトは良い出発点です。
-
-作業が本当にチームメイトが同時に動作することから利益を得る場合にのみスケールアップしてください。3 人の焦点を絞ったチームメイトは、5 人の散らばったチームメイトを上回ることが多いです。
-
-### タスクを適切にサイズする
-
-* **小さすぎる**: 調整オーバーヘッドが利益を超える
-* **大きすぎる**: チームメイトはチェックインなしで長時間動作し、無駄な努力のリスクが増加します
-* **ちょうど良い**: 関数、テストファイル、またはレビューなど、明確な成果物を生成する自己完結型ユニット
+## Claude に自分の作業を検証する方法を与える
 
 <Tip>
-  リーダーは作業をタスクに分割し、チームメイトに自動的に割り当てます。十分なタスクを作成していない場合は、作業をより小さなピースに分割するよう依頼してください。チームメイトあたり 5～6 個のタスクを持つことで、すべてを生産的に保ち、誰かが立ち往生した場合にリーダーが作業を再割り当てできます。
+  テスト、スクリーンショット、または期待される出力を含めて、Claude が自分自身をチェックできるようにします。これはあなたができる最も高いレバレッジのことです。
 </Tip>
 
-### チームメイトが完了するまで待つ
+Claude は、テストを実行したり、スクリーンショットを比較したり、出力を検証したりするなど、自分の作業を検証できるときに劇的に良くなります。
 
-リーダーがチームメイトを待たずにタスク自体を実装し始めることがあります。これに気付いた場合は、以下を実行してください。
+明確な成功基準がないと、正しく見えるが実際には機能しないものを生成する可能性があります。あなたが唯一のフィードバックループになり、すべての間違いがあなたの注意を必要とします。
 
-```text  theme={null}
-Wait for your teammates to complete their tasks before proceeding
-```
+| 戦略                  | 前                        | 後                                                                                                                                                      |
+| ------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **検証基準を提供する**       | *「メールアドレスを検証する関数を実装する」*  | *「validateEmail 関数を書く。テストケースの例：[user@example.com](mailto:user@example.com) は true、invalid は false、[user@.com](mailto:user@.com) は false。実装後にテストを実行する」* |
+| **UI の変更を視覚的に検証する** | *「ダッシュボードをより良く見えるようにする」* | *「\[スクリーンショットを貼り付け] このデザインを実装する。結果のスクリーンショットを撮り、元のものと比較する。違いをリストアップして修正する」*                                                                            |
+| **症状ではなく根本原因に対処する** | *「ビルドが失敗している」*           | *「ビルドがこのエラーで失敗している：\[エラーを貼り付け]。修正して、ビルドが成功することを確認する。根本原因に対処し、エラーを抑制しない」*                                                                               |
 
-### 研究とレビューから開始する
+UI の変更は [Chrome 拡張機能の Claude](/ja/chrome) を使用して検証できます。これはブラウザで新しいタブを開き、UI をテストし、コードが機能するまで反復します。
 
-エージェントチームが初めての場合は、明確な境界があり、コードを書く必要がないタスクから開始してください。PR をレビューする、ライブラリを研究する、またはバグを調査します。これらのタスクは、並列実装に伴う調整の課題なしに、並列探索の価値を示しています。
+検証はテストスイート、リンター、または出力をチェックする Bash コマンドにすることもできます。検証を堅牢にすることに投資してください。
 
-### ファイルの競合を回避する
+***
 
-2 人のチームメイトが同じファイルを編集すると、上書きが発生します。作業を分割して、各チームメイトが異なるファイルセットを所有するようにしてください。
-
-### 監視とステアリング
-
-チームメイトの進捗をチェックし、機能していないアプローチをリダイレクトし、発見が入ってくるにつれて統合してください。チームを長時間無人で実行させると、無駄な努力のリスクが増加します。
-
-## トラブルシューティング
-
-### チームメイトが表示されない
-
-Claude にチームを作成するよう依頼した後、チームメイトが表示されない場合は、以下を実行してください。
-
-* インプロセスモードでは、チームメイトは既に実行されているが、表示されていない可能性があります。Shift+Down を押してアクティブなチームメイトをサイクルしてください。
-* Claude に与えたタスクがチームを保証するのに十分複雑であることを確認してください。Claude はタスクに基づいてチームメイトをスポーンするかどうかを決定します。
-* 分割ペインを明示的にリクエストした場合は、tmux がインストールされ、PATH で利用可能であることを確認してください。
-
-```bash  theme={null}
-which tmux
-```
-
-* iTerm2 の場合、`it2` CLI がインストールされ、Python API が iTerm2 の設定で有効になっていることを確認してください。
-
-### 権限プロンプトが多すぎる
-
-チームメイト権限リクエストはリーダーにバブルアップし、摩擦を生じさせる可能性があります。チームメイトをスポーンする前に、[権限設定](/ja/permissions) で一般的な操作を事前承認して、中断を減らしてください。
-
-### チームメイトがエラーで停止する
-
-チームメイトはエラーが発生した後、回復する代わりに停止する可能性があります。インプロセスモードで Shift+Down を使用するか、分割モードでペインをクリックして、出力をチェックしてから、以下のいずれかを実行してください。
-
-* 追加の指示を直接与える
-* 作業を続行するために置き換えチームメイトをスポーンする
-
-### リーダーが作業完了前にシャットダウンする
-
-リーダーは、すべてのタスクが実際に完了する前に、チームが完了したと判断する可能性があります。これが発生した場合は、続行するよう指示してください。リーダーが作業を委任する代わりに実行を開始した場合、チームメイトが完了するまで待つようにリーダーに指示することもできます。
-
-### 孤立した tmux セッション
-
-チームが終了した後、tmux セッションが存在する場合、完全にクリーンアップされていない可能性があります。セッションをリストして、チームによって作成されたセッションを終了してください。
-
-```bash  theme={null}
-tmux ls
-tmux kill-session -t <session-name>
-```
-
-## 制限事項
-
-エージェントチームは実験的です。注意すべき現在の制限事項は以下の通りです。
-
-* **インプロセスチームメイトでのセッション再開なし**: `/resume` と `/rewind` はインプロセスチームメイトを復元しません。セッションを再開した後、リーダーは存在しなくなったチームメイトにメッセージを送信しようとする可能性があります。これが発生した場合は、リーダーに新しいチームメイトをスポーンするよう指示してください。
-* **タスクステータスは遅延する可能性があります**: チームメイトはタスクを完了としてマークできず、依存タスクをブロックすることがあります。タスクが立ち往生しているように見える場合は、作業が実際に完了しているかどうかを確認し、タスクステータスを手動で更新するか、リーダーにチームメイトを促すよう指示してください。
-* **シャットダウンは遅い可能性があります**: チームメイトは現在のリクエストまたはツール呼び出しを完了してからシャットダウンします。これには時間がかかる可能性があります。
-* **セッションあたり 1 つのチーム**: リーダーは一度に 1 つのチームのみを管理できます。新しいチームを開始する前に、現在のチームをクリーンアップしてください。
-* **ネストされたチームなし**: チームメイトは独自のチームまたはチームメイトをスポーンできません。リーダーのみがチームを管理できます。
-* **リーダーは固定**: チームを作成するセッションは、その生涯のリーダーです。チームメイトをリーダーに昇格させたり、リーダーシップを譲渡したりすることはできません。
-* **権限はスポーン時に設定**: すべてのチームメイトはリーダーの権限モードで開始します。スポーン後に個別のチームメイトモードを変更できますが、スポーン時にチームメイトごとのモードを設定することはできません。
-* **分割ペインには tmux または iTerm2 が必要**: デフォルトのインプロセスモードは任意のターミナルで動作します。分割ペインモードは VS Code の統合ターミナル、Windows Terminal、または Ghostty ではサポートされていません。
+## 最初に探索し、次に計画し、その後コーディングする
 
 <Tip>
-  **`CLAUDE.md` は正常に動作します**: チームメイトは作業ディレクトリから `CLAUDE.md` ファイルを読み取ります。これを使用して、すべてのチームメイトにプロジェクト固有のガイダンスを提供してください。
+  間違った問題を解決することを避けるために、研究と計画を実装から分離します。
 </Tip>
 
-## 次のステップ
+Claude が直接コーディングにジャンプさせると、間違った問題を解決するコードが生成される可能性があります。[Plan Mode](/ja/common-workflows#use-plan-mode-for-safe-code-analysis) を使用して、探索を実行から分離します。
 
-並列作業と委任の関連アプローチを探索してください。
+推奨されるワークフローには 4 つのフェーズがあります。
 
-* **軽量委任**: [subagents](/ja/sub-agents) はセッション内でヘルパーエージェントを生成して、研究または検証を行います。エージェント間調整が必要ないタスクに適しています
-* **手動並列セッション**: [Git worktrees](/ja/common-workflows#run-parallel-claude-code-sessions-with-git-worktrees) を使用すると、自動チーム調整なしで複数の Claude Code セッションを自分で実行できます
-* **アプローチを比較**: [subagent とエージェントチーム](/ja/features-overview#compare-similar-features) の比較を参照して、並べて比較してください
+<Steps>
+  <Step title="探索">
+    Plan Mode に入ります。Claude はファイルを読み取り、変更を加えずに質問に答えます。
+
+    ```txt claude (Plan Mode) theme={null}
+    read /src/auth and understand how we handle sessions and login.
+    also look at how we manage environment variables for secrets.
+    ```
+  </Step>
+
+  <Step title="計画">
+    Claude に詳細な実装計画を作成するよう依頼します。
+
+    ```txt claude (Plan Mode) theme={null}
+    I want to add Google OAuth. What files need to change?
+    What's the session flow? Create a plan.
+    ```
+
+    `Ctrl+G` を押して、Claude が進む前に、テキストエディタで計画を直接編集するために開きます。
+  </Step>
+
+  <Step title="実装">
+    Normal Mode に戻り、Claude にコーディングさせ、計画に対して検証します。
+
+    ```txt claude (Normal Mode) theme={null}
+    implement the OAuth flow from your plan. write tests for the
+    callback handler, run the test suite and fix any failures.
+    ```
+  </Step>
+
+  <Step title="コミット">
+    Claude に説明的なメッセージでコミットし、PR を作成するよう依頼します。
+
+    ```txt claude (Normal Mode) theme={null}
+    commit with a descriptive message and open a PR
+    ```
+  </Step>
+</Steps>
+
+<Callout>
+  Plan Mode は便利ですが、オーバーヘッドも追加します。
+
+  スコープが明確で修正が小さい場合（タイプミスの修正、ログ行の追加、変数の名前変更など）、Claude に直接実行するよう依頼します。
+
+  計画は、アプローチについて不確実な場合、変更が複数のファイルを変更する場合、または変更されるコードに不慣れな場合に最も役立ちます。差分を 1 文で説明できる場合は、計画をスキップします。
+</Callout>
+
+***
+
+## プロンプトで具体的なコンテキストを提供する
+
+<Tip>
+  指示がより正確であるほど、必要な修正が少なくなります。
+</Tip>
+
+Claude は意図を推測できますが、あなたの心を読むことはできません。特定のファイルを参照し、制約を述べ、例のパターンを指摘します。
+
+| 戦略                                          | 前                                                | 後                                                                                                                                                                             |
+| ------------------------------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **タスクをスコープする。** どのファイル、どのシナリオ、テスト設定を指定します。  | *「foo.py のテストを追加する」*                             | *「ユーザーがログアウトしているエッジケースをカバーする foo.py のテストを書く。モックを避ける。」*                                                                                                                        |
+| **ソースを指摘する。** Claude を質問に答えることができるソースに向けます。 | *「ExecutionFactory がこんなに奇妙な API を持っているのはなぜですか？」* | *「ExecutionFactory の git 履歴を調べて、その API がどのようになったかを要約する」*                                                                                                                      |
+| **既存のパターンを参照する。** Claude をコードベースのパターンに向けます。 | *「カレンダーウィジェットを追加する」*                             | *「ホームページで既存のウィジェットがどのように実装されているかを見て、パターンを理解する。HotDogWidget.php は良い例です。パターンに従って、ユーザーが月を選択し、前後にページネーションして年を選択できる新しいカレンダーウィジェットを実装する。コードベースで既に使用されているもの以外のライブラリを使用せずにゼロから構築する。」* |
+| **症状を説明する。** 症状、可能性のある場所、および「修正」の外観を提供します。  | *「ログインバグを修正する」*                                  | *「ユーザーはセッションタイムアウト後にログインが失敗すると報告しています。src/auth/ の認証フロー、特にトークン更新を確認します。問題を再現する失敗するテストを書き、その後修正する」*                                                                             |
+
+曖昧なプロンプトは、探索していて方向転換を余裕を持ってできる場合に役立つことがあります。「このファイルで何を改善しますか？」のようなプロンプトは、あなたが尋ねることを考えなかったことを表面化させることができます。
+
+### リッチコンテンツを提供する
+
+<Tip>
+  `@` を使用してファイルを参照したり、スクリーンショット/画像を貼り付けたり、データを直接パイプしたりします。
+</Tip>
+
+Claude にリッチデータを提供する方法はいくつかあります。
+
+* **`@` でファイルを参照する** コードがどこにあるかを説明する代わりに。Claude は応答する前にファイルを読み取ります。
+* **画像を直接貼り付ける**。画像をコピー/貼り付けまたはドラッグアンドドロップしてプロンプトに入れます。
+* **ドキュメントと API リファレンスの URL を指定する**。`/permissions` を使用して、頻繁に使用されるドメインをホワイトリストに登録します。
+* **データをパイプする** `cat error.log | claude` を実行してファイルの内容を直接送信します。
+* **Claude に必要なものを取得させる**。Bash コマンド、MCP ツール、またはファイルを読み取ることを使用して、Claude 自身がコンテキストをプルするよう指示します。
+
+***
+
+## 環境を設定する
+
+いくつかのセットアップステップにより、Claude Code はすべてのセッションで大幅に効果的になります。拡張機能の完全な概要と各機能をいつ使用するかについては、[Claude Code を拡張する](/ja/features-overview)を参照してください。
+
+### 効果的な CLAUDE.md を書く
+
+<Tip>
+  `/init` を実行して、現在のプロジェクト構造に基づいてスターター CLAUDE.md ファイルを生成し、時間をかけて改善します。
+</Tip>
+
+CLAUDE.md は Claude がすべての会話の開始時に読む特別なファイルです。Bash コマンド、コードスタイル、ワークフロールールを含めます。これにより、Claude はコードだけからは推測できない永続的なコンテキストを取得します。
+
+`/init` コマンドはコードベースを分析してビルドシステム、テストフレームワーク、コードパターンを検出し、改善するための堅牢な基盤を提供します。
+
+CLAUDE.md ファイルに必須の形式はありませんが、短く人間が読める状態に保ちます。例えば：
+
+```markdown CLAUDE.md theme={null}
+# Code style
+- Use ES modules (import/export) syntax, not CommonJS (require)
+- Destructure imports when possible (eg. import { foo } from 'bar')
+
+# Workflow
+- Be sure to typecheck when you're done making a series of code changes
+- Prefer running single tests, and not the whole test suite, for performance
+```
+
+CLAUDE.md はすべてのセッションで読み込まれるため、広く適用されるもののみを含めます。ドメイン知識またはときどきのみ関連するワークフローについては、代わりに [skills](/ja/skills) を使用します。Claude はオンデマンドで読み込み、すべての会話を膨らませません。
+
+簡潔に保ちます。各行について、次のように尋ねます。*「これを削除すると Claude が間違いを犯しますか？」* そうでない場合は、削除します。膨らんだ CLAUDE.md ファイルは Claude があなたの実際の指示を無視する原因になります。
+
+| ✅ 含める                     | ❌ 除外する                          |
+| ------------------------- | ------------------------------- |
+| Claude が推測できない Bash コマンド  | Claude がコードを読むことで理解できるもの        |
+| デフォルトと異なるコードスタイルルール       | Claude が既に知っている標準言語規約           |
+| テスト指示と推奨テストランナー           | 詳細な API ドキュメント（代わりにドキュメントへのリンク） |
+| リポジトリのエチケット（ブランチ命名、PR 規約） | 頻繁に変わる情報                        |
+| プロジェクト固有のアーキテクチャ決定        | 長い説明またはチュートリアル                  |
+| 開発者環境の癖（必須環境変数）           | ファイルごとのコードベースの説明                |
+| 一般的な落とし穴または明白でない動作        | 「きれいなコードを書く」のような自明なプラクティス       |
+
+Claude がルールに対して何かをしないようにしているのに、それでも何かをしている場合、ファイルはおそらく長すぎて、ルールが失われています。Claude が CLAUDE.md で答えられている質問をあなたに尋ねる場合、フレーズが曖昧かもしれません。CLAUDE.md をコードのように扱う：物事がうまくいかないときにレビューし、定期的に削除し、Claude の動作が実際に変わるかどうかを観察することで変更をテストします。
+
+指示の遵守を改善するために、強調（例えば、「IMPORTANT」または「YOU MUST」）を追加することで指示を調整できます。CLAUDE.md を git にチェックインして、チームが貢献できるようにします。ファイルは時間とともに価値が複合します。
+
+CLAUDE.md ファイルは `@path/to/import` 構文を使用して追加ファイルをインポートできます。
+
+```markdown CLAUDE.md theme={null}
+See @README.md for project overview and @package.json for available npm commands.
+
+# Additional Instructions
+- Git workflow: @docs/git-instructions.md
+- Personal overrides: @~/.claude/my-project-instructions.md
+```
+
+CLAUDE.md ファイルはいくつかの場所に配置できます。
+
+* **ホームフォルダ（`~/.claude/CLAUDE.md`）**：すべての Claude セッションに適用されます
+* **プロジェクトルート（`./CLAUDE.md`）**：git にチェックインしてチームと共有するか、`CLAUDE.local.md` という名前を付けて `.gitignore` します
+* **親ディレクトリ**：`root/CLAUDE.md` と `root/foo/CLAUDE.md` の両方が自動的に取得されるモノレポに役立ちます
+* **子ディレクトリ**：Claude はそれらのディレクトリ内のファイルを操作するときに、子 CLAUDE.md ファイルをオンデマンドで取得します
+
+### 権限を設定する
+
+<Tip>
+  `/permissions` を使用して安全なコマンドをホワイトリストに登録するか、`/sandbox` を使用して OS レベルの分離を行います。これにより、あなたが制御している間に中断が減ります。
+</Tip>
+
+デフォルトでは、Claude Code はシステムを変更する可能性のあるアクション（ファイル書き込み、Bash コマンド、MCP ツールなど）の許可をリクエストします。これは安全ですが、面倒です。10 番目の承認の後、あなたは本当にレビューしていません。あなたはクリックしているだけです。これらの中断を減らす 2 つの方法があります。
+
+* **権限ホワイトリスト**：安全であることがわかっている特定のツール（`npm run lint` や `git commit` など）を許可します
+* **サンドボックス**：OS レベルの分離を有効にして、ファイルシステムとネットワークアクセスを制限し、Claude が定義された境界内でより自由に動作できるようにします
+
+または、`--dangerously-skip-permissions` を使用して、lint エラーの修正やボイラープレートの生成などの含まれたワークフローのすべての権限チェックをバイパスします。
+
+<Warning>
+  Claude に任意のコマンドを実行させると、データ損失、システム破損、またはプロンプトインジェクションによるデータ流出が発生する可能性があります。`--dangerously-skip-permissions` はインターネットアクセスのないサンドボックスでのみ使用してください。
+</Warning>
+
+[権限の設定](/ja/permissions)と[サンドボックスの有効化](/ja/sandboxing)の詳細をお読みください。
+
+### CLI ツールを使用する
+
+<Tip>
+  Claude Code に `gh`、`aws`、`gcloud`、`sentry-cli` などの CLI ツールを使用して外部サービスと対話するよう指示します。
+</Tip>
+
+CLI ツールは外部サービスと対話する最もコンテキスト効率的な方法です。GitHub を使用する場合は、`gh` CLI をインストールします。Claude は問題の作成、プルリクエストのオープン、コメントの読み取りにそれを使用する方法を知っています。`gh` がなければ、Claude は GitHub API を使用できますが、認証されていないリクエストはしばしばレート制限に達します。
+
+Claude は既に知らない CLI ツールを学ぶのにも効果的です。`Use 'foo-cli-tool --help' to learn about foo tool, then use it to solve A, B, C.` のようなプロンプトを試してください。
+
+### MCP サーバーを接続する
+
+<Tip>
+  `claude mcp add` を実行して、Notion、Figma、またはデータベースなどの外部ツールを接続します。
+</Tip>
+
+[MCP servers](/ja/mcp) を使用すると、Claude に問題トラッカーから機能を実装したり、データベースをクエリしたり、監視データを分析したり、Figma からデザインを統合したり、ワークフローを自動化したりするよう依頼できます。
+
+### フックを設定する
+
+<Tip>
+  例外なく毎回実行する必要があるアクションにはフックを使用します。
+</Tip>
+
+[Hooks](/ja/hooks-guide) は Claude のワークフロー内の特定のポイントで自動的にスクリプトを実行します。CLAUDE.md の指示は勧告的ですが、フックは決定的で、アクションが確実に実行されることを保証します。
+
+Claude はあなたのためにフックを書くことができます。*「すべてのファイル編集後に eslint を実行するフックを書く」* または *「migrations フォルダへの書き込みをブロックするフックを書く」* のようなプロンプトを試してください。`/hooks` を実行して対話的に設定するか、`.claude/settings.json` を直接編集します。
+
+### スキルを作成する
+
+<Tip>
+  `.claude/skills/` に `SKILL.md` ファイルを作成して、Claude にドメイン知識と再利用可能なワークフローを提供します。
+</Tip>
+
+[Skills](/ja/skills) はプロジェクト、チーム、またはドメイン固有の情報で Claude の知識を拡張します。Claude は関連する場合に自動的にそれらを適用するか、`/skill-name` で直接呼び出すことができます。
+
+`.claude/skills/` にディレクトリと `SKILL.md` を追加してスキルを作成します。
+
+```markdown .claude/skills/api-conventions/SKILL.md theme={null}
+---
+name: api-conventions
+description: REST API design conventions for our services
+---
+# API Conventions
+- Use kebab-case for URL paths
+- Use camelCase for JSON properties
+- Always include pagination for list endpoints
+- Version APIs in the URL path (/v1/, /v2/)
+```
+
+スキルは直接呼び出す再利用可能なワークフローを定義することもできます。
+
+```markdown .claude/skills/fix-issue/SKILL.md theme={null}
+---
+name: fix-issue
+description: Fix a GitHub issue
+disable-model-invocation: true
+---
+Analyze and fix the GitHub issue: $ARGUMENTS.
+
+1. Use `gh issue view` to get the issue details
+2. Understand the problem described in the issue
+3. Search the codebase for relevant files
+4. Implement the necessary changes to fix the issue
+5. Write and run tests to verify the fix
+6. Ensure code passes linting and type checking
+7. Create a descriptive commit message
+8. Push and create a PR
+```
+
+`/fix-issue 1234` を実行して呼び出します。副作用のあるワークフローで、手動でトリガーしたい場合は `disable-model-invocation: true` を使用します。
+
+### カスタムサブエージェントを作成する
+
+<Tip>
+  `.claude/agents/` に特化したアシスタントを定義して、Claude が分離されたタスクに委譲できるようにします。
+</Tip>
+
+[Subagents](/ja/sub-agents) は独自のコンテキストと独自の許可されたツールセットで実行されます。メインの会話を乱さずに、多くのファイルを読み取ったり、特化した焦点が必要なタスクに役立ちます。
+
+```markdown .claude/agents/security-reviewer.md theme={null}
+---
+name: security-reviewer
+description: Reviews code for security vulnerabilities
+tools: Read, Grep, Glob, Bash
+model: opus
+---
+You are a senior security engineer. Review code for:
+- Injection vulnerabilities (SQL, XSS, command injection)
+- Authentication and authorization flaws
+- Secrets or credentials in code
+- Insecure data handling
+
+Provide specific line references and suggested fixes.
+```
+
+Claude にサブエージェントを明示的に使用するよう指示します。*「このコードをセキュリティの問題についてレビューするためにサブエージェントを使用する。」*
+
+### プラグインをインストールする
+
+<Tip>
+  `/plugin` を実行してマーケットプレイスを参照します。プラグインは設定なしでスキル、ツール、統合を追加します。
+</Tip>
+
+[Plugins](/ja/plugins) はスキル、フック、サブエージェント、MCP サーバーをコミュニティと Anthropic からの単一のインストール可能なユニットにバンドルします。型付き言語を使用する場合は、[コード インテリジェンス プラグイン](/ja/discover-plugins#code-intelligence)をインストールして、Claude に正確なシンボル ナビゲーションと編集後の自動エラー検出を提供します。
+
+スキル、サブエージェント、フック、MCP の選択に関するガイダンスについては、[Claude Code を拡張する](/ja/features-overview#match-features-to-your-goal)を参照してください。
+
+***
+
+## 効果的にコミュニケーションする
+
+Claude Code との通信方法は、結果の品質に大きく影響します。
+
+### コードベースの質問をする
+
+<Tip>
+  シニアエンジニアに尋ねるような質問を Claude にしてください。
+</Tip>
+
+新しいコードベースにオンボーディングするときは、Claude Code を学習と探索に使用します。別のエンジニアに尋ねるのと同じ種類の質問を Claude に尋ねることができます。
+
+* ロギングはどのように機能しますか？
+* 新しい API エンドポイントを作成するにはどうすればよいですか？
+* `foo.rs` の 134 行目の `async move { ... }` は何をしていますか？
+* `CustomerOnboardingFlowImpl` はどのエッジケースを処理していますか？
+* このコードが 333 行目で `bar()` の代わりに `foo()` を呼び出すのはなぜですか？
+
+Claude Code をこのように使用することは、効果的なオンボーディング ワークフローであり、ラップアップ時間を改善し、他のエンジニアの負荷を軽減します。特別なプロンプトは必要ありません。直接質問してください。
+
+### Claude にあなたにインタビューさせる
+
+<Tip>
+  より大きな機能の場合、Claude に最初にあなたにインタビューさせます。最小限のプロンプトで始めて、Claude に `AskUserQuestion` ツールを使用してあなたにインタビューするよう依頼します。
+</Tip>
+
+Claude は、技術的な実装、UI/UX、エッジケース、トレードオフなど、あなたがまだ考えていないことについて質問します。
+
+```text  theme={null}
+I want to build [brief description]. Interview me in detail using the AskUserQuestion tool.
+
+Ask about technical implementation, UI/UX, edge cases, concerns, and tradeoffs. Don't ask obvious questions, dig into the hard parts I might not have considered.
+
+Keep interviewing until we've covered everything, then write a complete spec to SPEC.md.
+```
+
+仕様が完成したら、新しいセッションを開始して実行します。新しいセッションはきれいなコンテキストを持ち、実装に完全に焦点を当てており、参照する書かれた仕様があります。
+
+***
+
+## セッションを管理する
+
+会話は永続的で可逆的です。これを有利に使用してください。
+
+### 早期かつ頻繁に方向転換する
+
+<Tip>
+  Claude が軌道を外れていることに気付いたらすぐに修正してください。
+</Tip>
+
+最良の結果は、タイトなフィードバックループから来ます。Claude は時々最初の試みで問題を完全に解決しますが、それを迅速に修正することは一般的により良い解決策をより速く生成します。
+
+* **`Esc`**：`Esc` キーで Claude の中途半端なアクションを停止します。コンテキストは保持されるため、リダイレクトできます。
+* **`Esc + Esc` または `/rewind`**：`Esc` を 2 回押すか `/rewind` を実行して、巻き戻しメニューを開き、以前の会話とコード状態を復元するか、選択したメッセージから要約します。
+* **`"Undo that"`**：Claude に変更を元に戻すよう依頼します。
+* **`/clear`**：関連のないタスク間でコンテキストをリセットします。関連のないコンテキストを持つ長いセッションはパフォーマンスを低下させる可能性があります。
+
+1 つのセッション内で同じ問題について 2 回以上 Claude を修正した場合、コンテキストは失敗したアプローチで乱雑です。`/clear` を実行し、学んだことを組み込んだより具体的なプロンプトで新しく開始します。より良いプロンプトを持つきれいなセッションはほぼ常に、蓄積された修正を持つ長いセッションを上回ります。
+
+### コンテキストを積極的に管理する
+
+<Tip>
+  関連のないタスク間でコンテキストをリセットするために `/ clear` を頻繁に実行します。
+</Tip>
+
+Claude Code はコンテキスト制限に近づくと、会話履歴を自動的にコンパクトにします。これにより、重要なコードと決定を保持しながら、スペースを解放します。
+
+長いセッション中に、Claude のコンテキストウィンドウは関連のない会話、ファイルの内容、コマンドで満杯になる可能性があります。これはパフォーマンスを低下させ、時々 Claude を気を散らすことができます。
+
+* タスク間で頻繁に `/clear` を使用してコンテキストウィンドウを完全にリセットします
+* 自動コンパクションがトリガーされると、Claude は最も重要なもの（コードパターン、ファイル状態、主要な決定を含む）を要約します
+* より多くの制御のために、`/compact <instructions>` を実行します。例えば `/compact Focus on the API changes`
+* 会話の一部のみをコンパクトするには、`Esc + Esc` または `/rewind` を使用し、メッセージチェックポイントを選択し、**ここから要約** を選択します。これにより、そのポイント以降のメッセージが凝縮され、以前のコンテキストが保持されます。
+* CLAUDE.md でコンパクション動作をカスタマイズして、`"When compacting, always preserve the full list of modified files and any test commands"` のような指示を使用して、重要なコンテキストが要約を生き残ることを確認します
+
+### 調査にサブエージェントを使用する
+
+<Tip>
+  `"use subagents to investigate X"` で研究を委譲します。彼らは別のコンテキストで探索し、実装のためにメインの会話をきれいに保つ要約を報告します。
+</Tip>
+
+コンテキストが基本的な制約であるため、サブエージェントは利用可能な最も強力なツールの 1 つです。Claude がコードベースを研究するとき、それは多くのファイルを読み取り、すべてがあなたのコンテキストを消費します。サブエージェントは別のコンテキストウィンドウで実行され、要約を報告します。
+
+```text  theme={null}
+Use subagents to investigate how our authentication system handles token
+refresh, and whether we have any existing OAuth utilities I should reuse.
+```
+
+サブエージェントはコードベースを探索し、関連ファイルを読み取り、メインの会話を乱さずにすべての調査結果を報告します。
+
+Claude が何かを実装した後、検証にサブエージェントを使用することもできます。
+
+```text  theme={null}
+use a subagent to review this code for edge cases
+```
+
+### チェックポイントで巻き戻す
+
+<Tip>
+  Claude が行うすべてのアクションはチェックポイントを作成します。以前のチェックポイントに会話、コード、またはその両方を復元できます。
+</Tip>
+
+Claude は変更前に自動的にチェックポイントを作成します。`Escape` をダブルタップするか `/rewind` を実行して、巻き戻しメニューを開きます。会話のみを復元したり、コードのみを復元したり、両方を復元したり、選択したメッセージから要約したりできます。詳細については、[Checkpointing](/ja/checkpointing) を参照してください。
+
+すべての動きを慎重に計画する代わりに、Claude に何か危険なことを試すよう指示できます。うまくいかない場合は、巻き戻して別のアプローチを試してください。チェックポイントはセッション間で永続するため、ターミナルを閉じても後で巻き戻すことができます。
+
+<Warning>
+  チェックポイントは Claude が行った変更のみを追跡し、外部プロセスは追跡しません。これは git の代替ではありません。
+</Warning>
+
+### 会話を再開する
+
+<Tip>
+  `claude --continue` を実行して中断したところから再開するか、`--resume` を実行して最近のセッションから選択します。
+</Tip>
+
+Claude Code はローカルに会話を保存します。タスクが複数のセッションにまたがる場合、コンテキストを再度説明する必要はありません。
+
+```bash  theme={null}
+claude --continue    # Resume the most recent conversation
+claude --resume      # Select from recent conversations
+```
+
+`/rename` を使用してセッションに説明的な名前を付けます。例えば `"oauth-migration"` または `"debugging-memory-leak"` など。後で見つけやすくするためです。セッションをブランチのように扱う：異なるワークストリームは別の永続的なコンテキストを持つことができます。
+
+***
+
+## 自動化とスケール
+
+1 つの Claude で効果的になったら、並列セッション、非対話型モード、ファンアウトパターンで出力を乗算します。
+
+これまでのすべては、1 人の人間、1 つの Claude、1 つの会話を想定しています。しかし、Claude Code は水平にスケールします。このセクションのテクニックは、より多くを成し遂げる方法を示しています。
+
+### 非対話型モードを実行する
+
+<Tip>
+  CI、プリコミットフック、またはスクリプトで `claude -p "prompt"` を使用します。ストリーミング JSON 出力の場合は `--output-format stream-json` を追加します。
+</Tip>
+
+`claude -p "your prompt"` を使用すると、セッションなしで非対話的に Claude を実行できます。非対話型モードは、Claude を CI パイプライン、プリコミットフック、または自動ワークフローに統合する方法です。出力形式を使用すると、結果をプログラムで解析できます。プレーンテキスト、JSON、またはストリーミング JSON。
+
+```bash  theme={null}
+# One-off queries
+claude -p "Explain what this project does"
+
+# Structured output for scripts
+claude -p "List all API endpoints" --output-format json
+
+# Streaming for real-time processing
+claude -p "Analyze this log file" --output-format stream-json
+```
+
+### 複数の Claude セッションを実行する
+
+<Tip>
+  複数の Claude セッションを並列で実行して、開発を高速化し、分離された実験を実行するか、複雑なワークフローを開始します。
+</Tip>
+
+並列セッションを実行する 3 つの主な方法があります。
+
+* [Claude Code デスクトップアプリ](/ja/desktop#work-in-parallel-with-sessions)：複数のローカルセッションを視覚的に管理します。各セッションは独自の分離されたワークツリーを取得します。
+* [Web 上の Claude Code](/ja/claude-code-on-the-web)：Anthropic のセキュアなクラウドインフラストラクチャで分離された VM で実行します。
+* [エージェントチーム](/ja/agent-teams)：共有タスク、メッセージング、チームリーダーを持つ複数のセッションの自動調整。
+
+作業を並列化することを超えて、複数のセッションは品質に焦点を当てたワークフローを有効にします。新しいコンテキストは、Claude がちょうど書いたコードに偏らないため、コードレビューを改善します。
+
+例えば、Writer/Reviewer パターンを使用します。
+
+| セッション A（ライター）                                                           | セッション B（レビュアー）                                                                                                                                                           |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Implement a rate limiter for our API endpoints`                        |                                                                                                                                                                          |
+|                                                                         | `Review the rate limiter implementation in @src/middleware/rateLimiter.ts. Look for edge cases, race conditions, and consistency with our existing middleware patterns.` |
+| `Here's the review feedback: [Session B output]. Address these issues.` |                                                                                                                                                                          |
+
+テストで同様のことを行うことができます。1 つの Claude にテストを書かせ、別の Claude にそれらを渡すコードを書かせます。
+
+### ファイル全体にファンアウトする
+
+<Tip>
+  各タスクに対して `claude -p` を呼び出すループを実行します。バッチ操作の権限をスコープするために `--allowedTools` を使用します。
+</Tip>
+
+大規模な移行または分析の場合、多くの並列 Claude 呼び出し全体で作業を配布できます。
+
+<Steps>
+  <Step title="タスクリストを生成する">
+    Claude に移行が必要なすべてのファイルをリストさせます（例えば、`list all 2,000 Python files that need migrating`）
+  </Step>
+
+  <Step title="リストをループするスクリプトを書く">
+    ```bash  theme={null}
+    for file in $(cat files.txt); do
+      claude -p "Migrate $file from React to Vue. Return OK or FAIL." \
+        --allowedTools "Edit,Bash(git commit *)"
+    done
+    ```
+  </Step>
+
+  <Step title="いくつかのファイルでテストしてから、スケールで実行する">
+    最初の 2～3 ファイルで何が悪いかに基づいてプロンプトを改善し、完全なセットで実行します。`--allowedTools` フラグは Claude が何ができるかを制限し、これは無人で実行している場合に重要です。
+  </Step>
+</Steps>
+
+Claude を既存のデータ/処理パイプラインに統合することもできます。
+
+```bash  theme={null}
+claude -p "<your prompt>" --output-format json | your_command
+```
+
+開発中は `--verbose` を使用し、本番環境では無効にします。
+
+### 安全な自律モード
+
+`claude --dangerously-skip-permissions` を使用して、すべての権限チェックをバイパスし、Claude が中断なく動作できるようにします。これは lint エラーの修正やボイラープレートコードの生成などのワークフローに適しています。
+
+<Warning>
+  Claude に任意のコマンドを実行させることはリスクがあり、データ損失、システム破損、またはデータ流出（例えば、プロンプトインジェクション攻撃を介して）が発生する可能性があります。これらのリスクを最小化するには、インターネットアクセスのないコンテナで `--dangerously-skip-permissions` を使用してください。
+
+  サンドボックスが有効な場合（`/sandbox`）、同様の自律性がより良いセキュリティで得られます。サンドボックスはすべてのチェックをバイパスするのではなく、事前に境界を定義します。
+</Warning>
+
+***
+
+## 一般的な失敗パターンを避ける
+
+これらは一般的な間違いです。早期に認識することで時間を節約できます。
+
+* **キッチンシンクセッション。** 1 つのタスクで開始し、関連のないことを Claude に尋ね、最初のタスクに戻ります。コンテキストは関連のない情報でいっぱいです。
+  > **修正**：関連のないタスク間で `/clear` を実行します。
+* **何度も修正する。** Claude が何か間違ったことをし、あなたがそれを修正し、それはまだ間違っており、あなたが再度修正します。コンテキストは失敗したアプローチで汚染されています。
+  > **修正**：2 回の失敗した修正の後、`/clear` を実行し、学んだことを組み込んだより良い初期プロンプトを書きます。
+* **過度に指定された CLAUDE.md。** CLAUDE.md が長すぎる場合、Claude は重要なルールがノイズに失われるため、その半分を無視します。
+  > **修正**：容赦なく削除します。Claude がすでに指示なしで何かを正しく行う場合、削除するか、フックに変換します。
+* **信頼してから検証するギャップ。** Claude はもっともらしく見える実装を生成しますが、実際にはエッジケースを処理しません。
+  > **修正**：常に検証を提供します（テスト、スクリプト、スクリーンショット）。検証できない場合は、出荷しないでください。
+* **無限探索。** スコープなしで Claude に何かを「調査」するよう依頼します。Claude は数百のファイルを読み取り、コンテキストを満杯にします。
+  > **修正**：調査を狭くスコープするか、サブエージェントを使用して、探索がメインコンテキストを消費しないようにします。
+
+***
+
+## 直感を開発する
+
+このガイドのパターンは固定されていません。それらはすべての状況で一般的にうまく機能する出発点ですが、すべての状況に最適ではない可能性があります。
+
+時々、1 つの複雑な問題に深く入り込んでいて、履歴が価値があるため、コンテキストを蓄積させるべきです。時々、タスクが探索的であるため、計画をスキップして Claude にそれを理解させるべきです。時々、曖昧なプロンプトは、Claude が制約する前に問題をどのように解釈するかを見たいため、正確に正しいです。
+
+何が機能するかに注意を払ってください。Claude が素晴らしい出力を生成するとき、あなたが何をしたかに注意してください。プロンプト構造、提供したコンテキスト、あなたがいたモード。Claude が苦労するとき、なぜ尋ねてください。コンテキストがノイズが多すぎましたか？プロンプトが曖昧すぎましたか？タスクが 1 回のパスには大きすぎましたか？
+
+時間をかけて、ガイドが捉えることができない直感を開発します。具体的にするべき時と開放的にするべき時、計画すべき時と探索すべき時、コンテキストをクリアすべき時と蓄積させるべき時を知ります。
+
+## 関連リソース
+
+* [Claude Code の仕組み](/ja/how-claude-code-works)：agentic ループ、ツール、コンテキスト管理
+* [Claude Code を拡張する](/ja/features-overview)：スキル、フック、MCP、サブエージェント、プラグイン
+* [一般的なワークフロー](/ja/common-workflows)：デバッグ、テスト、PR などのステップバイステップレシピ
+* [CLAUDE.md](/ja/memory)：プロジェクト規約と永続的なコンテキストを保存する

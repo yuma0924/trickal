@@ -81,8 +81,8 @@ export function StarRatingDisplay({
   }
 
   return (
-    <div className={cn("inline-flex items-center gap-0.5 text-star", className)}>
-      {stars}
+    <div className={cn("inline-flex items-center gap-0.5", className)}>
+      <span className="text-star flex items-center gap-0.5">{stars}</span>
       {showValue && (
         <span className={cn("ml-1 font-bold text-text-primary", sizeMap[size])}>
           {rating.toFixed(1)}
@@ -119,7 +119,7 @@ export function StarRatingInput({
         const filled = value !== null && value >= starIndex;
         const half = !filled && value !== null && value >= starIndex - 0.5;
         return (
-          <span key={starIndex} className="relative cursor-pointer text-star">
+          <span key={starIndex} className="relative cursor-pointer text-star" role="radio" aria-checked={value === starIndex || value === starIndex - 0.5}>
             <StarIcon
               filled={filled}
               half={half}

@@ -30,15 +30,15 @@ export function ThumbsUpDown({
   };
 
   return (
-    <div className={cn("inline-flex items-center gap-2", className)}>
+    <div className={cn("inline-flex items-center gap-4", className)}>
       <button
         type="button"
         onClick={() => handleClick("up")}
         className={cn(
-          "inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs transition-colors cursor-pointer",
+          "inline-flex items-center gap-1 text-xs transition-colors cursor-pointer",
           userReaction === "up"
-            ? "bg-thumbs-up/20 text-thumbs-up"
-            : "text-text-tertiary hover:text-thumbs-up hover:bg-thumbs-up/10"
+            ? "text-thumbs-up"
+            : "text-text-muted hover:text-thumbs-up"
         )}
         aria-label="いいね"
       >
@@ -49,10 +49,10 @@ export function ThumbsUpDown({
         type="button"
         onClick={() => handleClick("down")}
         className={cn(
-          "inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs transition-colors cursor-pointer",
+          "inline-flex items-center gap-1 text-xs transition-colors cursor-pointer",
           userReaction === "down"
-            ? "bg-thumbs-down/20 text-thumbs-down"
-            : "text-text-tertiary hover:text-thumbs-down hover:bg-thumbs-down/10"
+            ? "text-thumbs-down"
+            : "text-text-muted hover:text-thumbs-down"
         )}
         aria-label="よくない"
       >

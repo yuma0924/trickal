@@ -90,7 +90,7 @@ export function StatsRankingClient({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="キャラ名で検索..."
-          className="w-full rounded-lg bg-bg-input border border-border-primary px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+          className="w-full rounded-xl bg-bg-input border border-border-primary px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
         />
         <Tab items={elementTabs} value={elementFilter} onChange={setElementFilter} />
       </div>
@@ -101,9 +101,9 @@ export function StatsRankingClient({
           該当するキャラクターがいません
         </p>
       ) : (
-        <div className="space-y-1">
+        <div className="space-y-2">
           {/* ヘッダー */}
-          <div className="flex items-center gap-2 px-2 py-1.5 text-[10px] font-medium text-text-tertiary uppercase">
+          <div className="flex items-center gap-2 px-3 py-1.5 text-[10px] font-medium text-text-tertiary uppercase">
             <span className="w-8 text-center">#</span>
             <span className="flex-1">キャラクター</span>
             <span className="w-16 text-right">{selectedLabel}</span>
@@ -118,7 +118,7 @@ export function StatsRankingClient({
               <Link
                 key={character.id}
                 href={`/characters/${character.slug}`}
-                className="flex items-center gap-2 rounded-lg px-2 py-2 transition-colors hover:bg-bg-card-hover cursor-pointer"
+                className="flex items-center gap-2 rounded-xl border border-border-primary bg-bg-card/30 px-3 py-3 transition-colors hover:bg-bg-card-hover cursor-pointer"
               >
                 {/* 順位 */}
                 <span

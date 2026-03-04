@@ -34,9 +34,9 @@ export function CharacterCard({
     <Link
       href={`/characters/${slug}`}
       className={cn(
-        "group flex flex-col items-center gap-1.5 rounded-xl p-2 transition-all cursor-pointer",
+        "group flex flex-col items-center gap-1.5 rounded-2xl border border-border-primary bg-bg-card p-2 transition-all cursor-pointer overflow-hidden",
         "hover:bg-bg-card-hover hover:scale-[1.02]",
-        isHero && "bg-bg-card p-3",
+        isHero && "p-3",
         className
       )}
     >

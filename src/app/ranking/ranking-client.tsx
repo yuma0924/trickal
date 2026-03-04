@@ -4,10 +4,9 @@ import { useState, useMemo } from "react";
 import { Tab } from "@/components/ui/tab";
 import { CharacterCard } from "@/components/character/character-card";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
-import { ELEMENTS, type Element } from "@/lib/constants";
+import { ELEMENTS } from "@/lib/constants";
 import { StarRatingDisplay } from "@/components/ui/star-rating";
 import { Badge } from "@/components/ui/badge";
 import type { RankedCharacter, UnrankedCharacter, TrendingCharacter } from "./page";
@@ -16,7 +15,6 @@ interface RankingClientProps {
   rankedCharacters: RankedCharacter[];
   unrankedCharacters: UnrankedCharacter[];
   trendingCharacters: TrendingCharacter[];
-  topCharName: string | null;
 }
 
 const INITIAL_SHOW_COUNT = 30;
@@ -26,7 +24,6 @@ export function RankingClient({
   rankedCharacters,
   unrankedCharacters,
   trendingCharacters,
-  topCharName,
 }: RankingClientProps) {
   const [elementFilter, setElementFilter] = useState<string>("all");
   const [showCount, setShowCount] = useState(INITIAL_SHOW_COUNT);
@@ -70,7 +67,7 @@ export function RankingClient({
 
       {/* 1位アナウンス */}
       {currentTop && (
-        <div className="rounded-lg bg-bg-card p-3 text-center">
+        <div className="rounded-2xl bg-bg-card border border-border-primary p-3 text-center">
           <span className="text-sm text-text-secondary">
             現在の{elementFilter === "all" ? "全属性" : elementFilter}の1位は{" "}
           </span>
@@ -107,6 +104,9 @@ export function RankingClient({
                 variant="secondary"
                 onClick={() => setShowCount((c) => c + LOAD_MORE_COUNT)}
               >
+                <svg className="mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
                 さらに表示（残り{remaining}キャラ）
               </Button>
             </div>
@@ -116,21 +116,25 @@ export function RankingClient({
 
       {/* 注目のキャラクター（直近24時間） */}
       {trendingCharacters.length > 0 && (
-        <section className="space-y-3">
-          <div>
-            <h2 className="text-base font-bold text-text-primary">
-              注目のキャラクター
-            </h2>
-            <p className="text-xs text-text-tertiary">直近24時間のコメント数</p>
+        <section className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#fb64b6] to-[#ffa1ad]" />
+            <div>
+              <h2 className="text-xl font-bold text-text-primary">
+                話題のキャラクター
+              </h2>
+              <p className="text-sm text-text-tertiary">今注目されているキャラクターをチェック！</p>
+              <p className="text-xs text-text-muted">直近24時間</p>
+            </div>
           </div>
           <div className="space-y-1">
             {trendingCharacters.map((char) => (
               <Link
                 key={char.id}
                 href={`/characters/${char.slug}`}
-                className="flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-bg-card-hover cursor-pointer"
+                className="flex items-center gap-3 rounded-2xl bg-bg-card border border-border-primary px-3 py-2.5 transition-colors hover:bg-bg-card-hover cursor-pointer"
               >
-                <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg border border-border-primary">
+                <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-xl border border-border-primary">
                   {char.imageUrl ? (
                     <Image
                       src={char.imageUrl}
@@ -171,14 +175,17 @@ export function RankingClient({
 
       {/* 票が少ないキャラ */}
       {filteredUnranked.length > 0 && (
-        <div className="space-y-3">
-          <div>
-            <h2 className="text-base font-bold text-text-primary">
-              票が少ないキャラ（順位対象外）
-            </h2>
-            <p className="text-xs text-text-tertiary">
-              票が少ないため順位対象外
-            </p>
+        <section className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#fb64b6] to-[#ffa1ad]" />
+            <div>
+              <h2 className="text-xl font-bold text-text-primary">
+                票が少ないキャラ（順位対象外）
+              </h2>
+              <p className="text-sm text-text-tertiary">
+                票が少ないため順位対象外
+              </p>
+            </div>
           </div>
           <div className="grid grid-cols-4 gap-2 sm:grid-cols-5">
             {filteredUnranked.map((char) => (
@@ -195,7 +202,7 @@ export function RankingClient({
               />
             ))}
           </div>
-        </div>
+        </section>
       )}
     </div>
   );

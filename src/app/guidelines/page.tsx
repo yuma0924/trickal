@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { SITE_NAME, SITE_DOMAIN } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -17,34 +18,82 @@ export const metadata: Metadata = {
   },
 };
 
-function SectionHeading({ children }: { children: React.ReactNode }) {
+function AlertTriangleIcon() {
   return (
-    <h2 className="mb-3 mt-8 border-b border-border-secondary pb-2 text-base font-bold text-text-primary first:mt-0">
-      {children}
-    </h2>
+    <svg className="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01" />
+    </svg>
   );
 }
 
-function SubHeading({ children }: { children: React.ReactNode }) {
+function ShieldIcon() {
   return (
-    <h3 className="mb-2 mt-5 text-sm font-bold text-text-primary">
-      {children}
-    </h3>
+    <svg className="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
   );
 }
 
-function Paragraph({ children }: { children: React.ReactNode }) {
+function CopyrightIcon() {
   return (
-    <p className="mb-3 text-sm leading-relaxed text-text-secondary">
-      {children}
-    </p>
+    <svg className="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <circle cx="12" cy="12" r="10" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M14.83 11.17a4 4 0 10 0 1.66" />
+    </svg>
   );
 }
 
-function ListItem({ children }: { children: React.ReactNode }) {
+function FileTextIcon() {
   return (
-    <li className="mb-1.5 text-sm leading-relaxed text-text-secondary">
-      {children}
+    <svg className="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <line x1="16" y1="13" x2="8" y2="13" />
+      <line x1="16" y1="17" x2="8" y2="17" />
+      <polyline points="10 9 9 9 8 9" />
+    </svg>
+  );
+}
+
+function RefreshCwIcon() {
+  return (
+    <svg className="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <polyline points="23 4 23 10 17 10" />
+      <polyline points="1 20 1 14 7 14" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+    </svg>
+  );
+}
+
+function MailIcon() {
+  return (
+    <svg className="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+      <polyline points="22,6 12,13 2,6" />
+    </svg>
+  );
+}
+
+function SectionHeading({
+  icon,
+  children,
+}: {
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center gap-2 border-b border-border-primary pb-2">
+      {icon}
+      <h2 className="text-xl font-bold text-text-primary">{children}</h2>
+    </div>
+  );
+}
+
+function BulletItem({ children }: { children: React.ReactNode }) {
+  return (
+    <li className="flex gap-3 text-sm leading-relaxed text-text-secondary">
+      <span className="mt-0.5 shrink-0 text-accent">•</span>
+      <span>{children}</span>
     </li>
   );
 }
@@ -52,139 +101,135 @@ function ListItem({ children }: { children: React.ReactNode }) {
 export default function GuidelinesPage() {
   return (
     <div className="mx-auto max-w-2xl pb-12">
-      <h1 className="mb-6 text-xl font-bold text-text-primary">
-        ガイドライン・利用規約
-      </h1>
-
-      <div className="rounded-xl border border-border-primary bg-bg-card p-5 sm:p-8">
-        <SectionHeading>1. サイトについて</SectionHeading>
-        <Paragraph>
-          「{SITE_NAME}」（以下「本サイト」）は、ゲーム「トリッカル・もちもちほっぺ大作戦」（以下「トリッカル」）の非公式ファンサイトです。
-          プレイヤーの投票・コメントによるキャラクターランキングや、性能データベース、編成共有機能を提供します。
-        </Paragraph>
-        <Paragraph>
-          本サイトはトリッカルの開発元・運営元とは一切関係がありません。
-          ゲーム内の画像・名称等の権利はすべて原著作者に帰属します。
-        </Paragraph>
-
-        <SectionHeading>2. 利用規約</SectionHeading>
-
-        <SubHeading>2-1. 投稿について</SubHeading>
-        <ul className="mb-3 list-disc pl-5">
-          <ListItem>
-            投稿（コメント・投票・編成）はログイン不要で行えます。
-          </ListItem>
-          <ListItem>
-            同一キャラへの投票（★評価）は、最新の投票で上書きされます。過去のコメント本文は履歴として残ります。
-          </ListItem>
-          <ListItem>
-            投稿後のコメント編集・削除はできません（投票コメントの★評価のみ再投票で更新可能）。
-          </ListItem>
-          <ListItem>
-            投稿内容は他の利用者に公開されます。個人情報の投稿はご遠慮ください。
-          </ListItem>
-        </ul>
-
-        <SubHeading>2-2. 禁止事項</SubHeading>
-        <ul className="mb-3 list-disc pl-5">
-          <ListItem>
-            荒らし行為、スパム、連続投稿による妨害行為
-          </ListItem>
-          <ListItem>
-            他の利用者への誹謗中傷、差別的表現
-          </ListItem>
-          <ListItem>
-            わいせつな内容、暴力的な内容の投稿
-          </ListItem>
-          <ListItem>
-            虚偽の情報を故意に流布する行為
-          </ListItem>
-          <ListItem>
-            本サイトの運営を妨害する行為
-          </ListItem>
-          <ListItem>
-            その他、管理人が不適切と判断する行為
-          </ListItem>
-        </ul>
-
-        <SubHeading>2-3. 投稿の管理</SubHeading>
-        <Paragraph>
-          管理人は、利用規約に違反する投稿を予告なく削除することがあります。
-          削除されたコメントは「このコメントは削除されました」と表示されます。
-          悪質な行為を繰り返すユーザーに対しては、投稿を制限する場合があります。
-        </Paragraph>
-
-        <SectionHeading>3. ランキングについて</SectionHeading>
-        <ul className="mb-3 list-disc pl-5">
-          <ListItem>
-            人気キャラランキングは、プレイヤーの投票（★評価）の平均点に基づいて毎日0時（JST）に集計されます。
-          </ListItem>
-          <ListItem>
-            有効票が4件以上のキャラクターがランキング対象となります。
-          </ListItem>
-          <ListItem>
-            投稿から365日が経過した投票、および低評価（ネットスコア -10以下）の投票は集計から除外されます（投稿自体は表示されます）。
-          </ListItem>
-          <ListItem>
-            ランキングはプレイヤーの主観的な評価であり、公式の見解ではありません。
-          </ListItem>
-        </ul>
-
-        <SectionHeading>4. プライバシーポリシー</SectionHeading>
-
-        <SubHeading>4-1. 収集する情報</SubHeading>
-        <Paragraph>
-          本サイトでは、荒らし対策および一人一票制の実現のため、以下の情報を利用してユーザー識別を行います。
-        </Paragraph>
-        <ul className="mb-3 list-disc pl-5">
-          <ListItem>
-            Cookie に保存されるランダムな識別子（UUID）
-          </ListItem>
-          <ListItem>
-            IPアドレス（ハッシュ化して利用。生のIPアドレスは保存しません）
-          </ListItem>
-        </ul>
-        <Paragraph>
-          これらの情報から一方向ハッシュ値（user_hash）を生成し、投稿者の識別に使用します。
-          IPアドレス由来の識別子は、荒らし対策を目的として利用されます。
-        </Paragraph>
-
-        <SubHeading>4-2. Cookieの利用</SubHeading>
-        <Paragraph>
-          本サイトではユーザー識別のためにCookieを使用します。Cookieの有効期限は1年間です。
-          Cookieを削除した場合、別のユーザーとして扱われます。
-        </Paragraph>
-
-        <SubHeading>4-3. 第三者への提供</SubHeading>
-        <Paragraph>
-          収集した情報を第三者に提供することはありません。ただし、法令に基づく場合を除きます。
-        </Paragraph>
-
-        <SectionHeading>5. 免責事項</SectionHeading>
-        <ul className="mb-3 list-disc pl-5">
-          <ListItem>
-            本サイトに掲載されている情報の正確性・完全性について保証するものではありません。
-          </ListItem>
-          <ListItem>
-            本サイトの利用により生じたいかなる損害についても、管理人は責任を負いません。
-          </ListItem>
-          <ListItem>
-            ゲームのアップデートにより、掲載情報が古くなる場合があります。
-            暫定値のデータには「暫定」マークが表示されます。
-          </ListItem>
-          <ListItem>
-            本サイトは予告なくサービスの変更・停止を行うことがあります。
-          </ListItem>
-        </ul>
-
-        <SectionHeading>6. お問い合わせ</SectionHeading>
-        <Paragraph>
-          本サイトに関するお問い合わせは、管理人までご連絡ください。
-        </Paragraph>
-
-        <div className="mt-8 text-xs text-text-muted">
-          最終更新: 2026年3月
+      {/* タイトル */}
+      <div className="mb-2">
+        <div className="flex items-center gap-3">
+          <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#fb64b6] to-[#ffa1ad]" />
+          <h1 className="text-3xl font-bold text-text-primary">
+            ガイドライン
+          </h1>
         </div>
+        <div className="mt-3 flex items-center justify-between pl-4">
+          <p className="text-sm text-text-tertiary">利用規約・免責事項</p>
+          <p className="text-xs text-text-muted">最終更新日：2026/03/01</p>
+        </div>
+      </div>
+
+      {/* 冒頭メッセージ */}
+      <div className="mt-6 rounded-2xl border border-border-primary bg-bg-card/30 px-4 py-4">
+        <p className="text-xs text-text-secondary">
+          このサイトを気持ちよく使うための最低限のルールです。
+        </p>
+      </div>
+
+      {/* 1. 禁止事項 */}
+      <section className="mt-8 space-y-4">
+        <SectionHeading icon={<AlertTriangleIcon />}>
+          1. 禁止事項
+        </SectionHeading>
+        <p className="text-sm text-text-secondary">
+          以下に該当する投稿・行為は禁止です。
+        </p>
+        <ul className="space-y-2">
+          <BulletItem>誹謗中傷、差別、脅迫、嫌がらせ、粘着行為</BulletItem>
+          <BulletItem>
+            個人情報の投稿（SNSアカウントの晒し等を含む）
+          </BulletItem>
+          <BulletItem>なりすまし、虚偽情報の拡散</BulletItem>
+          <BulletItem>スパム、宣伝、過度な連投、荒らし行為</BulletItem>
+          <BulletItem>
+            不正アクセス、またはサイトに過度な負荷をかける行為
+          </BulletItem>
+          <BulletItem>その他、運営が不適切と判断する行為</BulletItem>
+        </ul>
+      </section>
+
+      {/* 2. 運営の対応 */}
+      <section className="mt-8 space-y-4">
+        <SectionHeading icon={<ShieldIcon />}>
+          2. 運営の対応（削除・制限）
+        </SectionHeading>
+        <div className="space-y-3">
+          <p className="text-sm leading-relaxed text-text-secondary">
+            明らかに問題がある投稿、または通報が入った投稿は、運営が確認のうえ削除・非表示にすることがあります。
+          </p>
+          <p className="text-sm leading-relaxed text-text-secondary">
+            また、迷惑行為が継続する場合は、投稿制限やBAN（投稿不可）等の対応を行うことがあります。
+          </p>
+          <p className="text-xs text-text-muted">
+            ※対応理由の個別説明は行わない場合があります。
+          </p>
+        </div>
+      </section>
+
+      {/* 3. 著作権・権利について */}
+      <section className="mt-8 space-y-4">
+        <SectionHeading icon={<CopyrightIcon />}>
+          3. 著作権・権利について
+        </SectionHeading>
+        <div className="space-y-3">
+          <p className="text-sm leading-relaxed text-text-secondary">
+            当サイトは非公式のファンサイトです。
+          </p>
+          <p className="text-sm leading-relaxed text-text-secondary">
+            作品名・キャラクター名・画像等の権利は各権利者に帰属します。
+          </p>
+          <p className="text-sm leading-relaxed text-text-secondary">
+            問題がある場合は権利者からの連絡により速やかに対応します。
+          </p>
+        </div>
+      </section>
+
+      {/* 4. 免責 */}
+      <section className="mt-8 space-y-4">
+        <SectionHeading icon={<FileTextIcon />}>4. 免責</SectionHeading>
+        <ul className="space-y-2">
+          <BulletItem>
+            掲載内容・ランキング・投稿内容の正確性を保証しません。
+          </BulletItem>
+          <BulletItem>
+            ランキング結果は投稿内容に基づくもので、内容の真偽を保証しません。
+          </BulletItem>
+          <BulletItem>
+            当サイトの利用により生じた損害について、運営は責任を負いません（法令上必要な範囲を除く）。
+          </BulletItem>
+        </ul>
+      </section>
+
+      {/* 5. 変更 */}
+      <section className="mt-8 space-y-4">
+        <SectionHeading icon={<RefreshCwIcon />}>5. 変更</SectionHeading>
+        <p className="text-sm leading-relaxed text-text-secondary">
+          本ガイドラインは必要に応じて予告なく更新することがあります。
+        </p>
+      </section>
+
+      {/* お問い合わせ */}
+      <section className="mt-8 space-y-4">
+        <SectionHeading icon={<MailIcon />}>お問い合わせ</SectionHeading>
+        <div className="space-y-3">
+          <p className="text-sm leading-relaxed text-text-secondary">
+            権利者の方の削除依頼・その他のお問い合わせは、下記へご連絡ください。
+          </p>
+          <div className="rounded-2xl border border-border-primary bg-bg-tertiary px-3 py-3">
+            <p className="text-sm text-accent-secondary">
+              contact@trickle-rank.example.com
+            </p>
+          </div>
+          <p className="text-xs text-text-muted">
+            ※内容により返信できない場合があります。
+          </p>
+        </div>
+      </section>
+
+      {/* ホームに戻るボタン */}
+      <div className="mt-10">
+        <Link
+          href="/"
+          className="block w-full rounded-2xl border border-border-primary bg-bg-tertiary py-3 text-center text-sm font-medium text-text-primary transition-colors hover:bg-bg-card-hover"
+        >
+          ホームに戻る
+        </Link>
       </div>
     </div>
   );
