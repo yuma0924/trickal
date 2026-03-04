@@ -348,7 +348,7 @@ export default async function Home() {
   const { data: topBuilds } = await supabase
     .from("builds")
     .select(
-      "id, mode, members, element_label, title, display_name, comment, likes_count, dislikes_count, updated_at"
+      "id, mode, members, element_label, title, display_name, comment, likes_count, dislikes_count, updated_at, build_comments(count)"
     )
     .eq("is_deleted", false)
     .order("likes_count", { ascending: false })
@@ -559,10 +559,7 @@ export default async function Home() {
                         <div className="mt-1.5 flex flex-wrap items-center gap-1">
                           {/* 評価ピル */}
                           <span className="inline-flex items-center gap-1 rounded-full bg-[#2a1f3d] py-0.5 pl-1.5 pr-2">
-                            <StarRatingDisplay rating={char.avgRating} size="sm" />
-                            <span className="text-xs font-bold text-[#fcd34d]">
-                              {char.avgRating.toFixed(1)}
-                            </span>
+                            <StarRatingDisplay rating={char.avgRating} size="sm" showValue />
                           </span>
                           <span className="text-[11px] text-[#8b7aab]">
                             {char.validVotesCount}票
@@ -624,30 +621,20 @@ export default async function Home() {
                   >
                     {/* 画像エリア */}
                     <div className="relative">
-                      <div
-                        className="overflow-hidden rounded-t-[14px] p-[1px]"
-                        style={{
-                          border: elemStyle ? `1.2px solid ${elemStyle.border}` : undefined,
-                          borderBottom: "none",
-                          borderTopLeftRadius: "14px",
-                          borderTopRightRadius: "14px",
-                        }}
-                      >
                         {char.imageUrl ? (
                           <Image
                             src={char.imageUrl}
                             alt={char.name}
                             width={82}
                             height={82}
-                            className="aspect-square w-full rounded-t-[14px] object-cover"
+                            className="aspect-square w-full rounded-t-[12px] object-cover"
                             loading="lazy"
                           />
                         ) : (
-                          <div className="flex aspect-square w-full items-center justify-center rounded-t-[14px] bg-[#2a1f3d] text-sm text-[#8b7aab]">
+                          <div className="flex aspect-square w-full items-center justify-center rounded-t-[12px] bg-[#2a1f3d] text-sm text-[#8b7aab]">
                             {char.name.charAt(0)}
                           </div>
                         )}
-                      </div>
                       {/* 順位バッジ (左上) */}
                       <div
                         className="absolute left-0.5 top-0.5 flex h-4 w-4 items-center justify-center rounded-full shadow-[0px_10px_15px_rgba(0,0,0,0.1)]"
@@ -865,11 +852,17 @@ export default async function Home() {
           <div className="space-y-2">
             {topBuilds.map((build, buildIndex) => {
               const memberIds = build.members as string[];
-              // 各メンバーの属性バッジ用
               const memberElements = memberIds
                 .map((mId) => charMap.get(mId)?.element)
                 .filter((e): e is string => e !== null && e !== undefined);
               const uniqueElements = [...new Set(memberElements)];
+              const commentCount = Array.isArray(build.build_comments) && build.build_comments.length > 0
+                ? (build.build_comments[0] as { count: number }).count
+                : 0;
+
+              // 3列×2行のメンバー配置を作成
+              const row1 = memberIds.slice(0, 3); // 上段
+              const row2 = memberIds.slice(3, 6); // 下段
 
               return (
                 <Link
@@ -879,26 +872,35 @@ export default async function Home() {
                   style={{ border: "1.2px solid rgba(249,168,212,0.1)" }}
                 >
                   <div className="p-3 space-y-2">
-                    {/* タイトル + 順位バッジ */}
-                    <div className="flex items-center gap-1.5">
-                      <span
-                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[14px] text-xs font-bold shadow-[0px_10px_15px_rgba(0,0,0,0.1)]"
-                        style={{
-                          backgroundImage: buildIndex === 0
-                            ? "linear-gradient(135deg, #ffd230, #fe9a00)"
-                            : buildIndex === 1
-                            ? "linear-gradient(135deg, #c0c0c0, #90a1b9)"
-                            : "linear-gradient(135deg, #b45309, #bb4d00)",
-                          color: buildIndex === 0 ? "#461901" : buildIndex === 1 ? "#1a1225" : "#fef3c7",
-                        }}
-                      >
-                        {buildIndex + 1}
-                      </span>
-                      {build.title && (
-                        <span className="truncate text-[11px] font-bold text-[#fce7f3]">
-                          {build.title}
+                    {/* タイトル行 + 右上コメント数 */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <span
+                          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[14px] text-xs font-bold shadow-[0px_10px_15px_rgba(0,0,0,0.1)]"
+                          style={{
+                            backgroundImage: buildIndex === 0
+                              ? "linear-gradient(135deg, #ffd230, #fe9a00)"
+                              : buildIndex === 1
+                              ? "linear-gradient(135deg, #c0c0c0, #90a1b9)"
+                              : "linear-gradient(135deg, #b45309, #bb4d00)",
+                            color: buildIndex === 0 ? "#461901" : buildIndex === 1 ? "#1a1225" : "#fef3c7",
+                          }}
+                        >
+                          {buildIndex + 1}
                         </span>
-                      )}
+                        {build.title && (
+                          <span className="truncate text-[11px] font-bold text-[#fce7f3]">
+                            {build.title}
+                          </span>
+                        )}
+                      </div>
+                      {/* コメント数 (右上) */}
+                      <span className="inline-flex shrink-0 items-center gap-0.5 text-[10px] text-[#8b7aab]">
+                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        {commentCount}
+                      </span>
                     </div>
 
                     {/* 属性バッジ + モード */}
@@ -917,63 +919,85 @@ export default async function Home() {
                       })}
                       {build.mode && (
                         <span className="rounded-[4px] bg-[rgba(36,27,53,0.5)] px-1.5 py-0.5 text-[8px] font-bold text-[#8b7aab]">
-                          {build.mode}
+                          {build.mode === "pve" ? "PvE" : "PvP"}
                         </span>
                       )}
                     </div>
 
-                    {/* メンバーアイコン */}
-                    <div className="flex justify-center gap-3 py-2">
-                      {memberIds.map((mId, i) => {
-                        const char = charMap.get(mId);
-                        const elemStyle = char?.element ? ELEMENT_COLORS[char.element] : null;
-                        return (
-                          <div key={`${mId}-${i}`} className="flex flex-col items-center gap-1">
-                            <div className="relative">
-                              <div
-                                className="h-9 w-9 overflow-hidden rounded-[10px] p-[2px]"
-                                style={{
-                                  border: elemStyle ? `1.2px solid ${elemStyle.border}` : "1.2px solid rgba(249,168,212,0.1)",
-                                  backgroundColor: elemStyle?.bg ?? "transparent",
-                                  boxShadow: "0px 4px 6px -1px rgba(0,0,0,0.1)",
-                                }}
-                              >
-                                {char?.imageUrl ? (
-                                  <Image
-                                    src={char.imageUrl}
-                                    alt={char?.name ?? "?"}
-                                    width={36}
-                                    height={36}
-                                    className="h-full w-full rounded-[4px] object-cover"
-                                    loading="lazy"
-                                  />
-                                ) : (
-                                  <div className="flex h-full w-full items-center justify-center rounded-[4px] bg-[#2a1f3d] text-[10px] text-[#8b7aab]">
-                                    {char?.name?.charAt(0) ?? "?"}
+                    {/* メンバーテーブル (後衛/中衛/前衛 × 2行) */}
+                    <div className="overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.05)]">
+                      {/* ヘッダー行 */}
+                      <div className="grid grid-cols-3 bg-[rgba(30,21,48,0.8)]">
+                        <span className="border-r border-[rgba(249,168,212,0.05)] py-1 text-center text-[9px] font-bold text-[#a893c0]">後衛</span>
+                        <span className="border-r border-[rgba(249,168,212,0.05)] py-1 text-center text-[9px] font-bold text-[#a893c0]">中衛</span>
+                        <span className="py-1 text-center text-[9px] font-bold text-[#a893c0]">前衛</span>
+                      </div>
+                      {/* 上段 */}
+                      <div className="grid grid-cols-3 border-b border-[rgba(249,168,212,0.05)]">
+                        {row1.map((mId, i) => {
+                          const char = charMap.get(mId);
+                          const elemStyle = char?.element ? ELEMENT_COLORS[char.element] : null;
+                          return (
+                            <div key={`${mId}-${i}`} className={`flex flex-col items-center gap-0.5 py-2 ${i < 2 ? "border-r border-[rgba(249,168,212,0.05)]" : ""}`}>
+                              <div className="relative">
+                                <div
+                                  className="h-9 w-9 overflow-hidden rounded-[10px] p-[2px]"
+                                  style={{
+                                    border: elemStyle ? `1.2px solid ${elemStyle.border}` : "1.2px solid rgba(249,168,212,0.1)",
+                                    backgroundColor: elemStyle?.bg ?? "transparent",
+                                  }}
+                                >
+                                  {char?.imageUrl ? (
+                                    <Image src={char.imageUrl} alt={char?.name ?? "?"} width={36} height={36} className="h-full w-full rounded-[4px] object-cover" loading="lazy" />
+                                  ) : (
+                                    <div className="flex h-full w-full items-center justify-center rounded-[4px] bg-[#2a1f3d] text-[10px] text-[#8b7aab]">{char?.name?.charAt(0) ?? "?"}</div>
+                                  )}
+                                </div>
+                                {char?.element && elemStyle && (
+                                  <div className="absolute -right-0.5 -top-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full" style={{ backgroundColor: elemStyle.bg, border: `1.2px solid ${elemStyle.border}` }}>
+                                    <span className="text-[7px] font-bold" style={{ color: elemStyle.text }}>{char.element}</span>
                                   </div>
                                 )}
                               </div>
-                              {char?.element && elemStyle && (
-                                <div
-                                  className="absolute -right-0.5 -top-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full"
-                                  style={{
-                                    backgroundColor: elemStyle.bg,
-                                    border: `1.2px solid ${elemStyle.border}`,
-                                    boxShadow: "0px 1px 3px rgba(0,0,0,0.1)",
-                                  }}
-                                >
-                                  <span className="text-[7px] font-bold" style={{ color: elemStyle.text }}>
-                                    {char.element}
-                                  </span>
-                                </div>
-                              )}
+                              <span className="max-w-16 truncate text-center text-[8px] font-bold text-[#a893c0]">{char?.name ?? "?"}</span>
                             </div>
-                            <span className="max-w-[50px] truncate text-[8px] font-bold text-[#a893c0]">
-                              {char?.name ?? "?"}
-                            </span>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
+                      </div>
+                      {/* 下段 */}
+                      {row2.length > 0 && (
+                        <div className="grid grid-cols-3">
+                          {row2.map((mId, i) => {
+                            const char = charMap.get(mId);
+                            const elemStyle = char?.element ? ELEMENT_COLORS[char.element] : null;
+                            return (
+                              <div key={`${mId}-${i + 3}`} className={`flex flex-col items-center gap-0.5 py-2 ${i < 2 ? "border-r border-[rgba(249,168,212,0.05)]" : ""}`}>
+                                <div className="relative">
+                                  <div
+                                    className="h-9 w-9 overflow-hidden rounded-[10px] p-[2px]"
+                                    style={{
+                                      border: elemStyle ? `1.2px solid ${elemStyle.border}` : "1.2px solid rgba(249,168,212,0.1)",
+                                      backgroundColor: elemStyle?.bg ?? "transparent",
+                                    }}
+                                  >
+                                    {char?.imageUrl ? (
+                                      <Image src={char.imageUrl} alt={char?.name ?? "?"} width={36} height={36} className="h-full w-full rounded-[4px] object-cover" loading="lazy" />
+                                    ) : (
+                                      <div className="flex h-full w-full items-center justify-center rounded-[4px] bg-[#2a1f3d] text-[10px] text-[#8b7aab]">{char?.name?.charAt(0) ?? "?"}</div>
+                                    )}
+                                  </div>
+                                  {char?.element && elemStyle && (
+                                    <div className="absolute -right-0.5 -top-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full" style={{ backgroundColor: elemStyle.bg, border: `1.2px solid ${elemStyle.border}` }}>
+                                      <span className="text-[7px] font-bold" style={{ color: elemStyle.text }}>{char.element}</span>
+                                    </div>
+                                  )}
+                                </div>
+                                <span className="max-w-16 truncate text-center text-[8px] font-bold text-[#a893c0]">{char?.name ?? "?"}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
 
                     {/* コメント */}

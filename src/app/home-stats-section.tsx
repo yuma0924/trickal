@@ -34,6 +34,8 @@ const ELEMENT_STYLES: Record<string, { border: string; bg: string; text: string 
   闇: { border: "rgba(166,132,255,0.6)", bg: "rgba(166,132,255,0.15)", text: "#a78bfa" },
 };
 
+const ROLES = ["アタッカー", "ヒーラー", "サポーター", "タンク"];
+
 const PREVIEW_COUNT = 10;
 
 interface HomeStatsSectionProps {
@@ -43,12 +45,24 @@ interface HomeStatsSectionProps {
 export function HomeStatsSection({ characters }: HomeStatsSectionProps) {
   const [selectedStat, setSelectedStat] = useState("hp");
   const [searchQuery, setSearchQuery] = useState("");
+  const [elementFilter, setElementFilter] = useState<string | null>(null);
+  const [roleFilter, setRoleFilter] = useState<string | null>(null);
+  const [ratedOnly, setRatedOnly] = useState(false);
 
   const sorted = useMemo(() => {
     let filtered = characters;
     if (searchQuery.trim()) {
       const q = searchQuery.trim().toLowerCase();
       filtered = filtered.filter((c) => c.name.toLowerCase().includes(q));
+    }
+    if (elementFilter) {
+      filtered = filtered.filter((c) => c.element === elementFilter);
+    }
+    if (roleFilter) {
+      filtered = filtered.filter((c) => c.role === roleFilter);
+    }
+    if (ratedOnly) {
+      filtered = filtered.filter((c) => c.stats[selectedStat] !== null);
     }
 
     return [...filtered]
@@ -61,7 +75,7 @@ export function HomeStatsSection({ characters }: HomeStatsSectionProps) {
         return bVal - aVal;
       })
       .slice(0, PREVIEW_COUNT);
-  }, [characters, selectedStat, searchQuery]);
+  }, [characters, selectedStat, searchQuery, elementFilter, roleFilter, ratedOnly]);
 
   const selectedLabel = STAT_TABS.find((s) => s.value === selectedStat)?.label ?? "";
 
@@ -69,22 +83,95 @@ export function HomeStatsSection({ characters }: HomeStatsSectionProps) {
     <div className="space-y-3">
       {/* フィルターパネル */}
       <div className="rounded-[14px] bg-[rgba(36,27,53,0.8)] border border-[rgba(249,168,212,0.1)] p-3 space-y-2">
-        {/* 検索 */}
-        <div className="relative">
-          <svg className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="キャラ名で検索..."
-            className="w-full rounded-[10px] bg-[#1a1225] border border-[rgba(249,168,212,0.1)] pl-8 pr-3 py-1.5 text-xs text-[#faf5ff] placeholder:text-[#8b7aab] focus:border-[rgba(249,168,212,0.3)] focus:outline-none"
-          />
+        {/* 検索 + ✓のみ */}
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <svg className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="キャラ名で検索..."
+              className="w-full rounded-[10px] bg-[#1a1225] border border-[rgba(249,168,212,0.1)] pl-8 pr-3 py-1.5 text-xs text-[#faf5ff] placeholder:text-[#8b7aab] focus:border-[rgba(249,168,212,0.3)] focus:outline-none"
+            />
+          </div>
+          <button
+            onClick={() => setRatedOnly(!ratedOnly)}
+            className={cn(
+              "flex items-center gap-1.5 rounded-[10px] border px-3 py-1.5 text-[11px] font-bold shrink-0 transition-colors",
+              ratedOnly
+                ? "bg-[rgba(255,99,126,0.15)] border-[rgba(255,99,126,0.4)] text-[#fda4af]"
+                : "bg-[#1a1225] border-[rgba(249,168,212,0.1)] text-[rgba(252,231,243,0.8)]"
+            )}
+          >
+            <span className={cn(
+              "flex h-3 w-3 items-center justify-center rounded-sm",
+              ratedOnly ? "bg-[rgba(255,99,126,0.3)]" : "bg-[#2a1f3d]"
+            )}>
+              {ratedOnly && (
+                <svg className="h-2 w-2 text-[#fda4af]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              )}
+            </span>
+            ✓のみ
+          </button>
+        </div>
+
+        {/* 属性フィルター */}
+        <div className="flex items-center gap-1.5">
+          <span className="w-5 text-[10px] font-bold text-[#6b5a80]">属性</span>
+          <div className="flex gap-1.5">
+            {Object.entries(ELEMENT_STYLES).map(([elem, style]) => (
+              <button
+                key={elem}
+                onClick={() => setElementFilter(elementFilter === elem ? null : elem)}
+                className={cn(
+                  "rounded-[10px] px-2.5 py-1 text-[11px] font-bold text-center transition-colors",
+                  elementFilter === elem
+                    ? "shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+                    : "bg-[#1a1225]"
+                )}
+                style={{
+                  border: `1.2px solid ${elementFilter === elem ? style.border : "rgba(249,168,212,0.1)"}`,
+                  color: style.text,
+                  ...(elementFilter === elem ? { backgroundColor: style.bg } : {}),
+                }}
+              >
+                {elem}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* 役割フィルター */}
+        <div className="flex items-center gap-1.5">
+          <span className="w-5 text-[10px] font-bold text-[#6b5a80]">役割</span>
+          <div className="flex gap-1.5">
+            {ROLES.map((role) => (
+              <button
+                key={role}
+                onClick={() => setRoleFilter(roleFilter === role ? null : role)}
+                className={cn(
+                  "rounded-[10px] px-2.5 py-1 text-[11px] font-bold transition-colors",
+                  roleFilter === role
+                    ? "bg-[rgba(255,99,126,0.15)] text-[#fda4af] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+                    : "bg-[#1a1225] text-[#a893c0]"
+                )}
+                style={{
+                  border: `1.2px solid ${roleFilter === role ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                }}
+              >
+                {role}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* 並替 (ステータスソート) */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 border-t border-[rgba(249,168,212,0.1)] pt-2">
           <span className="w-5 text-[10px] font-bold text-[#6b5a80]">並替</span>
           <div className="flex gap-1.5">
             {STAT_TABS.map((s) => (
@@ -109,111 +196,117 @@ export function HomeStatsSection({ characters }: HomeStatsSectionProps) {
       </div>
 
       {/* リスト */}
-      <div className="space-y-2">
-        {sorted.map((char) => {
-          const statValue = char.stats[selectedStat];
-          const elemStyle = char.element ? ELEMENT_STYLES[char.element] : null;
+      {sorted.length === 0 ? (
+        <p className="py-8 text-center text-sm text-[#8b7aab]">
+          該当するキャラクターがいません
+        </p>
+      ) : (
+        <div className="space-y-2">
+          {sorted.map((char) => {
+            const statValue = char.stats[selectedStat];
+            const elemStyle = char.element ? ELEMENT_STYLES[char.element] : null;
 
-          return (
-            <Link
-              key={char.id}
-              href={`/characters/${char.slug}`}
-              className="flex items-center gap-2.5 rounded-[14px] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] px-3 py-2.5 transition-colors hover:from-[rgba(36,27,53,0.9)] hover:to-[rgba(36,27,53,0.6)] cursor-pointer"
-              style={{ border: "1.2px solid rgba(249,168,212,0.1)" }}
-            >
-              {/* キャラアイコン */}
-              <div className="relative h-10 w-10 shrink-0">
-                <div
-                  className="h-10 w-10 overflow-hidden rounded-[10px] p-[3px]"
-                  style={{
-                    border: `1.2px solid ${elemStyle?.border ?? "rgba(249,168,212,0.2)"}`,
-                    backgroundColor: elemStyle?.bg ?? "transparent",
-                    boxShadow: "0px 4px 6px -1px rgba(0,0,0,0.1)",
-                  }}
-                >
-                  {char.imageUrl ? (
-                    <Image
-                      src={char.imageUrl}
-                      alt={char.name}
-                      width={40}
-                      height={40}
-                      className="h-full w-full rounded-[4px] object-cover"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center rounded-[4px] bg-[#2a1f3d] text-[10px] text-[#8b7aab]">
-                      {char.name.charAt(0)}
+            return (
+              <Link
+                key={char.id}
+                href={`/characters/${char.slug}`}
+                className="flex items-center gap-2.5 rounded-[14px] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] px-3 py-2.5 transition-colors hover:from-[rgba(36,27,53,0.9)] hover:to-[rgba(36,27,53,0.6)] cursor-pointer"
+                style={{ border: "1.2px solid rgba(249,168,212,0.1)" }}
+              >
+                {/* キャラアイコン */}
+                <div className="relative h-10 w-10 shrink-0">
+                  <div
+                    className="h-10 w-10 overflow-hidden rounded-[10px] p-[3px]"
+                    style={{
+                      border: `1.2px solid ${elemStyle?.border ?? "rgba(249,168,212,0.2)"}`,
+                      backgroundColor: elemStyle?.bg ?? "transparent",
+                      boxShadow: "0px 4px 6px -1px rgba(0,0,0,0.1)",
+                    }}
+                  >
+                    {char.imageUrl ? (
+                      <Image
+                        src={char.imageUrl}
+                        alt={char.name}
+                        width={40}
+                        height={40}
+                        className="h-full w-full rounded-[4px] object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center rounded-[4px] bg-[#2a1f3d] text-[10px] text-[#8b7aab]">
+                        {char.name.charAt(0)}
+                      </div>
+                    )}
+                  </div>
+                  {char.element && elemStyle && (
+                    <div
+                      className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full"
+                      style={{
+                        backgroundColor: elemStyle.bg,
+                        border: `1.2px solid ${elemStyle.border}`,
+                        boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
+                      }}
+                    >
+                      <span className="text-[7px] font-bold" style={{ color: elemStyle.text }}>
+                        {char.element}
+                      </span>
                     </div>
                   )}
                 </div>
-                {char.element && elemStyle && (
-                  <div
-                    className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full"
-                    style={{
-                      backgroundColor: elemStyle.bg,
-                      border: `1.2px solid ${elemStyle.border}`,
-                      boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
-                    }}
-                  >
-                    <span className="text-[7px] font-bold" style={{ color: elemStyle.text }}>
-                      {char.element}
-                    </span>
-                  </div>
-                )}
-              </div>
 
-              {/* 名前 + 役割 */}
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-bold text-[#faf5ff]">
-                  {char.name}
-                </p>
-                {char.role && (
-                  <p className="text-[10px] text-[#8b7aab]">{char.role}</p>
-                )}
-              </div>
+                {/* 名前 + 役割 */}
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-bold text-[#faf5ff]">
+                    {char.name}
+                  </p>
+                  {char.role && (
+                    <p className="text-[10px] text-[#8b7aab]">{char.role}</p>
+                  )}
+                </div>
 
-              {/* ステータス値ボックス */}
-              <div
-                className="flex shrink-0 flex-col items-center rounded-[10px] px-2.5 py-1"
-                style={{
-                  backgroundColor: "rgba(255,99,126,0.1)",
-                  border: "1.2px solid rgba(255,99,126,0.25)",
-                }}
-              >
-                <span className="text-[9px] font-bold text-[#8b7aab]">
-                  {selectedLabel}
-                </span>
-                <span className="text-xs font-bold text-[#fda4af]">
-                  {statValue !== null ? statValue.toLocaleString() : "—"}
-                </span>
-              </div>
-
-              {/* 評価 (⭐4.7 コンパクト形式) */}
-              <div className="flex shrink-0 flex-col items-end">
-                {char.avgRating !== null && char.validVotesCount >= 4 ? (
-                  <>
-                    <div className="flex items-center gap-1">
-                      <svg className="h-3.5 w-3.5 text-[#fcd34d]" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                      <span className="text-sm font-bold text-[#faf5ff]">
-                        {char.avgRating.toFixed(1)}
-                      </span>
-                    </div>
-                    <span className="text-[9px] text-[#8b7aab]">
-                      {char.validVotesCount}票
-                    </span>
-                  </>
-                ) : (
-                  <span className="text-[9px] text-[#8b7aab]">
-                    {char.validVotesCount > 0 ? `${char.validVotesCount}票` : "未評価"}
+                {/* ステータス値ボックス */}
+                <div
+                  className="flex shrink-0 flex-col items-center rounded-[10px] px-2.5 py-1"
+                  style={{
+                    backgroundColor: "rgba(255,99,126,0.1)",
+                    border: "1.2px solid rgba(255,99,126,0.25)",
+                  }}
+                >
+                  <span className="text-[9px] font-bold text-[#8b7aab]">
+                    {selectedLabel}
                   </span>
-                )}
-              </div>
-            </Link>
-          );
-        })}
-      </div>
+                  <span className="text-xs font-bold text-[#fda4af]">
+                    {statValue !== null ? statValue.toLocaleString() : "—"}
+                  </span>
+                </div>
+
+                {/* 評価 (⭐4.7 コンパクト形式) - 固定幅で位置統一 */}
+                <div className="flex w-[52px] shrink-0 flex-col items-end">
+                  {char.avgRating !== null && char.validVotesCount >= 4 ? (
+                    <>
+                      <div className="flex items-center gap-1">
+                        <svg className="h-3.5 w-3.5 text-[#fcd34d]" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <span className="text-sm font-bold text-[#faf5ff]">
+                          {char.avgRating.toFixed(1)}
+                        </span>
+                      </div>
+                      <span className="text-[9px] text-[#8b7aab]">
+                        {char.validVotesCount}票
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-[9px] text-[#8b7aab]">
+                      {char.validVotesCount > 0 ? `${char.validVotesCount}票` : "未評価"}
+                    </span>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
