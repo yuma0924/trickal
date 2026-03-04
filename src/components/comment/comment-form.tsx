@@ -59,13 +59,14 @@ export function CommentForm({
       className={cn("rounded-2xl bg-bg-card border border-border-primary p-4 space-y-3", className)}
     >
       <div>
+        <label className="mb-1 block text-xs text-text-secondary">名前</label>
         <input
           type="text"
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
           placeholder="名無しの教主"
           maxLength={20}
-          className="w-full rounded-xl bg-bg-input border border-border-primary px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+          className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:border-accent focus:outline-none"
         />
       </div>
 
@@ -79,13 +80,14 @@ export function CommentForm({
       )}
 
       <div>
+        <label className="mb-1 block text-xs text-text-secondary">コメント</label>
         <textarea
           value={body}
           onChange={handleBodyChange}
           placeholder="コメントを入力..."
           rows={4}
           maxLength={MAX_CHARS}
-          className="w-full resize-none rounded-xl bg-bg-input border border-border-primary px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+          className="w-full resize-none rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:border-accent focus:outline-none"
         />
         <div className="mt-1 flex justify-end text-[10px] text-text-tertiary">
           <span className={isOverLimit ? "text-thumbs-down" : ""}>

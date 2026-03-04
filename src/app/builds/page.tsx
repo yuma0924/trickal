@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { createServerClient } from "@/lib/supabase/server";
-import { Badge } from "@/components/ui/badge";
+import { StarRatingDisplay } from "@/components/ui/star-rating";
 import { BuildsClient } from "./builds-client";
 
 export const metadata: Metadata = {
@@ -21,12 +21,13 @@ export default async function BuildsPage() {
 
   const { data: recentComments } = await supabase
     .from("comments")
-    .select("character_id, user_hash")
+    .select("character_id, user_hash, body, display_name")
     .eq("is_deleted", false)
     .gte("created_at", twentyFourHoursAgo);
 
   const trendingMap = new Map<string, number>();
   const userCharCountMap = new Map<string, number>();
+  const trendingCommentMap = new Map<string, { body: string; author: string }>();
 
   if (recentComments) {
     for (const rc of recentComments) {
@@ -39,8 +40,19 @@ export default async function BuildsPage() {
           (trendingMap.get(rc.character_id) ?? 0) + 1
         );
       }
+      if (!trendingCommentMap.has(rc.character_id) && rc.body) {
+        trendingCommentMap.set(rc.character_id, {
+          body: rc.body,
+          author: rc.display_name || "名無し",
+        });
+      }
     }
   }
+
+  // ランキング情報取得（話題キャラの評価表示用）
+  const { data: rankings } = await supabase
+    .from("character_rankings")
+    .select("character_id, avg_rating, valid_votes_count");
 
   const { data: characters } = await supabase
     .from("characters")
@@ -66,6 +78,17 @@ export default async function BuildsPage() {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 6);
 
+  // ランキングマップ
+  const rankingLookup = new Map<string, { avgRating: number; validVotesCount: number }>();
+  if (rankings) {
+    for (const r of rankings) {
+      rankingLookup.set(r.character_id, {
+        avgRating: r.avg_rating,
+        validVotesCount: r.valid_votes_count,
+      });
+    }
+  }
+
   interface TrendingChar {
     id: string;
     slug: string;
@@ -73,12 +96,17 @@ export default async function BuildsPage() {
     element: string | null;
     imageUrl: string | null;
     commentCount: number;
+    avgRating: number | null;
+    validVotesCount: number;
+    latestComment: string | null;
+    latestCommentAuthor: string | null;
   }
 
   const trendingCharacters: TrendingChar[] = trendingEntries
     .map(([id, count]) => {
       const char = charMap.get(id);
       if (!char) return null;
+      const rr = rankingLookup.get(id);
       return {
         id,
         slug: char.slug,
@@ -86,98 +114,170 @@ export default async function BuildsPage() {
         element: char.element,
         imageUrl: char.imageUrl,
         commentCount: count,
+        avgRating: rr?.avgRating ?? null,
+        validVotesCount: rr?.validVotesCount ?? 0,
+        latestComment: trendingCommentMap.get(id)?.body ?? null,
+        latestCommentAuthor: trendingCommentMap.get(id)?.author ?? null,
       };
     })
     .filter((c): c is TrendingChar => c !== null);
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#fb64b6] to-[#ffa1ad]" />
-        <div>
-          <h1 className="text-xl font-bold text-text-primary">編成ランキング</h1>
-          <p className="mt-1 text-sm text-text-tertiary">
-            人気のパーティ編成をチェック・投稿しよう
-          </p>
+      <div>
+        <div className="flex items-center gap-2.5">
+          <span
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[14px]"
+            style={{ backgroundImage: "linear-gradient(135deg, #fb64b6, #ff637e)" }}
+          >
+            <svg className="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+            </svg>
+          </span>
+          <h1 className="text-lg font-bold text-text-primary">編成ランキング</h1>
         </div>
+        <p className="mt-1 pl-[42px] text-xs text-text-muted">
+          人気のパーティ編成をチェック・投稿しよう
+        </p>
       </div>
 
       <BuildsClient />
 
       {/* 話題のキャラクター（直近24時間） */}
       {trendingCharacters.length > 0 && (
-        <section className="space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#fb64b6] to-[#ffa1ad]" />
-            <div>
-              <h2 className="text-xl font-bold text-text-primary">
-                話題のキャラクター
-              </h2>
-              <p className="text-sm text-text-tertiary">今注目されているキャラクターをチェック！</p>
-              <p className="text-xs text-text-muted">直近24時間</p>
+        <section className="space-y-4">
+          <div className="space-y-1">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[14px]"
+                  style={{ backgroundImage: "linear-gradient(135deg, #fb64b6, #ff8904)" }}
+                >
+                  <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                </span>
+                <h2 className="text-base font-bold text-[#faf5ff]">
+                  話題のキャラクター
+                </h2>
+              </div>
+              <span className="text-xs text-[#8b7aab]">直近24時間</span>
             </div>
+            <p className="text-xs text-[#a893c0]">今注目されているキャラクターをチェック！</p>
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {trendingCharacters.map((char) => (
               <Link
                 key={char.id}
                 href={`/characters/${char.slug}`}
-                className="flex flex-col items-center gap-1.5 rounded-2xl border border-border-primary bg-bg-card/30 p-3 transition-colors hover:bg-bg-card-hover"
+                className="flex flex-col overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] transition-colors hover:bg-[rgba(36,27,53,0.7)] cursor-pointer"
               >
-                <div className="h-14 w-14 overflow-hidden rounded-full border-2 border-border-primary">
-                  {char.imageUrl ? (
-                    <Image
-                      src={char.imageUrl}
-                      alt={char.name}
-                      width={56}
-                      height={56}
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-xs text-text-tertiary">
-                      {char.name.charAt(0)}
+                {/* キャラ情報 */}
+                <div className="flex items-center gap-2 p-2">
+                  <div className="h-11 w-11 shrink-0 overflow-hidden rounded-[10px] border border-border-primary">
+                    {char.imageUrl ? (
+                      <Image
+                        src={char.imageUrl}
+                        alt={char.name}
+                        width={44}
+                        height={44}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-xs text-text-tertiary">
+                        {char.name.charAt(0)}
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-[10px] font-bold text-[#fce7f3]">
+                      {char.name}
+                    </p>
+                    <div className="mt-0.5 flex items-center gap-1">
+                      {char.avgRating !== null && char.validVotesCount >= 4 ? (
+                        <StarRatingDisplay rating={char.avgRating} size="sm" showValue />
+                      ) : (
+                        <span className="text-[8px] text-[#8b7aab]">
+                          {char.validVotesCount > 0 ? `${char.validVotesCount}票` : "未評価"}
+                        </span>
+                      )}
                     </div>
-                  )}
+                    <div className="mt-0.5">
+                      <span className="inline-flex items-center gap-0.5 rounded bg-[rgba(246,51,154,0.8)] px-1 py-0.5 text-[7px] font-bold text-white">
+                        <svg className="h-1.5 w-1.5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                        </svg>
+                        +{char.commentCount}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <span className="text-xs font-medium text-text-primary line-clamp-1">
-                  {char.name}
-                </span>
-                <Badge variant="outline" className="text-[10px]">
-                  {char.commentCount}件
-                </Badge>
+                {/* コメント */}
+                {char.latestComment && (
+                  <div className="mx-1.5 mb-1.5 rounded-[10px] bg-[rgba(30,21,48,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2">
+                    <p className="line-clamp-2 text-[9px] leading-relaxed text-[rgba(252,231,243,0.8)]">
+                      {char.latestComment}
+                    </p>
+                    <div className="mt-1 flex items-center justify-between">
+                      {char.latestCommentAuthor && (
+                        <span className="text-[8px] text-[#8b7aab]">
+                          — {char.latestCommentAuthor}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
               </Link>
             ))}
           </div>
         </section>
       )}
 
-      {/* ページ下部ナビリンク */}
-      <div className="mt-8 space-y-3">
-        <p className="pl-1 text-sm font-bold text-text-primary">他のランキングもチェック</p>
-        <Link href="/ranking" className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{backgroundImage: "linear-gradient(135deg, #fb64b6, #ffa1ad)"}}>
-            <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+      {/* 他のランキングもチェック */}
+      <section className="space-y-3">
+        <p className="text-sm font-bold text-text-primary">他のランキングもチェック</p>
+        <Link
+          href="/ranking"
+          className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover cursor-pointer"
+        >
+          <span
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            style={{ backgroundImage: "linear-gradient(135deg, #ffb900, #ff637e)" }}
+          >
+            <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />
             </svg>
           </span>
-          <div>
+          <div className="flex-1">
             <span className="block font-bold text-text-primary">人気キャラランキング</span>
-            <span className="text-xs text-text-tertiary">投票で決まる最強キャラをチェック</span>
+            <span className="text-xs text-text-muted">投票で決まる最強キャラをチェック</span>
           </div>
+          <svg className="h-5 w-5 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
         </Link>
-        <Link href="/stats" className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{backgroundImage: "linear-gradient(135deg, #8b5cf6, #a78bfa)"}}>
+        <Link
+          href="/stats"
+          className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover cursor-pointer"
+        >
+          <span
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            style={{ backgroundImage: "linear-gradient(135deg, #8b5cf6, #a78bfa)" }}
+          >
             <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
             </svg>
           </span>
-          <div>
+          <div className="flex-1">
             <span className="block font-bold text-text-primary">ステータス別ランキング</span>
-            <span className="text-xs text-text-tertiary">ステータスで比較して最強キャラを見つけよう</span>
+            <span className="text-xs text-text-muted">ステータスで比較して最強キャラを見つけよう</span>
           </div>
+          <svg className="h-5 w-5 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
         </Link>
-      </div>
+      </section>
     </div>
   );
 }

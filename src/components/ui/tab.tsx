@@ -23,7 +23,7 @@ export function Tab<T extends string>({
   return (
     <div
       className={cn(
-        "flex gap-1 rounded-full bg-bg-tertiary p-1",
+        "flex gap-1 overflow-x-auto rounded-full bg-bg-tertiary p-1",
         className
       )}
       role="tablist"
@@ -35,10 +35,10 @@ export function Tab<T extends string>({
           aria-selected={value === item.value}
           onClick={() => onChange(item.value)}
           className={cn(
-            "flex-1 rounded-full px-4 py-1.5 text-sm font-medium transition-colors cursor-pointer",
+            "shrink-0 whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium transition-all duration-150 cursor-pointer",
             value === item.value
-              ? "bg-accent text-white"
-              : "bg-bg-tertiary text-text-tertiary hover:text-text-secondary"
+              ? "bg-accent text-white shadow-sm shadow-[0_1px_3px_rgba(251,100,182,0.3)]"
+              : "text-text-tertiary hover:text-text-secondary"
           )}
         >
           {item.label}

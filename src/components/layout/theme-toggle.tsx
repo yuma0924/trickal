@@ -19,6 +19,28 @@ function MoonIcon() {
   );
 }
 
+function MonitorIcon() {
+  return (
+    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+      <line x1="8" y1="21" x2="16" y2="21" />
+      <line x1="12" y1="17" x2="12" y2="21" />
+    </svg>
+  );
+}
+
+const themeIcon = {
+  dark: <MoonIcon />,
+  light: <SunIcon />,
+  auto: <MonitorIcon />,
+} as const;
+
+const themeLabel = {
+  dark: "ダーク",
+  light: "ライト",
+  auto: "自動",
+} as const;
+
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
@@ -31,10 +53,11 @@ export function ThemeToggle() {
   return (
     <button
       onClick={cycle}
-      className="flex h-9 w-9 items-center justify-center rounded-[14px] border border-border-primary bg-bg-tertiary text-text-tertiary transition-colors hover:text-text-primary"
-      aria-label={`テーマ切替（現在: ${theme === "dark" ? "ダーク" : theme === "light" ? "ライト" : "自動"}）`}
+      className="flex h-9 w-9 items-center justify-center rounded-[14px] border border-border-primary bg-bg-tertiary text-text-tertiary transition-all duration-200 hover:text-text-primary [&_svg]:transition-transform [&_svg]:duration-300 active:[&_svg]:rotate-180"
+      aria-label={`テーマ切替（現在: ${themeLabel[theme]}）`}
+      title={themeLabel[theme]}
     >
-      {theme === "light" ? <MoonIcon /> : <SunIcon />}
+      {themeIcon[theme]}
     </button>
   );
 }

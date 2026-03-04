@@ -2,13 +2,13 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { CharacterIcon } from "@/components/character/character-icon";
+import Image from "next/image";
 import { CharacterCard } from "@/components/character/character-card";
 import { StarRatingDisplay } from "@/components/ui/star-rating";
-import { Badge } from "@/components/ui/badge";
 import { CommentForm } from "@/components/comment/comment-form";
 import { CommentList } from "@/components/comment/comment-list";
 import type { CharacterDetail, RelatedCharacter } from "./page";
+import type { Element } from "@/lib/constants";
 
 type SortTab = "newest" | "thumbs_up" | "thumbs_down";
 type ReactionState = "up" | "down" | null;
@@ -35,6 +35,15 @@ const STAT_LABELS: Record<string, string> = {
   crit: "クリティカル",
 };
 
+// Element color mappings for header image border/bg
+const ELEMENT_COLORS: Record<string, { border: string; bg: string; text: string }> = {
+  火: { border: "rgba(251,113,133,0.6)", bg: "rgba(251,113,133,0.15)", text: "#fb7185" },
+  水: { border: "rgba(56,189,248,0.6)", bg: "rgba(56,189,248,0.15)", text: "#38bdf8" },
+  風: { border: "rgba(74,222,128,0.6)", bg: "rgba(74,222,128,0.15)", text: "#4ade80" },
+  光: { border: "rgba(255,210,48,0.6)", bg: "rgba(255,210,48,0.15)", text: "#fcd34d" },
+  闇: { border: "rgba(167,139,250,0.6)", bg: "rgba(167,139,250,0.15)", text: "#a78bfa" },
+};
+
 const SORT_MAP: Record<SortTab, string> = {
   newest: "new",
   thumbs_up: "thumbs_up",
@@ -57,6 +66,8 @@ export function CharacterDetailClient({
   const [submitLoading, setSubmitLoading] = useState(false);
   const [userReactions, setUserReactions] = useState<Record<string, ReactionState>>({});
   const [_userHash, setUserHash] = useState<string | null>(null);
+  const [statsOpen, setStatsOpen] = useState(true);
+  const [skillsOpen, setSkillsOpen] = useState(true);
 
   // user_hash 取得
   useEffect(() => {
@@ -214,126 +225,210 @@ export function CharacterDetailClient({
   // スキル情報
   const skills = character.skills as Array<Record<string, unknown>> | null;
 
+  const elemColors = character.element ? ELEMENT_COLORS[character.element] : null;
+
   return (
     <div className="space-y-6">
       {/* ヒーローエリア */}
-      <div className="rounded-2xl bg-bg-card border border-border-primary p-4">
-        <div className="flex items-start gap-4">
-          <CharacterIcon
-            name={character.name}
-            imageUrl={character.imageUrl}
-            element={character.element ?? undefined}
-            size="lg"
-          />
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold text-text-primary">
-                {character.name}
-              </h1>
-              {character.isProvisional && (
-                <span className="text-sm" title="暫定値">⚠️</span>
-              )}
+      <div className="flex items-start gap-4">
+        {/* キャラ画像 96px */}
+        <div
+          className="relative h-24 w-24 shrink-0 overflow-hidden rounded-[10px]"
+          style={{
+            border: `1.2px solid ${elemColors?.border ?? "rgba(249,168,212,0.2)"}`,
+            backgroundColor: elemColors?.bg ?? "transparent",
+          }}
+        >
+          {character.imageUrl ? (
+            <Image
+              src={character.imageUrl}
+              alt={character.name}
+              width={96}
+              height={96}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-lg text-text-tertiary">
+              {character.name.charAt(0)}
             </div>
-            <div className="mt-1 flex flex-wrap items-center gap-1.5">
-              {character.element && (
-                <Badge variant="element" element={character.element}>
-                  {character.element}
-                </Badge>
-              )}
-              {character.rarity && (
-                <Badge>{character.rarity}</Badge>
-              )}
-              {character.role && (
-                <Badge variant="outline">{character.role}</Badge>
-              )}
+          )}
+          {/* 属性バッジ (左上) */}
+          {character.element && elemColors && (
+            <div
+              className="absolute left-1 top-1 rounded-[4px] px-1.5 py-0.5"
+              style={{
+                backgroundColor: elemColors.bg,
+                border: `1.2px solid ${elemColors.border}`,
+              }}
+            >
+              <span className="text-xs font-bold" style={{ color: elemColors.text }}>
+                {character.element}
+              </span>
             </div>
-            {character.avgRating !== null && character.validVotesCount >= 4 ? (
-              <div className="mt-2">
-                <StarRatingDisplay rating={character.avgRating} size="md" showValue />
-                <span className="ml-2 text-xs text-text-tertiary">
-                  ({character.validVotesCount}票)
-                </span>
-                {character.rank !== null && (
-                  <Badge variant="rank" className="ml-2">
-                    #{character.rank}
-                  </Badge>
-                )}
-              </div>
-            ) : (
-              <p className="mt-2 text-xs text-text-tertiary">
-                {character.validVotesCount > 0
-                  ? `${character.validVotesCount}票（順位対象外）`
-                  : "まだ投票がありません"}
-              </p>
+          )}
+        </div>
+
+        {/* キャラ情報 */}
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl font-bold text-[#fce7f3]">
+            {character.name}
+          </h1>
+
+          {/* タグ行 */}
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            {character.role && (
+              <span className="rounded-[4px] bg-[#2a1f3d] px-2 py-0.5 text-xs text-[#a893c0]">
+                {character.role}
+              </span>
+            )}
+            {character.race && (
+              <span className="rounded-[4px] bg-[#2a1f3d] px-2 py-0.5 text-xs text-[#a893c0]">
+                {character.race}
+              </span>
+            )}
+            {character.rarity && (
+              <span className="rounded-[4px] bg-[#2a1f3d] px-2 py-0.5 text-xs font-bold text-[#facc15]">
+                {character.rarity}
+              </span>
+            )}
+            {character.isProvisional && (
+              <span className="rounded-[4px] bg-[#2a1f3d] px-2 py-0.5 text-xs font-bold text-[#facc15]">
+                暫定
+              </span>
             )}
           </div>
+
+          {/* 評価 */}
+          {character.avgRating !== null && character.validVotesCount >= 4 ? (
+            <div className="mt-2 flex items-center gap-3">
+              <StarRatingDisplay rating={character.avgRating} size="md" />
+              <span className="text-2xl font-bold text-[#fce7f3]">
+                {character.avgRating.toFixed(1)}
+              </span>
+              <span className="text-xs text-[#a893c0]">
+                {character.validVotesCount}票
+              </span>
+            </div>
+          ) : (
+            <p className="mt-2 text-xs text-[#a893c0]">
+              {character.validVotesCount > 0
+                ? `${character.validVotesCount}票（順位対象外）`
+                : "まだ投票がありません"}
+            </p>
+          )}
         </div>
       </div>
 
-      {/* ステータス */}
-      <section className="space-y-3">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#fb64b6] to-[#ffa1ad]" />
-          <h2 className="text-xl font-bold text-text-primary">ステータス</h2>
-        </div>
-        <div className="grid grid-cols-2 gap-2">
-          {Object.entries(character.stats).map(([key, value]) => (
-            <div
-              key={key}
-              className="flex items-center justify-between rounded-2xl bg-bg-card border border-border-primary px-3 py-2"
-            >
-              <span className="text-xs text-text-secondary">
-                {STAT_LABELS[key] ?? key}
-              </span>
-              <span className="text-sm font-bold text-text-primary">
-                {value !== null ? value.toLocaleString() : "未入力"}
-              </span>
-            </div>
-          ))}
-        </div>
+      {/* ステータス (アコーディオン) */}
+      <section className="border-t border-[rgba(249,168,212,0.1)] pt-3">
+        <button
+          className="flex w-full items-center justify-between"
+          onClick={() => setStatsOpen(!statsOpen)}
+        >
+          <div className="flex items-center gap-2">
+            <svg className="h-4 w-4 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 3v18h18M9 17V9m4 8V5m4 12v-4" />
+            </svg>
+            <span className="text-sm font-bold text-[#fce7f3]">ステータス</span>
+          </div>
+          <svg
+            className={`h-4 w-4 text-[#8b7aab] transition-transform ${statsOpen ? "rotate-180" : ""}`}
+            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        {statsOpen && (
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {Object.entries(character.stats).map(([key, value]) => {
+              const maxStat = Math.max(
+                ...Object.values(character.stats).filter((v): v is number => v !== null)
+              );
+              const percentage = value !== null && maxStat > 0 ? (value / maxStat) * 100 : 0;
+              return (
+                <div
+                  key={key}
+                  className="relative overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2.5"
+                >
+                  <div
+                    className="absolute inset-y-0 left-0 bg-[rgba(168,147,192,0.08)]"
+                    style={{ width: `${percentage}%` }}
+                  />
+                  <div className="relative flex items-center justify-between">
+                    <span className="text-xs text-[#a893c0]">
+                      {STAT_LABELS[key] ?? key}
+                    </span>
+                    <span className="text-sm font-bold text-[#fce7f3]">
+                      {value !== null ? value.toLocaleString() : "—"}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </section>
 
-      {/* スキル */}
+      {/* スキル (アコーディオン) */}
       {skills && skills.length > 0 && (
-        <section className="space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#fb64b6] to-[#ffa1ad]" />
-            <h2 className="text-xl font-bold text-text-primary">スキル</h2>
-          </div>
-          <div className="space-y-2">
-            {skills.map((skill, i) => (
-              <div key={i} className="rounded-2xl bg-bg-card border border-border-primary p-4">
-                <h3 className="text-sm font-medium text-text-primary">
-                  {(skill.name as string) ?? `スキル${i + 1}`}
-                </h3>
-                {typeof skill.description === "string" && (
-                  <p className="mt-1 text-xs text-text-secondary leading-relaxed">
-                    {skill.description}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
+        <section className="border-t border-[rgba(249,168,212,0.1)] pt-3">
+          <button
+            className="flex w-full items-center justify-between"
+            onClick={() => setSkillsOpen(!skillsOpen)}
+          >
+            <div className="flex items-center gap-2">
+              <svg className="h-4 w-4 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
+              </svg>
+              <span className="text-sm font-bold text-[#fce7f3]">スキル</span>
+            </div>
+            <svg
+              className={`h-4 w-4 text-[#8b7aab] transition-transform ${skillsOpen ? "rotate-180" : ""}`}
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {skillsOpen && (
+            <div className="mt-3 space-y-2">
+              {skills.map((skill, i) => (
+                <div key={i} className="rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] p-3">
+                  <h3 className="text-sm font-bold text-[#fce7f3]">
+                    {(skill.name as string) ?? `スキル${i + 1}`}
+                  </h3>
+                  {typeof skill.description === "string" && (
+                    <p className="mt-1 text-xs leading-relaxed text-[#a893c0]">
+                      {skill.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </section>
       )}
 
       {/* アルバイトアイテム */}
       {partTimeItem && (
-        <p className="text-xs text-text-tertiary">
-          アルバイトアイテム: {partTimeItem}
-        </p>
+        <div className="border-t border-[rgba(249,168,212,0.1)] pt-3">
+          <p className="text-xs text-[#a893c0]">
+            アルバイトアイテム: <span className="font-bold text-[#fce7f3]">{partTimeItem}</span>
+          </p>
+        </div>
       )}
 
       {/* 投稿フォーム */}
       <section className="space-y-3">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#fb64b6] to-[#ffa1ad]" />
-          <div>
-            <h2 className="text-xl font-bold text-text-primary">
+        <div className="rounded-[14px] bg-gradient-to-r from-[rgba(246,51,154,0.1)] to-[rgba(255,32,86,0.1)] border border-[rgba(251,100,182,0.3)] p-4 shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]">
+          <div className="flex items-center gap-2">
+            <svg className="h-4 w-4 text-[#fce7f3]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+            </svg>
+            <span className="text-sm font-bold text-[#fce7f3]">
               {character.name}を評価する
-            </h2>
-            <p className="text-sm text-text-tertiary">評価とコメントを投稿できます</p>
+            </span>
           </div>
+          <p className="mt-1 text-xs text-[#8b7aab]">★評価とコメントを投稿できます</p>
         </div>
         <CommentForm
           onSubmit={handleSubmit}
@@ -344,14 +439,16 @@ export function CharacterDetailClient({
 
       {/* コメント一覧 */}
       <section>
-        <div className="mb-3 flex items-center gap-3">
-          <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#fb64b6] to-[#ffa1ad]" />
-          <div>
-            <h2 className="text-xl font-bold text-text-primary">
+        <div className="mb-3">
+          <div className="flex items-center gap-2">
+            <svg className="h-4 w-4 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            <span className="text-sm font-bold text-[#fce7f3]">
               みんなのコメント ({totalCount})
-            </h2>
-            <p className="text-sm text-text-tertiary">新着順・高評価順で表示</p>
+            </span>
           </div>
+          <p className="mt-0.5 text-xs text-[#8b7aab]">新着順・高評価順で表示</p>
         </div>
         <CommentList
           comments={comments}
@@ -369,14 +466,14 @@ export function CharacterDetailClient({
       {/* 回遊エリア: 関連キャラ */}
       {relatedCharacters.length > 0 && (
         <section className="space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#fb64b6] to-[#ffa1ad]" />
-            <div>
-              <h2 className="text-xl font-bold text-text-primary">
-                次に見る
-              </h2>
-              <p className="text-sm text-text-tertiary">同じ属性・レアリティのキャラ</p>
+          <div>
+            <div className="flex items-center gap-2">
+              <svg className="h-4 w-4 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span className="text-sm font-bold text-[#fce7f3]">次に見る</span>
             </div>
+            <p className="mt-0.5 text-xs text-[#8b7aab]">同じ属性・レアリティのキャラ</p>
           </div>
           <div className="grid grid-cols-4 gap-2">
             {relatedCharacters.map((c) => (
@@ -395,42 +492,69 @@ export function CharacterDetailClient({
       )}
 
       {/* ページ下部ナビリンク */}
-      <div className="mt-8 space-y-3">
-        <p className="pl-1 text-sm font-bold text-text-primary">他のランキングもチェック</p>
-        <Link href="/ranking" className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{backgroundImage: "linear-gradient(135deg, #fb64b6, #ffa1ad)"}}>
-            <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+      <section className="space-y-3">
+        <p className="text-xs font-bold text-[#a893c0]">他のランキングもチェック</p>
+        <Link
+          href="/ranking"
+          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(255,185,0,0.15)] to-[rgba(255,137,4,0.15)] border border-[rgba(249,168,212,0.1)] px-4 py-3 transition-colors hover:from-[rgba(255,185,0,0.25)] hover:to-[rgba(255,137,4,0.25)] cursor-pointer"
+        >
+          <span
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+            style={{ backgroundImage: "linear-gradient(135deg, #ffb900, #ff8904)" }}
+          >
+            <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />
             </svg>
           </span>
-          <div>
-            <span className="block font-bold text-text-primary">人気キャラランキング</span>
-            <span className="text-xs text-text-tertiary">投票で決まる最強キャラをチェック</span>
+          <div className="flex-1">
+            <span className="block text-sm font-bold text-[#fce7f3]">人気キャラランキング</span>
+            <span className="text-[10px] text-[#8b7aab]">投票で決まる最強キャラをチェック</span>
           </div>
+          <svg className="h-4 w-4 shrink-0 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
         </Link>
-        <Link href="/builds" className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{backgroundImage: "linear-gradient(135deg, #3b82f6, #60a5fa)"}}>
+        <Link
+          href="/builds"
+          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(251,100,182,0.15)] to-[rgba(255,99,126,0.15)] border border-[rgba(249,168,212,0.1)] px-4 py-3 transition-colors hover:from-[rgba(251,100,182,0.25)] hover:to-[rgba(255,99,126,0.25)] cursor-pointer"
+        >
+          <span
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+            style={{ backgroundImage: "linear-gradient(135deg, #fb64b6, #ff637e)" }}
+          >
             <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
             </svg>
           </span>
-          <div>
-            <span className="block font-bold text-text-primary">編成ランキング</span>
-            <span className="text-xs text-text-tertiary">人気のパーティ編成をチェックしよう</span>
+          <div className="flex-1">
+            <span className="block text-sm font-bold text-[#fce7f3]">編成ランキング</span>
+            <span className="text-[10px] text-[#8b7aab]">人気のパーティ編成をチェックしよう</span>
           </div>
+          <svg className="h-4 w-4 shrink-0 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
         </Link>
-        <Link href="/stats" className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{backgroundImage: "linear-gradient(135deg, #8b5cf6, #a78bfa)"}}>
-            <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+        <Link
+          href="/stats"
+          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(0,188,255,0.15)] to-[rgba(166,132,255,0.15)] border border-[rgba(249,168,212,0.1)] px-4 py-3 transition-colors hover:from-[rgba(0,188,255,0.25)] hover:to-[rgba(166,132,255,0.25)] cursor-pointer"
+        >
+          <span
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+            style={{ backgroundImage: "linear-gradient(135deg, #00bcff, #a684ff)" }}
+          >
+            <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 3v18h18M9 17V9m4 8V5m4 12v-4" />
             </svg>
           </span>
-          <div>
-            <span className="block font-bold text-text-primary">ステータス別ランキング</span>
-            <span className="text-xs text-text-tertiary">ステータスで比較して最強キャラを見つけよう</span>
+          <div className="flex-1">
+            <span className="block text-sm font-bold text-[#fce7f3]">ステータス別ランキング</span>
+            <span className="text-[10px] text-[#8b7aab]">ステータスで比較して最強キャラを見つけよう</span>
           </div>
+          <svg className="h-4 w-4 shrink-0 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
         </Link>
-      </div>
+      </section>
     </div>
   );
 }

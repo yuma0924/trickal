@@ -2,9 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { Tab } from "@/components/ui/tab";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { CharacterIcon } from "@/components/character/character-icon";
 import { ThumbsUpDown } from "@/components/reaction/thumbs-up-down";
 import { createBrowserClient } from "@/lib/supabase/client";
@@ -42,16 +40,44 @@ type BuildItem = {
 
 type Mode = "pvp" | "pve";
 
-const MODE_TABS = [
-  { value: "pvp" as Mode, label: "PvP" },
-  { value: "pve" as Mode, label: "PvE" },
+const MODE_TABS: { value: Mode; label: string; icon: string }[] = [
+  { value: "pve", label: "PvE", icon: "shield" },
+  { value: "pvp", label: "PvP", icon: "swords" },
 ];
 
-const ELEMENT_FILTERS = [
-  { value: "", label: "すべて" },
-  ...ELEMENTS.map((e) => ({ value: e, label: e })),
-  { value: "混合", label: "混合" },
+const ELEMENT_FILTERS = ELEMENTS.map((e) => ({ value: e, label: e }));
+
+type SortKey = "popular" | "unpopular" | "newest";
+const SORT_OPTIONS: { value: SortKey; label: string }[] = [
+  { value: "popular", label: "高評価" },
+  { value: "unpopular", label: "低評価" },
+  { value: "newest", label: "新着" },
 ];
+
+/**
+ * 属性カラー
+ */
+function getElementBg(element: string): string {
+  const map: Record<string, string> = {
+    火: "rgba(255,99,126,0.15)",
+    水: "rgba(0,188,255,0.15)",
+    風: "rgba(74,222,128,0.15)",
+    光: "rgba(255,210,48,0.15)",
+    闇: "rgba(166,132,255,0.15)",
+  };
+  return map[element] ?? "rgba(36,27,53,0.5)";
+}
+
+function getElementColor(element: string): string {
+  const map: Record<string, string> = {
+    火: "#fb7185",
+    水: "#38bdf8",
+    風: "#4ade80",
+    光: "#fcd34d",
+    闇: "#a78bfa",
+  };
+  return map[element] ?? "#8b7aab";
+}
 
 /**
  * 自浄作用の CSS クラスを計算
@@ -84,8 +110,9 @@ function formatDate(dateStr: string): string {
 }
 
 export function BuildsClient() {
-  const [mode, setMode] = useState<Mode>("pvp");
+  const [mode, setMode] = useState<Mode>("pve");
   const [elementFilter, setElementFilter] = useState("");
+  const [sortKey, setSortKey] = useState<SortKey>("popular");
   const [builds, setBuilds] = useState<BuildItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(false);
@@ -98,6 +125,7 @@ export function BuildsClient() {
       try {
         const params = new URLSearchParams({ mode });
         if (elementFilter) params.set("element", elementFilter);
+        if (sortKey) params.set("sort", sortKey);
         if (cursorId) params.set("cursor", cursorId);
 
         const res = await fetch(`/api/builds?${params.toString()}`);
@@ -118,7 +146,7 @@ export function BuildsClient() {
         setInitialLoaded(true);
       }
     },
-    [mode, elementFilter]
+    [mode, elementFilter, sortKey]
   );
 
   // mode や filter 変更時にリセット + 再取得
@@ -169,40 +197,92 @@ export function BuildsClient() {
 
   return (
     <div className="space-y-4">
-      {/* PvP / PvE タブ */}
-      <Tab items={MODE_TABS} value={mode} onChange={setMode} />
-
-      {/* 属性フィルター + 投稿ボタン */}
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex flex-wrap gap-1.5">
-          {ELEMENT_FILTERS.map((ef) => (
+      {/* PvE / PvP タブ + 投稿ボタン */}
+      <div className="flex items-center justify-between">
+        <div className="flex rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-[rgba(36,27,53,0.8)] p-1">
+          {MODE_TABS.map((tab) => (
             <button
-              key={ef.value}
-              onClick={() => setElementFilter(ef.value)}
+              key={tab.value}
+              onClick={() => setMode(tab.value)}
               className={cn(
-                "rounded-full px-3 py-1 text-xs font-medium transition-colors cursor-pointer",
-                elementFilter === ef.value
-                  ? "bg-accent text-accent-text"
-                  : "bg-bg-tertiary text-text-secondary hover:text-text-primary"
+                "flex items-center gap-1.5 rounded-[10px] px-4 py-2 text-xs font-bold transition-all cursor-pointer",
+                mode === tab.value
+                  ? "bg-gradient-to-r from-[rgba(236,72,153,0.3)] to-[rgba(244,63,94,0.3)] border border-[rgba(244,114,182,0.4)] text-[#faf5ff] shadow-[0px_10px_15px_0px_rgba(236,72,153,0.15)]"
+                  : "border border-transparent text-[#a893c0] hover:text-[#faf5ff]"
               )}
             >
-              {ef.label}
+              {tab.icon === "shield" ? (
+                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              ) : (
+                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              )}
+              {tab.label}
             </button>
           ))}
         </div>
-      </div>
-
-      <div className="flex justify-end">
-        <Button
-          size="sm"
+        <button
           onClick={() => {
             document
               .getElementById("build-form")
               ?.scrollIntoView({ behavior: "smooth" });
           }}
+          className="flex items-center gap-1.5 rounded-[14px] bg-gradient-to-r from-[#fb64b6] to-[#ff637e] px-3 py-2 text-[11px] font-bold text-white shadow-[0px_10px_15px_0px_rgba(246,51,154,0.2),0px_4px_6px_0px_rgba(246,51,154,0.2)] cursor-pointer"
         >
-          + 編成を投稿
-        </Button>
+          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          投稿
+        </button>
+      </div>
+
+      {/* 属性フィルター + ソート */}
+      <div className="space-y-2 rounded-2xl border border-[rgba(249,168,212,0.1)] bg-bg-card p-3">
+        {/* 属性行 */}
+        <div className="flex items-center gap-2">
+          <span className="shrink-0 text-[10px] text-text-muted">属性</span>
+          <div className="flex gap-1.5 overflow-x-auto">
+            {ELEMENT_FILTERS.map((ef) => (
+              <button
+                key={ef.value}
+                onClick={() => setElementFilter(elementFilter === ef.value ? "" : ef.value)}
+                className={cn(
+                  "shrink-0 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer",
+                  elementFilter === ef.value
+                    ? "bg-accent text-white"
+                    : "bg-bg-tertiary text-text-secondary hover:text-text-primary"
+                )}
+              >
+                {ef.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        {/* ソート行 */}
+        <div className="flex items-center gap-2">
+          <svg className="h-3.5 w-3.5 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+          </svg>
+          <div className="flex gap-1.5">
+            {SORT_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setSortKey(opt.value)}
+                className={cn(
+                  "shrink-0 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer",
+                  sortKey === opt.value
+                    ? "bg-accent text-white"
+                    : "bg-bg-tertiary text-text-secondary hover:text-text-primary"
+                )}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* 編成一覧 */}
@@ -271,7 +351,7 @@ function BuildCard({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-border-primary bg-bg-card p-4",
+        "rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] p-3",
         karmaClass
       )}
     >
@@ -280,46 +360,89 @@ function BuildCard({
         className="block cursor-pointer"
       >
         {/* タイトル + 属性タグ */}
-        <div className="mb-2 flex items-center gap-2">
+        <div className="mb-2 flex items-center gap-1.5">
           {build.title && (
-            <span className="text-sm font-medium text-text-primary">
+            <span className="truncate text-[11px] font-bold text-[#fce7f3]">
               {build.title}
             </span>
           )}
-          {build.element_label && (
-            <Badge
-              variant={build.element_label !== "混合" ? "element" : "default"}
-              element={
-                build.element_label !== "混合"
-                  ? (build.element_label as Element)
-                  : undefined
-              }
-            >
-              {build.element_label}
-            </Badge>
+        </div>
+        {/* 属性タグ + モード */}
+        <div className="mb-2 flex items-center gap-1">
+          {build.members_detail
+            .map((m) => m.element)
+            .filter((e, i, arr) => e && arr.indexOf(e) === i)
+            .map((el) => (
+              <span
+                key={el}
+                className="rounded px-1 py-0.5 text-[8px] font-bold opacity-80"
+                style={{
+                  backgroundColor: getElementBg(el as string),
+                  color: getElementColor(el as string),
+                }}
+              >
+                {el}
+              </span>
+            ))}
+          <span className="rounded bg-[rgba(36,27,53,0.5)] px-1.5 py-0.5 text-[8px] font-bold text-[#8b7aab]">
+            {build.mode === "pve" ? "PvE" : "PvP"}
+          </span>
+        </div>
+
+        {/* キャラ編成 3×2グリッド（後衛/中衛/前衛） */}
+        <div className="mb-2 overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.05)]">
+          {/* ヘッダー行 */}
+          <div className="grid grid-cols-3 bg-[rgba(30,21,48,0.8)]">
+            <span className="border-r border-[rgba(249,168,212,0.05)] py-1 text-center text-[9px] font-bold text-[#a893c0]">後衛</span>
+            <span className="border-r border-[rgba(249,168,212,0.05)] py-1 text-center text-[9px] font-bold text-[#a893c0]">中衛</span>
+            <span className="py-1 text-center text-[9px] font-bold text-[#a893c0]">前衛</span>
+          </div>
+          {/* 上段 (0,1,2) */}
+          <div className="grid grid-cols-3 border-b border-[rgba(249,168,212,0.05)]">
+            {build.members_detail.slice(0, 3).map((char, i) => (
+              <div key={`${char.id}-${i}`} className={cn(
+                "flex flex-col items-center gap-0.5 py-2",
+                i < 2 && "border-r border-[rgba(249,168,212,0.05)]"
+              )}>
+                <CharacterIcon
+                  name={char.name}
+                  imageUrl={char.image_url}
+                  element={char.element as Element | undefined}
+                  isHidden={char.is_hidden}
+                  size="sm"
+                />
+                <span className="max-w-16 truncate text-center text-[8px] font-bold text-[#a893c0]">
+                  {char.name}
+                </span>
+              </div>
+            ))}
+          </div>
+          {/* 下段 (3,4,5) */}
+          {build.members_detail.length > 3 && (
+            <div className="grid grid-cols-3">
+              {build.members_detail.slice(3, 6).map((char, i) => (
+                <div key={`${char.id}-${i + 3}`} className={cn(
+                  "flex flex-col items-center gap-0.5 py-2",
+                  i < 2 && "border-r border-[rgba(249,168,212,0.05)]"
+                )}>
+                  <CharacterIcon
+                    name={char.name}
+                    imageUrl={char.image_url}
+                    element={char.element as Element | undefined}
+                    isHidden={char.is_hidden}
+                    size="sm"
+                  />
+                  <span className="max-w-16 truncate text-center text-[8px] font-bold text-[#a893c0]">
+                    {char.name}
+                  </span>
+                </div>
+              ))}
+            </div>
           )}
         </div>
 
-        {/* キャラアイコン並び */}
-        <div className="mb-2 flex gap-2 overflow-x-auto">
-          {build.members_detail.map((char, i) => (
-            <div key={`${char.id}-${i}`} className="flex flex-col items-center gap-0.5">
-              <CharacterIcon
-                name={char.name}
-                imageUrl={char.image_url}
-                element={char.element as Element | undefined}
-                isHidden={char.is_hidden}
-                size="sm"
-              />
-              <span className="max-w-12 truncate text-[10px] text-text-tertiary">
-                {char.name}
-              </span>
-            </div>
-          ))}
-        </div>
-
         {/* コメント */}
-        <p className="whitespace-pre-wrap text-sm text-text-secondary leading-relaxed">
+        <p className="whitespace-pre-wrap text-xs text-[rgba(252,231,243,0.8)] leading-relaxed">
           {displayComment}
         </p>
       </Link>
@@ -327,26 +450,30 @@ function BuildCard({
       {shouldTruncate && (
         <button
           onClick={() => setExpanded(!expanded)}
-          className="mt-1 text-xs text-accent hover:underline cursor-pointer"
+          className="mt-1 flex items-center gap-1 text-xs text-[#a893c0] hover:text-[#faf5ff] cursor-pointer"
         >
+          <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
           {expanded ? "閉じる" : "続きを読む"}
         </button>
       )}
 
-      {/* フッター: リアクション + 日時 + 投稿者 */}
+      {/* フッター: 投稿者 · 日時 + リアクション + コメント数 */}
       <div className="mt-2 flex items-center justify-between">
+        <div className="flex items-center gap-1.5 text-[10px] text-[#8b7aab]">
+          {build.display_name && (
+            <span>{build.display_name}</span>
+          )}
+          {build.display_name && <span>·</span>}
+          <span>{formatDate(build.updated_at)}</span>
+        </div>
         <ThumbsUpDown
           thumbsUpCount={build.likes_count}
           thumbsDownCount={build.dislikes_count}
           userReaction={build.user_reaction}
           onReact={(reaction) => onReaction(build.id, reaction)}
         />
-        <div className="flex items-center gap-2 text-xs text-text-tertiary">
-          {build.display_name && (
-            <span>{build.display_name}</span>
-          )}
-          <span>{formatDate(build.updated_at)}</span>
-        </div>
       </div>
     </div>
   );
@@ -358,9 +485,14 @@ function BuildCard({
 function EmptyState() {
   return (
     <div className="rounded-2xl border border-border-primary bg-bg-card p-8 text-center">
-      <p className="text-text-secondary">まだ投稿がありません</p>
-      <p className="mt-2 text-sm text-text-tertiary">
-        最初の投稿者になろう!
+      <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-accent/10">
+        <svg className="h-6 w-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+      </div>
+      <p className="font-medium text-text-secondary">まだ投稿がありません</p>
+      <p className="mt-1 text-sm text-text-tertiary">
+        最初の投稿者になろう！
       </p>
       <Button
         className="mt-4"
@@ -370,7 +502,7 @@ function EmptyState() {
             ?.scrollIntoView({ behavior: "smooth" });
         }}
       >
-        + 編成を投稿
+        編成を投稿
       </Button>
     </div>
   );

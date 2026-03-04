@@ -35,7 +35,7 @@ export function CharacterCard({
       href={`/characters/${slug}`}
       className={cn(
         "group flex flex-col items-center gap-1.5 rounded-2xl border border-border-primary bg-bg-card p-2 transition-all cursor-pointer overflow-hidden",
-        "hover:bg-bg-card-hover hover:scale-[1.02]",
+        "hover:bg-bg-card-hover hover:scale-[1.02] hover:shadow-lg hover:shadow-black/10",
         isHero && "p-3",
         className
       )}
@@ -50,10 +50,10 @@ export function CharacterCard({
         {rankDisplay && (
           <div
             className={cn(
-              "absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold",
-              rank === 1 && "bg-yellow-500 text-black",
-              rank === 2 && "bg-gray-300 text-black",
-              rank === 3 && "bg-amber-700 text-white",
+              "absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold",
+              rank === 1 && "bg-gradient-to-br from-yellow-400 to-amber-500 text-black",
+              rank === 2 && "bg-gradient-to-br from-gray-300 to-gray-400 text-black",
+              rank === 3 && "bg-gradient-to-br from-amber-600 to-amber-700 text-white",
               rank !== undefined && rank > 3 && "bg-bg-tertiary text-text-secondary"
             )}
           >

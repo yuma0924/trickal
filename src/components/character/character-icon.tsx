@@ -22,6 +22,14 @@ const ELEMENT_BORDER: Record<Element, string> = {
   闇: "border-element-dark",
 };
 
+const ELEMENT_GLOW: Record<Element, string> = {
+  火: "shadow-[0_0_8px_rgba(239,68,68,0.2)]",
+  水: "shadow-[0_0_8px_rgba(59,130,246,0.2)]",
+  風: "shadow-[0_0_8px_rgba(34,197,94,0.2)]",
+  光: "shadow-[0_0_8px_rgba(234,179,8,0.2)]",
+  闇: "shadow-[0_0_8px_rgba(168,85,247,0.2)]",
+};
+
 const sizeMap: Record<IconSize, { container: string; image: number }> = {
   sm: { container: "h-10 w-10", image: 40 },
   md: { container: "h-14 w-14", image: 56 },
@@ -41,8 +49,9 @@ export function CharacterIcon({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-full border-2",
+        "relative overflow-hidden rounded-xl border-2",
         element ? ELEMENT_BORDER[element] : "border-border-primary",
+        element && ELEMENT_GLOW[element],
         isHidden && "opacity-40 grayscale",
         container,
         className

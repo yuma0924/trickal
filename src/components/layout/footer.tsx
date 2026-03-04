@@ -2,9 +2,17 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border-primary bg-bg-secondary pb-20">
-      <div className="mx-auto max-w-7xl px-4 pt-8 pb-4">
-        <div className="flex flex-col items-center gap-4 text-center">
+    <footer className="bg-bg-secondary pb-20">
+      {/* Gradient top border */}
+      <div
+        className="h-px w-full"
+        style={{
+          backgroundImage:
+            "linear-gradient(90deg, transparent 0%, #fb64b6 30%, #ffa1ad 70%, transparent 100%)",
+        }}
+      />
+      <div className="mx-auto max-w-7xl px-4 pt-10 pb-4">
+        <div className="flex flex-col items-center gap-5 text-center">
           <div className="flex items-center gap-2">
             <span
               className="flex h-7 w-7 items-center justify-center rounded-[14px] text-xs font-bold text-white shadow-[0_10px_15px_rgba(246,51,154,0.2),0_4px_6px_rgba(246,51,154,0.2)]"
@@ -19,7 +27,7 @@ export function Footer() {
               トリッカルランキング
             </span>
           </div>
-          <p className="text-sm leading-relaxed text-text-tertiary">
+          <p className="max-w-md text-sm leading-relaxed text-text-tertiary">
             トリッカル・もちもちほっぺ大作戦の全キャラクター性能を数値で比較し、プレイヤーの投票でリアルな順位を決定する非公式データベースです。
           </p>
           <Link

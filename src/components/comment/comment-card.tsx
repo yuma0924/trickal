@@ -55,21 +55,25 @@ export function CommentCard({
     );
   }
 
+  const initial = displayName.charAt(0);
+
   return (
     <div
       className={cn(
-        "rounded-2xl bg-bg-card/30 border border-border-primary p-4",
+        "rounded-2xl bg-bg-card border border-border-primary p-4 transition-all",
         karmaClass,
         className
       )}
     >
-      <div className="flex items-center gap-2">
-        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-[#fb64b6] to-[#ffa1ad] flex-shrink-0" />
+      <div className="flex items-center gap-2.5">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#fb64b6] to-[#ffa1ad] text-xs font-bold text-white">
+          {initial}
+        </div>
         <div className="flex flex-col">
           <span className="text-sm font-medium text-text-primary">
             {displayName}
           </span>
-          <span className="text-xs text-text-muted">
+          <span className="text-[11px] text-text-muted">
             {new Date(createdAt).toLocaleDateString("ja-JP")}
           </span>
         </div>
@@ -80,7 +84,7 @@ export function CommentCard({
         )}
       </div>
 
-      <p className="mt-2 whitespace-pre-wrap text-sm text-text-secondary leading-relaxed">
+      <p className="mt-2.5 whitespace-pre-wrap text-sm text-text-secondary leading-relaxed">
         {body}
       </p>
 
@@ -95,7 +99,7 @@ export function CommentCard({
           <button
             type="button"
             onClick={() => onReport(id)}
-            className="text-[10px] text-text-muted hover:text-thumbs-down transition-colors cursor-pointer ml-auto"
+            className="ml-auto text-[10px] text-text-muted transition-colors hover:text-thumbs-down cursor-pointer"
           >
             通報
           </button>

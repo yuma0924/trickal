@@ -3,7 +3,6 @@
 /* ============================
    テーマシステム（ダーク/ライト/自動）
    標準テーマ: ダーク（パープル×ピンク）
-   Figma準拠デザイン
    ============================ */
 
 @custom-variant dark (&:is(.dark *));
@@ -45,6 +44,11 @@
   --color-thumbs-up: var(--thumbs-up);
   --color-thumbs-down: var(--thumbs-down);
 
+  /* ランクカラー */
+  --color-rank-gold: #fbbf24;
+  --color-rank-silver: #94a3b8;
+  --color-rank-bronze: #d97706;
+
   /* フォントファミリー */
   --font-sans: var(--font-zen-maru-gothic), "Hiragino Sans",
     "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", "Meiryo",
@@ -53,86 +57,95 @@
 
 /* ダークテーマ（デフォルト） - パープル×ピンク */
 :root {
-  --bg-primary: #1a1225;
-  --bg-secondary: #1e1530;
-  --bg-tertiary: #241b35;
-  --bg-card: #241b35;
-  --bg-card-hover: #2d2242;
-  --bg-input: #1e1530;
+  --bg-primary: #0f0a1a;
+  --bg-secondary: #161024;
+  --bg-tertiary: #1e1530;
+  --bg-card: #1a1228;
+  --bg-card-hover: #241b35;
+  --bg-input: #161024;
 
-  --text-primary: #fce7f3;
-  --text-secondary: rgba(252, 231, 243, 0.8);
+  --text-primary: #f5e6f0;
+  --text-secondary: rgba(245, 230, 240, 0.78);
   --text-tertiary: #a893c0;
-  --text-muted: #8b7aab;
-  --text-inverse: #1a1225;
+  --text-muted: #7b6a9a;
+  --text-inverse: #0f0a1a;
 
-  --border-primary: rgba(249, 168, 212, 0.1);
-  --border-secondary: rgba(249, 168, 212, 0.05);
+  --border-primary: rgba(249, 168, 212, 0.12);
+  --border-secondary: rgba(249, 168, 212, 0.06);
 
   --accent: #fb64b6;
-  --accent-hover: #ffa1ad;
+  --accent-hover: #ff8ac4;
   --accent-text: #ffffff;
   --accent-secondary: #f9a8d4;
 
   --star: #fbbf24;
   --thumbs-up: #22c55e;
   --thumbs-down: #ef4444;
+
+  --glow-accent: rgba(251, 100, 182, 0.15);
+  --glow-gold: rgba(251, 191, 36, 0.2);
 }
 
 /* ライトテーマ */
 .light {
-  --bg-primary: #fdf2f8;
-  --bg-secondary: #fce7f3;
-  --bg-tertiary: #fbcfe8;
+  --bg-primary: #fef7fb;
+  --bg-secondary: #fdf2f8;
+  --bg-tertiary: #fce7f3;
   --bg-card: #ffffff;
-  --bg-card-hover: #fdf2f8;
-  --bg-input: #fce7f3;
+  --bg-card-hover: #fef7fb;
+  --bg-input: #fdf2f8;
 
   --text-primary: #1a1225;
-  --text-secondary: #4a3660;
-  --text-tertiary: #8b7aab;
-  --text-muted: #c4b5d9;
-  --text-inverse: #fce7f3;
+  --text-secondary: #3d2b52;
+  --text-tertiary: #6b5a80;
+  --text-muted: #9b8ab5;
+  --text-inverse: #f5e6f0;
 
-  --border-primary: rgba(251, 100, 182, 0.15);
+  --border-primary: rgba(251, 100, 182, 0.18);
   --border-secondary: rgba(251, 100, 182, 0.08);
 
   --accent: #e84da0;
-  --accent-hover: #fb64b6;
+  --accent-hover: #d63d8e;
   --accent-text: #ffffff;
   --accent-secondary: #be185d;
 
   --star: #f59e0b;
   --thumbs-up: #16a34a;
   --thumbs-down: #dc2626;
+
+  --glow-accent: rgba(232, 77, 160, 0.1);
+  --glow-gold: rgba(245, 158, 11, 0.15);
 }
 
 /* .dark クラスが明示的に付いた場合 */
 .dark {
-  --bg-primary: #1a1225;
-  --bg-secondary: #1e1530;
-  --bg-tertiary: #241b35;
-  --bg-card: #241b35;
-  --bg-card-hover: #2d2242;
-  --bg-input: #1e1530;
+  --bg-primary: #0f0a1a;
+  --bg-secondary: #161024;
+  --bg-tertiary: #1e1530;
+  --bg-card: #1a1228;
+  --bg-card-hover: #241b35;
+  --bg-input: #161024;
 
-  --text-primary: #fce7f3;
-  --text-secondary: rgba(252, 231, 243, 0.8);
+  --text-primary: #f5e6f0;
+  --text-secondary: rgba(245, 230, 240, 0.78);
   --text-tertiary: #a893c0;
-  --text-muted: #8b7aab;
-  --text-inverse: #1a1225;
+  --text-muted: #7b6a9a;
+  --text-inverse: #0f0a1a;
 
-  --border-primary: rgba(249, 168, 212, 0.1);
-  --border-secondary: rgba(249, 168, 212, 0.05);
+  --border-primary: rgba(249, 168, 212, 0.12);
+  --border-secondary: rgba(249, 168, 212, 0.06);
 
   --accent: #fb64b6;
-  --accent-hover: #ffa1ad;
+  --accent-hover: #ff8ac4;
   --accent-text: #ffffff;
   --accent-secondary: #f9a8d4;
 
   --star: #fbbf24;
   --thumbs-up: #22c55e;
   --thumbs-down: #ef4444;
+
+  --glow-accent: rgba(251, 100, 182, 0.15);
+  --glow-gold: rgba(251, 191, 36, 0.2);
 }
 
 /* ベーススタイル */
@@ -144,10 +157,88 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* テーマ切替トランジション */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color;
+  transition-duration: 0.15s;
+  transition-timing-function: ease-out;
+}
+
+/* アニメーション中に不要なトランジションを防止 */
+[data-no-transition] *,
+[data-no-transition] *::before,
+[data-no-transition] *::after {
+  transition: none !important;
+}
+
+/* フォーカス表示 */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* スクロールバー */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-primary);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* アニメーション */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px var(--glow-accent); }
+  50% { box-shadow: 0 0 16px var(--glow-accent); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out both;
+}
+
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* reduced-motion対応 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* 自浄作用スタイル */
 .karma-gold {
   border: 2px solid var(--color-karma-gold);
-  box-shadow: 0 0 8px rgba(251, 191, 36, 0.3);
+  box-shadow: 0 0 12px var(--glow-gold);
 }
 
 .karma-bold {

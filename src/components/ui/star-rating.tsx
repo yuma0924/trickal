@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useId } from "react";
 
 interface StarRatingDisplayProps {
   rating: number;
@@ -25,23 +26,25 @@ function StarIcon({
   filled,
   half,
   className,
+  gradientId,
 }: {
   filled: boolean;
   half: boolean;
   className?: string;
+  gradientId: string;
 }) {
   if (half) {
     return (
       <svg className={className} viewBox="0 0 24 24" fill="none">
         <defs>
-          <linearGradient id="half-star">
+          <linearGradient id={gradientId}>
             <stop offset="50%" stopColor="currentColor" />
             <stop offset="50%" stopColor="transparent" />
           </linearGradient>
         </defs>
         <path
           d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-          fill="url(#half-star)"
+          fill={`url(#${gradientId})`}
           stroke="currentColor"
           strokeWidth="1.5"
         />
@@ -49,7 +52,7 @@ function StarIcon({
     );
   }
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none">
+    <svg className={cn(className, filled && "drop-shadow-[0_0_2px_rgba(251,191,36,0.3)]")} viewBox="0 0 24 24" fill="none">
       <path
         d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
         fill={filled ? "currentColor" : "none"}
@@ -66,6 +69,7 @@ export function StarRatingDisplay({
   showValue = true,
   className,
 }: StarRatingDisplayProps) {
+  const instanceId = useId();
   const stars = [];
   for (let i = 1; i <= 5; i++) {
     const filled = rating >= i;
@@ -76,6 +80,7 @@ export function StarRatingDisplay({
         filled={filled}
         half={half}
         className={starSizeMap[size]}
+        gradientId={`half-star-${instanceId}-${i}`}
       />
     );
   }
@@ -103,6 +108,8 @@ export function StarRatingInput({
   onChange,
   className,
 }: StarRatingInputProps) {
+  const instanceId = useId();
+
   const handleClick = (starIndex: number, isLeftHalf: boolean) => {
     const newValue = isLeftHalf ? starIndex - 0.5 : starIndex;
     // タップで同じ値なら解除
@@ -124,6 +131,7 @@ export function StarRatingInput({
               filled={filled}
               half={half}
               className="h-8 w-8"
+              gradientId={`half-star-input-${instanceId}-${starIndex}`}
             />
             {/* 左半分 */}
             <button
