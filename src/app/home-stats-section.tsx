@@ -312,24 +312,26 @@ export function HomeStatsSection({ characters }: HomeStatsSectionProps) {
                   )}
                 </div>
 
-                {/* ステータス値ボックス */}
-                <div
-                  className="flex shrink-0 flex-col items-center rounded-[10px] px-2.5 py-1"
-                  style={{
-                    backgroundColor: "rgba(255,99,126,0.1)",
-                    border: "1.2px solid rgba(255,99,126,0.25)",
-                  }}
-                >
-                  <span className="text-[9px] font-bold text-[#8b7aab]">
-                    {selectedLabel}
-                  </span>
-                  <span className="text-xs font-bold text-[#fda4af]">
-                    {statValue !== null ? statValue.toLocaleString() : "—"}
-                  </span>
-                </div>
+                {/* 右側: ステータス + 評価 をまとめて右寄せ */}
+                <div className="ml-auto flex shrink-0 items-center" style={{ gap: "0px" }}>
+                  {/* ステータス値ボックス */}
+                  <div
+                    className="flex shrink-0 flex-col items-center rounded-[10px] px-2 py-1"
+                    style={{
+                      backgroundColor: "rgba(255,99,126,0.1)",
+                      border: "1.2px solid rgba(255,99,126,0.25)",
+                    }}
+                  >
+                    <span className="text-[9px] font-bold text-[#8b7aab]">
+                      {selectedLabel}
+                    </span>
+                    <span className="text-xs font-bold text-[#fda4af]">
+                      {statValue !== null ? statValue.toLocaleString() : "—"}
+                    </span>
+                  </div>
 
-                {/* 評価 (⭐4.7 コンパクト形式) - 固定幅で位置統一 */}
-                <div className="flex w-[52px] shrink-0 flex-col items-end">
+                  {/* 評価 (⭐4.7 コンパクト形式) */}
+                  <div className="flex min-w-[44px] shrink-0 flex-col items-end pl-1.5">
                   {char.avgRating !== null && char.validVotesCount >= 4 ? (
                     <>
                       <div className="flex items-center gap-1">
@@ -349,6 +351,7 @@ export function HomeStatsSection({ characters }: HomeStatsSectionProps) {
                       {char.validVotesCount > 0 ? `${char.validVotesCount}票` : "未評価"}
                     </span>
                   )}
+                  </div>
                 </div>
               </Link>
             );
