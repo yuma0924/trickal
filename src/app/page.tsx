@@ -264,16 +264,28 @@ export default async function Home() {
 
   const topChar = rankedCharacters[0] ?? null;
 
-  // --- 第2段: 話題のキャラクター（直近24時間） ---
-  const twentyFourHoursAgo = new Date(
-    Date.now() - 24 * 60 * 60 * 1000
-  ).toISOString();
+  // --- 第2段: 話題のキャラクター ---
+  // 直近24時間 → 7日間 → 30日間とフォールバック
+  let recentComments: { character_id: string; user_hash: string; body: string | null; display_name: string | null; thumbs_up_count: number | null }[] | null = null;
+  let trendingPeriodLabel = "直近24時間";
 
-  const { data: recentComments } = await supabase
-    .from("comments")
-    .select("character_id, user_hash, body, display_name, thumbs_up_count")
-    .eq("is_deleted", false)
-    .gte("created_at", twentyFourHoursAgo);
+  for (const { hours, label } of [
+    { hours: 24, label: "直近24時間" },
+    { hours: 7 * 24, label: "直近7日間" },
+    { hours: 30 * 24, label: "直近30日間" },
+  ]) {
+    const since = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
+    const { data } = await supabase
+      .from("comments")
+      .select("character_id, user_hash, body, display_name, thumbs_up_count")
+      .eq("is_deleted", false)
+      .gte("created_at", since);
+    if (data && data.length > 0) {
+      recentComments = data;
+      trendingPeriodLabel = label;
+      break;
+    }
+  }
 
   const trendingMap = new Map<string, number>();
   const userCharCountMap = new Map<string, number>();
@@ -305,9 +317,7 @@ export default async function Home() {
     }
   }
 
-  const rankedIds = new Set(rankedCharacters.map((c) => c.id));
   const trendingEntries = Array.from(trendingMap.entries())
-    .filter(([id]) => !rankedIds.has(id))
     .sort((a, b) => b[1] - a[1])
     .slice(0, 6);
 
@@ -451,7 +461,7 @@ export default async function Home() {
                 // 順位ごとのカラー設定
                 const rankConfig = {
                   1: {
-                    borderClass: "border-[rgba(249,168,212,0.1)] border-l-[3.5px] border-l-[#d4a017]",
+                    borderColor: "#d4a017",
                     bannerBg: "rgba(255,185,0,0.15)",
                     circleBg: "#ffb900",
                     circleText: "#1a1225",
@@ -463,7 +473,7 @@ export default async function Home() {
                     ),
                   },
                   2: {
-                    borderClass: "border-[rgba(249,168,212,0.1)] border-l-[2.4px] border-l-[#9ca3af]",
+                    borderColor: "#9ca3af",
                     bannerBg: "rgba(144,161,185,0.1)",
                     circleBg: "#90a1b9",
                     circleText: "#1a1225",
@@ -471,7 +481,7 @@ export default async function Home() {
                     icon: null,
                   },
                   3: {
-                    borderClass: "border-[rgba(249,168,212,0.1)] border-l-[2.4px] border-l-[#b45309]",
+                    borderColor: "#b45309",
                     bannerBg: "rgba(225,113,0,0.1)",
                     circleBg: "#bb4d00",
                     circleText: "#fef3c7",
@@ -486,7 +496,10 @@ export default async function Home() {
                   <Link
                     key={char.id}
                     href={`/characters/${char.slug}`}
-                    className={`block overflow-clip rounded-[16px] border bg-[rgba(36,27,53,0.95)] transition-colors hover:brightness-110 cursor-pointer ${cfg.borderClass}`}
+                    className="block overflow-clip rounded-[16px] bg-[rgba(36,27,53,0.95)] transition-colors hover:brightness-110 cursor-pointer"
+                    style={{
+                      border: `1.5px solid ${cfg.borderColor}`,
+                    }}
                   >
                     {/* 順位バナー */}
                     <div
@@ -617,7 +630,7 @@ export default async function Home() {
                     key={char.id}
                     href={`/characters/${char.slug}`}
                     className="flex flex-col overflow-clip rounded-[14px] bg-[#241b35] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1)] transition-all hover:scale-[1.02] hover:brightness-110 cursor-pointer"
-                    style={{ border: "1.2px solid rgba(249,168,212,0.1)" }}
+                    style={{ border: `1.2px solid ${elemStyle?.border ?? "rgba(249,168,212,0.15)"}` }}
                   >
                     {/* 画像エリア */}
                     <div className="relative">
@@ -717,7 +730,7 @@ export default async function Home() {
                   話題のキャラクター
                 </h2>
               </div>
-              <span className="text-xs text-[#8b7aab]">直近24時間</span>
+              <span className="text-xs text-[#8b7aab]">{trendingPeriodLabel}</span>
             </div>
             <p className="text-xs text-[#a893c0]">今注目されているキャラクターをチェック！</p>
           </div>

@@ -47,7 +47,19 @@ export function HomeStatsSection({ characters }: HomeStatsSectionProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [elementFilter, setElementFilter] = useState<string | null>(null);
   const [roleFilter, setRoleFilter] = useState<string | null>(null);
-  const [ratedOnly, setRatedOnly] = useState(false);
+  const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
+  const [checkedOnly, setCheckedOnly] = useState(false);
+
+  const toggleCheck = (id: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCheckedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   const sorted = useMemo(() => {
     let filtered = characters;
@@ -61,8 +73,8 @@ export function HomeStatsSection({ characters }: HomeStatsSectionProps) {
     if (roleFilter) {
       filtered = filtered.filter((c) => c.role === roleFilter);
     }
-    if (ratedOnly) {
-      filtered = filtered.filter((c) => c.stats[selectedStat] !== null);
+    if (checkedOnly) {
+      filtered = filtered.filter((c) => checkedIds.has(c.id));
     }
 
     return [...filtered]
@@ -75,7 +87,7 @@ export function HomeStatsSection({ characters }: HomeStatsSectionProps) {
         return bVal - aVal;
       })
       .slice(0, PREVIEW_COUNT);
-  }, [characters, selectedStat, searchQuery, elementFilter, roleFilter, ratedOnly]);
+  }, [characters, selectedStat, searchQuery, elementFilter, roleFilter, checkedOnly, checkedIds]);
 
   const selectedLabel = STAT_TABS.find((s) => s.value === selectedStat)?.label ?? "";
 
@@ -98,21 +110,31 @@ export function HomeStatsSection({ characters }: HomeStatsSectionProps) {
             />
           </div>
           <button
-            onClick={() => setRatedOnly(!ratedOnly)}
-            className={cn(
-              "flex items-center gap-1.5 rounded-[10px] border px-3 py-1.5 text-[11px] font-bold shrink-0 transition-colors",
-              ratedOnly
-                ? "bg-[rgba(255,99,126,0.15)] border-[rgba(255,99,126,0.4)] text-[#fda4af]"
-                : "bg-[#1a1225] border-[rgba(249,168,212,0.1)] text-[rgba(252,231,243,0.8)]"
-            )}
+            onClick={() => setCheckedOnly(!checkedOnly)}
+            className="flex items-center gap-1.5 rounded-[10px] px-3 py-1.5 text-[11px] font-bold shrink-0 transition-colors"
+            style={{
+              backgroundColor: checkedOnly ? "rgba(255,99,126,0.15)" : "#1a1225",
+              border: `1.2px solid ${checkedOnly ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+              color: checkedOnly ? "#fda4af" : "rgba(252,231,243,0.8)",
+            }}
           >
-            <span className={cn(
-              "flex h-3 w-3 items-center justify-center rounded-sm",
-              ratedOnly ? "bg-[rgba(255,99,126,0.3)]" : "bg-[#2a1f3d]"
-            )}>
-              {ratedOnly && (
-                <svg className="h-2 w-2 text-[#fda4af]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "16px",
+                height: "16px",
+                minWidth: "16px",
+                minHeight: "16px",
+                borderRadius: "3px",
+                backgroundColor: checkedOnly ? "rgba(255,99,126,0.3)" : "#2a1f3d",
+                border: `1.5px solid ${checkedOnly ? "rgba(255,99,126,0.5)" : "rgba(249,168,212,0.2)"}`,
+              }}
+            >
+              {checkedOnly && (
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fda4af" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 13l4 4L19 7" />
                 </svg>
               )}
             </span>
@@ -122,20 +144,20 @@ export function HomeStatsSection({ characters }: HomeStatsSectionProps) {
 
         {/* 属性フィルター */}
         <div className="flex items-center gap-1.5">
-          <span className="w-5 text-[10px] font-bold text-[#6b5a80]">属性</span>
-          <div className="flex gap-1.5">
+          <span className="w-5 shrink-0 text-[10px] font-bold text-[#6b5a80]">属性</span>
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
             {Object.entries(ELEMENT_STYLES).map(([elem, style]) => (
               <button
                 key={elem}
                 onClick={() => setElementFilter(elementFilter === elem ? null : elem)}
                 className={cn(
-                  "rounded-[10px] px-2.5 py-1 text-[11px] font-bold text-center transition-colors",
+                  "shrink-0 rounded-[10px] px-2.5 py-1 text-[11px] font-bold text-center transition-colors",
                   elementFilter === elem
                     ? "shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
                     : "bg-[#1a1225]"
                 )}
                 style={{
-                  border: `1.2px solid ${elementFilter === elem ? style.border : "rgba(249,168,212,0.1)"}`,
+                  border: `1.2px solid ${elementFilter === elem ? style.border : style.border.replace("0.6)", "0.3)")}`,
                   color: style.text,
                   ...(elementFilter === elem ? { backgroundColor: style.bg } : {}),
                 }}
@@ -148,14 +170,14 @@ export function HomeStatsSection({ characters }: HomeStatsSectionProps) {
 
         {/* 役割フィルター */}
         <div className="flex items-center gap-1.5">
-          <span className="w-5 text-[10px] font-bold text-[#6b5a80]">役割</span>
-          <div className="flex gap-1.5">
+          <span className="w-5 shrink-0 text-[10px] font-bold text-[#6b5a80]">役割</span>
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
             {ROLES.map((role) => (
               <button
                 key={role}
                 onClick={() => setRoleFilter(roleFilter === role ? null : role)}
                 className={cn(
-                  "rounded-[10px] px-2.5 py-1 text-[11px] font-bold transition-colors",
+                  "shrink-0 rounded-[10px] px-2.5 py-1 text-[11px] font-bold transition-colors",
                   roleFilter === role
                     ? "bg-[rgba(255,99,126,0.15)] text-[#fda4af] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
                     : "bg-[#1a1225] text-[#a893c0]"
@@ -213,6 +235,32 @@ export function HomeStatsSection({ characters }: HomeStatsSectionProps) {
                 className="flex items-center gap-2.5 rounded-[14px] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] px-3 py-2.5 transition-colors hover:from-[rgba(36,27,53,0.9)] hover:to-[rgba(36,27,53,0.6)] cursor-pointer"
                 style={{ border: "1.2px solid rgba(249,168,212,0.1)" }}
               >
+                {/* チェックボックス */}
+                <span
+                  role="checkbox"
+                  aria-checked={checkedIds.has(char.id)}
+                  onClick={(e) => toggleCheck(char.id, e)}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "14px",
+                    height: "14px",
+                    minWidth: "14px",
+                    minHeight: "14px",
+                    borderRadius: "3px",
+                    backgroundColor: checkedIds.has(char.id) ? "rgba(255,99,126,0.3)" : "#2a1f3d",
+                    border: `1.5px solid ${checkedIds.has(char.id) ? "rgba(255,99,126,0.5)" : "rgba(249,168,212,0.2)"}`,
+                    cursor: "pointer",
+                    flexShrink: 0,
+                  }}
+                >
+                  {checkedIds.has(char.id) && (
+                    <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fda4af" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </span>
                 {/* キャラアイコン */}
                 <div className="relative h-10 w-10 shrink-0">
                   <div

@@ -57,12 +57,12 @@
 
 /* ダークテーマ（デフォルト） - パープル×ピンク */
 :root {
-  --bg-primary: #0f0a1a;
-  --bg-secondary: #161024;
-  --bg-tertiary: #1e1530;
-  --bg-card: #1a1228;
-  --bg-card-hover: #241b35;
-  --bg-input: #161024;
+  --bg-primary: #1a1225;
+  --bg-secondary: #1e1530;
+  --bg-tertiary: #241b35;
+  --bg-card: #1e1530;
+  --bg-card-hover: #2a1f3d;
+  --bg-input: #1a1225;
 
   --text-primary: #f5e6f0;
   --text-secondary: rgba(245, 230, 240, 0.78);
@@ -119,12 +119,12 @@
 
 /* .dark クラスが明示的に付いた場合 */
 .dark {
-  --bg-primary: #0f0a1a;
-  --bg-secondary: #161024;
-  --bg-tertiary: #1e1530;
-  --bg-card: #1a1228;
-  --bg-card-hover: #241b35;
-  --bg-input: #161024;
+  --bg-primary: #1a1225;
+  --bg-secondary: #1e1530;
+  --bg-tertiary: #241b35;
+  --bg-card: #1e1530;
+  --bg-card-hover: #2a1f3d;
+  --bg-input: #1a1225;
 
   --text-primary: #f5e6f0;
   --text-secondary: rgba(245, 230, 240, 0.78);
@@ -155,6 +155,15 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* スクロールバー非表示ユーティリティ */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 /* テーマ切替トランジション */
