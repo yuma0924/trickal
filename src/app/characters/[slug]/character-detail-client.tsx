@@ -231,9 +231,9 @@ export function CharacterDetailClient({
     <div className="space-y-6">
       {/* ヒーローエリア */}
       <div className="flex items-start gap-4">
-        {/* キャラ画像 96px */}
+        {/* キャラ画像 モバイル96px / PC160px */}
         <div
-          className="relative h-24 w-24 shrink-0 overflow-hidden rounded-[10px]"
+          className="relative h-24 w-24 shrink-0 overflow-hidden rounded-[10px] md:h-56 md:w-56 md:rounded-[16px]"
           style={{
             border: `1.2px solid ${elemColors?.border ?? "rgba(249,168,212,0.2)"}`,
             backgroundColor: elemColors?.bg ?? "transparent",
@@ -243,27 +243,13 @@ export function CharacterDetailClient({
             <Image
               src={character.imageUrl}
               alt={character.name}
-              width={96}
-              height={96}
+              width={224}
+              height={224}
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-lg text-text-tertiary">
+            <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-lg text-text-tertiary md:text-2xl">
               {character.name.charAt(0)}
-            </div>
-          )}
-          {/* 属性バッジ (左上) */}
-          {character.element && elemColors && (
-            <div
-              className="absolute left-1 top-1 rounded-[4px] px-1.5 py-0.5"
-              style={{
-                backgroundColor: elemColors.bg,
-                border: `1.2px solid ${elemColors.border}`,
-              }}
-            >
-              <span className="text-xs font-bold" style={{ color: elemColors.text }}>
-                {character.element}
-              </span>
             </div>
           )}
         </div>

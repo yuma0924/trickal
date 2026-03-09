@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import type { Element } from "@/lib/constants";
 
 type IconSize = "sm" | "md" | "lg";
@@ -31,9 +30,9 @@ const ELEMENT_GLOW: Record<Element, string> = {
 };
 
 const sizeMap: Record<IconSize, { container: string; image: number }> = {
-  sm: { container: "h-10 w-10", image: 40 },
-  md: { container: "h-14 w-14", image: 56 },
-  lg: { container: "h-20 w-20", image: 80 },
+  sm: { container: "h-12 w-12", image: 48 },
+  md: { container: "h-16 w-16", image: 64 },
+  lg: { container: "h-24 w-24", image: 96 },
 };
 
 export function CharacterIcon({
@@ -69,13 +68,6 @@ export function CharacterIcon({
       ) : (
         <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-xs text-text-tertiary">
           {name.charAt(0)}
-        </div>
-      )}
-      {element && (
-        <div className="absolute left-0 top-0">
-          <Badge variant="element" element={element} className="rounded-none rounded-br-md text-[10px] px-1 py-0">
-            {element}
-          </Badge>
         </div>
       )}
     </div>

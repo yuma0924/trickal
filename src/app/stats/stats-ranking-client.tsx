@@ -244,7 +244,7 @@ export function StatsRankingClient({
               <Link
                 key={character.id}
                 href={`/characters/${character.slug}`}
-                className="flex items-center gap-2.5 rounded-[14px] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] px-3 py-2.5 transition-colors hover:from-[rgba(36,27,53,0.9)] hover:to-[rgba(36,27,53,0.6)] cursor-pointer"
+                className="flex items-center gap-2.5 rounded-[14px] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] px-3 py-1.5 transition-colors hover:from-[rgba(36,27,53,0.9)] hover:to-[rgba(36,27,53,0.6)] cursor-pointer"
                 style={{ border: "1.2px solid rgba(249,168,212,0.1)" }}
               >
                 {/* チェックボックス */}
@@ -275,44 +275,23 @@ export function StatsRankingClient({
                 </span>
 
                 {/* キャラアイコン */}
-                <div className="relative h-10 w-10 shrink-0">
-                  <div
-                    className="h-10 w-10 overflow-hidden rounded-[10px] p-[3px]"
-                    style={{
-                      border: `1.2px solid ${elemStyle?.border ?? "rgba(249,168,212,0.2)"}`,
-                      backgroundColor: elemStyle?.bg ?? "transparent",
-                      boxShadow: "0px 4px 6px -1px rgba(0,0,0,0.1)",
-                    }}
-                  >
+                <div className="relative h-12 w-12 shrink-0 overflow-hidden">
+                  <div className="h-[52px] w-[52px] -ml-0.5 -mt-0.5">
                     {character.imageUrl ? (
                       <Image
                         src={character.imageUrl}
                         alt={character.name}
-                        width={40}
-                        height={40}
-                        className="h-full w-full rounded-[4px] object-cover"
+                        width={52}
+                        height={52}
+                        className="h-full w-full object-cover"
                         loading="lazy"
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center rounded-[4px] bg-[#2a1f3d] text-[10px] text-[#8b7aab]">
+                      <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-[10px] text-[#8b7aab]">
                         {character.name.charAt(0)}
                       </div>
                     )}
                   </div>
-                  {character.element && elemStyle && (
-                    <div
-                      className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full"
-                      style={{
-                        backgroundColor: elemStyle.bg,
-                        border: `1.2px solid ${elemStyle.border}`,
-                        boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
-                      }}
-                    >
-                      <span className="text-[7px] font-bold" style={{ color: elemStyle.text }}>
-                        {character.element}
-                      </span>
-                    </div>
-                  )}
                 </div>
 
                 {/* キャラ名 + 役割 */}

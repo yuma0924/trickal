@@ -430,15 +430,28 @@ Rank-lab プロジェクト統合仕様書
 
 6. データベース・管理仕様
 
+【キャラクター分類マスタ】
+
+| 分類         | カラム         | 選択肢 |
+|-------------|---------------|--------|
+| 属性         | element       | 火 / 水 / 風 / 光 / 闇 |
+| 性格         | personality   | 純粋 / 冷静 / 狂気 / 活発 / 憂鬱 |
+| タイプ       | role          | 守備 / 攻撃 / 支援 |
+| 並び替え     | position      | 前列 / 中列 / 後列 |
+| 種族         | race          | 妖精 / 獣人 / エルフ / 精霊 / 幽霊 / 竜族 / 魔女 / ??? |
+| 攻撃タイプ   | attack_type   | 物理 / 魔法 |
+
 - characters（キャラクター）:
   - id (UUID, PK)
   - slug (text, UNIQUE) — キャラ識別子（URL用）
   - name (text, NOT NULL) — キャラ名
   - rarity (text) — レアリティ
   - element (text) — 属性（火/水/風/光/闇）
-  - role (text) — 役割
-  - race (text) — 種族
-  - position (text) — 配置
+  - personality (text) — 性格（純粋/冷静/狂気/活発/憂鬱）
+  - role (text) — タイプ（守備/攻撃/支援）
+  - race (text) — 種族（妖精/獣人/エルフ/精霊/幽霊/竜族/魔女/???）
+  - position (text) — 並び替え（前列/中列/後列）
+  - attack_type (text) — 攻撃タイプ（物理/魔法）
   - stats (jsonb) — ステータス値（HP, 物理攻撃, 魔法攻撃, 防御, 速度, クリティカル 等）
   - skills (jsonb) — スキル情報
   - metadata (jsonb) — その他メタ情報（アルバイトアイテム等）

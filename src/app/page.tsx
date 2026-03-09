@@ -4,6 +4,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import { StarRatingDisplay } from "@/components/ui/star-rating";
 import type { Element } from "@/lib/constants";
 import { HomeStatsSection } from "./home-stats-section";
+import { HomeBuildsSection } from "./home-builds-section";
 
 interface RankedChar {
   id: string;
@@ -354,7 +355,7 @@ export default async function Home() {
     })
     .filter((c): c is TrendingChar => c !== null);
 
-  // --- 第3段: 編成ランキング（上位5件）---
+  // --- 第3段: 編成ランキング（フィルター用に多めに取得）---
   const { data: topBuilds } = await supabase
     .from("builds")
     .select(
@@ -363,7 +364,7 @@ export default async function Home() {
     .eq("is_deleted", false)
     .order("likes_count", { ascending: false })
     .order("updated_at", { ascending: false })
-    .limit(5);
+    .limit(30);
 
   // --- 第4段: ステータス別ランキングのデータ ---
   const { data: allChars } = await supabase
@@ -407,6 +408,35 @@ export default async function Home() {
       avgRating: rr?.avgRating ?? null,
       validVotesCount: rr?.validVotesCount ?? 0,
     };
+  });
+
+  // 編成ランキング用データ変換
+  const buildsData = (topBuilds ?? []).map((build) => {
+    const memberIds = build.members as string[];
+    const memberElements = memberIds
+      .map((mId) => charMap.get(mId)?.element)
+      .filter((e): e is string => e !== null && e !== undefined);
+    const commentCount = Array.isArray(build.build_comments) && build.build_comments.length > 0
+      ? (build.build_comments[0] as { count: number }).count
+      : 0;
+    return {
+      id: build.id,
+      mode: build.mode,
+      members: memberIds,
+      elementLabel: build.element_label,
+      title: build.title,
+      displayName: build.display_name,
+      comment: build.comment,
+      likesCount: build.likes_count,
+      dislikesCount: build.dislikes_count,
+      commentCount,
+      memberElements,
+    };
+  });
+
+  const charMapPlain: Record<string, { name: string; element: string | null; imageUrl: string | null }> = {};
+  charMap.forEach((v, k) => {
+    charMapPlain[k] = { name: v.name, element: v.element, imageUrl: v.imageUrl };
   });
 
   return (
@@ -545,20 +575,6 @@ export default async function Home() {
                             </div>
                           )}
                         </div>
-                        {char.element && elemStyle && (
-                          <div
-                            className="absolute -top-1 right-0 flex items-center justify-center rounded-[8px] px-1.5 py-0.5"
-                            style={{
-                              backgroundColor: elemStyle.bg,
-                              border: `1.2px solid ${elemStyle.border}`,
-                              boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
-                            }}
-                          >
-                            <span className="text-[8px] font-bold" style={{ color: elemStyle.text }}>
-                              {char.element}
-                            </span>
-                          </div>
-                        )}
                       </div>
 
                       {/* 名前・ロール・評価 */}
@@ -658,21 +674,6 @@ export default async function Home() {
                       >
                         <span className="text-[8px] font-bold text-[#a893c0]">{char.rank}</span>
                       </div>
-                      {/* 属性バッジ (右上) */}
-                      {char.element && elemStyle && (
-                        <div
-                          className="absolute right-0.5 top-0.5 flex items-center justify-center rounded-[10px] px-1 py-0"
-                          style={{
-                            backgroundColor: elemStyle.bg,
-                            border: `1.2px solid ${elemStyle.border}`,
-                            boxShadow: "0px 10px 15px rgba(0,0,0,0.1)",
-                          }}
-                        >
-                          <span className="text-[8px] font-bold leading-3" style={{ color: elemStyle.text }}>
-                            {char.element}
-                          </span>
-                        </div>
-                      )}
                       {/* ⭐4.8 オーバーレイ (左下) */}
                       {char.avgRating != null && (
                         <div
@@ -768,20 +769,6 @@ export default async function Home() {
                           </div>
                         )}
                       </div>
-                      {char.element && elemStyle && (
-                        <div
-                          className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-[4px]"
-                          style={{
-                            backgroundColor: elemStyle.bg,
-                            border: `1.2px solid ${elemStyle.border}`,
-                            boxShadow: "0px 1px 3px rgba(0,0,0,0.1)",
-                          }}
-                        >
-                          <span className="text-[7px] font-bold" style={{ color: elemStyle.text }}>
-                            {char.element}
-                          </span>
-                        </div>
-                      )}
                     </div>
                     {/* 情報 */}
                     <div className="min-w-0 flex-1">
@@ -857,195 +844,7 @@ export default async function Home() {
           gradientTo="#ff637e"
         />
 
-        {!topBuilds || topBuilds.length === 0 ? (
-          <p className="py-8 text-center text-sm text-[#8b7aab]">
-            まだ編成が投稿されていません
-          </p>
-        ) : (
-          <div className="space-y-2">
-            {topBuilds.map((build, buildIndex) => {
-              const memberIds = build.members as string[];
-              const memberElements = memberIds
-                .map((mId) => charMap.get(mId)?.element)
-                .filter((e): e is string => e !== null && e !== undefined);
-              const uniqueElements = [...new Set(memberElements)];
-              const commentCount = Array.isArray(build.build_comments) && build.build_comments.length > 0
-                ? (build.build_comments[0] as { count: number }).count
-                : 0;
-
-              // 3列×2行のメンバー配置を作成
-              const row1 = memberIds.slice(0, 3); // 上段
-              const row2 = memberIds.slice(3, 6); // 下段
-
-              return (
-                <Link
-                  key={build.id}
-                  href={`/builds/${build.id}`}
-                  className="block overflow-clip rounded-[16px] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] transition-colors hover:from-[rgba(36,27,53,0.9)] hover:to-[rgba(36,27,53,0.6)] cursor-pointer"
-                  style={{ border: "1.2px solid rgba(249,168,212,0.1)" }}
-                >
-                  <div className="p-3 space-y-2">
-                    {/* タイトル行 + 右上コメント数 */}
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-center gap-1.5 min-w-0">
-                        <span
-                          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[14px] text-xs font-bold shadow-[0px_10px_15px_rgba(0,0,0,0.1)]"
-                          style={{
-                            backgroundImage: buildIndex === 0
-                              ? "linear-gradient(135deg, #ffd230, #fe9a00)"
-                              : buildIndex === 1
-                              ? "linear-gradient(135deg, #c0c0c0, #90a1b9)"
-                              : "linear-gradient(135deg, #b45309, #bb4d00)",
-                            color: buildIndex === 0 ? "#461901" : buildIndex === 1 ? "#1a1225" : "#fef3c7",
-                          }}
-                        >
-                          {buildIndex + 1}
-                        </span>
-                        {build.title && (
-                          <span className="truncate text-[11px] font-bold text-[#fce7f3]">
-                            {build.title}
-                          </span>
-                        )}
-                      </div>
-                      {/* コメント数 (右上) */}
-                      <span className="inline-flex shrink-0 items-center gap-0.5 text-[10px] text-[#8b7aab]">
-                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
-                        {commentCount}
-                      </span>
-                    </div>
-
-                    {/* 属性バッジ + モード */}
-                    <div className="flex items-center gap-1 pl-[34px]">
-                      {uniqueElements.map((elem) => {
-                        const es = ELEMENT_COLORS[elem];
-                        return es ? (
-                          <span
-                            key={elem}
-                            className="rounded-[4px] px-1 py-0.5 text-[8px] font-bold opacity-80"
-                            style={{ backgroundColor: es.bg, color: es.text }}
-                          >
-                            {elem}
-                          </span>
-                        ) : null;
-                      })}
-                      {build.mode && (
-                        <span className="rounded-[4px] bg-[rgba(36,27,53,0.5)] px-1.5 py-0.5 text-[8px] font-bold text-[#8b7aab]">
-                          {build.mode === "pve" ? "PvE" : "PvP"}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* メンバーテーブル (後衛/中衛/前衛 × 2行) */}
-                    <div className="overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.05)]">
-                      {/* ヘッダー行 */}
-                      <div className="grid grid-cols-3 bg-[rgba(30,21,48,0.8)]">
-                        <span className="border-r border-[rgba(249,168,212,0.05)] py-1 text-center text-[9px] font-bold text-[#a893c0]">後衛</span>
-                        <span className="border-r border-[rgba(249,168,212,0.05)] py-1 text-center text-[9px] font-bold text-[#a893c0]">中衛</span>
-                        <span className="py-1 text-center text-[9px] font-bold text-[#a893c0]">前衛</span>
-                      </div>
-                      {/* 上段 */}
-                      <div className="grid grid-cols-3 border-b border-[rgba(249,168,212,0.05)]">
-                        {row1.map((mId, i) => {
-                          const char = charMap.get(mId);
-                          const elemStyle = char?.element ? ELEMENT_COLORS[char.element] : null;
-                          return (
-                            <div key={`${mId}-${i}`} className={`flex flex-col items-center gap-0.5 py-2 ${i < 2 ? "border-r border-[rgba(249,168,212,0.05)]" : ""}`}>
-                              <div className="relative">
-                                <div
-                                  className="h-9 w-9 overflow-hidden rounded-[10px] p-[2px]"
-                                  style={{
-                                    border: elemStyle ? `1.2px solid ${elemStyle.border}` : "1.2px solid rgba(249,168,212,0.1)",
-                                    backgroundColor: elemStyle?.bg ?? "transparent",
-                                  }}
-                                >
-                                  {char?.imageUrl ? (
-                                    <Image src={char.imageUrl} alt={char?.name ?? "?"} width={36} height={36} className="h-full w-full rounded-[4px] object-cover" loading="lazy" />
-                                  ) : (
-                                    <div className="flex h-full w-full items-center justify-center rounded-[4px] bg-[#2a1f3d] text-[10px] text-[#8b7aab]">{char?.name?.charAt(0) ?? "?"}</div>
-                                  )}
-                                </div>
-                                {char?.element && elemStyle && (
-                                  <div className="absolute -right-0.5 -top-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full" style={{ backgroundColor: elemStyle.bg, border: `1.2px solid ${elemStyle.border}` }}>
-                                    <span className="text-[7px] font-bold" style={{ color: elemStyle.text }}>{char.element}</span>
-                                  </div>
-                                )}
-                              </div>
-                              <span className="max-w-16 truncate text-center text-[8px] font-bold text-[#a893c0]">{char?.name ?? "?"}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      {/* 下段 */}
-                      {row2.length > 0 && (
-                        <div className="grid grid-cols-3">
-                          {row2.map((mId, i) => {
-                            const char = charMap.get(mId);
-                            const elemStyle = char?.element ? ELEMENT_COLORS[char.element] : null;
-                            return (
-                              <div key={`${mId}-${i + 3}`} className={`flex flex-col items-center gap-0.5 py-2 ${i < 2 ? "border-r border-[rgba(249,168,212,0.05)]" : ""}`}>
-                                <div className="relative">
-                                  <div
-                                    className="h-9 w-9 overflow-hidden rounded-[10px] p-[2px]"
-                                    style={{
-                                      border: elemStyle ? `1.2px solid ${elemStyle.border}` : "1.2px solid rgba(249,168,212,0.1)",
-                                      backgroundColor: elemStyle?.bg ?? "transparent",
-                                    }}
-                                  >
-                                    {char?.imageUrl ? (
-                                      <Image src={char.imageUrl} alt={char?.name ?? "?"} width={36} height={36} className="h-full w-full rounded-[4px] object-cover" loading="lazy" />
-                                    ) : (
-                                      <div className="flex h-full w-full items-center justify-center rounded-[4px] bg-[#2a1f3d] text-[10px] text-[#8b7aab]">{char?.name?.charAt(0) ?? "?"}</div>
-                                    )}
-                                  </div>
-                                  {char?.element && elemStyle && (
-                                    <div className="absolute -right-0.5 -top-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full" style={{ backgroundColor: elemStyle.bg, border: `1.2px solid ${elemStyle.border}` }}>
-                                      <span className="text-[7px] font-bold" style={{ color: elemStyle.text }}>{char.element}</span>
-                                    </div>
-                                  )}
-                                </div>
-                                <span className="max-w-16 truncate text-center text-[8px] font-bold text-[#a893c0]">{char?.name ?? "?"}</span>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* コメント */}
-                    {build.comment && (
-                      <div className="rounded-[14px] border border-[rgba(249,168,212,0.05)] bg-[rgba(30,21,48,0.8)] px-3 py-2.5">
-                        <p className="line-clamp-2 text-[11px] leading-relaxed text-[rgba(252,231,243,0.8)]">
-                          {build.comment}
-                        </p>
-                        <div className="mt-1.5 flex items-center justify-between border-t border-[rgba(249,168,212,0.05)] pt-1.5">
-                          {build.display_name && (
-                            <span className="text-[10px] text-[#8b7aab]">{build.display_name}</span>
-                          )}
-                          <div className="flex items-center gap-2">
-                            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#f9a8d4]">
-                              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
-                              </svg>
-                              {build.likes_count}
-                            </span>
-                            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7dd3fc]">
-                              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M10 15V19a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9a2 2 0 002 2.3H10z" />
-                              </svg>
-                              {build.dislikes_count}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        )}
+        <HomeBuildsSection builds={buildsData} charMap={charMapPlain} />
 
         <SectionFooterButton
           href="/builds"
