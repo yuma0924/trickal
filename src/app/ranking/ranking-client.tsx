@@ -3,11 +3,10 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Tab } from "@/components/ui/tab";
 import { CharacterCard } from "@/components/character/character-card";
 import { Button } from "@/components/ui/button";
-import { StarRatingDisplay } from "@/components/ui/star-rating";
 import { ELEMENTS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 import type { RankedCharacter, UnrankedCharacter, TrendingCharacter } from "./page";
 
 interface RankingClientProps {
@@ -19,6 +18,14 @@ interface RankingClientProps {
 const INITIAL_SHOW_COUNT = 30;
 const LOAD_MORE_COUNT = 30;
 
+const ELEMENT_ICONS: Record<string, string> = {
+  純粋: "/icons/pure.png",
+  冷静: "/icons/calm.png",
+  狂気: "/icons/madness.png",
+  活発: "/icons/lively.png",
+  憂鬱: "/icons/melancholy.png",
+};
+
 export function RankingClient({
   rankedCharacters,
   unrankedCharacters,
@@ -26,11 +33,6 @@ export function RankingClient({
 }: RankingClientProps) {
   const [elementFilter, setElementFilter] = useState<string>("all");
   const [showCount, setShowCount] = useState(INITIAL_SHOW_COUNT);
-
-  const elementTabs = [
-    { value: "all", label: "全属性" },
-    ...ELEMENTS.map((e) => ({ value: e, label: e })),
-  ];
 
   // フィルター適用
   const filteredRanked = useMemo(() => {
@@ -62,7 +64,49 @@ export function RankingClient({
   return (
     <div className="space-y-6">
       {/* 属性フィルター */}
-      <Tab items={elementTabs} value={elementFilter} onChange={handleFilterChange} />
+      <div className="flex items-center gap-1.5">
+        <button
+          onClick={() => handleFilterChange("all")}
+          className={cn(
+            "shrink-0 rounded-[10px] px-2.5 py-1.5 text-[11px] font-bold transition-colors cursor-pointer",
+            elementFilter === "all"
+              ? "bg-[rgba(255,99,126,0.15)] text-[#fda4af] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+              : "bg-[#1a1225] text-[#a893c0]"
+          )}
+          style={{
+            border: `1.2px solid ${elementFilter === "all" ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+          }}
+        >
+          全属性
+        </button>
+        {ELEMENTS.map((elem) => {
+          const active = elementFilter === elem;
+          return (
+            <button
+              key={elem}
+              onClick={() => handleFilterChange(elem)}
+              className={cn(
+                "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer",
+                active
+                  ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+                  : "bg-[#1a1225]"
+              )}
+              style={{
+                border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+              }}
+              title={elem}
+            >
+              <Image
+                src={ELEMENT_ICONS[elem]}
+                alt={elem}
+                width={20}
+                height={20}
+                className="h-5 w-5"
+              />
+            </button>
+          );
+        })}
+      </div>
 
       {/* 1位アナウンス */}
       {currentTop && (
@@ -162,16 +206,17 @@ export function RankingClient({
                     <p className="truncate text-[10px] font-bold text-[#fce7f3]">
                       {char.name}
                     </p>
-                    <div className="mt-0.5 flex items-center gap-1">
+                    <div className="mt-0.5 flex items-center gap-1.5">
                       {char.avgRating !== null && char.validVotesCount >= 4 ? (
-                        <StarRatingDisplay rating={char.avgRating} size="sm" showValue />
+                        <span className="text-[10px] font-bold text-[#fcd34d]">
+                          ★{char.avgRating.toFixed(1)}
+                          <span className="ml-0.5 font-normal text-[#8b7aab]">{char.validVotesCount}票</span>
+                        </span>
                       ) : (
                         <span className="text-[8px] text-[#8b7aab]">
                           {char.validVotesCount > 0 ? `${char.validVotesCount}票` : "未評価"}
                         </span>
                       )}
-                    </div>
-                    <div className="mt-0.5">
                       <span className="inline-flex items-center gap-0.5 rounded bg-[rgba(246,51,154,0.8)] px-1 py-0.5 text-[7px] font-bold text-white">
                         <svg className="h-1.5 w-1.5" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />

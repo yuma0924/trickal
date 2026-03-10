@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { CharacterIcon } from "@/components/character/character-icon";
 import { ThumbsUpDown } from "@/components/reaction/thumbs-up-down";
@@ -44,7 +45,13 @@ const MODE_TABS: { value: Mode; label: string; icon: string }[] = [
   { value: "pvp", label: "PvP", icon: "swords" },
 ];
 
-const ELEMENT_FILTERS = ELEMENTS.map((e) => ({ value: e, label: e }));
+const ELEMENT_ICONS: Record<string, string> = {
+  純粋: "/icons/pure.png",
+  冷静: "/icons/calm.png",
+  狂気: "/icons/madness.png",
+  活発: "/icons/lively.png",
+  憂鬱: "/icons/melancholy.png",
+};
 
 type SortKey = "popular" | "unpopular" | "newest";
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
@@ -244,20 +251,33 @@ export function BuildsClient() {
         <div className="flex items-center gap-2">
           <span className="shrink-0 text-[10px] text-text-muted">属性</span>
           <div className="flex gap-1.5 overflow-x-auto">
-            {ELEMENT_FILTERS.map((ef) => (
-              <button
-                key={ef.value}
-                onClick={() => setElementFilter(elementFilter === ef.value ? "" : ef.value)}
-                className={cn(
-                  "shrink-0 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer",
-                  elementFilter === ef.value
-                    ? "bg-accent text-white"
-                    : "bg-bg-tertiary text-text-secondary hover:text-text-primary"
-                )}
-              >
-                {ef.label}
-              </button>
-            ))}
+            {ELEMENTS.map((elem) => {
+              const active = elementFilter === elem;
+              return (
+                <button
+                  key={elem}
+                  onClick={() => setElementFilter(elementFilter === elem ? "" : elem)}
+                  className={cn(
+                    "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer",
+                    active
+                      ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+                      : "bg-[#1a1225]"
+                  )}
+                  style={{
+                    border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                  }}
+                  title={elem}
+                >
+                  <Image
+                    src={ELEMENT_ICONS[elem]}
+                    alt={elem}
+                    width={20}
+                    height={20}
+                    className="h-5 w-5"
+                  />
+                </button>
+              );
+            })}
           </div>
         </div>
         {/* ソート行 */}

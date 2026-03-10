@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { ELEMENTS } from "@/lib/constants";
+import { CharacterCard } from "@/components/character/character-card";
 
 interface SearchCharacter {
   id: string;
@@ -254,33 +254,12 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
       ) : (
         <div className="grid grid-cols-4 gap-2">
           {filtered.map((char) => (
-            <Link
+            <CharacterCard
               key={char.id}
-              href={`/characters/${char.slug}`}
-              className="flex flex-col overflow-clip bg-[#241b35] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1)] transition-all hover:scale-[1.02] hover:brightness-110 cursor-pointer"
-            >
-              <div className="relative">
-                {char.imageUrl ? (
-                  <Image
-                    src={char.imageUrl}
-                    alt={char.name}
-                    width={82}
-                    height={82}
-                    className="aspect-square w-full object-cover"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="flex aspect-square w-full items-center justify-center bg-[#2a1f3d] text-sm text-[#8b7aab]">
-                    {char.name.charAt(0)}
-                  </div>
-                )}
-              </div>
-              <div className="bg-[rgba(36,27,53,0.95)] px-1 pt-0.5 pb-1.5">
-                <p className="truncate text-center text-[9px] font-bold leading-tight text-[#fce7f3]">
-                  {char.name}
-                </p>
-              </div>
-            </Link>
+              slug={char.slug}
+              name={char.name}
+              imageUrl={char.imageUrl}
+            />
           ))}
         </div>
       )}

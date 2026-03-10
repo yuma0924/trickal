@@ -1,8 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { CharacterIcon } from "@/components/character/character-icon";
-import { StarRatingDisplay } from "@/components/ui/star-rating";
-import { Badge } from "@/components/ui/badge";
 
 interface CharacterCardProps {
   slug: string;
@@ -11,7 +9,6 @@ interface CharacterCardProps {
   avgRating?: number | null;
   validVotesCount?: number;
   rank?: number | null;
-  isHero?: boolean;
   className?: string;
 }
 
@@ -22,7 +19,6 @@ export function CharacterCard({
   avgRating,
   validVotesCount = 0,
   rank,
-  isHero = false,
   className,
 }: CharacterCardProps) {
   const rankDisplay = rank !== null && rank !== undefined;
@@ -31,54 +27,60 @@ export function CharacterCard({
     <Link
       href={`/characters/${slug}`}
       className={cn(
-        "group flex flex-col items-center gap-1.5 rounded-2xl border border-border-primary bg-bg-card p-2 transition-all cursor-pointer overflow-hidden",
-        "hover:bg-bg-card-hover hover:scale-[1.02] hover:shadow-lg hover:shadow-black/10",
-        isHero && "p-3",
+        "flex flex-col overflow-clip bg-[#241b35] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1)] transition-all hover:scale-[1.02] hover:brightness-110 cursor-pointer",
         className
       )}
     >
       <div className="relative">
-        <CharacterIcon
-          name={name}
-          imageUrl={imageUrl}
-          size={isHero ? "lg" : "md"}
-        />
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt={name}
+            width={82}
+            height={82}
+            className="aspect-square w-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <div className="flex aspect-square w-full items-center justify-center bg-[#2a1f3d] text-sm text-[#8b7aab]">
+            {name.charAt(0)}
+          </div>
+        )}
+        {/* 順位バッジ (左上) */}
         {rankDisplay && (
           <div
-            className={cn(
-              "absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold",
-              rank === 1 && "bg-gradient-to-br from-yellow-400 to-amber-500 text-black",
-              rank === 2 && "bg-gradient-to-br from-gray-300 to-gray-400 text-black",
-              rank === 3 && "bg-gradient-to-br from-amber-600 to-amber-700 text-white",
-              rank !== undefined && rank > 3 && "bg-bg-tertiary text-text-secondary"
-            )}
+            className="absolute left-0.5 top-0.5 flex h-4 w-4 items-center justify-center rounded-full shadow-[0px_10px_15px_rgba(0,0,0,0.1)]"
+            style={{
+              backgroundColor: "rgba(42,31,61,0.9)",
+              border: "1.2px solid rgba(249,168,212,0.1)",
+            }}
           >
-            {rank}
+            <span className="text-[8px] font-bold text-[#a893c0]">{rank}</span>
+          </div>
+        )}
+        {/* ★評価オーバーレイ (左下) */}
+        {avgRating !== null && avgRating !== undefined && (
+          <div
+            className="absolute bottom-0.5 left-0.5 flex items-center gap-0.5 rounded-[10px] py-[1px] pl-[5px] pr-[1px] shadow-[0px_10px_15px_rgba(0,0,0,0.1)]"
+            style={{
+              backgroundColor: "rgba(26,18,37,0.9)",
+              border: "1.2px solid rgba(249,168,212,0.1)",
+            }}
+          >
+            <svg className="h-2.5 w-2.5 text-[#fcd34d]" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+            <span className="text-[10px] font-bold text-[#fcd34d]">
+              {avgRating.toFixed(1)}
+            </span>
           </div>
         )}
       </div>
-      <span
-        className={cn(
-          "line-clamp-1 text-center font-medium text-text-primary",
-          isHero ? "text-sm" : "text-xs"
-        )}
-      >
-        {name}
-      </span>
-      {avgRating !== null && avgRating !== undefined ? (
-        <StarRatingDisplay
-          rating={avgRating}
-          size="sm"
-          showValue
-        />
-      ) : (
-        <span className="text-[10px] text-text-tertiary">未評価</span>
-      )}
-      {validVotesCount > 0 && (
-        <Badge variant="outline" className="text-[10px]">
-          {validVotesCount}票
-        </Badge>
-      )}
+      <div className="bg-[rgba(36,27,53,0.95)] px-1 pt-0.5 pb-1.5">
+        <p className="truncate text-center text-[9px] font-bold leading-tight text-[#fce7f3]">
+          {name}
+        </p>
+      </div>
     </Link>
   );
 }

@@ -13,6 +13,14 @@ const ELEMENT_COLORS: Record<string, { border: string; bg: string; text: string 
   憂鬱: { border: "rgba(166,132,255,0.6)", bg: "rgba(166,132,255,0.15)", text: "#a78bfa" },
 };
 
+const ELEMENT_ICONS: Record<string, string> = {
+  純粋: "/icons/pure.png",
+  冷静: "/icons/calm.png",
+  狂気: "/icons/madness.png",
+  活発: "/icons/lively.png",
+  憂鬱: "/icons/melancholy.png",
+};
+
 interface CharInfo {
   name: string;
   element: string | null;
@@ -102,25 +110,33 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
 
         {/* 属性フィルター */}
         <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
-          {Object.entries(ELEMENT_COLORS).map(([elem, style]) => (
-            <button
-              key={elem}
-              onClick={() => setElementFilter(elementFilter === elem ? null : elem)}
-              className={cn(
-                "shrink-0 rounded-[10px] px-2.5 py-1 text-[11px] font-bold text-center transition-colors",
-                elementFilter === elem
-                  ? "shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-                  : "bg-[#1a1225]"
-              )}
-              style={{
-                border: `1.2px solid ${elementFilter === elem ? style.border : style.border.replace("0.6)", "0.3)")}`,
-                color: style.text,
-                ...(elementFilter === elem ? { backgroundColor: style.bg } : {}),
-              }}
-            >
-              {elem}
-            </button>
-          ))}
+          {Object.keys(ELEMENT_ICONS).map((elem) => {
+            const active = elementFilter === elem;
+            return (
+              <button
+                key={elem}
+                onClick={() => setElementFilter(elementFilter === elem ? null : elem)}
+                className={cn(
+                  "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer",
+                  active
+                    ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+                    : "bg-[#1a1225]"
+                )}
+                style={{
+                  border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                }}
+                title={elem}
+              >
+                <Image
+                  src={ELEMENT_ICONS[elem]}
+                  alt={elem}
+                  width={20}
+                  height={20}
+                  className="h-5 w-5"
+                />
+              </button>
+            );
+          })}
         </div>
       </div>
 

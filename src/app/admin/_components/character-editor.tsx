@@ -16,9 +16,9 @@ const FIELDS: EditableField[] = [
   { key: "slug", label: "スラッグ", type: "text", width: "w-28" },
   { key: "rarity", label: "レア", type: "select", options: ["★1", "★2", "★3"], width: "w-16" },
   { key: "element", label: "属性", type: "select", options: ["純粋", "冷静", "狂気", "活発", "憂鬱"], width: "w-16" },
-  { key: "role", label: "役割", type: "text", width: "w-20" },
-  { key: "race", label: "種族", type: "text", width: "w-20" },
-  { key: "position", label: "配置", type: "text", width: "w-20" },
+  { key: "role", label: "役割", type: "select", options: ["守備", "攻撃", "支援"], width: "w-16" },
+  { key: "race", label: "種族", type: "select", options: ["妖精", "獣人", "エルフ", "精霊", "幽霊", "竜族", "魔女", "???"], width: "w-20" },
+  { key: "position", label: "配置", type: "select", options: ["前列", "中列", "後列"], width: "w-16" },
   { key: "is_provisional", label: "暫定", type: "checkbox", width: "w-12" },
   { key: "is_hidden", label: "非表示", type: "checkbox", width: "w-12" },
 ];

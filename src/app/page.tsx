@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { createServerClient } from "@/lib/supabase/server";
 import { StarRatingDisplay } from "@/components/ui/star-rating";
+import { CharacterCard } from "@/components/character/character-card";
 import type { Element } from "@/lib/constants";
 import { HomeSearchSection } from "./home-search-section";
 import { HomeBuildsSection } from "./home-builds-section";
@@ -600,69 +601,19 @@ export default async function Home() {
               })}
             </div>
 
-            {/* 4位以降: グリッド表示 (Figma完全マッチ - 4列) */}
+            {/* 4位以降: グリッド表示 (4列) */}
             <div className="grid grid-cols-4 gap-2">
-              {rankedCharacters.slice(3).map((char) => {
-                const elemStyle = char.element ? ELEMENT_COLORS[char.element] : null;
-                return (
-                  <Link
-                    key={char.id}
-                    href={`/characters/${char.slug}`}
-                    className="flex flex-col overflow-clip bg-[#241b35] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1)] transition-all hover:scale-[1.02] hover:brightness-110 cursor-pointer"
-                  >
-                    {/* 画像エリア */}
-                    <div className="relative">
-                        {char.imageUrl ? (
-                          <Image
-                            src={char.imageUrl}
-                            alt={char.name}
-                            width={82}
-                            height={82}
-                            className="aspect-square w-full object-cover"
-                            loading="lazy"
-                          />
-                        ) : (
-                          <div className="flex aspect-square w-full items-center justify-center bg-[#2a1f3d] text-sm text-[#8b7aab]">
-                            {char.name.charAt(0)}
-                          </div>
-                        )}
-                      {/* 順位バッジ (左上) */}
-                      <div
-                        className="absolute left-0.5 top-0.5 flex h-4 w-4 items-center justify-center rounded-full shadow-[0px_10px_15px_rgba(0,0,0,0.1)]"
-                        style={{
-                          backgroundColor: "rgba(42,31,61,0.9)",
-                          border: "1.2px solid rgba(249,168,212,0.1)",
-                        }}
-                      >
-                        <span className="text-[8px] font-bold text-[#a893c0]">{char.rank}</span>
-                      </div>
-                      {/* ⭐4.8 オーバーレイ (左下) */}
-                      {char.avgRating != null && (
-                        <div
-                          className="absolute bottom-0.5 left-0.5 flex items-center gap-0.5 rounded-[10px] py-[1px] pl-[5px] pr-[1px] shadow-[0px_10px_15px_rgba(0,0,0,0.1)]"
-                          style={{
-                            backgroundColor: "rgba(26,18,37,0.9)",
-                            border: "1.2px solid rgba(249,168,212,0.1)",
-                          }}
-                        >
-                          <svg className="h-2.5 w-2.5 text-[#fcd34d]" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                          <span className="text-[10px] font-bold text-[#fcd34d]">
-                            {char.avgRating.toFixed(1)}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    {/* 名前 */}
-                    <div className="bg-[rgba(36,27,53,0.95)] px-1 pt-0.5 pb-1.5">
-                      <p className="truncate text-center text-[9px] font-bold leading-tight text-[#fce7f3]">
-                        {char.name}
-                      </p>
-                    </div>
-                  </Link>
-                );
-              })}
+              {rankedCharacters.slice(3).map((char) => (
+                <CharacterCard
+                  key={char.id}
+                  slug={char.slug}
+                  name={char.name}
+                  imageUrl={char.imageUrl}
+                  avgRating={char.avgRating}
+                  validVotesCount={char.validVotesCount}
+                  rank={char.rank}
+                />
+              ))}
             </div>
           </>
         )}
@@ -731,26 +682,17 @@ export default async function Home() {
                       <p className="truncate text-[10px] font-bold text-[#fce7f3]">
                         {char.name}
                       </p>
-                      <div className="mt-0.5 flex items-center gap-1">
+                      <div className="mt-0.5 flex items-center gap-1.5">
                         {char.avgRating !== null && char.validVotesCount >= 4 ? (
-                          <>
-                            <svg className="h-2.5 w-2.5 text-[#fcd34d]" fill="currentColor" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <span className="text-[10px] font-bold text-[#fcd34d]">
-                              {char.avgRating.toFixed(1)}
-                            </span>
-                            <span className="text-[8px] text-[#8b7aab]">
-                              {char.validVotesCount}票
-                            </span>
-                          </>
+                          <span className="text-[10px] font-bold text-[#fcd34d]">
+                            ★{char.avgRating.toFixed(1)}
+                            <span className="ml-0.5 font-normal text-[#8b7aab]">{char.validVotesCount}票</span>
+                          </span>
                         ) : (
                           <span className="text-[8px] text-[#8b7aab]">
                             {char.validVotesCount > 0 ? `${char.validVotesCount}票` : "未評価"}
                           </span>
                         )}
-                      </div>
-                      <div className="mt-0.5">
                         <span className="inline-flex items-center gap-0.5 rounded bg-[rgba(246,51,154,0.8)] px-1 py-0.5 text-[7px] font-bold text-white">
                           <svg className="h-1.5 w-1.5" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
