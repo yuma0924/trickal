@@ -30,7 +30,7 @@ trickal/
 │   │   │   └── [slug]/       # キャラクター個別ページ
 │   │   ├── builds/           # 編成ランキング
 │   │   │   └── [buildId]/    # 編成詳細ページ
-│   │   ├── stats/            # ステータス別ランキング
+│   │   ├── stats/            # （廃止予定）ステータス別ランキング → キャラ検索・フィルターに統合
 │   │   ├── guidelines/       # ガイドライン
 │   │   ├── admin/            # 管理者ダッシュボード
 │   │   └── api/              # API Routes
@@ -128,7 +128,7 @@ trickal/
 |---------|---------------|
 | infra | `supabase/`, `src/lib/supabase/`, `src/types/database.ts`, `.github/workflows/`, `src/app/api/user-hash/` |
 | ui-foundation | `src/components/`, `src/app/layout.tsx`, `src/lib/utils.ts`, `src/lib/constants.ts`, `tailwind.config.ts`, `src/app/globals.css` |
-| pages-ranking | `src/app/page.tsx`, `src/app/ranking/`, `src/app/characters/`, `src/app/stats/`, `src/app/api/comments/`, `src/app/api/reactions/` |
+| pages-ranking | `src/app/page.tsx`, `src/app/ranking/`, `src/app/characters/`, `src/app/api/comments/`, `src/app/api/reactions/` |
 | pages-builds | `src/app/builds/`, `src/app/api/builds/`, `src/app/api/reports/` |
 | admin | `src/app/admin/`, `src/app/api/admin/`, `src/app/guidelines/` |
 

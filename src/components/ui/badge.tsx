@@ -11,11 +11,11 @@ interface BadgeProps {
 }
 
 const ELEMENT_BG: Record<Element, string> = {
-  火: "bg-element-fire/20 text-element-fire",
-  水: "bg-element-water/20 text-element-water",
-  風: "bg-element-wind/20 text-element-wind",
-  光: "bg-element-light/20 text-element-light",
-  闇: "bg-element-dark/20 text-element-dark",
+  純粋: "bg-element-pure/20 text-element-pure",
+  冷静: "bg-element-calm/20 text-element-calm",
+  狂気: "bg-element-madness/20 text-element-madness",
+  活発: "bg-element-lively/20 text-element-lively",
+  憂鬱: "bg-element-melancholy/20 text-element-melancholy",
 };
 
 export function Badge({

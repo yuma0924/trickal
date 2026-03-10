@@ -88,7 +88,7 @@ export function RankingClient({
                 slug={char.slug}
                 name={char.name}
                 imageUrl={char.imageUrl}
-                element={char.element ?? undefined}
+
                 avgRating={char.avgRating}
                 validVotesCount={char.validVotesCount}
                 rank={char.rank}
@@ -217,7 +217,7 @@ export function RankingClient({
                 slug={char.slug}
                 name={char.name}
                 imageUrl={char.imageUrl}
-                element={char.element ?? undefined}
+
                 avgRating={
                   char.validVotesCount > 0 ? char.avgRating : null
                 }
@@ -246,26 +246,6 @@ export function RankingClient({
           <div className="flex-1">
             <span className="block text-sm font-bold text-[#fce7f3]">編成ランキング</span>
             <span className="text-[10px] text-[#8b7aab]">人気のパーティ編成をチェックしよう</span>
-          </div>
-          <svg className="h-4 w-4 shrink-0 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-          </svg>
-        </Link>
-        <Link
-          href="/stats"
-          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(0,188,255,0.15)] to-[rgba(166,132,255,0.15)] border border-[rgba(249,168,212,0.1)] px-4 py-3 transition-colors hover:from-[rgba(0,188,255,0.25)] hover:to-[rgba(166,132,255,0.25)] cursor-pointer"
-        >
-          <span
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-            style={{ backgroundImage: "linear-gradient(135deg, #00bcff, #a684ff)" }}
-          >
-            <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 3v18h18M9 17V9m4 8V5m4 12v-4" />
-            </svg>
-          </span>
-          <div className="flex-1">
-            <span className="block text-sm font-bold text-[#fce7f3]">ステータス別ランキング</span>
-            <span className="text-[10px] text-[#8b7aab]">ステータスで比較して最強キャラを見つけよう</span>
           </div>
           <svg className="h-4 w-4 shrink-0 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

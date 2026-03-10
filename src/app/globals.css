@@ -8,12 +8,12 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  /* 属性カラー */
-  --color-element-fire: #ef4444;
-  --color-element-water: #3b82f6;
-  --color-element-wind: #22c55e;
-  --color-element-light: #eab308;
-  --color-element-dark: #a855f7;
+  /* 属性(性格)カラー */
+  --color-element-pure: #22c55e;
+  --color-element-calm: #3b82f6;
+  --color-element-madness: #ef4444;
+  --color-element-lively: #eab308;
+  --color-element-melancholy: #a855f7;
 
   /* 自浄作用ボーダーカラー */
   --color-karma-gold: #fbbf24;

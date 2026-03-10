@@ -3,7 +3,7 @@ import Image from "next/image";
 import { createServerClient } from "@/lib/supabase/server";
 import { StarRatingDisplay } from "@/components/ui/star-rating";
 import type { Element } from "@/lib/constants";
-import { HomeStatsSection } from "./home-stats-section";
+import { HomeSearchSection } from "./home-search-section";
 import { HomeBuildsSection } from "./home-builds-section";
 
 interface RankedChar {
@@ -23,11 +23,11 @@ interface RankedChar {
 }
 
 const ELEMENT_COLORS: Record<string, { border: string; bg: string; text: string }> = {
-  火: { border: "rgba(251,113,133,0.6)", bg: "rgba(251,113,133,0.15)", text: "#fb7185" },
-  水: { border: "rgba(56,189,248,0.6)", bg: "rgba(56,189,248,0.15)", text: "#38bdf8" },
-  風: { border: "rgba(74,222,128,0.6)", bg: "rgba(74,222,128,0.15)", text: "#34d399" },
-  光: { border: "rgba(255,210,48,0.6)", bg: "rgba(255,210,48,0.15)", text: "#fcd34d" },
-  闇: { border: "rgba(166,132,255,0.6)", bg: "rgba(166,132,255,0.15)", text: "#a78bfa" },
+  純粋: { border: "rgba(74,222,128,0.6)", bg: "rgba(74,222,128,0.15)", text: "#34d399" },
+  冷静: { border: "rgba(56,189,248,0.6)", bg: "rgba(56,189,248,0.15)", text: "#38bdf8" },
+  狂気: { border: "rgba(251,113,133,0.6)", bg: "rgba(251,113,133,0.15)", text: "#fb7185" },
+  活発: { border: "rgba(255,210,48,0.6)", bg: "rgba(255,210,48,0.15)", text: "#fcd34d" },
+  憂鬱: { border: "rgba(166,132,255,0.6)", bg: "rgba(166,132,255,0.15)", text: "#a78bfa" },
 };
 
 interface TrendingChar {
@@ -138,13 +138,6 @@ function TeamIcon({ className }: { className?: string }) {
   );
 }
 
-function ChartIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="currentColor" viewBox="0 0 20 20">
-      <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
-    </svg>
-  );
-}
 
 export default async function Home() {
   const supabase = await createServerClient();
@@ -366,49 +359,23 @@ export default async function Home() {
     .order("updated_at", { ascending: false })
     .limit(30);
 
-  // --- 第4段: ステータス別ランキングのデータ ---
+  // --- 第4段: キャラ検索・フィルターのデータ ---
   const { data: allChars } = await supabase
     .from("characters")
-    .select("id, slug, name, element, role, image_url, stats")
+    .select("id, slug, name, element, role, rarity, race, position, image_url")
     .eq("is_hidden", false);
 
-  const { data: allRankings } = await supabase
-    .from("character_rankings")
-    .select("character_id, avg_rating, valid_votes_count");
-
-  const rankingMapForStats = new Map<
-    string,
-    { avgRating: number; validVotesCount: number }
-  >();
-  if (allRankings) {
-    for (const r of allRankings) {
-      rankingMapForStats.set(r.character_id, {
-        avgRating: r.avg_rating,
-        validVotesCount: r.valid_votes_count,
-      });
-    }
-  }
-
-  const statsCharacters = (allChars ?? []).map((c) => {
-    const rr = rankingMapForStats.get(c.id);
-    const rawStats = (c.stats as Record<string, unknown>) ?? {};
-    const stats: Record<string, number | null> = {};
-    for (const key of ["hp", "patk", "matk", "def", "spd", "crit"]) {
-      const val = rawStats[key];
-      stats[key] = typeof val === "number" ? val : null;
-    }
-    return {
-      id: c.id,
-      slug: c.slug,
-      name: c.name,
-      element: c.element,
-      role: c.role,
-      imageUrl: c.image_url,
-      stats,
-      avgRating: rr?.avgRating ?? null,
-      validVotesCount: rr?.validVotesCount ?? 0,
-    };
-  });
+  const searchCharacters = (allChars ?? []).map((c) => ({
+    id: c.id,
+    slug: c.slug,
+    name: c.name,
+    element: c.element,
+    role: c.role,
+    rarity: c.rarity,
+    race: c.race,
+    position: c.position,
+    imageUrl: c.image_url,
+  }));
 
   // 編成ランキング用データ変換
   const buildsData = (topBuilds ?? []).map((build) => {
@@ -493,30 +460,39 @@ export default async function Home() {
                   1: {
                     borderColor: "#d4a017",
                     bannerBg: "rgba(255,185,0,0.15)",
-                    circleBg: "#ffb900",
-                    circleText: "#1a1225",
                     rankText: "#fcd34d",
-                    icon: (
-                      <svg className="h-3.5 w-3.5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />
-                      </svg>
+                    badge: (
+                      <span className="flex h-7 w-7 items-center justify-center">
+                        <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
+                          <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z" fill="#ffd700" />
+                          <path d="M5 18h14v2H5z" fill="#ffd700" />
+                        </svg>
+                      </span>
                     ),
                   },
                   2: {
                     borderColor: "#9ca3af",
                     bannerBg: "rgba(144,161,185,0.1)",
-                    circleBg: "#90a1b9",
-                    circleText: "#1a1225",
                     rankText: "#d1d5db",
-                    icon: null,
+                    badge: (
+                      <svg className="h-7 w-7" viewBox="0 0 32 32" fill="none">
+                        <path d="M13 22l-4 6h14l-4-6" fill="#7a8fa3" />
+                        <circle cx="16" cy="14" r="10" fill="#b0c4d8" stroke="#90a1b9" strokeWidth="1.5" />
+                        <path d="M16 8l1.8 3.6 4 .6-2.9 2.8.7 4L16 17l-3.6 2 .7-4-2.9-2.8 4-.6L16 8z" fill="#e8eef4" stroke="#90a1b9" strokeWidth="0.5" />
+                      </svg>
+                    ),
                   },
                   3: {
                     borderColor: "#b45309",
                     bannerBg: "rgba(225,113,0,0.1)",
-                    circleBg: "#bb4d00",
-                    circleText: "#fef3c7",
                     rankText: "#fe9a00",
-                    icon: null,
+                    badge: (
+                      <svg className="h-7 w-7" viewBox="0 0 32 32" fill="none">
+                        <path d="M13 22l-4 6h14l-4-6" fill="#92400e" />
+                        <circle cx="16" cy="14" r="10" fill="#d97706" stroke="#b45309" strokeWidth="1.5" />
+                        <path d="M16 8l1.8 3.6 4 .6-2.9 2.8.7 4L16 17l-3.6 2 .7-4-2.9-2.8 4-.6L16 8z" fill="#fde68a" stroke="#b45309" strokeWidth="0.5" />
+                      </svg>
+                    ),
                   },
                 } as const;
 
@@ -536,12 +512,7 @@ export default async function Home() {
                       className="flex h-[38px] items-center gap-1.5 pl-3.5"
                       style={{ backgroundColor: cfg.bannerBg }}
                     >
-                      <span
-                        className="flex h-6 w-6 items-center justify-center rounded-full text-[9px] font-black"
-                        style={{ backgroundColor: cfg.circleBg, color: cfg.circleText }}
-                      >
-                        {cfg.icon ?? rank}
-                      </span>
+                      {cfg.badge}
                       <span
                         className="text-xs font-bold"
                         style={{ color: cfg.rankText }}
@@ -552,29 +523,21 @@ export default async function Home() {
 
                     {/* キャラ情報 */}
                     <div className="flex gap-3 px-3.5 py-2.5">
-                      {/* 80px キャラ画像 + 属性バッジ */}
-                      <div className="relative h-20 w-20 shrink-0">
-                        <div
-                          className="h-20 w-20 overflow-hidden rounded-[14px] p-[1px]"
-                          style={{
-                            border: `1.2px solid ${elemStyle?.border ?? "rgba(249,168,212,0.2)"}`,
-                            boxShadow: "0px 10px 15px -3px rgba(0,0,0,0.1)",
-                          }}
-                        >
-                          {char.imageUrl ? (
-                            <Image
-                              src={char.imageUrl}
-                              alt={char.name}
-                              width={80}
-                              height={80}
-                              className="h-full w-full rounded-[12px] object-cover"
-                            />
-                          ) : (
-                            <div className="flex h-full w-full items-center justify-center rounded-[12px] bg-[#2a1f3d] text-lg text-[#8b7aab]">
-                              {char.name.charAt(0)}
-                            </div>
-                          )}
-                        </div>
+                      {/* キャラ画像 */}
+                      <div className="h-20 w-20 shrink-0 overflow-hidden">
+                        {char.imageUrl ? (
+                          <Image
+                            src={char.imageUrl}
+                            alt={char.name}
+                            width={84}
+                            height={84}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-lg text-[#8b7aab]">
+                            {char.name.charAt(0)}
+                          </div>
+                        )}
                       </div>
 
                       {/* 名前・ロール・評価 */}
@@ -645,8 +608,7 @@ export default async function Home() {
                   <Link
                     key={char.id}
                     href={`/characters/${char.slug}`}
-                    className="flex flex-col overflow-clip rounded-[14px] bg-[#241b35] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1)] transition-all hover:scale-[1.02] hover:brightness-110 cursor-pointer"
-                    style={{ border: `1.2px solid ${elemStyle?.border ?? "rgba(249,168,212,0.15)"}` }}
+                    className="flex flex-col overflow-clip bg-[#241b35] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1)] transition-all hover:scale-[1.02] hover:brightness-110 cursor-pointer"
                   >
                     {/* 画像エリア */}
                     <div className="relative">
@@ -656,11 +618,11 @@ export default async function Home() {
                             alt={char.name}
                             width={82}
                             height={82}
-                            className="aspect-square w-full rounded-t-[12px] object-cover"
+                            className="aspect-square w-full object-cover"
                             loading="lazy"
                           />
                         ) : (
-                          <div className="flex aspect-square w-full items-center justify-center rounded-t-[12px] bg-[#2a1f3d] text-sm text-[#8b7aab]">
+                          <div className="flex aspect-square w-full items-center justify-center bg-[#2a1f3d] text-sm text-[#8b7aab]">
                             {char.name.charAt(0)}
                           </div>
                         )}
@@ -746,25 +708,19 @@ export default async function Home() {
                 >
                   <div className="flex items-center gap-2 p-2">
                     {/* キャラアイコン */}
-                    <div className="relative h-11 w-11 shrink-0">
-                      <div
-                        className="h-11 w-11 overflow-hidden rounded-[10px] p-[2px]"
-                        style={{
-                          border: elemStyle ? `1.2px solid ${elemStyle.border}` : "1.2px solid rgba(249,168,212,0.2)",
-                          backgroundColor: elemStyle?.bg ?? "transparent",
-                        }}
-                      >
+                    <div className="h-11 w-11 shrink-0 overflow-hidden">
+                      <div className="h-[48px] w-[48px] -ml-0.5 -mt-0.5">
                         {char.imageUrl ? (
                           <Image
                             src={char.imageUrl}
                             alt={char.name}
-                            width={44}
-                            height={44}
-                            className="h-full w-full rounded-[8px] object-cover"
+                            width={48}
+                            height={48}
+                            className="h-full w-full object-cover"
                             loading="lazy"
                           />
                         ) : (
-                          <div className="flex h-full w-full items-center justify-center rounded-[8px] bg-[#2a1f3d] text-xs text-[#8b7aab]">
+                          <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-xs text-[#8b7aab]">
                             {char.name.charAt(0)}
                           </div>
                         )}
@@ -854,26 +810,21 @@ export default async function Home() {
         />
       </section>
 
-      {/* ====== 第4段: ステータス別ランキング ====== */}
+      {/* ====== 第4段: キャラ検索・フィルター ====== */}
       <section className="space-y-4">
         <SectionHeading
-          icon={<ChartIcon className="h-4 w-4 text-white" />}
-          title="ステータス別ランキング"
-          subtitle="キャラを検索・フィルタして性能を比較"
-          href="/stats"
-          linkLabel="もっと見る"
+          icon={
+            <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          }
+          title="キャラ検索・フィルター"
+          subtitle="属性・タイプ・種族などで絞り込み"
           gradientFrom="#8b5cf6"
           gradientTo="#a78bfa"
         />
 
-        <HomeStatsSection characters={statsCharacters} />
-
-        <SectionFooterButton
-          href="/stats"
-          label="ステータス別ランキングをすべて見る"
-          gradientFrom="#8b5cf6"
-          gradientTo="#a78bfa"
-        />
+        <HomeSearchSection characters={searchCharacters} />
       </section>
     </div>
   );

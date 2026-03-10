@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { createServerClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import { BuildDetailClient } from "./build-detail-client";
-import type { Element } from "@/lib/constants";
+
 
 type CharacterInfo = {
   id: string;

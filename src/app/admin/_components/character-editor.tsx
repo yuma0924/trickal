@@ -14,8 +14,8 @@ type EditableField = {
 const FIELDS: EditableField[] = [
   { key: "name", label: "名前", type: "text", width: "w-32" },
   { key: "slug", label: "スラッグ", type: "text", width: "w-28" },
-  { key: "rarity", label: "レア", type: "select", options: ["SSR", "SR", "R", "N"], width: "w-16" },
-  { key: "element", label: "属性", type: "select", options: ["火", "水", "風", "光", "闇"], width: "w-16" },
+  { key: "rarity", label: "レア", type: "select", options: ["★1", "★2", "★3"], width: "w-16" },
+  { key: "element", label: "属性", type: "select", options: ["純粋", "冷静", "狂気", "活発", "憂鬱"], width: "w-16" },
   { key: "role", label: "役割", type: "text", width: "w-20" },
   { key: "race", label: "種族", type: "text", width: "w-20" },
   { key: "position", label: "配置", type: "text", width: "w-20" },

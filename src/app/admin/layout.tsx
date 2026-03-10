@@ -10,6 +10,6 @@ export default function AdminRootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Header/Footer/BottomNav を非表示にするため、ルートレイアウトの <main> の中身だけ差し替え
+  // Header/Footer を非表示にするため、ルートレイアウトの <main> の中身だけ差し替え
   return <>{children}</>;
 }

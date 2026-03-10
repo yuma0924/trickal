@@ -6,11 +6,11 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 const ELEMENT_COLORS: Record<string, { border: string; bg: string; text: string }> = {
-  火: { border: "rgba(251,113,133,0.6)", bg: "rgba(251,113,133,0.15)", text: "#fb7185" },
-  水: { border: "rgba(56,189,248,0.6)", bg: "rgba(56,189,248,0.15)", text: "#38bdf8" },
-  風: { border: "rgba(74,222,128,0.6)", bg: "rgba(74,222,128,0.15)", text: "#34d399" },
-  光: { border: "rgba(255,210,48,0.6)", bg: "rgba(255,210,48,0.15)", text: "#fcd34d" },
-  闇: { border: "rgba(166,132,255,0.6)", bg: "rgba(166,132,255,0.15)", text: "#a78bfa" },
+  純粋: { border: "rgba(74,222,128,0.6)", bg: "rgba(74,222,128,0.15)", text: "#34d399" },
+  冷静: { border: "rgba(56,189,248,0.6)", bg: "rgba(56,189,248,0.15)", text: "#38bdf8" },
+  狂気: { border: "rgba(251,113,133,0.6)", bg: "rgba(251,113,133,0.15)", text: "#fb7185" },
+  活発: { border: "rgba(255,210,48,0.6)", bg: "rgba(255,210,48,0.15)", text: "#fcd34d" },
+  憂鬱: { border: "rgba(166,132,255,0.6)", bg: "rgba(166,132,255,0.15)", text: "#a78bfa" },
 };
 
 interface CharInfo {
@@ -209,17 +209,11 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                         return (
                           <div key={`${mId}-${i}`} className={`flex flex-col items-center gap-0.5 py-2 ${i < 2 ? "border-r border-[rgba(249,168,212,0.05)]" : ""}`}>
                             <div className="relative">
-                              <div
-                                className="h-9 w-9 overflow-hidden rounded-[10px] p-[2px]"
-                                style={{
-                                  border: elemStyle ? `1.2px solid ${elemStyle.border}` : "1.2px solid rgba(249,168,212,0.1)",
-                                  backgroundColor: elemStyle?.bg ?? "transparent",
-                                }}
-                              >
+                              <div className="h-10 w-10 overflow-hidden">
                                 {char?.imageUrl ? (
-                                  <Image src={char.imageUrl} alt={char?.name ?? "?"} width={36} height={36} className="h-full w-full rounded-[4px] object-cover" loading="lazy" />
+                                  <Image src={char.imageUrl} alt={char?.name ?? "?"} width={40} height={40} className="h-full w-full object-cover" loading="lazy" />
                                 ) : (
-                                  <div className="flex h-full w-full items-center justify-center rounded-[4px] bg-[#2a1f3d] text-[10px] text-[#8b7aab]">{char?.name?.charAt(0) ?? "?"}</div>
+                                  <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-[10px] text-[#8b7aab]">{char?.name?.charAt(0) ?? "?"}</div>
                                 )}
                               </div>
                             </div>
@@ -236,17 +230,11 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                           return (
                             <div key={`${mId}-${i + 3}`} className={`flex flex-col items-center gap-0.5 py-2 ${i < 2 ? "border-r border-[rgba(249,168,212,0.05)]" : ""}`}>
                               <div className="relative">
-                                <div
-                                  className="h-9 w-9 overflow-hidden rounded-[10px] p-[2px]"
-                                  style={{
-                                    border: elemStyle ? `1.2px solid ${elemStyle.border}` : "1.2px solid rgba(249,168,212,0.1)",
-                                    backgroundColor: elemStyle?.bg ?? "transparent",
-                                  }}
-                                >
+                                <div className="h-10 w-10 overflow-hidden">
                                   {char?.imageUrl ? (
-                                    <Image src={char.imageUrl} alt={char?.name ?? "?"} width={36} height={36} className="h-full w-full rounded-[4px] object-cover" loading="lazy" />
+                                    <Image src={char.imageUrl} alt={char?.name ?? "?"} width={40} height={40} className="h-full w-full object-cover" loading="lazy" />
                                   ) : (
-                                    <div className="flex h-full w-full items-center justify-center rounded-[4px] bg-[#2a1f3d] text-[10px] text-[#8b7aab]">{char?.name?.charAt(0) ?? "?"}</div>
+                                    <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-[10px] text-[#8b7aab]">{char?.name?.charAt(0) ?? "?"}</div>
                                   )}
                                 </div>
                               </div>

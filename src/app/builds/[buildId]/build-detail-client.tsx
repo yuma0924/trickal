@@ -339,7 +339,6 @@ export function BuildDetailClient({
               <CharacterIcon
                 name={char.name}
                 imageUrl={char.image_url}
-                element={char.element as Element | undefined}
                 isHidden={char.is_hidden}
                 size="md"
               />
@@ -536,7 +535,6 @@ export function BuildDetailClient({
                       key={`${char.id}-${i}`}
                       name={char.name}
                       imageUrl={char.image_url}
-                      element={char.element as Element | undefined}
                       isHidden={char.is_hidden}
                       size="sm"
                     />

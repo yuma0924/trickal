@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Zen_Maru_Gothic } from "next/font/google";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Header } from "@/components/layout/header";
-import { BottomNav } from "@/components/layout/bottom-nav";
 import { Footer } from "@/components/layout/footer";
 import "./globals.css";
 
@@ -34,7 +33,6 @@ export default function RootLayout({
               {children}
             </main>
             <Footer />
-            <BottomNav />
           </div>
         </ThemeProvider>
       </body>

@@ -3,13 +3,11 @@ import { cn } from "@/lib/utils";
 import { CharacterIcon } from "@/components/character/character-icon";
 import { StarRatingDisplay } from "@/components/ui/star-rating";
 import { Badge } from "@/components/ui/badge";
-import type { Element } from "@/lib/constants";
 
 interface CharacterCardProps {
   slug: string;
   name: string;
   imageUrl: string | null;
-  element?: Element;
   avgRating?: number | null;
   validVotesCount?: number;
   rank?: number | null;
@@ -21,7 +19,6 @@ export function CharacterCard({
   slug,
   name,
   imageUrl,
-  element,
   avgRating,
   validVotesCount = 0,
   rank,
@@ -44,7 +41,6 @@ export function CharacterCard({
         <CharacterIcon
           name={name}
           imageUrl={imageUrl}
-          element={element}
           size={isHero ? "lg" : "md"}
         />
         {rankDisplay && (

@@ -7,7 +7,6 @@ import { CharacterIcon } from "@/components/character/character-icon";
 import { ThumbsUpDown } from "@/components/reaction/thumbs-up-down";
 import { createBrowserClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import type { Element } from "@/lib/constants";
 import { ELEMENTS } from "@/lib/constants";
 
 // API レスポンスの型
@@ -59,22 +58,22 @@ const SORT_OPTIONS: { value: SortKey; label: string }[] = [
  */
 function getElementBg(element: string): string {
   const map: Record<string, string> = {
-    火: "rgba(255,99,126,0.15)",
-    水: "rgba(0,188,255,0.15)",
-    風: "rgba(74,222,128,0.15)",
-    光: "rgba(255,210,48,0.15)",
-    闇: "rgba(166,132,255,0.15)",
+    純粋: "rgba(74,222,128,0.15)",
+    冷静: "rgba(0,188,255,0.15)",
+    狂気: "rgba(255,99,126,0.15)",
+    活発: "rgba(255,210,48,0.15)",
+    憂鬱: "rgba(166,132,255,0.15)",
   };
   return map[element] ?? "rgba(36,27,53,0.5)";
 }
 
 function getElementColor(element: string): string {
   const map: Record<string, string> = {
-    火: "#fb7185",
-    水: "#38bdf8",
-    風: "#4ade80",
-    光: "#fcd34d",
-    闇: "#a78bfa",
+    純粋: "#4ade80",
+    冷静: "#38bdf8",
+    狂気: "#fb7185",
+    活発: "#fcd34d",
+    憂鬱: "#a78bfa",
   };
   return map[element] ?? "#8b7aab";
 }
@@ -407,7 +406,7 @@ function BuildCard({
                 <CharacterIcon
                   name={char.name}
                   imageUrl={char.image_url}
-                  element={char.element as Element | undefined}
+
                   isHidden={char.is_hidden}
                   size="sm"
                 />
@@ -428,7 +427,7 @@ function BuildCard({
                   <CharacterIcon
                     name={char.name}
                     imageUrl={char.image_url}
-                    element={char.element as Element | undefined}
+  
                     isHidden={char.is_hidden}
                     size="sm"
                   />
@@ -653,7 +652,7 @@ function BuildPostForm({
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="例: 火属性PvP編成"
+            placeholder="例: 狂気属性PvP編成"
             maxLength={100}
             className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
           />
@@ -676,7 +675,7 @@ function BuildPostForm({
                   <CharacterIcon
                     name={char.name}
                     imageUrl={char.image_url}
-                    element={char.element as Element | undefined}
+  
                     size="sm"
                   />
                   <button
@@ -720,7 +719,7 @@ function BuildPostForm({
                       <CharacterIcon
                         name={char.name}
                         imageUrl={char.image_url}
-                        element={char.element as Element | undefined}
+      
                         size="sm"
                       />
                       <span>{char.name}</span>

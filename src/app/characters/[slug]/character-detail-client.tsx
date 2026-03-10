@@ -8,7 +8,7 @@ import { StarRatingDisplay } from "@/components/ui/star-rating";
 import { CommentForm } from "@/components/comment/comment-form";
 import { CommentList } from "@/components/comment/comment-list";
 import type { CharacterDetail, RelatedCharacter } from "./page";
-import type { Element } from "@/lib/constants";
+
 
 type SortTab = "newest" | "thumbs_up" | "thumbs_down";
 type ReactionState = "up" | "down" | null;
@@ -26,22 +26,20 @@ interface CommentItem {
   isDeleted: boolean;
 }
 
-const STAT_LABELS: Record<string, string> = {
-  hp: "HP",
-  patk: "物理攻撃",
-  matk: "魔法攻撃",
-  def: "防御",
-  spd: "速度",
-  crit: "クリティカル",
-};
+const SKILL_CATEGORIES = [
+  { key: "low_grade", label: "低学年スキル" },
+  { key: "high_grade", label: "高学年スキル" },
+  { key: "passive", label: "パッシブスキル" },
+  { key: "normal_attack", label: "普通攻撃" },
+];
 
 // Element color mappings for header image border/bg
 const ELEMENT_COLORS: Record<string, { border: string; bg: string; text: string }> = {
-  火: { border: "rgba(251,113,133,0.6)", bg: "rgba(251,113,133,0.15)", text: "#fb7185" },
-  水: { border: "rgba(56,189,248,0.6)", bg: "rgba(56,189,248,0.15)", text: "#38bdf8" },
-  風: { border: "rgba(74,222,128,0.6)", bg: "rgba(74,222,128,0.15)", text: "#4ade80" },
-  光: { border: "rgba(255,210,48,0.6)", bg: "rgba(255,210,48,0.15)", text: "#fcd34d" },
-  闇: { border: "rgba(167,139,250,0.6)", bg: "rgba(167,139,250,0.15)", text: "#a78bfa" },
+  純粋: { border: "rgba(74,222,128,0.6)", bg: "rgba(74,222,128,0.15)", text: "#4ade80" },
+  冷静: { border: "rgba(56,189,248,0.6)", bg: "rgba(56,189,248,0.15)", text: "#38bdf8" },
+  狂気: { border: "rgba(251,113,133,0.6)", bg: "rgba(251,113,133,0.15)", text: "#fb7185" },
+  活発: { border: "rgba(255,210,48,0.6)", bg: "rgba(255,210,48,0.15)", text: "#fcd34d" },
+  憂鬱: { border: "rgba(167,139,250,0.6)", bg: "rgba(167,139,250,0.15)", text: "#a78bfa" },
 };
 
 const SORT_MAP: Record<SortTab, string> = {
@@ -66,7 +64,6 @@ export function CharacterDetailClient({
   const [submitLoading, setSubmitLoading] = useState(false);
   const [userReactions, setUserReactions] = useState<Record<string, ReactionState>>({});
   const [_userHash, setUserHash] = useState<string | null>(null);
-  const [statsOpen, setStatsOpen] = useState(true);
   const [skillsOpen, setSkillsOpen] = useState(true);
 
   // user_hash 取得
@@ -305,94 +302,46 @@ export function CharacterDetailClient({
         </div>
       </div>
 
-      {/* ステータス (アコーディオン) */}
+      {/* スキル (アコーディオン) */}
       <section className="border-t border-[rgba(249,168,212,0.1)] pt-3">
         <button
           className="flex w-full items-center justify-between"
-          onClick={() => setStatsOpen(!statsOpen)}
+          onClick={() => setSkillsOpen(!skillsOpen)}
         >
           <div className="flex items-center gap-2">
             <svg className="h-4 w-4 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 3v18h18M9 17V9m4 8V5m4 12v-4" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
             </svg>
-            <span className="text-sm font-bold text-[#fce7f3]">ステータス</span>
+            <span className="text-sm font-bold text-[#fce7f3]">スキル</span>
           </div>
           <svg
-            className={`h-4 w-4 text-[#8b7aab] transition-transform ${statsOpen ? "rotate-180" : ""}`}
+            className={`h-4 w-4 text-[#8b7aab] transition-transform ${skillsOpen ? "rotate-180" : ""}`}
             fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-        {statsOpen && (
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            {Object.entries(character.stats).map(([key, value]) => {
-              const maxStat = Math.max(
-                ...Object.values(character.stats).filter((v): v is number => v !== null)
-              );
-              const percentage = value !== null && maxStat > 0 ? (value / maxStat) * 100 : 0;
+        {skillsOpen && (
+          <div className="mt-3 space-y-3">
+            {SKILL_CATEGORIES.map((cat) => {
+              const skillData = skills?.find((s) => s.category === cat.key) as Record<string, unknown> | undefined;
               return (
-                <div
-                  key={key}
-                  className="relative overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2.5"
-                >
-                  <div
-                    className="absolute inset-y-0 left-0 bg-[rgba(168,147,192,0.08)]"
-                    style={{ width: `${percentage}%` }}
-                  />
-                  <div className="relative flex items-center justify-between">
-                    <span className="text-xs text-[#a893c0]">
-                      {STAT_LABELS[key] ?? key}
-                    </span>
-                    <span className="text-sm font-bold text-[#fce7f3]">
-                      {value !== null ? value.toLocaleString() : "—"}
-                    </span>
-                  </div>
+                <div key={cat.key} className="rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] p-3">
+                  <span className="text-[10px] font-bold text-[#8b7aab]">{cat.label}</span>
+                  <h3 className="mt-0.5 text-sm font-bold text-[#fce7f3]">
+                    {(skillData?.name as string) ?? "—"}
+                  </h3>
+                  {typeof skillData?.description === "string" && (
+                    <p className="mt-1 text-xs leading-relaxed text-[#a893c0]">
+                      {skillData.description}
+                    </p>
+                  )}
                 </div>
               );
             })}
           </div>
         )}
       </section>
-
-      {/* スキル (アコーディオン) */}
-      {skills && skills.length > 0 && (
-        <section className="border-t border-[rgba(249,168,212,0.1)] pt-3">
-          <button
-            className="flex w-full items-center justify-between"
-            onClick={() => setSkillsOpen(!skillsOpen)}
-          >
-            <div className="flex items-center gap-2">
-              <svg className="h-4 w-4 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
-              </svg>
-              <span className="text-sm font-bold text-[#fce7f3]">スキル</span>
-            </div>
-            <svg
-              className={`h-4 w-4 text-[#8b7aab] transition-transform ${skillsOpen ? "rotate-180" : ""}`}
-              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          {skillsOpen && (
-            <div className="mt-3 space-y-2">
-              {skills.map((skill, i) => (
-                <div key={i} className="rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] p-3">
-                  <h3 className="text-sm font-bold text-[#fce7f3]">
-                    {(skill.name as string) ?? `スキル${i + 1}`}
-                  </h3>
-                  {typeof skill.description === "string" && (
-                    <p className="mt-1 text-xs leading-relaxed text-[#a893c0]">
-                      {skill.description}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
-      )}
 
       {/* アルバイトアイテム */}
       {partTimeItem && (
@@ -468,7 +417,6 @@ export function CharacterDetailClient({
                 slug={c.slug}
                 name={c.name}
                 imageUrl={c.imageUrl}
-                element={c.element ?? undefined}
                 avgRating={c.avgRating}
                 validVotesCount={c.validVotesCount}
               />
@@ -515,26 +463,6 @@ export function CharacterDetailClient({
           <div className="flex-1">
             <span className="block text-sm font-bold text-[#fce7f3]">編成ランキング</span>
             <span className="text-[10px] text-[#8b7aab]">人気のパーティ編成をチェックしよう</span>
-          </div>
-          <svg className="h-4 w-4 shrink-0 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-          </svg>
-        </Link>
-        <Link
-          href="/stats"
-          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(0,188,255,0.15)] to-[rgba(166,132,255,0.15)] border border-[rgba(249,168,212,0.1)] px-4 py-3 transition-colors hover:from-[rgba(0,188,255,0.25)] hover:to-[rgba(166,132,255,0.25)] cursor-pointer"
-        >
-          <span
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-            style={{ backgroundImage: "linear-gradient(135deg, #00bcff, #a684ff)" }}
-          >
-            <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 3v18h18M9 17V9m4 8V5m4 12v-4" />
-            </svg>
-          </span>
-          <div className="flex-1">
-            <span className="block text-sm font-bold text-[#fce7f3]">ステータス別ランキング</span>
-            <span className="text-[10px] text-[#8b7aab]">ステータスで比較して最強キャラを見つけよう</span>
           </div>
           <svg className="h-4 w-4 shrink-0 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
