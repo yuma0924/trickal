@@ -76,6 +76,31 @@ const ELEMENT_COLORS: Record<string, { border: string; bg: string; text: string 
   憂鬱: { border: "rgba(167,139,250,0.6)", bg: "rgba(167,139,250,0.15)", text: "#a78bfa" },
 };
 
+const ELEMENT_ICON_MAP: Record<string, string> = {
+  純粋: "/icons/pure.png",
+  冷静: "/icons/calm.png",
+  狂気: "/icons/madness.png",
+  活発: "/icons/lively.png",
+  憂鬱: "/icons/melancholy.png",
+};
+
+const ROLE_ICON_MAP: Record<string, string> = {
+  攻撃: "/icons/attack.png",
+  守備: "/icons/defense.png",
+  支援: "/icons/support.png",
+};
+
+const POSITION_ICON_MAP: Record<string, string> = {
+  前列: "/icons/front.png",
+  中列: "/icons/middle.png",
+  後列: "/icons/back.png",
+};
+
+const ATTACK_TYPE_ICON_MAP: Record<string, string> = {
+  物理: "/icons/physical.png",
+  魔法: "/icons/magical.png",
+};
+
 const SORT_MAP: Record<SortTab, string> = {
   newest: "new",
   thumbs_up: "thumbs_up",
@@ -255,7 +280,7 @@ export function CharacterDetailClient({
   const partTimeItem = meta?.part_time_item as string | undefined;
 
   // スキル情報
-  const skills = character.skills as Array<Record<string, unknown>> | null;
+  const skills = Array.isArray(character.skills) ? (character.skills as Array<Record<string, unknown>>) : null;
 
   const elemColors = character.element ? ELEMENT_COLORS[character.element] : null;
 
@@ -301,9 +326,28 @@ export function CharacterDetailClient({
 
           {/* タグ行 */}
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            {character.role && (
-              <span className="rounded-[4px] bg-[#2a1f3d] px-2 py-0.5 text-xs text-[#a893c0]">
+            {character.element && ELEMENT_ICON_MAP[character.element] && (
+              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-2 py-0.5 text-xs text-[#a893c0]">
+                <Image src={ELEMENT_ICON_MAP[character.element]} alt={character.element} width={14} height={14} />
+                {character.element}
+              </span>
+            )}
+            {character.role && ROLE_ICON_MAP[character.role] && (
+              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-2 py-0.5 text-xs text-[#a893c0]">
+                <Image src={ROLE_ICON_MAP[character.role]} alt={character.role} width={14} height={14} />
                 {character.role}
+              </span>
+            )}
+            {character.position && POSITION_ICON_MAP[character.position] && (
+              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-2 py-0.5 text-xs text-[#a893c0]">
+                <Image src={POSITION_ICON_MAP[character.position]} alt={character.position} width={14} height={14} />
+                {character.position}
+              </span>
+            )}
+            {character.attackType && ATTACK_TYPE_ICON_MAP[character.attackType] && (
+              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-2 py-0.5 text-xs text-[#a893c0]">
+                <Image src={ATTACK_TYPE_ICON_MAP[character.attackType]} alt={character.attackType} width={14} height={14} />
+                {character.attackType}
               </span>
             )}
             {character.race && (

@@ -38,6 +38,7 @@ export interface CharacterDetail {
   role: string | null;
   race: string | null;
   position: string | null;
+  attackType: string | null;
   stats: Record<string, number | null>;
   skills: unknown;
   metadata: unknown;
@@ -66,7 +67,7 @@ export default async function CharacterPage({ params }: Props) {
   // キャラ情報取得
   const { data: character } = await supabase
     .from("characters")
-    .select("id, slug, name, rarity, element, role, race, position, stats, skills, metadata, image_url, is_provisional, is_hidden, created_at, updated_at")
+    .select("id, slug, name, rarity, element, role, race, position, attack_type, stats, skills, metadata, image_url, is_provisional, is_hidden, created_at, updated_at")
     .eq("slug", slug)
     .eq("is_hidden", false)
     .returns<Character[]>()
@@ -147,6 +148,7 @@ export default async function CharacterPage({ params }: Props) {
     role: character.role,
     race: character.race,
     position: character.position,
+    attackType: character.attack_type,
     stats,
     skills: character.skills,
     metadata: character.metadata,
