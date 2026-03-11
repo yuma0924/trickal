@@ -98,6 +98,7 @@ export function CharacterDetailClient({
   const [userReactions, setUserReactions] = useState<Record<string, ReactionState>>({});
   const [_userHash, setUserHash] = useState<string | null>(null);
   const [skillsOpen, setSkillsOpen] = useState(true);
+  const [formOpen, setFormOpen] = useState(false);
 
   // user_hash 取得
   useEffect(() => {
@@ -474,21 +475,36 @@ export function CharacterDetailClient({
       {/* 投稿フォーム */}
       <section className="space-y-3">
         <div className="rounded-[14px] bg-gradient-to-r from-[rgba(246,51,154,0.1)] to-[rgba(255,32,86,0.1)] border border-[rgba(251,100,182,0.3)] p-4 shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]">
-          <div className="flex items-center gap-2">
-            <svg className="h-4 w-4 text-[#fce7f3]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-            </svg>
-            <span className="text-sm font-bold text-[#fce7f3]">
-              {character.name}を評価する
-            </span>
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <svg className="h-4 w-4 text-[#fce7f3]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                </svg>
+                <span className="text-sm font-bold text-[#fce7f3]">
+                  {character.name}を評価する
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-[#8b7aab]">★評価とコメントを投稿できます</p>
+            </div>
+            <button
+              onClick={() => setFormOpen(!formOpen)}
+              className="flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#fb64b6] to-[#ff637e] px-5 py-3 text-xs font-bold text-white shadow-md transition-opacity hover:opacity-90"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+              </svg>
+              投稿する
+            </button>
           </div>
-          <p className="mt-1 text-xs text-[#8b7aab]">★評価とコメントを投稿できます</p>
         </div>
-        <CommentForm
-          onSubmit={handleSubmit}
-          showRating
-          loading={submitLoading}
-        />
+        {formOpen && (
+          <CommentForm
+            onSubmit={handleSubmit}
+            showRating
+            loading={submitLoading}
+          />
+        )}
       </section>
 
       {/* コメント一覧 */}

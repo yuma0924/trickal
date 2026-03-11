@@ -66,7 +66,7 @@ export function CommentForm({
           onChange={(e) => setDisplayName(e.target.value)}
           placeholder="名無しの教主"
           maxLength={20}
-          className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:border-accent focus:outline-none"
+          className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted transition-colors focus:border-accent focus:outline-none"
         />
       </div>
 
@@ -87,7 +87,7 @@ export function CommentForm({
           placeholder="コメントを入力..."
           rows={4}
           maxLength={MAX_CHARS}
-          className="w-full resize-none rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:border-accent focus:outline-none"
+          className="w-full resize-none rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted transition-colors focus:border-accent focus:outline-none"
         />
         <div className="mt-1 flex justify-end text-[10px] text-text-tertiary">
           <span className={isOverLimit ? "text-thumbs-down" : ""}>
