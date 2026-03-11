@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useId } from "react";
+import { useId, useRef, useCallback } from "react";
 
 interface StarRatingDisplayProps {
   rating: number;
@@ -109,10 +109,40 @@ export function StarRatingInput({
   className,
 }: StarRatingInputProps) {
   const instanceId = useId();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const draggingRef = useRef(false);
+
+  const calcValueFromPointer = useCallback((clientX: number): number => {
+    const container = containerRef.current;
+    if (!container) return 0.5;
+    const rect = container.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const starWidth = rect.width / 5;
+    const starIndex = Math.floor(x / starWidth);
+    const withinStar = (x - starIndex * starWidth) / starWidth;
+    const rating = starIndex + (withinStar < 0.5 ? 0.5 : 1);
+    return Math.max(0.5, Math.min(5, rating));
+  }, []);
+
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    draggingRef.current = true;
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    const newValue = calcValueFromPointer(e.clientX);
+    onChange(newValue);
+  }, [calcValueFromPointer, onChange]);
+
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (!draggingRef.current) return;
+    const newValue = calcValueFromPointer(e.clientX);
+    onChange(newValue);
+  }, [calcValueFromPointer, onChange]);
+
+  const handlePointerUp = useCallback(() => {
+    draggingRef.current = false;
+  }, []);
 
   const handleClick = (starIndex: number, isLeftHalf: boolean) => {
     const newValue = isLeftHalf ? starIndex - 0.5 : starIndex;
-    // タップで同じ値なら解除
     if (value === newValue) {
       onChange(null);
     } else {
@@ -122,34 +152,43 @@ export function StarRatingInput({
 
   return (
     <div className={cn("inline-flex items-center gap-1", className)} role="radiogroup" aria-label="評価">
-      {[1, 2, 3, 4, 5].map((starIndex) => {
-        const filled = value !== null && value >= starIndex;
-        const half = !filled && value !== null && value >= starIndex - 0.5;
-        return (
-          <span key={starIndex} className="relative cursor-pointer text-star" role="radio" aria-checked={value === starIndex || value === starIndex - 0.5}>
-            <StarIcon
-              filled={filled}
-              half={half}
-              className="h-8 w-8"
-              gradientId={`half-star-input-${instanceId}-${starIndex}`}
-            />
-            {/* 左半分 */}
-            <button
-              type="button"
-              className="absolute inset-y-0 left-0 w-1/2"
-              onClick={() => handleClick(starIndex, true)}
-              aria-label={`${starIndex - 0.5}点`}
-            />
-            {/* 右半分 */}
-            <button
-              type="button"
-              className="absolute inset-y-0 right-0 w-1/2"
-              onClick={() => handleClick(starIndex, false)}
-              aria-label={`${starIndex}点`}
-            />
-          </span>
-        );
-      })}
+      <div
+        ref={containerRef}
+        className="inline-flex touch-none items-center gap-1"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+      >
+        {[1, 2, 3, 4, 5].map((starIndex) => {
+          const filled = value !== null && value >= starIndex;
+          const half = !filled && value !== null && value >= starIndex - 0.5;
+          return (
+            <span key={starIndex} className="relative cursor-pointer text-star" role="radio" aria-checked={value === starIndex || value === starIndex - 0.5}>
+              <StarIcon
+                filled={filled}
+                half={half}
+                className="h-8 w-8"
+                gradientId={`half-star-input-${instanceId}-${starIndex}`}
+              />
+              {/* 左半分 */}
+              <button
+                type="button"
+                className="absolute inset-y-0 left-0 w-1/2"
+                onClick={() => handleClick(starIndex, true)}
+                aria-label={`${starIndex - 0.5}点`}
+              />
+              {/* 右半分 */}
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 w-1/2"
+                onClick={() => handleClick(starIndex, false)}
+                aria-label={`${starIndex}点`}
+              />
+            </span>
+          );
+        })}
+      </div>
       {value !== null && (
         <span className="ml-2 text-sm font-bold text-text-primary">
           {value.toFixed(1)}

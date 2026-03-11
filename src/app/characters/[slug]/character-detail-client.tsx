@@ -287,9 +287,16 @@ export function CharacterDetailClient({
 
         {/* キャラ情報 */}
         <div className="min-w-0 flex-1">
-          <h1 className="text-xl font-bold text-[#fce7f3]">
-            {character.name}
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-bold text-[#fce7f3]">
+              {character.name}
+            </h1>
+            {character.rarity && (
+              <span className="text-base text-[#facc15]">
+                {"★".repeat(parseInt(character.rarity.replace(/[^0-9]/g, "")) || 0)}
+              </span>
+            )}
+          </div>
 
           {/* タグ行 */}
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
@@ -301,11 +308,6 @@ export function CharacterDetailClient({
             {character.race && (
               <span className="rounded-[4px] bg-[#2a1f3d] px-2 py-0.5 text-xs text-[#a893c0]">
                 {character.race}
-              </span>
-            )}
-            {character.rarity && (
-              <span className="rounded-[4px] bg-[#2a1f3d] px-2 py-0.5 text-xs font-bold text-[#facc15]">
-                {character.rarity}
               </span>
             )}
             {character.isProvisional && (
