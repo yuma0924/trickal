@@ -33,6 +33,7 @@ interface CommentListProps {
   onReact?: (commentId: string, reaction: ReactionState) => void;
   onReport?: (commentId: string) => void;
   className?: string;
+  hideTab?: boolean;
 }
 
 const SORT_TABS = [
@@ -52,12 +53,13 @@ export function CommentList({
   onReact,
   onReport,
   className,
+  hideTab = false,
 }: CommentListProps) {
   const remaining = totalCount - comments.length;
 
   return (
     <div className={cn("space-y-3", className)}>
-      <Tab items={SORT_TABS} value={sortTab} onChange={onSortChange} />
+      {!hideTab && <Tab items={SORT_TABS} value={sortTab} onChange={onSortChange} />}
 
       {comments.length === 0 ? (
         <p className="py-8 text-center text-sm text-text-tertiary">

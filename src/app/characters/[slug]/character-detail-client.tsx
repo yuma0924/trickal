@@ -7,6 +7,7 @@ import { CharacterCard } from "@/components/character/character-card";
 import { StarRatingDisplay } from "@/components/ui/star-rating";
 import { CommentForm } from "@/components/comment/comment-form";
 import { CommentList } from "@/components/comment/comment-list";
+import { cn } from "@/lib/utils";
 import type { CharacterDetail, RelatedCharacter } from "./page";
 
 
@@ -511,16 +512,56 @@ export function CharacterDetailClient({
 
       {/* コメント一覧 */}
       <section>
-        <div className="mb-3">
+        <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <svg className="h-4 w-4 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
             <span className="text-sm font-bold text-[#fce7f3]">
-              みんなのコメント ({totalCount})
+              コメント ({totalCount})
             </span>
           </div>
-          <p className="mt-0.5 text-xs text-[#8b7aab]">新着順・高評価順で表示</p>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => handleSortChange("newest")}
+              className={cn(
+                "rounded-full border px-2.5 py-1 text-xs font-medium transition-colors",
+                sortTab === "newest"
+                  ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
+                  : "border-[rgba(139,122,171,0.3)] text-[#8b7aab] hover:text-[#c4b5d4]"
+              )}
+            >
+              新着順
+            </button>
+            <button
+              onClick={() => handleSortChange("thumbs_up")}
+              className={cn(
+                "flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors",
+                sortTab === "thumbs_up"
+                  ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
+                  : "border-[rgba(139,122,171,0.3)] text-[#8b7aab] hover:text-[#c4b5d4]"
+              )}
+            >
+              <svg className="h-3 w-3 text-[#fb64b6]" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M2 20h2c.55 0 1-.45 1-1v-9c0-.55-.45-1-1-1H2v11zm19.83-7.12c.11-.25.17-.52.17-.8V11c0-1.1-.9-2-2-2h-5.5l.92-4.65c.05-.22.02-.46-.08-.66-.23-.45-.52-.86-.88-1.22L14 2 7.59 8.41C7.21 8.79 7 9.3 7 9.83v7.84C7 18.95 8.05 20 9.34 20h8.11c.7 0 1.36-.37 1.72-.97l2.66-6.15z" />
+              </svg>
+              順
+            </button>
+            <button
+              onClick={() => handleSortChange("thumbs_down")}
+              className={cn(
+                "flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors",
+                sortTab === "thumbs_down"
+                  ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
+                  : "border-[rgba(139,122,171,0.3)] text-[#8b7aab] hover:text-[#c4b5d4]"
+              )}
+            >
+              <svg className="h-3 w-3 text-[#60a5fa]" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22 4h-2c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h2V4zM2.17 11.12c-.11.25-.17.52-.17.8V13c0 1.1.9 2 2 2h5.5l-.92 4.65c-.05.22-.02.46.08.66.23.45.52.86.88 1.22L10 22l6.41-6.41c.38-.38.59-.89.59-1.42V6.34C17 5.05 15.95 4 14.66 4h-8.1c-.71 0-1.36.37-1.72.97l-2.67 6.15z" />
+              </svg>
+              順
+            </button>
+          </div>
         </div>
         <CommentList
           comments={comments}
@@ -532,6 +573,7 @@ export function CharacterDetailClient({
           userReactions={userReactions}
           onReact={handleReact}
           onReport={handleReport}
+          hideTab
         />
       </section>
 
