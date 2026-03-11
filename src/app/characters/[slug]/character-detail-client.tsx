@@ -10,6 +10,22 @@ import { CommentList } from "@/components/comment/comment-list";
 import type { CharacterDetail, RelatedCharacter } from "./page";
 
 
+/** **text** を強調色の <span> に変換して表示 */
+function StyledText({ text, className }: { text: string; className?: string }) {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return (
+    <span className={className}>
+      {parts.map((part, i) =>
+        part.startsWith("**") && part.endsWith("**") ? (
+          <span key={i} className="font-semibold text-[#e8b4d0]">{part.slice(2, -2)}</span>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      )}
+    </span>
+  );
+}
+
 type SortTab = "newest" | "thumbs_up" | "thumbs_down";
 type ReactionState = "up" | "down" | null;
 
@@ -26,11 +42,15 @@ interface CommentItem {
   isDeleted: boolean;
 }
 
-const SKILL_CATEGORIES = [
-  { key: "low_grade", label: "低学年スキル" },
-  { key: "high_grade", label: "高学年スキル" },
+const SKILL_CATEGORIES: { key: string; label: string; hasName?: boolean; hasCooltime?: boolean }[] = [
+  { key: "low_grade", label: "低学年スキル", hasName: true },
+  { key: "high_grade", label: "高学年スキル", hasName: true, hasCooltime: true },
   { key: "passive", label: "パッシブスキル" },
-  { key: "normal_attack", label: "普通攻撃" },
+];
+
+const NORMAL_ATTACK_CATEGORIES = [
+  { key: "normal_attack_basic", label: "基本" },
+  { key: "normal_attack_enhanced", label: "強化" },
 ];
 
 // Element color mappings for header image border/bg
@@ -322,23 +342,109 @@ export function CharacterDetailClient({
           </svg>
         </button>
         {skillsOpen && (
-          <div className="mt-3 space-y-3">
+          <div className="mt-3 space-y-2">
             {SKILL_CATEGORIES.map((cat) => {
               const skillData = skills?.find((s) => s.category === cat.key) as Record<string, unknown> | undefined;
+              if (!skillData) return (
+                <div key={cat.key} className="overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
+                  <div className="flex items-center gap-2 bg-[rgba(36,27,53,0.7)] px-3 py-2">
+                    <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] font-bold text-[#c4b5d4]">{cat.label}</span>
+                    <span className="text-xs text-[#8b7aab]">—</span>
+                  </div>
+                </div>
+              );
               return (
-                <div key={cat.key} className="rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] p-3">
-                  <span className="text-[10px] font-bold text-[#8b7aab]">{cat.label}</span>
-                  <h3 className="mt-0.5 text-sm font-bold text-[#fce7f3]">
-                    {(skillData?.name as string) ?? "—"}
-                  </h3>
-                  {typeof skillData?.description === "string" && (
-                    <p className="mt-1 text-xs leading-relaxed text-[#a893c0]">
-                      {skillData.description}
-                    </p>
+                <div key={cat.key} className="overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 bg-[rgba(36,27,53,0.7)] px-3 py-2">
+                    <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] font-bold text-[#c4b5d4]">{cat.label}</span>
+                    {cat.hasName && typeof skillData.name === "string" && (
+                      <span className="text-sm font-bold text-white">{skillData.name}</span>
+                    )}
+                    {cat.hasCooltime && typeof skillData.cooltime === "number" && (
+                      <span className="rounded bg-[rgba(249,168,212,0.12)] px-1.5 py-0.5 text-[10px] font-medium text-[#c4b5d4]">
+                        CT {skillData.cooltime}秒
+                      </span>
+                    )}
+                  </div>
+                  {(typeof skillData.description === "string" || (typeof skillData.params === "string" && skillData.params !== "")) && (
+                    <div className="bg-[rgba(20,15,35,0.6)] px-3 py-2.5">
+                      {typeof skillData.description === "string" && (
+                        <p className="whitespace-pre-line text-xs leading-relaxed text-[#a893c0]">
+                          <StyledText text={skillData.description as string} />
+                        </p>
+                      )}
+                      {typeof skillData.params === "string" && skillData.params !== "" && (
+                        <ul className="mt-2 space-y-0.5 border-l-2 border-[rgba(249,168,212,0.1)] pl-2.5">
+                          {(skillData.params as string).split("\n").filter(Boolean).map((line, i) => (
+                            <li key={i} className="text-[11px] leading-relaxed text-[#c4b5d4]">{line}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
                   )}
                 </div>
               );
             })}
+
+            {/* 普通攻撃セクション — 1カードにまとめる */}
+            {(() => {
+              const basicAttack = skills?.find((s) => s.category === "normal_attack_basic") as Record<string, unknown> | undefined;
+              const enhancedAttack = skills?.find((s) => s.category === "normal_attack_enhanced") as Record<string, unknown> | undefined;
+              if (!basicAttack && !enhancedAttack) {
+                return (
+                  <div className="overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
+                    <div className="flex items-center gap-2 bg-[rgba(36,27,53,0.7)] px-3 py-2">
+                      <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] font-bold text-[#c4b5d4]">普通攻撃</span>
+                      <span className="text-xs text-[#8b7aab]">—</span>
+                    </div>
+                  </div>
+                );
+              }
+              const hasBoth = !!basicAttack && !!enhancedAttack;
+              const renderAttackBody = (data: Record<string, unknown>) => (
+                <>
+                  {typeof data.description === "string" && (
+                    <p className="whitespace-pre-line text-xs leading-relaxed text-[#a893c0]">
+                      <StyledText text={data.description as string} />
+                    </p>
+                  )}
+                  {typeof data.params === "string" && data.params !== "" && (
+                    <ul className="mt-1.5 space-y-0.5 border-l-2 border-[rgba(249,168,212,0.1)] pl-2.5">
+                      {(data.params as string).split("\n").filter(Boolean).map((line, i) => (
+                        <li key={i} className="text-[11px] leading-relaxed text-[#c4b5d4]">{line}</li>
+                      ))}
+                    </ul>
+                  )}
+                </>
+              );
+              return (
+                <div className="overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
+                  <div className="bg-[rgba(36,27,53,0.7)] px-3 py-2">
+                    <span className="rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] font-bold text-[#c4b5d4]">普通攻撃</span>
+                  </div>
+                  <div className="bg-[rgba(20,15,35,0.6)] px-3 py-2.5">
+                    {hasBoth ? (
+                      <div className="flex flex-col divide-y divide-[rgba(249,168,212,0.08)]">
+                        {basicAttack && (
+                          <div className="space-y-1 pb-2.5">
+                            <span className="text-[11px] font-bold text-[#fce7f3]/70">基本</span>
+                            {renderAttackBody(basicAttack)}
+                          </div>
+                        )}
+                        {enhancedAttack && (
+                          <div className="space-y-1 pt-2.5">
+                            <span className="text-[11px] font-bold text-[#fce7f3]/70">強化</span>
+                            {renderAttackBody(enhancedAttack)}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      renderAttackBody((basicAttack ?? enhancedAttack)!)
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         )}
       </section>
