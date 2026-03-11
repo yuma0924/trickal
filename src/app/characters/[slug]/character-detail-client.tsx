@@ -10,6 +10,19 @@ import { CommentList } from "@/components/comment/comment-list";
 import type { CharacterDetail, RelatedCharacter } from "./page";
 
 
+/** パラメータ行の「ラベル: 値」を分割し、値部分にアクセント色を適用 */
+function ParamLine({ text }: { text: string }) {
+  const match = text.match(/^(.+?)([：:]\s*)(.+)$/);
+  if (!match) return <>{text}</>;
+  const [, label, sep, value] = match;
+  return (
+    <>
+      <span>{label}{sep}</span>
+      <span className="font-medium text-[#fcd34d]">{value}</span>
+    </>
+  );
+}
+
 /** **text** を強調色の <span> に変換して表示 */
 function StyledText({ text, className }: { text: string; className?: string }) {
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
@@ -369,14 +382,14 @@ export function CharacterDetailClient({
                   {(typeof skillData.description === "string" || (typeof skillData.params === "string" && skillData.params !== "")) && (
                     <div className="bg-[rgba(20,15,35,0.6)] px-3 py-2.5">
                       {typeof skillData.description === "string" && (
-                        <p className="whitespace-pre-line text-xs leading-relaxed text-[#a893c0]">
+                        <p className="whitespace-pre-line text-xs leading-relaxed text-[#c4b5d4]">
                           <StyledText text={skillData.description as string} />
                         </p>
                       )}
                       {typeof skillData.params === "string" && skillData.params !== "" && (
                         <ul className="mt-2 space-y-0.5 border-l-2 border-[rgba(249,168,212,0.1)] pl-2.5">
                           {(skillData.params as string).split("\n").filter(Boolean).map((line, i) => (
-                            <li key={i} className="text-[11px] leading-relaxed text-[#c4b5d4]">{line}</li>
+                            <li key={i} className="text-[11px] leading-relaxed text-[#c4b5d4]"><ParamLine text={line} /></li>
                           ))}
                         </ul>
                       )}
@@ -404,14 +417,14 @@ export function CharacterDetailClient({
               const renderAttackBody = (data: Record<string, unknown>) => (
                 <>
                   {typeof data.description === "string" && (
-                    <p className="whitespace-pre-line text-xs leading-relaxed text-[#a893c0]">
+                    <p className="whitespace-pre-line text-xs leading-relaxed text-[#c4b5d4]">
                       <StyledText text={data.description as string} />
                     </p>
                   )}
                   {typeof data.params === "string" && data.params !== "" && (
                     <ul className="mt-1.5 space-y-0.5 border-l-2 border-[rgba(249,168,212,0.1)] pl-2.5">
                       {(data.params as string).split("\n").filter(Boolean).map((line, i) => (
-                        <li key={i} className="text-[11px] leading-relaxed text-[#c4b5d4]">{line}</li>
+                        <li key={i} className="text-[11px] leading-relaxed text-[#c4b5d4]"><ParamLine text={line} /></li>
                       ))}
                     </ul>
                   )}
