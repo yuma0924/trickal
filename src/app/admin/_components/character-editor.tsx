@@ -19,11 +19,11 @@ const FIELDS: EditableField[] = [
   { key: "role", label: "役割", type: "select", options: ["守備", "攻撃", "支援"], width: "w-16" },
   { key: "race", label: "種族", type: "select", options: ["妖精", "獣人", "エルフ", "精霊", "幽霊", "竜族", "魔女", "???"], width: "w-20" },
   { key: "position", label: "配置", type: "select", options: ["前列", "中列", "後列"], width: "w-16" },
+  { key: "attack_type", label: "攻撃タイプ", type: "select", options: ["物理", "魔法"], width: "w-16" },
   { key: "is_provisional", label: "暫定", type: "checkbox", width: "w-12" },
   { key: "is_hidden", label: "非表示", type: "checkbox", width: "w-12" },
 ];
 
-const STAT_KEYS = ["HP", "物理攻撃", "魔法攻撃", "防御", "速度", "クリティカル"] as const;
 
 type SkillCategory = "low_grade" | "high_grade" | "passive" | "normal_attack_basic" | "normal_attack_enhanced";
 
@@ -86,7 +86,7 @@ export function CharacterEditor({
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent, rowIndex: number, colIndex: number) => {
-      const totalCols = FIELDS.length + STAT_KEYS.length;
+      const totalCols = FIELDS.length;
 
       if (e.key === "Tab") {
         e.preventDefault();
@@ -113,16 +113,7 @@ export function CharacterEditor({
       const next = [...prev];
       const char = { ...next[index], _isDirty: true };
 
-      if (STAT_KEYS.includes(key as (typeof STAT_KEYS)[number])) {
-        const stats =
-          typeof char.stats === "object" && char.stats !== null && !Array.isArray(char.stats)
-            ? { ...char.stats }
-            : {};
-        (stats as Record<string, unknown>)[key] = value === "" ? undefined : Number(value);
-        char.stats = stats;
-      } else {
-        (char as Record<string, unknown>)[key] = value;
-      }
+      (char as Record<string, unknown>)[key] = value;
 
       next[index] = char;
       return next;
@@ -139,6 +130,7 @@ export function CharacterEditor({
       role: null,
       race: null,
       position: null,
+      attack_type: null,
       stats: {},
       skills: [],
       metadata: {},
@@ -272,13 +264,6 @@ export function CharacterEditor({
     }
   };
 
-  const getStatValue = (char: Character, key: string): string => {
-    if (typeof char.stats === "object" && char.stats !== null && !Array.isArray(char.stats)) {
-      const val = (char.stats as Record<string, unknown>)[key];
-      return val !== undefined && val !== null ? String(val) : "";
-    }
-    return "";
-  };
 
   const getSkillsArray = (char: Character): SkillData[] => {
     if (Array.isArray(char.skills)) return char.skills as unknown as SkillData[];
@@ -368,14 +353,6 @@ export function CharacterEditor({
                   className="px-2 py-2 text-left font-medium text-text-secondary"
                 >
                   {field.label}
-                </th>
-              ))}
-              {STAT_KEYS.map((key) => (
-                <th
-                  key={key}
-                  className="px-2 py-2 text-left font-medium text-text-secondary"
-                >
-                  {key}
                 </th>
               ))}
               <th className="px-2 py-2 text-left font-medium text-text-secondary">
@@ -483,27 +460,6 @@ export function CharacterEditor({
                   </td>
                 ))}
 
-                {/* ステータスフィールド */}
-                {STAT_KEYS.map((key, statIndex) => {
-                  const colIndex = FIELDS.length + statIndex;
-                  return (
-                    <td key={key} className="px-1 py-1">
-                      <input
-                        type="number"
-                        value={getStatValue(char, key)}
-                        onChange={(e) =>
-                          updateField(rowIndex, key, e.target.value)
-                        }
-                        onKeyDown={(e) => handleKeyDown(e, rowIndex, colIndex)}
-                        ref={(el) => {
-                          if (el) cellRefs.current.set(getCellKey(rowIndex, colIndex), el);
-                        }}
-                        className="w-16 rounded border border-border-secondary bg-bg-input px-1.5 py-1 text-right text-text-primary focus:border-accent focus:outline-none"
-                        placeholder="-"
-                      />
-                    </td>
-                  );
-                })}
                 {/* スキル編集ボタン */}
                 <td className="px-1 py-1">
                   <button

@@ -24,6 +24,7 @@ export interface Database {
           role: string | null;
           race: string | null;
           position: string | null;
+          attack_type: string | null;
           stats: Json;
           skills: Json;
           metadata: Json;
@@ -42,6 +43,7 @@ export interface Database {
           role?: string | null;
           race?: string | null;
           position?: string | null;
+          attack_type?: string | null;
           stats?: Json;
           skills?: Json;
           metadata?: Json;
@@ -60,6 +62,7 @@ export interface Database {
           role?: string | null;
           race?: string | null;
           position?: string | null;
+          attack_type?: string | null;
           stats?: Json;
           skills?: Json;
           metadata?: Json;

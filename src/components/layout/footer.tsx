@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export function Footer() {
   return (
@@ -14,15 +15,13 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 pt-10 pb-4">
         <div className="flex flex-col items-center gap-5 text-center">
           <div className="flex items-center gap-2">
-            <span
-              className="flex h-7 w-7 items-center justify-center rounded-[14px] text-xs font-bold text-white shadow-[0_10px_15px_rgba(246,51,154,0.2),0_4px_6px_rgba(246,51,154,0.2)]"
-              style={{
-                backgroundImage:
-                  "linear-gradient(135deg, #fb64b6 0%, #ffa1ad 100%)",
-              }}
-            >
-              T
-            </span>
+            <Image
+              src="/logo.png"
+              alt="トリッカルランキング"
+              width={28}
+              height={28}
+              className="rounded-[10px]"
+            />
             <span className="text-base font-bold text-text-primary">
               トリッカルランキング
             </span>
