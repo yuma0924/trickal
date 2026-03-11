@@ -28,7 +28,7 @@ export function Footer() {
             </span>
           </div>
           <p className="max-w-md text-sm leading-relaxed text-text-tertiary">
-            トリッカル・もちもちほっぺ大作戦の全キャラクター性能を数値で比較し、プレイヤーの投票でリアルな順位を決定する非公式データベースです。
+            トリッカル・もちもちほっぺ大作戦の非公式ファンサイトです。みんなの投票とコメントでキャラクターの人気ランキングやおすすめ編成を共有できます。
           </p>
           <Link
             href="/guidelines"
