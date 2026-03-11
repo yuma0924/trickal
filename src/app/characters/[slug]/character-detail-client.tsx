@@ -387,7 +387,7 @@ export function CharacterDetailClient({
                         </p>
                       )}
                       {typeof skillData.params === "string" && skillData.params !== "" && (
-                        <ul className="mt-2 space-y-0.5 border-l-2 border-[rgba(249,168,212,0.1)] pl-2.5">
+                        <ul className="mt-3 space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
                           {(skillData.params as string).split("\n").filter(Boolean).map((line, i) => (
                             <li key={i} className="text-[11px] leading-relaxed text-[#c4b5d4]"><ParamLine text={line} /></li>
                           ))}
@@ -422,7 +422,7 @@ export function CharacterDetailClient({
                     </p>
                   )}
                   {typeof data.params === "string" && data.params !== "" && (
-                    <ul className="mt-1.5 space-y-0.5 border-l-2 border-[rgba(249,168,212,0.1)] pl-2.5">
+                    <ul className="mt-3 space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
                       {(data.params as string).split("\n").filter(Boolean).map((line, i) => (
                         <li key={i} className="text-[11px] leading-relaxed text-[#c4b5d4]"><ParamLine text={line} /></li>
                       ))}
@@ -432,21 +432,21 @@ export function CharacterDetailClient({
               );
               return (
                 <div className="overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
-                  <div className="bg-[rgba(36,27,53,0.7)] px-3 py-2">
+                  <div className="flex items-center bg-[rgba(36,27,53,0.7)] px-3 py-2">
                     <span className="rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] font-bold text-[#c4b5d4]">普通攻撃</span>
                   </div>
-                  <div className="bg-[rgba(20,15,35,0.6)] px-3 py-2.5">
+                  <div className="bg-[rgba(20,15,35,0.6)] px-3 pb-2.5 pt-1.5">
                     {hasBoth ? (
                       <div className="flex flex-col divide-y divide-[rgba(249,168,212,0.08)]">
                         {basicAttack && (
-                          <div className="space-y-1 pb-2.5">
-                            <span className="text-[11px] font-bold text-[#fce7f3]/70">基本</span>
+                          <div className="pb-2.5">
+                            <span className="mb-1.5 inline-block rounded border border-[rgba(249,168,212,0.15)] px-1.5 py-0.5 text-[10px] font-bold text-[#fce7f3]/70">基本</span>
                             {renderAttackBody(basicAttack)}
                           </div>
                         )}
                         {enhancedAttack && (
-                          <div className="space-y-1 pt-2.5">
-                            <span className="text-[11px] font-bold text-[#fce7f3]/70">強化</span>
+                          <div className="pt-2.5">
+                            <span className="mb-1.5 inline-block rounded border border-[rgba(249,168,212,0.15)] px-1.5 py-0.5 text-[10px] font-bold text-[#fce7f3]/70">強化</span>
                             {renderAttackBody(enhancedAttack)}
                           </div>
                         )}
