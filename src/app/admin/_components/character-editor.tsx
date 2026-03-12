@@ -50,6 +50,9 @@ const SKILL_SLOTS: {
 
 type CharacterDraft = Character & { _isNew?: boolean; _isDirty?: boolean };
 
+const ELEMENT_OPTIONS = ["純粋", "冷静", "狂気", "活発", "憂鬱"] as const;
+const RARITY_OPTIONS = ["★1", "★2", "★3"] as const;
+
 export function CharacterEditor({
   initialCharacters,
 }: {
@@ -59,6 +62,9 @@ export function CharacterEditor({
     initialCharacters.map((c) => ({ ...c }))
   );
   const [saving, setSaving] = useState(false);
+  const [filterElement, setFilterElement] = useState("");
+  const [filterRarity, setFilterRarity] = useState("");
+  const [filterName, setFilterName] = useState("");
   const [saveMessage, setSaveMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [uploadingId, setUploadingId] = useState<string | null>(null);
   const [skillEditIndex, setSkillEditIndex] = useState<number | null>(null);
@@ -305,6 +311,15 @@ export function CharacterEditor({
     });
   };
 
+  // フィルタリング: 実インデックスの配列を返す
+  const filteredIndices = characters.reduce<number[]>((acc, char, i) => {
+    if (filterElement && char.element !== filterElement) return acc;
+    if (filterRarity && char.rarity !== filterRarity) return acc;
+    if (filterName && !char.name.toLowerCase().includes(filterName.toLowerCase())) return acc;
+    acc.push(i);
+    return acc;
+  }, []);
+
   return (
     <div className="space-y-4">
       {/* ヘッダーバー */}
@@ -336,6 +351,49 @@ export function CharacterEditor({
         </span>
       </div>
 
+      {/* フィルター */}
+      <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border-secondary bg-bg-secondary px-3 py-2">
+        <span className="text-[10px] font-medium text-text-tertiary">フィルター</span>
+        <input
+          type="text"
+          value={filterName}
+          onChange={(e) => setFilterName(e.target.value)}
+          placeholder="名前で検索..."
+          className="w-36 rounded border border-border-secondary bg-bg-input px-2 py-1 text-xs text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+        />
+        <select
+          value={filterElement}
+          onChange={(e) => setFilterElement(e.target.value)}
+          className="rounded border border-border-secondary bg-bg-input px-2 py-1 text-xs text-text-primary focus:border-accent focus:outline-none"
+        >
+          <option value="">性格: すべて</option>
+          {ELEMENT_OPTIONS.map((e) => (
+            <option key={e} value={e}>{e}</option>
+          ))}
+        </select>
+        <select
+          value={filterRarity}
+          onChange={(e) => setFilterRarity(e.target.value)}
+          className="rounded border border-border-secondary bg-bg-input px-2 py-1 text-xs text-text-primary focus:border-accent focus:outline-none"
+        >
+          <option value="">レア: すべて</option>
+          {RARITY_OPTIONS.map((r) => (
+            <option key={r} value={r}>{r}</option>
+          ))}
+        </select>
+        {(filterName || filterElement || filterRarity) && (
+          <button
+            onClick={() => { setFilterName(""); setFilterElement(""); setFilterRarity(""); }}
+            className="cursor-pointer text-[10px] text-text-muted hover:text-text-primary"
+          >
+            クリア
+          </button>
+        )}
+        <span className="text-[10px] text-text-tertiary">
+          {filteredIndices.length}/{characters.length}件
+        </span>
+      </div>
+
       {/* テーブル */}
       <div className="overflow-x-auto rounded-xl border border-border-primary">
         <table className="w-max min-w-full text-xs">
@@ -361,7 +419,9 @@ export function CharacterEditor({
             </tr>
           </thead>
           <tbody>
-            {characters.map((char, rowIndex) => (
+            {filteredIndices.map((rowIndex) => {
+              const char = characters[rowIndex];
+              return (
               <tr
                 key={char.id}
                 className={`border-b border-border-secondary transition-colors hover:bg-bg-card-hover ${
@@ -470,7 +530,8 @@ export function CharacterEditor({
                   </button>
                 </td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </div>
