@@ -63,7 +63,7 @@ export function RankingClient({
 
   return (
     <div className="space-y-6">
-      {/* 属性フィルター */}
+      {/* 性格フィルター */}
       <div className="flex items-center gap-1.5">
         <button
           onClick={() => handleFilterChange("all")}
@@ -77,7 +77,7 @@ export function RankingClient({
             border: `1.2px solid ${elementFilter === "all" ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
           }}
         >
-          全属性
+          全性格
         </button>
         {ELEMENTS.map((elem) => {
           const active = elementFilter === elem;
@@ -112,7 +112,7 @@ export function RankingClient({
       {currentTop && (
         <div className="rounded-2xl bg-bg-card border border-border-primary p-3 text-center">
           <span className="text-xs text-text-muted">
-            現在の{elementFilter === "all" ? "全属性" : elementFilter}の1位は{" "}
+            現在の{elementFilter === "all" ? "全性格" : elementFilter}の1位は{" "}
           </span>
           <span className="text-xs font-bold text-text-primary">{currentTop.name}</span>
         </div>

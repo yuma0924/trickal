@@ -249,7 +249,7 @@ export function BuildsClient() {
       <div className="space-y-2 rounded-2xl border border-[rgba(249,168,212,0.1)] bg-bg-card p-3">
         {/* 属性行 */}
         <div className="flex items-center gap-2">
-          <span className="shrink-0 text-[10px] text-text-muted">属性</span>
+          <span className="shrink-0 text-[10px] text-text-muted">性格</span>
           <div className="flex gap-1.5 overflow-x-auto">
             {ELEMENTS.map((elem) => {
               const active = elementFilter === elem;
@@ -672,7 +672,7 @@ function BuildPostForm({
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="例: 狂気属性PvP編成"
+            placeholder="例: 狂気性格PvP編成"
             maxLength={100}
             className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
           />

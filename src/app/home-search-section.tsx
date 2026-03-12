@@ -82,7 +82,7 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
     return result;
   }, [characters, searchQuery, elementFilters, typeFilters, positionFilters, raceFilters, rarityFilters]);
 
-  const hasAnyFilter = searchQuery.trim() || elementFilters.size > 0 || typeFilters.size > 0 || positionFilters.size > 0 || raceFilters.size > 0 || rarityFilters.size > 0;
+  const hasAnyFilter = searchQuery.trim().length > 0 || elementFilters.size > 0 || typeFilters.size > 0 || positionFilters.size > 0 || raceFilters.size > 0 || rarityFilters.size > 0;
 
   const clearAll = () => {
     setSearchQuery("");
@@ -121,8 +121,8 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
           )}
         </div>
 
-        {/* 属性フィルター */}
-        <FilterRow label="属性">
+        {/* 性格フィルター */}
+        <FilterRow label="性格">
           {ELEMENTS.map((elem) => {
             const active = elementFilters.has(elem);
             return (
@@ -239,28 +239,42 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
         </FilterRow>
       </div>
 
-      {/* 結果件数 */}
-      <div className="flex items-center justify-between px-1">
-        <span className="text-[11px] text-[#8b7aab]">
-          {filtered.length}件のキャラクター
-        </span>
-      </div>
-
-      {/* 結果グリッド */}
-      {filtered.length === 0 ? (
-        <p className="py-8 text-center text-sm text-[#8b7aab]">
-          該当するキャラクターが見つかりません
-        </p>
+      {/* 結果 */}
+      {hasAnyFilter ? (
+        <>
+          <div className="flex items-center justify-between px-1">
+            <span className="text-[11px] text-[#8b7aab]">
+              {filtered.length}件のキャラクター
+            </span>
+          </div>
+          {filtered.length === 0 ? (
+            <p className="py-8 text-center text-sm text-[#8b7aab]">
+              該当するキャラクターが見つかりません
+            </p>
+          ) : (
+            <div className="grid grid-cols-4 gap-2">
+              {filtered.map((char) => (
+                <CharacterCard
+                  key={char.id}
+                  slug={char.slug}
+                  name={char.name}
+                  imageUrl={char.imageUrl}
+                />
+              ))}
+            </div>
+          )}
+        </>
       ) : (
-        <div className="grid grid-cols-4 gap-2">
-          {filtered.map((char) => (
-            <CharacterCard
-              key={char.id}
-              slug={char.slug}
-              name={char.name}
-              imageUrl={char.imageUrl}
-            />
-          ))}
+        <div className="flex flex-col items-center gap-1.5 rounded-[14px] border border-dashed border-[rgba(139,122,171,0.3)] py-6">
+          <svg className="h-6 w-6 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <p className="text-sm font-medium text-[#a893c0]">
+            性格やタイプを選択してキャラクターを探そう
+          </p>
+          <p className="text-[11px] text-[#8b7aab]">
+            全{characters.length}体のキャラクターから絞り込めます
+          </p>
         </div>
       )}
     </div>

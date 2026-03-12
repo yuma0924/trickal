@@ -635,7 +635,7 @@ export default async function Home() {
             </svg>
           }
           title="キャラクターを探す"
-          subtitle="属性・タイプ・種族などで絞り込み"
+          subtitle="性格・タイプ・種族などで絞り込み"
           gradientFrom="#8b5cf6"
           gradientTo="#a78bfa"
         />

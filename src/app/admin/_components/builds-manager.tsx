@@ -89,7 +89,7 @@ export function BuildsManager() {
             <tr className="border-b border-border-primary bg-bg-secondary text-left">
               <th className="px-3 py-2 font-medium text-text-secondary">モード</th>
               <th className="px-3 py-2 font-medium text-text-secondary">タイトル</th>
-              <th className="px-3 py-2 font-medium text-text-secondary">属性</th>
+              <th className="px-3 py-2 font-medium text-text-secondary">性格</th>
               <th className="px-3 py-2 font-medium text-text-secondary">投稿者</th>
               <th className="px-3 py-2 font-medium text-text-secondary">コメント</th>
               <th className="px-3 py-2 font-medium text-text-secondary">反応</th>

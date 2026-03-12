@@ -631,7 +631,7 @@ export function CharacterDetailClient({
               </svg>
               <span className="text-sm font-bold text-[#fce7f3]">次に見る</span>
             </div>
-            <p className="mt-0.5 text-xs text-[#8b7aab]">同じ属性・レアリティのキャラ</p>
+            <p className="mt-0.5 text-xs text-[#8b7aab]">同じ性格・レアリティのキャラ</p>
           </div>
           <div className="grid grid-cols-4 gap-2">
             {relatedCharacters.map((c) => (
