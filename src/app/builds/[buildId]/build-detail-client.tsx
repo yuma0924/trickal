@@ -8,6 +8,7 @@ import { Tab } from "@/components/ui/tab";
 import { CharacterIcon } from "@/components/character/character-icon";
 import { ThumbsUpDown } from "@/components/reaction/thumbs-up-down";
 import { cn } from "@/lib/utils";
+import { useToast, Toast } from "@/components/ui/toast";
 import type { Element } from "@/lib/constants";
 
 type CharacterInfo = {
@@ -111,6 +112,7 @@ export function BuildDetailClient({
 
   // コメント投稿フォーム
   const [commentBody, setCommentBody] = useState("");
+  const { toast, showToast } = useToast();
   const [commentName, setCommentName] = useState("");
   const [commentSubmitting, setCommentSubmitting] = useState(false);
   const [commentError, setCommentError] = useState<string | null>(null);
@@ -266,6 +268,7 @@ export function BuildDetailClient({
       }
       setCommentBody("");
       setCommentName("");
+      showToast("コメントを投稿しました！");
     } catch {
       setCommentError("投稿に失敗しました");
     } finally {
@@ -627,6 +630,8 @@ export function BuildDetailClient({
           </div>
         </div>
       )}
+
+      <Toast message={toast.message} visible={toast.visible} />
     </div>
   );
 }

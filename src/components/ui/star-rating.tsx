@@ -111,6 +111,7 @@ export function StarRatingInput({
   const instanceId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef(false);
+  const pointerHandledRef = useRef(false);
 
   const calcValueFromPointer = useCallback((clientX: number): number => {
     const container = containerRef.current;
@@ -126,6 +127,7 @@ export function StarRatingInput({
 
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     draggingRef.current = true;
+    pointerHandledRef.current = true;
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
     const newValue = calcValueFromPointer(e.clientX);
     onChange(newValue);
@@ -141,7 +143,13 @@ export function StarRatingInput({
     draggingRef.current = false;
   }, []);
 
-  const handleClick = (starIndex: number, isLeftHalf: boolean) => {
+  const handleClick = (_e: React.MouseEvent, starIndex: number, isLeftHalf: boolean) => {
+    // pointerdown で既に処理済みなら click を無視する
+    // （タッチでは pointerdown → click の順に発火し、二重処理になるため）
+    if (pointerHandledRef.current) {
+      pointerHandledRef.current = false;
+      return;
+    }
     const newValue = isLeftHalf ? starIndex - 0.5 : starIndex;
     if (value === newValue) {
       onChange(null);
@@ -175,14 +183,14 @@ export function StarRatingInput({
               <button
                 type="button"
                 className="absolute inset-y-0 left-0 w-1/2"
-                onClick={() => handleClick(starIndex, true)}
+                onClick={(e) => handleClick(e, starIndex, true)}
                 aria-label={`${starIndex - 0.5}点`}
               />
               {/* 右半分 */}
               <button
                 type="button"
                 className="absolute inset-y-0 right-0 w-1/2"
-                onClick={() => handleClick(starIndex, false)}
+                onClick={(e) => handleClick(e, starIndex, false)}
                 aria-label={`${starIndex}点`}
               />
             </span>
@@ -190,9 +198,21 @@ export function StarRatingInput({
         })}
       </div>
       {value !== null && (
-        <span className="ml-2 text-sm font-bold text-text-primary">
-          {value.toFixed(1)}
-        </span>
+        <>
+          <span className="ml-2 text-sm font-bold text-text-primary">
+            {value.toFixed(1)}
+          </span>
+          <button
+            type="button"
+            onClick={() => onChange(null)}
+            className="ml-1 flex h-5 w-5 items-center justify-center rounded-full text-text-tertiary transition-colors hover:bg-bg-tertiary hover:text-text-secondary"
+            aria-label="評価をリセット"
+          >
+            <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </>
       )}
     </div>
   );

@@ -11,6 +11,7 @@ interface CommentFormProps {
     rating: number | null;
     body: string;
   }) => void;
+  onClose?: () => void;
   showRating?: boolean;
   loading?: boolean;
   className?: string;
@@ -21,6 +22,7 @@ const MAX_LINES = 8;
 
 export function CommentForm({
   onSubmit,
+  onClose,
   showRating = true,
   loading = false,
   className,
@@ -59,7 +61,21 @@ export function CommentForm({
       className={cn("rounded-2xl bg-bg-card border border-border-primary p-4 space-y-3", className)}
     >
       <div>
-        <label className="mb-1 block text-xs text-text-secondary">名前</label>
+        <div className="mb-1 flex items-center justify-between">
+          <label className="text-xs text-text-secondary">名前（任意）</label>
+          {onClose && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex h-6 w-6 items-center justify-center rounded-full text-text-tertiary transition-colors hover:bg-bg-tertiary hover:text-text-secondary"
+              aria-label="閉じる"
+            >
+              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+        </div>
         <input
           type="text"
           value={displayName}
@@ -76,6 +92,7 @@ export function CommentForm({
             評価（任意）
           </label>
           <StarRatingInput value={rating} onChange={setRating} />
+          <p className="mt-1 text-xs text-text-tertiary">評価するとランキングに反映されます</p>
         </div>
       )}
 
@@ -97,7 +114,15 @@ export function CommentForm({
       </div>
 
       <Button type="submit" disabled={!canSubmit} className="w-full">
-        {loading ? "送信中..." : rating !== null ? "投票する" : "コメントする"}
+        {loading ? (
+          <span className="inline-flex items-center gap-2">
+            <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            送信中...
+          </span>
+        ) : rating !== null ? "投票する" : "コメントする"}
       </Button>
     </form>
   );

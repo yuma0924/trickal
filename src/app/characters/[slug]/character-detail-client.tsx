@@ -8,6 +8,7 @@ import { StarRatingDisplay } from "@/components/ui/star-rating";
 import { CommentForm } from "@/components/comment/comment-form";
 import { CommentList } from "@/components/comment/comment-list";
 import { cn } from "@/lib/utils";
+import { useToast, Toast } from "@/components/ui/toast";
 import type { CharacterDetail, RelatedCharacter } from "./page";
 
 
@@ -123,8 +124,9 @@ export function CharacterDetailClient({
   const [submitLoading, setSubmitLoading] = useState(false);
   const [userReactions, setUserReactions] = useState<Record<string, ReactionState>>({});
   const [_userHash, setUserHash] = useState<string | null>(null);
-  const [skillsOpen, setSkillsOpen] = useState(true);
+  const [skillsOpen, setSkillsOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
+  const { toast, showToast } = useToast();
 
   // user_hash 取得
   useEffect(() => {
@@ -211,8 +213,9 @@ export function CharacterDetailClient({
       });
 
       if (res.ok) {
-        // リロード
         fetchComments(sortTab);
+        setFormOpen(false);
+        showToast("投稿しました！");
       }
     } catch {
       // エラー無視
@@ -535,7 +538,7 @@ export function CharacterDetailClient({
               <p className="mt-1 text-xs text-[#8b7aab]">★評価とコメントを投稿できます</p>
             </div>
             <button
-              onClick={() => setFormOpen(!formOpen)}
+              onClick={() => setFormOpen(true)}
               className="flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#fb64b6] to-[#ff637e] px-5 py-3 text-xs font-bold text-white shadow-md transition-opacity hover:opacity-90"
             >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -548,6 +551,7 @@ export function CharacterDetailClient({
         {formOpen && (
           <CommentForm
             onSubmit={handleSubmit}
+            onClose={() => setFormOpen(false)}
             showRating
             loading={submitLoading}
           />
@@ -692,6 +696,8 @@ export function CharacterDetailClient({
           </svg>
         </Link>
       </section>
+
+      <Toast message={toast.message} visible={toast.visible} />
     </div>
   );
 }

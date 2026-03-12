@@ -9,6 +9,7 @@ import { ThumbsUpDown } from "@/components/reaction/thumbs-up-down";
 import { createBrowserClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { ELEMENTS } from "@/lib/constants";
+import { useToast, Toast } from "@/components/ui/toast";
 
 // API レスポンスの型
 type CharacterInfo = {
@@ -124,6 +125,7 @@ export function BuildsClient() {
   const [hasMore, setHasMore] = useState(false);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [initialLoaded, setInitialLoaded] = useState(false);
+  const { toast, showToast } = useToast();
 
   const fetchBuilds = useCallback(
     async (cursorId?: string) => {
@@ -340,10 +342,12 @@ export function BuildsClient() {
 
       {/* 投稿フォーム */}
       <div id="build-form">
-        <BuildPostForm mode={mode} onPosted={() => fetchBuilds()} />
+        <BuildPostForm mode={mode} onPosted={() => { fetchBuilds(); showToast("編成を投稿しました！"); }} />
       </div>
 
       {/* ナビリンクはサーバーコンポーネント側で表示 */}
+
+      <Toast message={toast.message} visible={toast.visible} />
     </div>
   );
 }
@@ -543,7 +547,6 @@ function BuildPostForm({
   const [displayName, setDisplayName] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   // キャラ検索
   const [searchQuery, setSearchQuery] = useState("");
@@ -609,7 +612,6 @@ function BuildPostForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setSuccess(false);
 
     if (selectedChars.length !== 6) {
       setError("メンバーは6人選択してください");
@@ -643,7 +645,6 @@ function BuildPostForm({
         return;
       }
 
-      setSuccess(true);
       setSelectedChars([]);
       setComment("");
       setTitle("");
@@ -786,10 +787,6 @@ function BuildPostForm({
 
         {error && (
           <p className="text-sm text-thumbs-down">{error}</p>
-        )}
-
-        {success && (
-          <p className="text-sm text-thumbs-up">投稿しました!</p>
         )}
 
         <Button type="submit" disabled={submitting} className="w-full">
