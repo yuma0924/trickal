@@ -151,6 +151,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
             const uniqueElements = [...new Set(build.memberElements)];
             const row1 = build.members.slice(0, 3);
             const row2 = build.members.slice(3, 6);
+            const row3 = build.members.slice(6, 9);
 
             return (
               <Link
@@ -206,7 +207,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                     })}
                     {build.mode && (
                       <span className="rounded-[4px] bg-[rgba(36,27,53,0.5)] px-1.5 py-0.5 text-[8px] font-bold text-[#8b7aab]">
-                        {build.mode === "pve" ? "PvE" : "PvP"}
+                        {build.mode === "pve" ? "PvE" : build.mode === "pvp" ? "PvP" : "次元"}
                       </span>
                     )}
                   </div>
@@ -239,12 +240,32 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                       })}
                     </div>
                     {row2.length > 0 && (
-                      <div className="grid grid-cols-3">
+                      <div className={`grid grid-cols-3 ${row3.length > 0 ? "border-b border-[rgba(249,168,212,0.05)]" : ""}`}>
                         {row2.map((mId, i) => {
                           const char = charMap[mId];
-                          const elemStyle = char?.element ? ELEMENT_COLORS[char.element] : null;
                           return (
                             <div key={`${mId}-${i + 3}`} className={`flex flex-col items-center gap-0.5 py-2 ${i < 2 ? "border-r border-[rgba(249,168,212,0.05)]" : ""}`}>
+                              <div className="relative">
+                                <div className="h-10 w-10 overflow-hidden">
+                                  {char?.imageUrl ? (
+                                    <Image src={char.imageUrl} alt={char?.name ?? "?"} width={40} height={40} className="h-full w-full object-cover" loading="lazy" />
+                                  ) : (
+                                    <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-[10px] text-[#8b7aab]">{char?.name?.charAt(0) ?? "?"}</div>
+                                  )}
+                                </div>
+                              </div>
+                              <span className="max-w-16 truncate text-center text-[8px] font-bold text-[#a893c0]">{char?.name ?? "?"}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                    {row3.length > 0 && (
+                      <div className="grid grid-cols-3">
+                        {row3.map((mId, i) => {
+                          const char = charMap[mId];
+                          return (
+                            <div key={`${mId}-${i + 6}`} className={`flex flex-col items-center gap-0.5 py-2 ${i < 2 ? "border-r border-[rgba(249,168,212,0.05)]" : ""}`}>
                               <div className="relative">
                                 <div className="h-10 w-10 overflow-hidden">
                                   {char?.imageUrl ? (

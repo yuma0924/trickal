@@ -44,9 +44,9 @@ export async function GET(request: NextRequest) {
       50
     );
 
-    if (!mode || (mode !== "pvp" && mode !== "pve")) {
+    if (!mode || (mode !== "pvp" && mode !== "pve" && mode !== "dimension")) {
       return NextResponse.json(
-        { error: "mode パラメータは 'pvp' または 'pve' を指定してください" },
+        { error: "mode パラメータは 'pvp', 'pve', 'dimension' のいずれかを指定してください" },
         { status: 400 }
       );
     }
@@ -241,9 +241,9 @@ export async function POST(request: NextRequest) {
     const { mode, members, comment, title, display_name } = parsed;
 
     // バリデーション
-    if (!mode || (mode !== "pvp" && mode !== "pve")) {
+    if (!mode || (mode !== "pvp" && mode !== "pve" && mode !== "dimension")) {
       return NextResponse.json(
-        { error: "mode は 'pvp' または 'pve' を指定してください" },
+        { error: "mode は 'pvp', 'pve', 'dimension' のいずれかを指定してください" },
         { status: 400 }
       );
     }
@@ -255,8 +255,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // party_size は初期は6固定
-    const partySize = 6;
+    const partySize = mode === "dimension" ? 9 : 6;
     if (members.length !== partySize) {
       return NextResponse.json(
         { error: `メンバーは${partySize}人選択してください` },
@@ -363,7 +362,7 @@ export async function POST(request: NextRequest) {
     const { data: newBuild, error: insertError } = await supabase
       .from("builds")
       .insert({
-        mode: mode as "pvp" | "pve",
+        mode: mode as "pvp" | "pve" | "dimension",
         party_size: partySize,
         members,
         element_label: elementLabel,

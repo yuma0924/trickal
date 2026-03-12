@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { CharacterIcon } from "@/components/character/character-icon";
 import { ThumbsUpDown } from "@/components/reaction/thumbs-up-down";
-import { createBrowserClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { ELEMENTS } from "@/lib/constants";
 import { useToast, Toast } from "@/components/ui/toast";
+import { BuildPostForm } from "./build-post-form";
 
 // API レスポンスの型
 type CharacterInfo = {
@@ -23,7 +23,7 @@ type CharacterInfo = {
 
 type BuildItem = {
   id: string;
-  mode: "pvp" | "pve";
+  mode: "pvp" | "pve" | "dimension";
   party_size: number;
   members: string[];
   members_detail: CharacterInfo[];
@@ -39,11 +39,12 @@ type BuildItem = {
   user_reaction: "up" | "down" | null;
 };
 
-type Mode = "pvp" | "pve";
+type Mode = "pvp" | "pve" | "dimension";
 
 const MODE_TABS: { value: Mode; label: string; icon: string }[] = [
   { value: "pve", label: "PvE", icon: "shield" },
   { value: "pvp", label: "PvP", icon: "swords" },
+  { value: "dimension", label: "次元の衝突", icon: "dimension" },
 ];
 
 const ELEMENT_ICONS: Record<string, string> = {
@@ -125,6 +126,7 @@ export function BuildsClient() {
   const [hasMore, setHasMore] = useState(false);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [initialLoaded, setInitialLoaded] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
   const { toast, showToast } = useToast();
 
   const fetchBuilds = useCallback(
@@ -223,6 +225,10 @@ export function BuildsClient() {
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
+              ) : tab.icon === "dimension" ? (
+                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
               ) : (
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -233,11 +239,7 @@ export function BuildsClient() {
           ))}
         </div>
         <button
-          onClick={() => {
-            document
-              .getElementById("build-form")
-              ?.scrollIntoView({ behavior: "smooth" });
-          }}
+          onClick={() => setFormOpen(!formOpen)}
           className="flex items-center gap-1.5 rounded-[14px] bg-gradient-to-r from-[#fb64b6] to-[#ff637e] px-3 py-2 text-[11px] font-bold text-white shadow-[0px_10px_15px_0px_rgba(246,51,154,0.2),0px_4px_6px_0px_rgba(246,51,154,0.2)] cursor-pointer"
         >
           <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -308,7 +310,7 @@ export function BuildsClient() {
 
       {/* 編成一覧 */}
       {initialLoaded && builds.length === 0 && !loading ? (
-        <EmptyState />
+        <EmptyState onOpenForm={() => setFormOpen(true)} />
       ) : (
         <div className="space-y-3">
           {builds.map((build) => (
@@ -341,9 +343,18 @@ export function BuildsClient() {
       )}
 
       {/* 投稿フォーム */}
-      <div id="build-form">
-        <BuildPostForm mode={mode} onPosted={() => { fetchBuilds(); showToast("編成を投稿しました！"); }} />
-      </div>
+      {formOpen && (
+        <div id="build-form">
+          <BuildPostForm
+            onPosted={() => {
+              fetchBuilds();
+              showToast("編成を投稿しました！");
+              setFormOpen(false);
+            }}
+            onClose={() => setFormOpen(false)}
+          />
+        </div>
+      )}
 
       {/* ナビリンクはサーバーコンポーネント側で表示 */}
 
@@ -408,7 +419,7 @@ function BuildCard({
               </span>
             ))}
           <span className="rounded bg-[rgba(36,27,53,0.5)] px-1.5 py-0.5 text-[8px] font-bold text-[#8b7aab]">
-            {build.mode === "pve" ? "PvE" : "PvP"}
+            {build.mode === "pve" ? "PvE" : build.mode === "pvp" ? "PvP" : "次元"}
           </span>
         </div>
 
@@ -442,7 +453,7 @@ function BuildCard({
           </div>
           {/* 下段 (3,4,5) */}
           {build.members_detail.length > 3 && (
-            <div className="grid grid-cols-3">
+            <div className={cn("grid grid-cols-3", build.members_detail.length > 6 && "border-b border-[rgba(249,168,212,0.05)]")}>
               {build.members_detail.slice(3, 6).map((char, i) => (
                 <div key={`${char.id}-${i + 3}`} className={cn(
                   "flex flex-col items-center gap-0.5 py-2",
@@ -451,7 +462,27 @@ function BuildCard({
                   <CharacterIcon
                     name={char.name}
                     imageUrl={char.image_url}
-  
+                    isHidden={char.is_hidden}
+                    size="sm"
+                  />
+                  <span className="max-w-16 truncate text-center text-[8px] font-bold text-[#a893c0]">
+                    {char.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+          {/* 3段目 (6,7,8) — 次元の衝突 9体 */}
+          {build.members_detail.length > 6 && (
+            <div className="grid grid-cols-3">
+              {build.members_detail.slice(6, 9).map((char, i) => (
+                <div key={`${char.id}-${i + 6}`} className={cn(
+                  "flex flex-col items-center gap-0.5 py-2",
+                  i < 2 && "border-r border-[rgba(249,168,212,0.05)]"
+                )}>
+                  <CharacterIcon
+                    name={char.name}
+                    imageUrl={char.image_url}
                     isHidden={char.is_hidden}
                     size="sm"
                   />
@@ -505,7 +536,7 @@ function BuildCard({
 /**
  * 0件時の表示
  */
-function EmptyState() {
+function EmptyState({ onOpenForm }: { onOpenForm: () => void }) {
   return (
     <div className="rounded-2xl border border-border-primary bg-bg-card p-8 text-center">
       <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-accent/10">
@@ -517,282 +548,10 @@ function EmptyState() {
       <p className="mt-1 text-sm text-text-tertiary">
         最初の投稿者になろう！
       </p>
-      <Button
-        className="mt-4"
-        onClick={() => {
-          document
-            .getElementById("build-form")
-            ?.scrollIntoView({ behavior: "smooth" });
-        }}
-      >
+      <Button className="mt-4" onClick={onOpenForm}>
         編成を投稿
       </Button>
     </div>
   );
 }
 
-/**
- * 編成投稿フォーム
- */
-function BuildPostForm({
-  mode,
-  onPosted,
-}: {
-  mode: Mode;
-  onPosted: () => void;
-}) {
-  const [selectedChars, setSelectedChars] = useState<CharacterInfo[]>([]);
-  const [comment, setComment] = useState("");
-  const [title, setTitle] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  // キャラ検索
-  const [searchQuery, setSearchQuery] = useState("");
-  const [allCharacters, setAllCharacters] = useState<CharacterInfo[]>([]);
-  const [charsLoaded, setCharsLoaded] = useState(false);
-
-  // キャラ一覧をロード（初回のみ）
-  useEffect(() => {
-    if (charsLoaded) return;
-
-    async function loadCharacters() {
-      try {
-        const supabase = createBrowserClient();
-        const { data } = await supabase
-          .from("characters")
-          .select("id, name, slug, element, image_url, is_hidden")
-          .eq("is_hidden", false)
-          .order("name");
-
-        if (data) {
-          setAllCharacters(
-            data.map((c) => ({
-              id: c.id,
-              name: c.name,
-              slug: c.slug,
-              element: c.element,
-              image_url: c.image_url,
-              is_hidden: c.is_hidden,
-            }))
-          );
-        }
-        setCharsLoaded(true);
-      } catch {
-        // ignore
-      }
-    }
-
-    loadCharacters();
-  }, [charsLoaded]);
-
-  // 検索結果のフィルタリング
-  const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return allCharacters.slice(0, 20);
-    }
-    const q = searchQuery.toLowerCase();
-    return allCharacters
-      .filter((c) => c.name.toLowerCase().includes(q))
-      .slice(0, 20);
-  }, [searchQuery, allCharacters]);
-
-  const handleAddChar = (char: CharacterInfo) => {
-    if (selectedChars.length >= 6) return;
-    if (selectedChars.some((c) => c.id === char.id)) return;
-    setSelectedChars((prev) => [...prev, char]);
-    setSearchQuery("");
-  };
-
-  const handleRemoveChar = (charId: string) => {
-    setSelectedChars((prev) => prev.filter((c) => c.id !== charId));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-
-    if (selectedChars.length !== 6) {
-      setError("メンバーは6人選択してください");
-      return;
-    }
-
-    if (!comment.trim()) {
-      setError("コメントは必須です");
-      return;
-    }
-
-    setSubmitting(true);
-
-    try {
-      const res = await fetch("/api/builds", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          mode,
-          members: selectedChars.map((c) => c.id),
-          comment: comment.trim(),
-          title: title.trim() || undefined,
-          display_name: displayName.trim() || undefined,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || "投稿に失敗しました");
-        return;
-      }
-
-      setSelectedChars([]);
-      setComment("");
-      setTitle("");
-      setDisplayName("");
-      onPosted();
-    } catch {
-      setError("投稿に失敗しました");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  return (
-    <div className="rounded-2xl border border-border-primary bg-bg-card p-4">
-      <h2 className="mb-4 text-lg font-bold text-text-primary">
-        編成を投稿
-      </h2>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* タイトル（任意） */}
-        <div>
-          <label className="mb-1 block text-sm text-text-secondary">
-            編成名（任意）
-          </label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="例: 狂気性格PvP編成"
-            maxLength={100}
-            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
-          />
-        </div>
-
-        {/* メンバー選択 */}
-        <div>
-          <label className="mb-1 block text-sm text-text-secondary">
-            メンバー（6人選択）
-            <span className="ml-2 text-xs text-text-tertiary">
-              {selectedChars.length}/6
-            </span>
-          </label>
-
-          {/* 選択済みキャラ */}
-          {selectedChars.length > 0 && (
-            <div className="mb-2 flex flex-wrap gap-2">
-              {selectedChars.map((char) => (
-                <div key={char.id} className="relative">
-                  <CharacterIcon
-                    name={char.name}
-                    imageUrl={char.image_url}
-  
-                    size="sm"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveChar(char.id)}
-                    className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-thumbs-down text-[10px] text-white cursor-pointer"
-                    aria-label={`${char.name}を削除`}
-                  >
-                    x
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* キャラ検索 */}
-          {selectedChars.length < 6 && (
-            <div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="キャラ名で検索..."
-                className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
-              />
-              {searchResults.length > 0 && searchQuery && (
-                <div className="mt-1 max-h-40 overflow-y-auto rounded-2xl border border-border-primary bg-bg-card">
-                  {searchResults.map((char) => (
-                    <button
-                      key={char.id}
-                      type="button"
-                      onClick={() => handleAddChar(char)}
-                      disabled={selectedChars.some((c) => c.id === char.id)}
-                      className={cn(
-                        "flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors cursor-pointer",
-                        selectedChars.some((c) => c.id === char.id)
-                          ? "text-text-muted cursor-not-allowed"
-                          : "text-text-primary hover:bg-bg-card-hover"
-                      )}
-                    >
-                      <CharacterIcon
-                        name={char.name}
-                        imageUrl={char.image_url}
-      
-                        size="sm"
-                      />
-                      <span>{char.name}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* 投稿者名（任意） */}
-        <div>
-          <label className="mb-1 block text-sm text-text-secondary">
-            名前（任意）
-          </label>
-          <input
-            type="text"
-            value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
-            placeholder="名無しの教主"
-            maxLength={50}
-            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
-          />
-        </div>
-
-        {/* コメント */}
-        <div>
-          <label className="mb-1 block text-sm text-text-secondary">
-            コメント
-            <span className="ml-2 text-xs text-text-tertiary">
-              {comment.length}/200
-            </span>
-          </label>
-          <textarea
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            placeholder="この編成のポイントを教えてください"
-            maxLength={200}
-            rows={3}
-            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none resize-none"
-          />
-        </div>
-
-        {error && (
-          <p className="text-sm text-thumbs-down">{error}</p>
-        )}
-
-        <Button type="submit" disabled={submitting} className="w-full">
-          {submitting ? "投稿中..." : "投稿する"}
-        </Button>
-      </form>
-    </div>
-  );
-}
