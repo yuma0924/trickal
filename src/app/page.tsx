@@ -626,7 +626,24 @@ export default async function Home() {
         />
       </section>
 
-      {/* ====== 第2段: 話題のキャラクター ====== */}
+      {/* ====== 第2段: キャラクターを探す ====== */}
+      <section className="space-y-4">
+        <SectionHeading
+          icon={
+            <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          }
+          title="キャラクターを探す"
+          subtitle="属性・タイプ・種族などで絞り込み"
+          gradientFrom="#8b5cf6"
+          gradientTo="#a78bfa"
+        />
+
+        <HomeSearchSection characters={searchCharacters} />
+      </section>
+
+      {/* ====== 第3段: 注目キャラクター ====== */}
       {trendingCharacters.length > 0 && (
         <section className="space-y-4">
           <div className="space-y-1">
@@ -730,7 +747,7 @@ export default async function Home() {
         </section>
       )}
 
-      {/* ====== 第3段: 編成ランキング ====== */}
+      {/* ====== 第4段: 編成ランキング ====== */}
       <section className="space-y-4">
         <SectionHeading
           icon={<TeamIcon className="h-4 w-4 text-white" />}
@@ -750,23 +767,6 @@ export default async function Home() {
           gradientFrom="#fb64b6"
           gradientTo="#ff637e"
         />
-      </section>
-
-      {/* ====== 第4段: キャラ検索・フィルター ====== */}
-      <section className="space-y-4">
-        <SectionHeading
-          icon={
-            <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          }
-          title="キャラ検索・フィルター"
-          subtitle="属性・タイプ・種族などで絞り込み"
-          gradientFrom="#8b5cf6"
-          gradientTo="#a78bfa"
-        />
-
-        <HomeSearchSection characters={searchCharacters} />
       </section>
     </div>
   );
