@@ -32,6 +32,7 @@ interface CommentListProps {
   userReactions?: Record<string, ReactionState>;
   onReact?: (commentId: string, reaction: ReactionState) => void;
   onReport?: (commentId: string) => void;
+  accentColor?: string;
   className?: string;
   hideTab?: boolean;
 }
@@ -52,6 +53,7 @@ export function CommentList({
   userReactions = {},
   onReact,
   onReport,
+  accentColor,
   className,
   hideTab = false,
 }: CommentListProps) {
@@ -74,6 +76,7 @@ export function CommentList({
               userReaction={userReactions[comment.id]}
               onReact={onReact}
               onReport={onReport}
+              accentColor={accentColor}
             />
           ))}
         </div>

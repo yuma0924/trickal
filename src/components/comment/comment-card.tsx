@@ -18,6 +18,7 @@ interface CommentCardProps {
   userReaction?: ReactionState;
   onReact?: (commentId: string, reaction: ReactionState) => void;
   onReport?: (commentId: string) => void;
+  accentColor?: string;
   className?: string;
 }
 
@@ -42,6 +43,7 @@ export function CommentCard({
   userReaction,
   onReact,
   onReport,
+  accentColor,
   className,
 }: CommentCardProps) {
   const netScore = thumbsUpCount - thumbsDownCount;
@@ -55,8 +57,6 @@ export function CommentCard({
     );
   }
 
-  const initial = displayName.charAt(0);
-
   return (
     <div
       className={cn(
@@ -65,10 +65,13 @@ export function CommentCard({
         className
       )}
     >
-      <div className="flex items-center gap-2.5">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#fb64b6] to-[#ffa1ad] text-xs font-bold text-white">
-          {initial}
-        </div>
+      <div className="flex items-start gap-2.5">
+        {accentColor && (
+          <div
+            className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full"
+            style={{ backgroundColor: accentColor }}
+          />
+        )}
         <div className="flex flex-col">
           <span className="text-sm font-medium text-text-primary">
             {displayName}
@@ -99,7 +102,7 @@ export function CommentCard({
           <button
             type="button"
             onClick={() => onReport(id)}
-            className="ml-auto text-[10px] text-text-muted transition-colors hover:text-thumbs-down cursor-pointer"
+            className="ml-auto rounded-full border border-border-primary px-2.5 py-1 text-[10px] text-text-muted transition-colors hover:border-thumbs-down/20 hover:text-thumbs-down cursor-pointer"
           >
             通報
           </button>

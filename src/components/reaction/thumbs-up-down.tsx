@@ -35,10 +35,10 @@ export function ThumbsUpDown({
         type="button"
         onClick={() => handleClick("up")}
         className={cn(
-          "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs transition-all duration-150 cursor-pointer",
+          "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs transition-all duration-150 cursor-pointer",
           userReaction === "up"
-            ? "bg-thumbs-up/10 text-thumbs-up font-medium"
-            : "text-text-muted hover:text-thumbs-up hover:bg-thumbs-up/5"
+            ? "border-thumbs-up/30 bg-thumbs-up/10 text-thumbs-up font-medium"
+            : "border-border-primary text-text-muted hover:text-thumbs-up hover:border-thumbs-up/20 hover:bg-thumbs-up/5"
         )}
         aria-label="いいね"
       >
@@ -49,10 +49,10 @@ export function ThumbsUpDown({
         type="button"
         onClick={() => handleClick("down")}
         className={cn(
-          "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs transition-all duration-150 cursor-pointer",
+          "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs transition-all duration-150 cursor-pointer",
           userReaction === "down"
-            ? "bg-thumbs-down/10 text-thumbs-down font-medium"
-            : "text-text-muted hover:text-thumbs-down hover:bg-thumbs-down/5"
+            ? "border-thumbs-down/30 bg-thumbs-down/10 text-thumbs-down font-medium"
+            : "border-border-primary text-text-muted hover:text-thumbs-down hover:border-thumbs-down/20 hover:bg-thumbs-down/5"
         )}
         aria-label="よくない"
       >

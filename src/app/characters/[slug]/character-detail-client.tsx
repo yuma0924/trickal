@@ -621,6 +621,7 @@ export function CharacterDetailClient({
           userReactions={userReactions}
           onReact={handleReact}
           onReport={handleReport}
+          accentColor={elemColors?.text}
           hideTab
         />
       </section>
