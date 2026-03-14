@@ -6,7 +6,7 @@ import { CharacterIcon } from "@/components/character/character-icon";
 import { Button } from "@/components/ui/button";
 import { createBrowserClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import { ELEMENTS, ELEMENT_COLORS } from "@/lib/constants";
+import { ELEMENTS } from "@/lib/constants";
 
 type FormMode = "pve" | "pvp" | "dimension";
 
