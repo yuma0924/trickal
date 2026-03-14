@@ -131,7 +131,7 @@ export async function POST(request: Request) {
       entries.push({
         character_id: char.id,
         avg_rating:
-          stat.voteCount >= 4 ? stat.totalRating / stat.voteCount : 0,
+          stat.voteCount >= 1 ? stat.totalRating / stat.voteCount : 0,
         valid_votes_count: stat.voteCount,
         board_comments_count: stat.boardCount,
         created_at: char.created_at,
@@ -152,7 +152,7 @@ export async function POST(request: Request) {
     let rank = 1;
     const upsertData: InsertTables<"character_rankings">[] = entries.map(
       (entry) => {
-        const assignedRank = entry.valid_votes_count >= 4 ? rank++ : null;
+        const assignedRank = entry.valid_votes_count >= 1 ? rank++ : null;
         return {
           character_id: entry.character_id,
           avg_rating: entry.avg_rating,

@@ -86,7 +86,7 @@ export default async function RankingPage() {
       const char = charMap.get(r.character_id);
       if (!char) continue;
 
-      if (r.rank !== null && r.valid_votes_count >= 4) {
+      if (r.rank !== null && r.valid_votes_count >= 1) {
         rankedCharacters.push({
           id: r.character_id,
           slug: char.slug,

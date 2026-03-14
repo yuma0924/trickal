@@ -207,7 +207,7 @@ export function RankingClient({
                       {char.name}
                     </p>
                     <div className="mt-0.5 flex items-center gap-1.5">
-                      {char.avgRating !== null && char.validVotesCount >= 4 ? (
+                      {char.avgRating !== null && char.validVotesCount >= 1 ? (
                         <span className="text-[10px] font-bold text-[#fcd34d]">
                           ★{char.avgRating.toFixed(1)}
                           <span className="ml-0.5 font-normal text-[#8b7aab]">{char.validVotesCount}票</span>
