@@ -15,6 +15,7 @@ type CharacterInfo = {
   name: string;
   slug: string;
   element: string | null;
+  position: string | null;
   image_url: string | null;
   is_hidden: boolean;
 };
@@ -40,12 +41,31 @@ const MODE_TABS: { value: FormMode; label: string }[] = [
 
 const POSITION_LABELS = ["後衛", "中衛", "前衛"] as const;
 
+const POSITION_ICON_MAP: Record<string, string> = {
+  前列: "/icons/front.png",
+  中列: "/icons/middle.png",
+  後列: "/icons/back.png",
+};
+
+// 配置グリッドの列名 → DBの position 値のマッピング
+const COLUMN_TO_POSITION: Record<string, string> = {
+  後衛: "後列",
+  中衛: "中列",
+  前衛: "前列",
+};
+
 function getPartySize(mode: FormMode): number {
   return mode === "dimension" ? 9 : 6;
 }
 
 function getRowCount(mode: FormMode): number {
   return mode === "dimension" ? 3 : 2;
+}
+
+// スロットインデックスからポジション列を取得
+function getSlotColumn(slotIndex: number, rowCount: number): string {
+  const colIdx = Math.floor(slotIndex / rowCount);
+  return POSITION_LABELS[colIdx];
 }
 
 export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
@@ -55,7 +75,8 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
   const [formation, setFormation] = useState<(CharacterInfo | null)[]>(
     Array(6).fill(null)
   );
-  const [activeSlotIndex, setActiveSlotIndex] = useState<number | null>(null);
+  // 選択中のキャラ（スロットに配置する前の一時状態）
+  const [selectedChar, setSelectedChar] = useState<CharacterInfo | null>(null);
   const [comment, setComment] = useState("");
   const [title, setTitle] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -73,7 +94,7 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
         const supabase = createBrowserClient();
         const { data } = await supabase
           .from("characters")
-          .select("id, name, slug, element, image_url, is_hidden")
+          .select("id, name, slug, element, position, image_url, is_hidden")
           .eq("is_hidden", false)
           .order("name");
         if (data) {
@@ -83,6 +104,7 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
               name: c.name,
               slug: c.slug,
               element: c.element,
+              position: c.position,
               image_url: c.image_url,
               is_hidden: c.is_hidden,
             }))
@@ -100,7 +122,7 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
   useEffect(() => {
     const size = getPartySize(formMode);
     setFormation(Array(size).fill(null));
-    setActiveSlotIndex(null);
+    setSelectedChar(null);
   }, [formMode]);
 
   const partySize = getPartySize(formMode);
@@ -132,49 +154,69 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
       setFormation((prev) =>
         prev.map((slot) => (slot?.id === char.id ? null : slot))
       );
+      if (selectedChar?.id === char.id) {
+        setSelectedChar(null);
+      }
       return;
     }
 
-    // activeSlotがあればそこに配置
-    if (activeSlotIndex !== null && formation[activeSlotIndex] === null) {
-      setFormation((prev) => {
-        const next = [...prev];
-        next[activeSlotIndex] = char;
-        return next;
-      });
-      // 次の空スロットをactiveにする
-      const nextEmpty = formation.findIndex(
-        (s, i) => i !== activeSlotIndex && s === null
-      );
-      setActiveSlotIndex(nextEmpty >= 0 ? nextEmpty : null);
+    // 既に選択中のキャラを再タップ → キャンセル
+    if (selectedChar?.id === char.id) {
+      setSelectedChar(null);
       return;
     }
 
-    // 最初の空スロットに配置
-    const emptyIndex = formation.findIndex((s) => s === null);
-    if (emptyIndex === -1) return;
-    setFormation((prev) => {
-      const next = [...prev];
-      next[emptyIndex] = char;
-      return next;
-    });
+    // 選択状態にする（スロットはまだ決まらない）
+    setSelectedChar(char);
   };
 
   // スロットタップ
-  const handleSlotTap = (index: number) => {
-    if (formation[index]) {
-      // 配置済み → activeSlot切替
-      setActiveSlotIndex(index);
-    } else {
-      // 空スロット → activeSlotに設定
-      setActiveSlotIndex(index);
+  const handleSlotTap = (slotIndex: number) => {
+    // 既にキャラがいるスロットをタップ → そのキャラを除去
+    if (formation[slotIndex]) {
+      setFormation((prev) => {
+        const next = [...prev];
+        next[slotIndex] = null;
+        return next;
+      });
+      return;
     }
+
+    // キャラが選択されていなければ何もしない
+    if (!selectedChar) return;
+
+    // ポジション制約チェック
+    const slotColumn = getSlotColumn(slotIndex, rowCount);
+    const requiredPosition = COLUMN_TO_POSITION[slotColumn];
+    if (selectedChar.position && selectedChar.position !== requiredPosition) {
+      return; // 配置不可
+    }
+
+    // 配置
+    setFormation((prev) => {
+      const next = [...prev];
+      next[slotIndex] = selectedChar;
+      return next;
+    });
+    setSelectedChar(null);
+  };
+
+  // キャラがスロットに配置可能か判定
+  const canPlaceInSlot = (slotIndex: number): boolean => {
+    if (!selectedChar) return false;
+    if (formation[slotIndex]) return false;
+    const slotColumn = getSlotColumn(slotIndex, rowCount);
+    const requiredPosition = COLUMN_TO_POSITION[slotColumn];
+    if (selectedChar.position && selectedChar.position !== requiredPosition) {
+      return false;
+    }
+    return true;
   };
 
   // 全解除
   const handleClearAll = () => {
     setFormation(Array(partySize).fill(null));
-    setActiveSlotIndex(null);
+    setSelectedChar(null);
   };
 
   // 投稿
@@ -220,7 +262,7 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
       setComment("");
       setTitle("");
       setDisplayName("");
-      setActiveSlotIndex(null);
+      setSelectedChar(null);
       onPosted();
     } catch {
       setError("投稿に失敗しました");
@@ -334,6 +376,7 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
             <div className="grid grid-cols-5 gap-1.5">
               {filteredCharacters.map((char) => {
                 const isPlaced = placedIds.has(char.id);
+                const isSelected = selectedChar?.id === char.id;
                 return (
                   <button
                     key={char.id}
@@ -343,7 +386,9 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
                       "relative flex flex-col items-center gap-0.5 rounded-xl p-1.5 transition-all cursor-pointer",
                       isPlaced
                         ? "bg-[rgba(236,72,153,0.15)] border border-[rgba(244,114,182,0.4)]"
-                        : "hover:bg-[rgba(249,168,212,0.05)] border border-transparent"
+                        : isSelected
+                          ? "bg-[rgba(56,189,248,0.15)] border border-[rgba(56,189,248,0.5)]"
+                          : "hover:bg-[rgba(249,168,212,0.05)] border border-transparent"
                     )}
                   >
                     <CharacterIcon
@@ -379,9 +424,40 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
           )}
         </div>
 
-        {/* 選択カウンター */}
-        <div className="flex items-center justify-between text-xs text-text-secondary">
-          <span>
+        {/* 選択中のキャラ表示 */}
+        {selectedChar && (
+          <div className="flex items-start gap-2 rounded-xl border border-[rgba(56,189,248,0.3)] bg-[rgba(56,189,248,0.08)] px-3 py-2">
+            <CharacterIcon
+              name={selectedChar.name}
+              imageUrl={selectedChar.image_url}
+              size="sm"
+            />
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1">
+                  <p className="truncate text-sm font-bold text-[#faf5ff]">{selectedChar.name}</p>
+                  {selectedChar.position && POSITION_ICON_MAP[selectedChar.position] && (
+                    <Image src={POSITION_ICON_MAP[selectedChar.position]} alt={selectedChar.position} width={16} height={16} className="shrink-0" />
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedChar(null)}
+                  className="shrink-0 text-xs text-[#8b7aab] hover:text-[#faf5ff] cursor-pointer"
+                >
+                  キャンセル
+                </button>
+              </div>
+              <p className="mt-1 text-xs text-[#8b7aab]">
+                下のスロットをタップして配置
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* 選択カウンター + 全解除 */}
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-text-secondary">
             キャラクター選択（{partySize}体）
             <span className="ml-1 font-bold text-accent">
               {formation.filter(Boolean).length}/{partySize}
@@ -390,7 +466,7 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
           <button
             type="button"
             onClick={handleClearAll}
-            className="text-[10px] text-text-muted hover:text-text-primary cursor-pointer"
+            className="rounded-lg border border-[rgba(249,168,212,0.15)] bg-[rgba(30,21,48,0.5)] px-2.5 py-1 text-[11px] font-bold text-[#8b7aab] transition-colors hover:border-[rgba(255,99,126,0.4)] hover:text-[#fda4af] cursor-pointer"
           >
             全解除
           </button>
@@ -423,11 +499,9 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
               )}
             >
               {POSITION_LABELS.map((_, colIdx) => {
-                // スロット順: [後衛1, 後衛2, (後衛3), 中衛1, 中衛2, (中衛3), 前衛1, 前衛2, (前衛3)]
-                // → colIdx * rowCount + rowIdx
                 const slotIndex = colIdx * rowCount + rowIdx;
                 const char = formation[slotIndex] ?? null;
-                const isActive = activeSlotIndex === slotIndex;
+                const placeable = canPlaceInSlot(slotIndex);
 
                 return (
                   <button
@@ -438,7 +512,8 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
                       "flex flex-col items-center gap-0.5 py-2.5 transition-all cursor-pointer",
                       colIdx < 2 &&
                         "border-r border-[rgba(249,168,212,0.05)]",
-                      isActive && "bg-[rgba(236,72,153,0.08)]"
+                      placeable && "bg-[rgba(56,189,248,0.08)]",
+                      !placeable && selectedChar && !char && "opacity-30"
                     )}
                   >
                     {char ? (
@@ -456,8 +531,8 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
                       <div
                         className={cn(
                           "flex h-12 w-12 items-center justify-center rounded-lg border-2 border-dashed",
-                          isActive
-                            ? "border-accent/50 bg-accent/5"
+                          placeable
+                            ? "border-[rgba(56,189,248,0.5)] bg-[rgba(56,189,248,0.05)]"
                             : "border-[rgba(249,168,212,0.15)]"
                         )}
                       >
@@ -484,9 +559,9 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
         </div>
 
         {/* 編成名（任意） */}
-        <div>
-          <label className="mb-1 block text-sm text-text-secondary">
-            編成名（任意）
+        <div className="flex items-center gap-3">
+          <label className="w-12 shrink-0 text-sm text-text-secondary">
+            編成名
           </label>
           <input
             type="text"
@@ -494,14 +569,14 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="例: 狂気性格PvP編成"
             maxLength={100}
-            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+            className="flex-1 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
           />
         </div>
 
         {/* 投稿者名（任意） */}
-        <div>
-          <label className="mb-1 block text-sm text-text-secondary">
-            名前（任意）
+        <div className="flex items-center gap-3">
+          <label className="w-12 shrink-0 text-sm text-text-secondary">
+            名前
           </label>
           <input
             type="text"
@@ -509,7 +584,7 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder="名無しの教主"
             maxLength={50}
-            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+            className="flex-1 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
           />
         </div>
 
