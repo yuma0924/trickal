@@ -320,7 +320,7 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="キャラ名で検索..."
-            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-2 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
           />
         </div>
 
@@ -494,7 +494,7 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="例: 狂気性格PvP編成"
             maxLength={100}
-            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
           />
         </div>
 
@@ -509,7 +509,7 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder="名無しの教主"
             maxLength={50}
-            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
           />
         </div>
 
@@ -527,7 +527,7 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
             placeholder="この編成のポイントを教えてください"
             maxLength={200}
             rows={3}
-            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none resize-none"
+            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none resize-none"
           />
         </div>
 

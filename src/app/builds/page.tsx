@@ -165,7 +165,7 @@ export default async function BuildsPage() {
             </div>
             <p className="text-xs text-[#a893c0]">今注目されているキャラクターをチェック！</p>
           </div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="-mx-4 grid grid-cols-2 gap-2 px-2">
             {trendingCharacters.map((char) => (
               <Link
                 key={char.id}
@@ -173,39 +173,37 @@ export default async function BuildsPage() {
                 className="flex flex-col overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] transition-colors hover:bg-[rgba(36,27,53,0.7)] cursor-pointer"
               >
                 {/* キャラ情報 */}
-                <div className="flex items-center gap-2 p-2">
-                  <div className="h-11 w-11 shrink-0 overflow-hidden rounded-[10px] border border-border-primary">
+                <div className="flex items-center gap-2.5 p-2.5">
+                  <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg">
                     {char.imageUrl ? (
                       <Image
                         src={char.imageUrl}
                         alt={char.name}
-                        width={44}
-                        height={44}
+                        width={56}
+                        height={56}
                         className="h-full w-full object-cover"
                         loading="lazy"
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-xs text-text-tertiary">
+                      <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-sm text-[#8b7aab]">
                         {char.name.charAt(0)}
                       </div>
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[10px] font-bold text-[#fce7f3]">
+                    <p className="truncate text-xs font-bold text-[#fce7f3]">
                       {char.name}
                     </p>
-                    <div className="mt-0.5 flex items-center gap-1">
+                    <div className="mt-0.5 flex items-center gap-1.5">
                       {char.avgRating !== null && char.validVotesCount >= 4 ? (
                         <StarRatingDisplay rating={char.avgRating} size="sm" showValue />
                       ) : (
-                        <span className="text-[8px] text-[#8b7aab]">
+                        <span className="text-[10px] text-[#8b7aab]">
                           {char.validVotesCount > 0 ? `${char.validVotesCount}票` : "未評価"}
                         </span>
                       )}
-                    </div>
-                    <div className="mt-0.5">
-                      <span className="inline-flex items-center gap-0.5 rounded bg-[rgba(246,51,154,0.8)] px-1 py-0.5 text-[7px] font-bold text-white">
-                        <svg className="h-1.5 w-1.5" fill="currentColor" viewBox="0 0 20 20">
+                      <span className="inline-flex items-center gap-0.5 rounded bg-[rgba(246,51,154,0.8)] px-1.5 py-0.5 text-[9px] font-bold text-white">
+                        <svg className="h-2.5 w-2.5" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
                         </svg>
                         +{char.commentCount}
@@ -215,13 +213,13 @@ export default async function BuildsPage() {
                 </div>
                 {/* コメント */}
                 {char.latestComment && (
-                  <div className="mx-1.5 mb-1.5 rounded-[10px] bg-[rgba(30,21,48,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2">
-                    <p className="line-clamp-2 text-[9px] leading-relaxed text-[rgba(252,231,243,0.8)]">
+                  <div className="mx-2 mb-2 rounded-[10px] bg-[rgba(30,21,48,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2">
+                    <p className="line-clamp-2 text-[11px] leading-relaxed text-[rgba(252,231,243,0.8)]">
                       {char.latestComment}
                     </p>
                     <div className="mt-1 flex items-center justify-between">
                       {char.latestCommentAuthor && (
-                        <span className="text-[8px] text-[#8b7aab]">
+                        <span className="text-[10px] text-[#8b7aab]">
                           — {char.latestCommentAuthor}
                         </span>
                       )}

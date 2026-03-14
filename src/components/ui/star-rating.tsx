@@ -89,7 +89,7 @@ export function StarRatingDisplay({
     <div className={cn("inline-flex items-center gap-0.5", className)}>
       <span className="text-star flex items-center gap-0.5">{stars}</span>
       {showValue && (
-        <span className={cn("ml-1 font-bold text-text-primary", sizeMap[size])}>
+        <span className={cn("ml-1 -translate-y-px font-bold leading-none text-text-primary", sizeMap[size])}>
           {rating.toFixed(1)}
         </span>
       )}

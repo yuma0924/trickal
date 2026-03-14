@@ -88,7 +88,7 @@ function SectionHeading({
         )}
       </div>
       {subtitle && (
-        <p className="mt-1 pl-[42px] text-xs text-text-muted">{subtitle}</p>
+        <p className="mt-0.5 pl-2.5 text-xs text-text-muted">{subtitle}</p>
       )}
     </div>
   );
@@ -410,48 +410,40 @@ export default async function Home() {
   return (
     <div className="space-y-10">
       {/* ====== 第1段: 人気キャラランキング ====== */}
-      <section className="space-y-4">
+      <section>
         <SectionHeading
           icon={<CrownIcon className="h-5 w-5 text-white" />}
           title="人気キャラランキング"
-          subtitle="みんなの評価で算出 · 毎日 0:00 更新"
           href="/ranking"
           linkLabel="もっと見る"
           gradientFrom="#ffb900"
           gradientTo="#ff637e"
         />
 
-        {/* 1位アナウンス */}
-        {topChar && (
-          <div className="pl-[42px] text-[11px] leading-relaxed">
-            <span className="text-[#a893c0]">現在の1位は</span>
-            <span className="font-bold text-[#faf5ff]">{topChar.name}</span>
-            <span className="inline-flex items-center gap-0.5 align-middle">
-              <svg className="h-2.5 w-2.5 text-[#fcd34d]" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <span className="font-bold text-[#fcd34d]">{topChar.avgRating.toFixed(1)}</span>
-            </span>
-            <span className="mx-1 text-[#6b5a80]">·</span>
-            <span className="text-[#8b7aab]">みんなの評価で算出</span>
-            <span className="mx-1 text-[#6b5a80]">·</span>
-            <span className="inline-flex items-center gap-0.5 align-middle text-[#8b7aab]">
-              <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              毎日 0:00 更新
-            </span>
-          </div>
-        )}
+        <div className="mt-2 space-y-0.5 pl-4">
+          <p className="text-xs text-text-muted">みんなの評価で算出 · 毎日 0:00 更新</p>
+          {topChar && (
+            <div className="text-sm">
+              <span className="text-[#a893c0]">現在の1位は</span>
+              <span className="font-bold text-[#faf5ff]">{topChar.name}</span>
+              <span className="inline-flex -translate-y-[2px] items-center gap-0.5 align-middle">
+                <svg className="h-3.5 w-3.5 text-[#fcd34d]" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <span className="-translate-y-px font-bold text-[#fcd34d]">{topChar.avgRating.toFixed(1)}</span>
+              </span>
+            </div>
+          )}
+        </div>
 
         {rankedCharacters.length === 0 ? (
-          <p className="py-8 text-center text-sm text-text-tertiary">
+          <p className="mt-4 py-8 text-center text-sm text-text-tertiary">
             まだランキングデータがありません
           </p>
         ) : (
           <>
-            {/* ヒーロー表示 (1-3位) - Figma完全マッチ */}
-            <div className="space-y-3">
+            {/* ヒーロー表示 (1-3位) */}
+            <div className="mt-3 space-y-3">
               {rankedCharacters.slice(0, 3).map((char) => {
                 const rank = char.rank as 1 | 2 | 3;
                 const elemStyle = char.element ? ELEMENT_COLORS[char.element] : null;
@@ -554,11 +546,11 @@ export default async function Home() {
                           <span className="inline-flex items-center gap-1 rounded-full bg-[#2a1f3d] py-0.5 pl-1.5 pr-2">
                             <StarRatingDisplay rating={char.avgRating} size="sm" showValue />
                           </span>
-                          <span className="text-[11px] text-[#8b7aab]">
+                          <span className="text-[11px] leading-none text-[#8b7aab]">
                             {char.validVotesCount}票
                           </span>
                           {char.boardCommentsCount > 0 && (
-                            <span className="inline-flex items-center gap-0.5 text-[11px] text-[#8b7aab]">
+                            <span className="inline-flex items-center gap-0.5 text-[11px] leading-none text-[#8b7aab]">
                               <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                               </svg>
@@ -602,7 +594,7 @@ export default async function Home() {
             </div>
 
             {/* 4位以降: グリッド表示 (4列) */}
-            <div className="grid grid-cols-4 gap-2">
+            <div className="mt-4 grid grid-cols-4 gap-2">
               {rankedCharacters.slice(3).map((char) => (
                 <CharacterCard
                   key={char.id}
@@ -618,12 +610,14 @@ export default async function Home() {
           </>
         )}
 
-        <SectionFooterButton
-          href="/ranking"
-          label="キャラランキングをすべて見る"
-          gradientFrom="#fb64b6"
-          gradientTo="#ffa1ad"
-        />
+        <div className="mt-4">
+          <SectionFooterButton
+            href="/ranking"
+            label="キャラランキングをすべて見る"
+            gradientFrom="#fb64b6"
+            gradientTo="#ffa1ad"
+          />
+        </div>
       </section>
 
       {/* ====== 第2段: キャラクターを探す ====== */}
