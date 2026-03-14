@@ -3,6 +3,8 @@ import { createServerClient } from "@/lib/supabase/server";
 import { RankingClient } from "./ranking-client";
 import type { Element } from "@/lib/constants";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "人気キャラランキング | みんなで決めるトリッカルランキング",
   description:
