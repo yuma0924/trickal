@@ -76,7 +76,7 @@ export default async function RankingPage() {
     }
   }
 
-  // ランク付きキャラ（有効票4件以上）
+  // ランク付きキャラ（有効票1件以上）
   const rankedCharacters: RankedCharacter[] = [];
   // ランクなしキャラ（有効票0〜3件）
   const unrankedCharacters: UnrankedCharacter[] = [];
