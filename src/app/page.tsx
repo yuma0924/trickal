@@ -14,7 +14,9 @@ interface RankedChar {
   element: Element | null;
   role: string | null;
   position: string | null;
+  attackType: string | null;
   race: string | null;
+  rarity: string | null;
   imageUrl: string | null;
   avgRating: number;
   validVotesCount: number;
@@ -43,6 +45,11 @@ const POSITION_ICON_MAP: Record<string, string> = {
   前列: "/icons/front.png",
   中列: "/icons/middle.png",
   後列: "/icons/back.png",
+};
+
+const ATTACK_TYPE_ICON_MAP: Record<string, string> = {
+  物理: "/icons/physical.png",
+  魔法: "/icons/magical.png",
 };
 
 const ELEMENT_COLORS: Record<string, { border: string; bg: string; text: string }> = {
@@ -110,7 +117,7 @@ function SectionHeading({
         )}
       </div>
       {subtitle && (
-        <p className="mt-0.5 pl-2.5 text-xs text-text-muted">{subtitle}</p>
+        <p className="mt-1.5 pl-2.5 text-xs text-text-muted">{subtitle}</p>
       )}
     </div>
   );
@@ -178,7 +185,7 @@ export default async function Home() {
 
   const { data: characters } = await supabase
     .from("characters")
-    .select("id, slug, name, element, role, position, race, image_url")
+    .select("id, slug, name, element, role, position, attack_type, race, rarity, image_url")
     .eq("is_hidden", false);
 
   const charMap = new Map<
@@ -189,7 +196,9 @@ export default async function Home() {
       element: string | null;
       role: string | null;
       position: string | null;
+      attackType: string | null;
       race: string | null;
+      rarity: string | null;
       imageUrl: string | null;
     }
   >();
@@ -201,7 +210,9 @@ export default async function Home() {
         element: c.element,
         role: c.role,
         position: c.position,
+        attackType: c.attack_type,
         race: c.race,
+        rarity: c.rarity,
         imageUrl: c.image_url,
       });
     }
@@ -272,7 +283,9 @@ export default async function Home() {
         element: char.element as Element | null,
         role: char.role,
         position: char.position,
+        attackType: char.attackType,
         race: char.race,
+        rarity: char.rarity,
         imageUrl: char.imageUrl,
         avgRating: r.avg_rating,
         validVotesCount: r.valid_votes_count,
@@ -535,7 +548,7 @@ export default async function Home() {
                     >
                       {cfg.badge}
                       <span
-                        className="text-xs font-bold"
+                        className="text-sm font-bold"
                         style={{ color: cfg.rankText }}
                       >
                         {rank}位
@@ -563,16 +576,15 @@ export default async function Home() {
 
                       {/* 名前・ロール・評価 */}
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-base font-bold text-[#faf5ff]">
-                          {char.name}
-                        </p>
-                        <div className="mt-1 flex flex-wrap items-center gap-1">
+                        <div className="flex items-center gap-1.5">
+                          <p className="truncate text-base font-bold text-[#faf5ff]">
+                            {char.name}
+                          </p>
                           {char.element && ELEMENT_ICON_MAP[char.element] && (
-                            <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
-                              <Image src={ELEMENT_ICON_MAP[char.element]} alt={char.element} width={13} height={13} />
-                              {char.element}
-                            </span>
+                            <Image src={ELEMENT_ICON_MAP[char.element]} alt={char.element} width={16} height={16} className="shrink-0" />
                           )}
+                        </div>
+                        <div className="mt-1 flex flex-wrap items-center gap-1">
                           {char.role && ROLE_ICON_MAP[char.role] && (
                             <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
                               <Image src={ROLE_ICON_MAP[char.role]} alt={char.role} width={13} height={13} />
@@ -585,6 +597,12 @@ export default async function Home() {
                               {char.position}
                             </span>
                           )}
+                          {char.attackType && ATTACK_TYPE_ICON_MAP[char.attackType] && (
+                            <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
+                              <Image src={ATTACK_TYPE_ICON_MAP[char.attackType]} alt={char.attackType} width={13} height={13} />
+                              {char.attackType}
+                            </span>
+                          )}
                           {char.race && (
                             <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
                               {char.race}
@@ -595,9 +613,6 @@ export default async function Home() {
                           {/* 評価ピル */}
                           <span className="inline-flex items-center gap-1 rounded-full bg-[#2a1f3d] py-0.5 pl-1.5 pr-2">
                             <StarRatingDisplay rating={char.avgRating} size="sm" showValue />
-                          </span>
-                          <span className="text-xs leading-none text-[#8b7aab]">
-                            {char.validVotesCount}票
                           </span>
                           {char.boardCommentsCount > 0 && (
                             <span className="inline-flex items-center gap-0.5 text-xs leading-none text-[#8b7aab]">
@@ -613,28 +628,30 @@ export default async function Home() {
 
                     {/* 注目コメント */}
                     {char.featuredComment && (
-                      <div className="mx-2.5 mb-2.5 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(30,21,48,0.8)] px-3 pb-1 pt-2.5">
-                        <p className="mb-0.5 flex items-center gap-1 text-[10px] font-bold text-[#38bdf8]">
+                      <div className="mx-2.5 mb-2.5">
+                        <p className="mb-1 flex items-center gap-1 px-0.5 text-[10px] font-bold text-[#38bdf8]">
                           <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
                           </svg>
                           注目コメント
                         </p>
-                        <p className="line-clamp-2 text-[11px] leading-relaxed text-[rgba(252,231,243,0.8)]">
-                          {char.featuredComment}
-                        </p>
-                        <div className="mt-1 flex items-center justify-between">
-                          {char.featuredCommentAuthor && (
-                            <span className="text-[10px] text-[#8b7aab]">
-                              — {char.featuredCommentAuthor}
+                        <div className="rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(30,21,48,0.8)] px-3 py-3">
+                          <p className="line-clamp-2 text-[11px] leading-relaxed text-[rgba(252,231,243,0.8)]">
+                            {char.featuredComment}
+                          </p>
+                          <div className="mt-1 flex items-center justify-between">
+                            {char.featuredCommentAuthor && (
+                              <span className="text-[10px] text-[#8b7aab]">
+                                — {char.featuredCommentAuthor}
+                              </span>
+                            )}
+                            <span className="inline-flex items-center gap-0.5 text-[10px] text-[#f9a8d4]">
+                              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
+                              </svg>
+                              {char.featuredCommentThumbsUp}
                             </span>
-                          )}
-                          <span className="inline-flex items-center gap-0.5 text-[10px] text-[#f9a8d4]">
-                            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
-                            </svg>
-                            {char.featuredCommentThumbsUp}
-                          </span>
+                          </div>
                         </div>
                       </div>
                     )}
@@ -738,18 +755,22 @@ export default async function Home() {
                     </div>
                     {/* 情報 */}
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-xs font-bold text-[#fce7f3]">
-                        {char.name}
-                      </p>
+                      <div className="flex items-center gap-1">
+                        <p className="truncate text-xs font-bold text-[#fce7f3]">
+                          {char.name}
+                        </p>
+                        {char.element && ELEMENT_ICON_MAP[char.element] && (
+                          <Image src={ELEMENT_ICON_MAP[char.element]} alt={char.element} width={14} height={14} className="shrink-0" />
+                        )}
+                      </div>
                       <div className="mt-0.5 flex items-center gap-1.5">
                         {char.avgRating !== null && char.validVotesCount >= 4 ? (
                           <span className="text-xs font-bold text-[#fcd34d]">
                             ★{char.avgRating.toFixed(1)}
-                            <span className="ml-0.5 font-normal text-[#8b7aab]">{char.validVotesCount}票</span>
                           </span>
                         ) : (
                           <span className="text-[10px] text-[#8b7aab]">
-                            {char.validVotesCount > 0 ? `${char.validVotesCount}票` : "未評価"}
+                            未評価
                           </span>
                         )}
                         <span className="inline-flex items-center gap-0.5 rounded bg-[rgba(246,51,154,0.8)] px-1.5 py-0.5 text-[9px] font-bold text-white">

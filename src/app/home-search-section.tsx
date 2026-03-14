@@ -111,14 +111,17 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
               className="w-full rounded-[10px] bg-[#1a1225] border border-[rgba(249,168,212,0.1)] pl-8 pr-3 py-1.5 text-xs text-[#faf5ff] placeholder:text-[#8b7aab] focus:border-[rgba(249,168,212,0.3)] focus:outline-none"
             />
           </div>
-          {hasAnyFilter && (
-            <button
-              onClick={clearAll}
-              className="shrink-0 rounded-[10px] bg-[#1a1225] border border-[rgba(249,168,212,0.1)] px-2.5 py-1.5 text-[11px] font-bold text-[#8b7aab] transition-colors hover:text-[#fda4af]"
-            >
-              クリア
-            </button>
-          )}
+          <button
+            onClick={clearAll}
+            className={cn(
+              "shrink-0 rounded-[10px] bg-[#1a1225] border px-2.5 py-1.5 text-[11px] font-bold transition-colors",
+              hasAnyFilter
+                ? "border-[rgba(255,99,126,0.4)] text-[#fda4af] hover:text-white"
+                : "border-[rgba(249,168,212,0.1)] text-[#6b5a80]"
+            )}
+          >
+            クリア
+          </button>
         </div>
 
         {/* 性格フィルター */}
