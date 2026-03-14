@@ -722,7 +722,7 @@ export default async function Home() {
                   話題のキャラクター
                 </h2>
               </div>
-              <span className="text-xs text-[#8b7aab]">{trendingPeriodLabel}</span>
+              <span className="text-xs text-[#8b7aab]">最近の注目</span>
             </div>
             <p className="text-xs text-[#a893c0]">今注目されているキャラクターをチェック！</p>
           </div>

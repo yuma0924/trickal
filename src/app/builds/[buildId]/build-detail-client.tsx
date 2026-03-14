@@ -578,17 +578,6 @@ export function BuildDetailClient({
             <span className="text-xs text-text-tertiary">人気のパーティ編成をチェックしよう</span>
           </div>
         </Link>
-        <Link href="/stats" className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{backgroundImage: "linear-gradient(135deg, #8b5cf6, #a78bfa)"}}>
-            <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
-            </svg>
-          </span>
-          <div>
-            <span className="block font-bold text-text-primary">ステータス別ランキング</span>
-            <span className="text-xs text-text-tertiary">ステータスで比較して最強キャラを見つけよう</span>
-          </div>
-        </Link>
       </div>
 
       {/* 通報モーダル */}

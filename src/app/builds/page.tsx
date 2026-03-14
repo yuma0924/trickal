@@ -161,7 +161,7 @@ export default async function BuildsPage() {
                   話題のキャラクター
                 </h2>
               </div>
-              <span className="text-xs text-[#8b7aab]">直近24時間</span>
+              <span className="text-xs text-[#8b7aab]">最近の注目</span>
             </div>
             <p className="text-xs text-[#a893c0]">今注目されているキャラクターをチェック！</p>
           </div>
@@ -250,26 +250,6 @@ export default async function BuildsPage() {
           <div className="flex-1">
             <span className="block font-bold text-text-primary">人気キャラランキング</span>
             <span className="text-xs text-text-muted">投票で決まる最強キャラをチェック</span>
-          </div>
-          <svg className="h-5 w-5 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-          </svg>
-        </Link>
-        <Link
-          href="/stats"
-          className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover cursor-pointer"
-        >
-          <span
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
-            style={{ backgroundImage: "linear-gradient(135deg, #8b5cf6, #a78bfa)" }}
-          >
-            <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
-            </svg>
-          </span>
-          <div className="flex-1">
-            <span className="block font-bold text-text-primary">ステータス別ランキング</span>
-            <span className="text-xs text-text-muted">ステータスで比較して最強キャラを見つけよう</span>
           </div>
           <svg className="h-5 w-5 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
