@@ -13,6 +13,8 @@ interface RankedChar {
   name: string;
   element: Element | null;
   role: string | null;
+  position: string | null;
+  race: string | null;
   imageUrl: string | null;
   avgRating: number;
   validVotesCount: number;
@@ -22,6 +24,26 @@ interface RankedChar {
   featuredCommentAuthor: string | null;
   featuredCommentThumbsUp: number;
 }
+
+const ELEMENT_ICON_MAP: Record<string, string> = {
+  純粋: "/icons/pure.png",
+  冷静: "/icons/calm.png",
+  狂気: "/icons/madness.png",
+  活発: "/icons/lively.png",
+  憂鬱: "/icons/melancholy.png",
+};
+
+const ROLE_ICON_MAP: Record<string, string> = {
+  攻撃: "/icons/attack.png",
+  守備: "/icons/defense.png",
+  支援: "/icons/support.png",
+};
+
+const POSITION_ICON_MAP: Record<string, string> = {
+  前列: "/icons/front.png",
+  中列: "/icons/middle.png",
+  後列: "/icons/back.png",
+};
 
 const ELEMENT_COLORS: Record<string, { border: string; bg: string; text: string }> = {
   純粋: { border: "rgba(74,222,128,0.6)", bg: "rgba(74,222,128,0.15)", text: "#34d399" },
@@ -156,7 +178,7 @@ export default async function Home() {
 
   const { data: characters } = await supabase
     .from("characters")
-    .select("id, slug, name, element, role, image_url")
+    .select("id, slug, name, element, role, position, race, image_url")
     .eq("is_hidden", false);
 
   const charMap = new Map<
@@ -166,6 +188,8 @@ export default async function Home() {
       name: string;
       element: string | null;
       role: string | null;
+      position: string | null;
+      race: string | null;
       imageUrl: string | null;
     }
   >();
@@ -176,6 +200,8 @@ export default async function Home() {
         name: c.name,
         element: c.element,
         role: c.role,
+        position: c.position,
+        race: c.race,
         imageUrl: c.image_url,
       });
     }
@@ -245,6 +271,8 @@ export default async function Home() {
         name: char.name,
         element: char.element as Element | null,
         role: char.role,
+        position: char.position,
+        race: char.race,
         imageUrl: char.imageUrl,
         avgRating: r.avg_rating,
         validVotesCount: r.valid_votes_count,
@@ -420,7 +448,7 @@ export default async function Home() {
           gradientTo="#ff637e"
         />
 
-        <div className="mt-2 space-y-0.5 pl-4">
+        <div className="mt-2 space-y-1 pl-4">
           <p className="text-xs text-text-muted">みんなの評価で算出 · 毎日 0:00 更新</p>
           {topChar && (
             <div className="text-sm">
@@ -535,23 +563,45 @@ export default async function Home() {
 
                       {/* 名前・ロール・評価 */}
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-bold text-[#faf5ff]">
+                        <p className="truncate text-base font-bold text-[#faf5ff]">
                           {char.name}
                         </p>
-                        {char.role && (
-                          <p className="text-[11px] text-[#8b7aab]">{char.role}</p>
-                        )}
+                        <div className="mt-1 flex flex-wrap items-center gap-1">
+                          {char.element && ELEMENT_ICON_MAP[char.element] && (
+                            <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
+                              <Image src={ELEMENT_ICON_MAP[char.element]} alt={char.element} width={13} height={13} />
+                              {char.element}
+                            </span>
+                          )}
+                          {char.role && ROLE_ICON_MAP[char.role] && (
+                            <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
+                              <Image src={ROLE_ICON_MAP[char.role]} alt={char.role} width={13} height={13} />
+                              {char.role}
+                            </span>
+                          )}
+                          {char.position && POSITION_ICON_MAP[char.position] && (
+                            <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
+                              <Image src={POSITION_ICON_MAP[char.position]} alt={char.position} width={13} height={13} />
+                              {char.position}
+                            </span>
+                          )}
+                          {char.race && (
+                            <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
+                              {char.race}
+                            </span>
+                          )}
+                        </div>
                         <div className="mt-1.5 flex flex-wrap items-center gap-1">
                           {/* 評価ピル */}
                           <span className="inline-flex items-center gap-1 rounded-full bg-[#2a1f3d] py-0.5 pl-1.5 pr-2">
                             <StarRatingDisplay rating={char.avgRating} size="sm" showValue />
                           </span>
-                          <span className="text-[11px] leading-none text-[#8b7aab]">
+                          <span className="text-xs leading-none text-[#8b7aab]">
                             {char.validVotesCount}票
                           </span>
                           {char.boardCommentsCount > 0 && (
-                            <span className="inline-flex items-center gap-0.5 text-[11px] leading-none text-[#8b7aab]">
-                              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <span className="inline-flex items-center gap-0.5 text-xs leading-none text-[#8b7aab]">
+                              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                               </svg>
                               {char.boardCommentsCount}
