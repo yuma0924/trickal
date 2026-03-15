@@ -118,12 +118,27 @@ export function RankingClient({
 
       {/* 1位アナウンス */}
       {currentTop && (
-        <div className="rounded-2xl bg-bg-card border border-border-primary p-3 text-center">
-          <span className="text-xs text-text-muted">
-            現在の{elementFilter === "all" ? "全性格" : elementFilter}の1位は{" "}
-          </span>
-          <span className="text-xs font-bold text-text-primary">{currentTop.name}</span>
-        </div>
+        <Link
+          href={`/characters/${currentTop.slug}`}
+          className="flex items-center gap-3 rounded-2xl border border-[rgba(255,191,36,0.3)] bg-gradient-to-r from-[rgba(255,191,36,0.1)] to-[rgba(255,143,0,0.05)] px-4 py-3 transition-colors hover:from-[rgba(255,191,36,0.15)] cursor-pointer"
+        >
+          <div className="min-w-0 flex-1">
+            <span className="text-sm text-[#a893c0]">
+              現在の{elementFilter === "all" ? "全性格" : elementFilter}1位は
+            </span>
+            <span className="ml-1.5 text-base font-bold text-[#fcd34d]">
+              {currentTop.name}
+            </span>
+            <span className="ml-1 text-sm text-[#a893c0]">
+              です
+            </span>
+          </div>
+          {currentTop.avgRating !== null && (
+            <span className="shrink-0 text-sm font-bold text-[#fcd34d]">
+              ★{currentTop.avgRating.toFixed(1)}
+            </span>
+          )}
+        </Link>
       )}
 
       {/* ランキンググリッド (4列) */}

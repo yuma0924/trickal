@@ -47,9 +47,35 @@ export function CharacterCard({
           </div>
         )}
         {/* 順位バッジ (左上) */}
-        {rankDisplay && (
+        {rankDisplay && rank === 1 && (
+          <div className="absolute left-0.5 top-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-[rgba(26,18,37,0.7)] drop-shadow-md">
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none">
+              <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z" fill="#ffd700" />
+              <path d="M5 18h14v2H5z" fill="#ffd700" />
+            </svg>
+          </div>
+        )}
+        {rankDisplay && rank === 2 && (
+          <div className="absolute left-0.5 top-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-[rgba(26,18,37,0.7)] drop-shadow-md">
+            <svg className="h-5 w-5" viewBox="0 0 32 32" fill="none">
+              <path d="M13 22l-4 6h14l-4-6" fill="#7a8fa3" />
+              <circle cx="16" cy="14" r="10" fill="#b0c4d8" stroke="#90a1b9" strokeWidth="1.5" />
+              <path d="M16 8l1.8 3.6 4 .6-2.9 2.8.7 4L16 17l-3.6 2 .7-4-2.9-2.8 4-.6L16 8z" fill="#e8eef4" stroke="#90a1b9" strokeWidth="0.5" />
+            </svg>
+          </div>
+        )}
+        {rankDisplay && rank === 3 && (
+          <div className="absolute left-0.5 top-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-[rgba(26,18,37,0.7)] drop-shadow-md">
+            <svg className="h-5 w-5" viewBox="0 0 32 32" fill="none">
+              <path d="M13 22l-4 6h14l-4-6" fill="#92400e" />
+              <circle cx="16" cy="14" r="10" fill="#d97706" stroke="#b45309" strokeWidth="1.5" />
+              <path d="M16 8l1.8 3.6 4 .6-2.9 2.8.7 4L16 17l-3.6 2 .7-4-2.9-2.8 4-.6L16 8z" fill="#fde68a" stroke="#b45309" strokeWidth="0.5" />
+            </svg>
+          </div>
+        )}
+        {rankDisplay && rank !== null && rank !== undefined && rank > 3 && (
           <div
-            className="absolute left-0.5 top-0.5 flex h-5 w-5 items-center justify-center rounded-full shadow-[0px_10px_15px_rgba(0,0,0,0.1)]"
+            className="absolute left-0.5 top-0.5 flex h-6 w-6 items-center justify-center rounded-full shadow-[0px_10px_15px_rgba(0,0,0,0.1)]"
             style={{
               backgroundColor: "rgba(42,31,61,0.9)",
               border: "1.2px solid rgba(249,168,212,0.1)",
