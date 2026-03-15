@@ -423,13 +423,13 @@ function BuildCard({
           </span>
         </div>
 
-        {/* キャラ編成 3×2グリッド（後衛/中衛/前衛） */}
+        {/* キャラ編成 3×2グリッド（後列/中列/前列） */}
         <div className="mb-2 overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.05)]">
           {/* ヘッダー行 */}
           <div className="grid grid-cols-3 bg-[rgba(30,21,48,0.8)]">
-            <span className="border-r border-[rgba(249,168,212,0.05)] py-1 text-center text-[9px] font-bold text-[#a893c0]">後衛</span>
-            <span className="border-r border-[rgba(249,168,212,0.05)] py-1 text-center text-[9px] font-bold text-[#a893c0]">中衛</span>
-            <span className="py-1 text-center text-[9px] font-bold text-[#a893c0]">前衛</span>
+            <span className="border-r border-[rgba(249,168,212,0.05)] py-1 text-center text-[9px] font-bold text-[#a893c0]">後列</span>
+            <span className="border-r border-[rgba(249,168,212,0.05)] py-1 text-center text-[9px] font-bold text-[#a893c0]">中列</span>
+            <span className="py-1 text-center text-[9px] font-bold text-[#a893c0]">前列</span>
           </div>
           {/* 上段 (0,1,2) */}
           <div className="grid grid-cols-3 border-b border-[rgba(249,168,212,0.05)]">

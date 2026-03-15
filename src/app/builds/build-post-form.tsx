@@ -39,19 +39,12 @@ const MODE_TABS: { value: FormMode; label: string }[] = [
   { value: "dimension", label: "次元の衝突" },
 ];
 
-const POSITION_LABELS = ["後衛", "中衛", "前衛"] as const;
+const POSITION_LABELS = ["後列", "中列", "前列"] as const;
 
 const POSITION_ICON_MAP: Record<string, string> = {
   前列: "/icons/front.png",
   中列: "/icons/middle.png",
   後列: "/icons/back.png",
-};
-
-// 配置グリッドの列名 → DBの position 値のマッピング
-const COLUMN_TO_POSITION: Record<string, string> = {
-  後衛: "後列",
-  中衛: "中列",
-  前衛: "前列",
 };
 
 function getPartySize(mode: FormMode): number {
@@ -187,7 +180,7 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
 
     // ポジション制約チェック
     const slotColumn = getSlotColumn(slotIndex, rowCount);
-    const requiredPosition = COLUMN_TO_POSITION[slotColumn];
+    const requiredPosition = slotColumn;
     if (selectedChar.position && selectedChar.position !== requiredPosition) {
       return; // 配置不可
     }
@@ -206,7 +199,7 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
     if (!selectedChar) return false;
     if (formation[slotIndex]) return false;
     const slotColumn = getSlotColumn(slotIndex, rowCount);
-    const requiredPosition = COLUMN_TO_POSITION[slotColumn];
+    const requiredPosition = slotColumn;
     if (selectedChar.position && selectedChar.position !== requiredPosition) {
       return false;
     }
@@ -559,7 +552,7 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
         </div>
 
         {/* 編成名（任意） */}
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-3">
           <label className="w-12 shrink-0 text-sm text-text-secondary">
             編成名
           </label>
@@ -569,12 +562,12 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="例: 狂気性格PvP編成"
             maxLength={100}
-            className="flex-1 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+            className="min-w-0 flex-1 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
           />
         </div>
 
         {/* 投稿者名（任意） */}
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-3">
           <label className="w-12 shrink-0 text-sm text-text-secondary">
             名前
           </label>
@@ -584,7 +577,7 @@ export function BuildPostForm({ onPosted, onClose }: BuildPostFormProps) {
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder="名無しの教主"
             maxLength={50}
-            className="flex-1 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+            className="min-w-0 flex-1 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
           />
         </div>
 
