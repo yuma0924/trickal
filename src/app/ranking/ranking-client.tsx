@@ -9,6 +9,14 @@ import { ELEMENTS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import type { RankedCharacter, UnrankedCharacter, TrendingCharacter } from "./page";
 
+const ELEMENT_ICON_MAP: Record<string, string> = {
+  純粋: "/icons/pure.png",
+  冷静: "/icons/calm.png",
+  狂気: "/icons/madness.png",
+  活発: "/icons/lively.png",
+  憂鬱: "/icons/melancholy.png",
+};
+
 interface RankingClientProps {
   rankedCharacters: RankedCharacter[];
   unrankedCharacters: UnrankedCharacter[];
@@ -203,22 +211,26 @@ export function RankingClient({
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-xs font-bold text-[#fce7f3]">
-                      {char.name}
-                    </p>
-                    <div className="mt-0.5 flex items-center gap-1.5">
+                    <div className="flex items-center gap-1">
+                      <p className="truncate text-sm font-bold text-[#fce7f3]">
+                        {char.name}
+                      </p>
+                      {char.element && ELEMENT_ICON_MAP[char.element] && (
+                        <Image src={ELEMENT_ICON_MAP[char.element]} alt={char.element} width={16} height={16} className="shrink-0" />
+                      )}
+                    </div>
+                    <div className="mt-1 flex items-center gap-1.5">
                       {char.avgRating !== null && char.validVotesCount >= 1 ? (
-                        <span className="text-xs font-bold text-[#fcd34d]">
+                        <span className="text-sm font-bold text-[#fcd34d]">
                           ★{char.avgRating.toFixed(1)}
-                          <span className="ml-0.5 font-normal text-[#8b7aab]">{char.validVotesCount}票</span>
                         </span>
                       ) : (
-                        <span className="text-[10px] text-[#8b7aab]">
-                          {char.validVotesCount > 0 ? `${char.validVotesCount}票` : "未評価"}
+                        <span className="text-xs text-[#8b7aab]">
+                          未評価
                         </span>
                       )}
-                      <span className="inline-flex items-center gap-0.5 rounded bg-[rgba(246,51,154,0.8)] px-1.5 py-0.5 text-[9px] font-bold text-white">
-                        <svg className="h-2.5 w-2.5" fill="currentColor" viewBox="0 0 20 20">
+                      <span className="inline-flex items-center gap-0.5 rounded bg-[rgba(246,51,154,0.8)] px-1.5 py-0.5 text-[10px] font-bold text-white">
+                        <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
                         </svg>
                         +{char.commentCount}
@@ -231,11 +243,19 @@ export function RankingClient({
                     <p className="line-clamp-2 text-[11px] leading-relaxed text-[rgba(252,231,243,0.8)]">
                       {char.latestComment}
                     </p>
-                    {char.latestCommentAuthor && (
-                      <p className="mt-1 text-[10px] text-[#8b7aab]">
-                        — {char.latestCommentAuthor}
-                      </p>
-                    )}
+                    <div className="mt-1 flex items-center justify-between">
+                      {char.latestCommentAuthor && (
+                        <span className="text-[10px] text-[#8b7aab]">
+                          — {char.latestCommentAuthor}
+                        </span>
+                      )}
+                      <span className="inline-flex items-center gap-0.5 text-[10px] text-thumbs-up">
+                        <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
+                        </svg>
+                        {char.latestCommentThumbsUp}
+                      </span>
+                    </div>
                   </div>
                 )}
               </Link>

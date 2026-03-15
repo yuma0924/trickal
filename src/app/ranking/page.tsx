@@ -44,6 +44,7 @@ export interface TrendingCharacter {
   commentCount: number;
   latestComment: string | null;
   latestCommentAuthor: string | null;
+  latestCommentThumbsUp: number;
 }
 
 export default async function RankingPage() {
@@ -128,14 +129,14 @@ export default async function RankingPage() {
 
   const { data: recentComments } = await supabase
     .from("comments")
-    .select("character_id, user_hash, body, display_name")
+    .select("character_id, user_hash, body, display_name, thumbs_up_count")
     .eq("is_deleted", false)
     .gte("created_at", twentyFourHoursAgo);
 
   // 連投ガード: 1キャラにつき同一 user_hash は最大3件まで
   const trendingMap = new Map<string, number>();
   const userCharCountMap = new Map<string, number>();
-  const trendingCommentMap = new Map<string, { body: string; author: string }>();
+  const trendingCommentMap = new Map<string, { body: string; author: string; thumbsUp: number }>();
 
   if (recentComments) {
     for (const rc of recentComments) {
@@ -154,6 +155,7 @@ export default async function RankingPage() {
         trendingCommentMap.set(rc.character_id, {
           body: rc.body,
           author: rc.display_name || "名無し",
+          thumbsUp: rc.thumbs_up_count ?? 0,
         });
       }
     }
@@ -190,6 +192,7 @@ export default async function RankingPage() {
         commentCount: count,
         latestComment: trendingCommentMap.get(id)?.body ?? null,
         latestCommentAuthor: trendingCommentMap.get(id)?.author ?? null,
+        latestCommentThumbsUp: trendingCommentMap.get(id)?.thumbsUp ?? 0,
       };
     })
     .filter((c): c is TrendingCharacter => c !== null);
