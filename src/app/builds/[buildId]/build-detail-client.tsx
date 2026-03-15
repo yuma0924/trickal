@@ -2,14 +2,21 @@
 
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Tab } from "@/components/ui/tab";
 import { CharacterIcon } from "@/components/character/character-icon";
 import { ThumbsUpDown } from "@/components/reaction/thumbs-up-down";
 import { cn } from "@/lib/utils";
 import { useToast, Toast } from "@/components/ui/toast";
-import type { Element } from "@/lib/constants";
+
+const ELEMENT_ICONS: Record<string, string> = {
+  純粋: "/icons/pure.png",
+  冷静: "/icons/calm.png",
+  狂気: "/icons/madness.png",
+  活発: "/icons/lively.png",
+  憂鬱: "/icons/melancholy.png",
+};
 
 type CharacterInfo = {
   id: string;
@@ -319,72 +326,139 @@ export function BuildDetailClient({
 
   return (
     <div className="space-y-6">
-      {/* 編成情報ヘッダー */}
-      <div className={cn("rounded-2xl border border-border-primary bg-bg-card p-4", karmaClass)}>
-        {/* タイトル + 属性タグ */}
-        <div className="mb-3 flex items-center gap-2">
-          <h1 className="text-lg font-bold text-text-primary">
-            {build.title || `${build.element_label ?? ""}${MODE_LABEL_MAP[build.mode]}`}
-          </h1>
-          {build.element_label && (
-            <Badge
-              variant={build.element_label !== "混合" ? "element" : "default"}
-              element={
-                build.element_label !== "混合"
-                  ? (build.element_label as Element)
-                  : undefined
-              }
-            >
-              {build.element_label}
-            </Badge>
-          )}
-          <Badge variant="outline">
+      {/* 編成情報カード */}
+      <div className={cn(
+        "relative rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] p-4",
+        karmaClass
+      )}>
+        {/* 通報（右上） */}
+        <button
+          onClick={() => setReportTarget({ type: "build", id: build.id })}
+          className="absolute right-3 top-3 text-[10px] text-[#8b7aab]/50 hover:text-thumbs-down cursor-pointer"
+        >
+          通報
+        </button>
+        {/* タイトル */}
+        {build.title && (
+          <div className="mb-2">
+            <h1 className="text-sm font-bold text-[#fce7f3]">
+              {build.title}
+            </h1>
+          </div>
+        )}
+        {/* 属性アイコン + モード */}
+        <div className="mb-3 flex items-center gap-1.5">
+          {build.members_detail
+            .map((m) => m.element)
+            .filter((e, i, arr) => e && arr.indexOf(e) === i)
+            .map((el) => (
+              ELEMENT_ICONS[el as string] ? (
+                <Image
+                  key={el}
+                  src={ELEMENT_ICONS[el as string]}
+                  alt={el as string}
+                  width={18}
+                  height={18}
+                  className="h-[18px] w-[18px]"
+                />
+              ) : null
+            ))}
+          <span className="rounded-md bg-[rgba(36,27,53,0.5)] px-2 py-0.5 text-[10px] font-bold text-[#8b7aab]">
             {MODE_LABEL_MAP[build.mode]}
-          </Badge>
+          </span>
         </div>
 
-        {/* キャラアイコン並び */}
-        <div className="mb-3 flex gap-2 overflow-x-auto">
-          {build.members_detail.map((char, i) => (
-            <Link key={`${char.id}-${i}`} href={char.slug ? `/characters/${char.slug}` : "#"} className="flex flex-col items-center gap-1">
-              <CharacterIcon
-                name={char.name}
-                imageUrl={char.image_url}
-                isHidden={char.is_hidden}
-                size="md"
-              />
-              <span className="max-w-14 truncate text-[10px] text-text-tertiary">
-                {char.name}
-              </span>
-            </Link>
-          ))}
+        {/* キャラ編成グリッド */}
+        <div className="mb-3 overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.05)]">
+          {/* ヘッダー行 */}
+          <div className="grid grid-cols-3 bg-[rgba(30,21,48,0.8)]">
+            <span className="border-r border-[rgba(249,168,212,0.05)] py-1.5 text-center text-[10px] font-bold text-[#a893c0]">後列</span>
+            <span className="border-r border-[rgba(249,168,212,0.05)] py-1.5 text-center text-[10px] font-bold text-[#a893c0]">中列</span>
+            <span className="py-1.5 text-center text-[10px] font-bold text-[#a893c0]">前列</span>
+          </div>
+          {/* 上段 (0,1,2) */}
+          <div className="grid grid-cols-3 border-b border-[rgba(249,168,212,0.05)]">
+            {build.members_detail.slice(0, 3).map((char, i) => (
+              <Link key={`${char.id}-${i}`} href={char.slug ? `/characters/${char.slug}` : "#"} className={cn(
+                "flex flex-col items-center gap-1 py-3",
+                i < 2 && "border-r border-[rgba(249,168,212,0.05)]"
+              )}>
+                <CharacterIcon
+                  name={char.name}
+                  imageUrl={char.image_url}
+                  isHidden={char.is_hidden}
+                  size="md"
+                />
+                <span className="max-w-20 truncate text-center text-[10px] font-bold text-[#a893c0]">
+                  {char.name}
+                </span>
+              </Link>
+            ))}
+          </div>
+          {/* 下段 (3,4,5) */}
+          {build.members_detail.length > 3 && (
+            <div className={cn("grid grid-cols-3", build.members_detail.length > 6 && "border-b border-[rgba(249,168,212,0.05)]")}>
+              {build.members_detail.slice(3, 6).map((char, i) => (
+                <Link key={`${char.id}-${i + 3}`} href={char.slug ? `/characters/${char.slug}` : "#"} className={cn(
+                  "flex flex-col items-center gap-1 py-3",
+                  i < 2 && "border-r border-[rgba(249,168,212,0.05)]"
+                )}>
+                  <CharacterIcon
+                    name={char.name}
+                    imageUrl={char.image_url}
+                    isHidden={char.is_hidden}
+                    size="md"
+                  />
+                  <span className="max-w-20 truncate text-center text-[10px] font-bold text-[#a893c0]">
+                    {char.name}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          )}
+          {/* 3段目 (6,7,8) — 次元の衝突 9体 */}
+          {build.members_detail.length > 6 && (
+            <div className="grid grid-cols-3">
+              {build.members_detail.slice(6, 9).map((char, i) => (
+                <Link key={`${char.id}-${i + 6}`} href={char.slug ? `/characters/${char.slug}` : "#"} className={cn(
+                  "flex flex-col items-center gap-1 py-3",
+                  i < 2 && "border-r border-[rgba(249,168,212,0.05)]"
+                )}>
+                  <CharacterIcon
+                    name={char.name}
+                    imageUrl={char.image_url}
+                    isHidden={char.is_hidden}
+                    size="md"
+                  />
+                  <span className="max-w-20 truncate text-center text-[10px] font-bold text-[#a893c0]">
+                    {char.name}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* 投稿者 + 日時 */}
-        <div className="mb-2 flex items-center gap-2 text-xs text-text-tertiary">
-          <span>{build.display_name || "名無しの教主"}</span>
-          <span>{formatDate(build.updated_at)}</span>
+        {/* コメント */}
+        <div className="border-t border-[rgba(249,168,212,0.1)] pt-2.5">
+          <p className="whitespace-pre-wrap text-sm text-[#fce7f3] leading-relaxed">
+            {build.comment}
+          </p>
         </div>
 
-        {/* 説明文 */}
-        <p className="mb-3 whitespace-pre-wrap text-sm text-text-secondary leading-relaxed">
-          {build.comment}
-        </p>
-
-        {/* リアクション + 通報 */}
-        <div className="flex items-center justify-between">
+        {/* フッター: 投稿者 · 日時 + リアクション */}
+        <div className="mt-3 flex items-center justify-between">
+          <div className="flex items-center gap-1.5 text-xs text-[#8b7aab]">
+            <span>{build.display_name || "名無しの教主"}</span>
+            <span>·</span>
+            <span>{formatDate(build.updated_at)}</span>
+          </div>
           <ThumbsUpDown
             thumbsUpCount={build.likes_count}
             thumbsDownCount={build.dislikes_count}
             userReaction={userReaction}
             onReact={handleBuildReaction}
           />
-          <button
-            onClick={() => setReportTarget({ type: "build", id: build.id })}
-            className="text-xs text-text-tertiary hover:text-thumbs-down cursor-pointer"
-          >
-            通報
-          </button>
         </div>
       </div>
 
@@ -453,10 +527,18 @@ export function BuildDetailClient({
                 <div
                   key={c.id}
                   className={cn(
-                    "rounded-2xl border border-border-primary bg-bg-card/30 p-4",
+                    "relative rounded-2xl border border-border-primary bg-bg-card/30 p-4",
                     cKarma
                   )}
                 >
+                  <button
+                    onClick={() =>
+                      setReportTarget({ type: "build_comment", id: c.id })
+                    }
+                    className="absolute right-3 top-3 text-[10px] text-[#8b7aab]/50 hover:text-thumbs-down cursor-pointer"
+                  >
+                    通報
+                  </button>
                   <div className="mb-1 flex items-center gap-2 text-xs text-text-tertiary">
                     <div className="flex h-6 w-6 items-center justify-center rounded-full text-[10px] text-white" style={{backgroundImage: "linear-gradient(135deg, #fb64b6, #ffa1ad)"}}>
                       {(c.display_name || "名")[0]}
@@ -469,24 +551,14 @@ export function BuildDetailClient({
                   <p className="mb-2 whitespace-pre-wrap text-sm text-text-secondary leading-relaxed">
                     {c.body}
                   </p>
-                  <div className="flex items-center justify-between">
-                    <ThumbsUpDown
-                      thumbsUpCount={c.thumbs_up_count}
-                      thumbsDownCount={c.thumbs_down_count}
-                      userReaction={c.user_reaction}
-                      onReact={(reaction) =>
-                        handleCommentReaction(c.id, reaction)
-                      }
-                    />
-                    <button
-                      onClick={() =>
-                        setReportTarget({ type: "build_comment", id: c.id })
-                      }
-                      className="text-xs text-text-muted hover:text-thumbs-down cursor-pointer"
-                    >
-                      通報
-                    </button>
-                  </div>
+                  <ThumbsUpDown
+                    thumbsUpCount={c.thumbs_up_count}
+                    thumbsDownCount={c.thumbs_down_count}
+                    userReaction={c.user_reaction}
+                    onReact={(reaction) =>
+                      handleCommentReaction(c.id, reaction)
+                    }
+                  />
                 </div>
               );
             })}
@@ -523,22 +595,32 @@ export function BuildDetailClient({
                 href={`/builds/${sb.id}`}
                 className="block rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover cursor-pointer"
               >
-                <div className="mb-1 flex items-center gap-2">
-                  <span className="text-sm font-medium text-text-primary">
-                    {sb.title || `${sb.element_label ?? ""}${MODE_LABEL_MAP[sb.mode]}`}
+                {sb.title && (
+                  <div className="mb-1">
+                    <span className="text-sm font-bold text-[#fce7f3]">
+                      {sb.title}
+                    </span>
+                  </div>
+                )}
+                <div className="mb-2 flex items-center gap-1.5">
+                  {sb.members_detail
+                    .map((m) => m.element)
+                    .filter((e, i, arr) => e && arr.indexOf(e) === i)
+                    .map((el) => (
+                      ELEMENT_ICONS[el as string] ? (
+                        <Image
+                          key={el}
+                          src={ELEMENT_ICONS[el as string]}
+                          alt={el as string}
+                          width={16}
+                          height={16}
+                          className="h-4 w-4"
+                        />
+                      ) : null
+                    ))}
+                  <span className="rounded-md bg-[rgba(36,27,53,0.5)] px-2 py-0.5 text-[10px] font-bold text-[#8b7aab]">
+                    {MODE_LABEL_MAP[sb.mode]}
                   </span>
-                  {sb.element_label && (
-                    <Badge
-                      variant={sb.element_label !== "混合" ? "element" : "default"}
-                      element={
-                        sb.element_label !== "混合"
-                          ? (sb.element_label as Element)
-                          : undefined
-                      }
-                    >
-                      {sb.element_label}
-                    </Badge>
-                  )}
                 </div>
                 <div className="mb-1 flex gap-1">
                   {sb.members_detail.map((char, i) => (
@@ -551,7 +633,7 @@ export function BuildDetailClient({
                     />
                   ))}
                 </div>
-                <div className="flex items-center gap-2 text-xs text-text-tertiary">
+                <div className="flex items-center gap-2 text-xs text-[#8b7aab]">
                   <span>👍 {sb.likes_count}</span>
                   <span>{formatDate(sb.updated_at)}</span>
                 </div>

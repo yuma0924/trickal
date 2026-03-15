@@ -315,68 +315,54 @@ export function CharacterDetailClient({
 
         {/* キャラ情報 */}
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <h1 className="text-xl font-bold text-[#fce7f3]">
               {character.name}
             </h1>
-            {character.rarity && (
-              <span className="text-base text-[#facc15]">
-                {"★".repeat(parseInt(character.rarity.replace(/[^0-9]/g, "")) || 0)}
-              </span>
+            {character.element && ELEMENT_ICON_MAP[character.element] && (
+              <Image src={ELEMENT_ICON_MAP[character.element]} alt={character.element} width={22} height={22} className="shrink-0" />
             )}
           </div>
 
           {/* タグ行 */}
-          <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            {character.element && ELEMENT_ICON_MAP[character.element] && (
-              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-2 py-0.5 text-xs text-[#a893c0]">
-                <Image src={ELEMENT_ICON_MAP[character.element]} alt={character.element} width={14} height={14} />
-                {character.element}
-              </span>
-            )}
+          <div className="mt-1.5 flex flex-wrap items-center gap-1">
             {character.role && ROLE_ICON_MAP[character.role] && (
-              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-2 py-0.5 text-xs text-[#a893c0]">
-                <Image src={ROLE_ICON_MAP[character.role]} alt={character.role} width={14} height={14} />
+              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] text-[#a893c0]">
+                <Image src={ROLE_ICON_MAP[character.role]} alt={character.role} width={15} height={15} />
                 {character.role}
               </span>
             )}
             {character.position && POSITION_ICON_MAP[character.position] && (
-              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-2 py-0.5 text-xs text-[#a893c0]">
-                <Image src={POSITION_ICON_MAP[character.position]} alt={character.position} width={14} height={14} />
+              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] text-[#a893c0]">
+                <Image src={POSITION_ICON_MAP[character.position]} alt={character.position} width={15} height={15} />
                 {character.position}
               </span>
             )}
             {character.attackType && ATTACK_TYPE_ICON_MAP[character.attackType] && (
-              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-2 py-0.5 text-xs text-[#a893c0]">
-                <Image src={ATTACK_TYPE_ICON_MAP[character.attackType]} alt={character.attackType} width={14} height={14} />
+              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] text-[#a893c0]">
+                <Image src={ATTACK_TYPE_ICON_MAP[character.attackType]} alt={character.attackType} width={15} height={15} />
                 {character.attackType}
               </span>
             )}
             {character.race && (
-              <span className="rounded-[4px] bg-[#2a1f3d] px-2 py-0.5 text-xs text-[#a893c0]">
+              <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] text-[#a893c0]">
                 {character.race}
               </span>
             )}
             {character.isProvisional && (
-              <span className="rounded-[4px] bg-[#2a1f3d] px-2 py-0.5 text-xs font-bold text-[#facc15]">
+              <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] font-bold text-[#facc15]">
                 暫定
               </span>
             )}
           </div>
 
           {/* 評価 */}
-          {character.avgRating !== null && character.validVotesCount >= 4 ? (
-            <div className="mt-2 flex items-center gap-3">
-              <StarRatingDisplay rating={character.avgRating} size="md" />
-              <span className="text-2xl font-bold text-[#fce7f3]">
-                {character.avgRating.toFixed(1)}
-              </span>
-              <span className="text-xs text-[#a893c0]">
-                {character.validVotesCount}票
-              </span>
+          {character.avgRating !== null && character.validVotesCount >= 1 ? (
+            <div className="mt-2.5 flex items-center">
+              <StarRatingDisplay rating={character.avgRating} size="lg" />
             </div>
           ) : (
-            <p className="mt-2 text-xs text-[#a893c0]">
+            <p className="mt-1.5 text-xs text-[#a893c0]">
               {character.validVotesCount > 0
                 ? `${character.validVotesCount}票（順位対象外）`
                 : "まだ投票がありません"}
