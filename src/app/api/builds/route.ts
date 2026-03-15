@@ -37,19 +37,30 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = request.nextUrl;
     const mode = searchParams.get("mode");
-    const element = searchParams.get("element");
+    const elementParam = searchParams.get("element");
+    // カンマ区切りで複数性格対応、複数指定時は「混合」も含める
+    const elementLabels: string[] = elementParam
+      ? (() => {
+          const elems = elementParam.split(",").filter(Boolean);
+          if (elems.length > 1) return [...elems, "混合"];
+          return elems;
+        })()
+      : [];
     const cursor = searchParams.get("cursor");
     const limit = Math.min(
       Number(searchParams.get("limit")) || PAGE_SIZE,
       50
     );
 
-    if (!mode || (mode !== "pvp" && mode !== "pve" && mode !== "dimension")) {
+    const VALID_MODES = ["general", "arena", "dimension", "world_tree"] as const;
+    type ValidMode = (typeof VALID_MODES)[number];
+    if (!mode || !(VALID_MODES as readonly string[]).includes(mode)) {
       return NextResponse.json(
-        { error: "mode パラメータは 'pvp', 'pve', 'dimension' のいずれかを指定してください" },
+        { error: "mode パラメータは 'general', 'arena', 'dimension', 'world_tree' のいずれかを指定してください" },
         { status: 400 }
       );
     }
+    const validMode = mode as ValidMode;
 
     const supabase = createAdminClient();
 
@@ -68,14 +79,14 @@ export async function GET(request: NextRequest) {
         let q = supabase
           .from("builds")
           .select("*")
-          .eq("mode", mode)
+          .eq("mode", validMode)
           .eq("is_deleted", false)
           .or(
             `likes_count.lt.${cursorBuild.likes_count},` +
             `and(likes_count.eq.${cursorBuild.likes_count},updated_at.lt.${cursorBuild.updated_at})`
           );
 
-        if (element) q = q.eq("element_label", element);
+        if (elementLabels.length > 0) q = q.in("element_label", elementLabels);
 
         const { data, error } = await q
           .order("likes_count", { ascending: false })
@@ -92,10 +103,10 @@ export async function GET(request: NextRequest) {
         let q = supabase
           .from("builds")
           .select("*")
-          .eq("mode", mode)
+          .eq("mode", validMode)
           .eq("is_deleted", false);
 
-        if (element) q = q.eq("element_label", element);
+        if (elementLabels.length > 0) q = q.in("element_label", elementLabels);
 
         const { data, error } = await q
           .order("likes_count", { ascending: false })
@@ -241,12 +252,15 @@ export async function POST(request: NextRequest) {
     const { mode, members, comment, title, display_name } = parsed;
 
     // バリデーション
-    if (!mode || (mode !== "pvp" && mode !== "pve" && mode !== "dimension")) {
+    const VALID_MODES_POST = ["general", "arena", "dimension", "world_tree"] as const;
+    type ValidModePost = (typeof VALID_MODES_POST)[number];
+    if (!mode || !(VALID_MODES_POST as readonly string[]).includes(mode)) {
       return NextResponse.json(
-        { error: "mode は 'pvp', 'pve', 'dimension' のいずれかを指定してください" },
+        { error: "mode は 'general', 'arena', 'dimension', 'world_tree' のいずれかを指定してください" },
         { status: 400 }
       );
     }
+    const validModePost = mode as ValidModePost;
 
     if (!Array.isArray(members) || members.length === 0) {
       return NextResponse.json(
@@ -255,10 +269,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const partySize = mode === "dimension" ? 9 : 6;
-    if (members.length !== partySize) {
+    const maxPartySize = validModePost === "dimension" ? 9 : 6;
+    if (members.length > maxPartySize) {
       return NextResponse.json(
-        { error: `メンバーは${partySize}人選択してください` },
+        { error: `メンバーは${maxPartySize}人以内で選択してください` },
         { status: 400 }
       );
     }
@@ -312,17 +326,24 @@ export async function POST(request: NextRequest) {
     const elementLabel =
       uniqueElements.length === 1 ? uniqueElements[0]! : "混合";
 
+    const modeLabelMap: Record<string, string> = {
+      general: "汎用編成",
+      arena: "PvP",
+      dimension: "次元の衝突",
+      world_tree: "世界樹採掘基地",
+    };
     const finalTitle =
-      title?.trim() || `${elementLabel}${mode.toUpperCase()}編成`;
+      title?.trim() || (modeLabelMap[validModePost] ?? validModePost);
     const finalDisplayName = display_name?.trim() || DEFAULT_DISPLAY_NAME;
 
-    // 同一 user_hash * mode * party_size の既存投稿を検索（上書き判定）
+    const actualPartySize = members.length;
+
+    // 同一 user_hash * mode の既存投稿を検索（上書き判定）
     const { data: existing } = await supabase
       .from("builds")
       .select("id")
       .eq("user_hash", userHash)
-      .eq("mode", mode)
-      .eq("party_size", partySize)
+      .eq("mode", validModePost)
       .eq("is_deleted", false)
       .single();
 
@@ -335,6 +356,7 @@ export async function POST(request: NextRequest) {
         .from("builds")
         .update({
           members,
+          party_size: actualPartySize,
           element_label: elementLabel,
           title: finalTitle,
           display_name: finalDisplayName,
@@ -362,8 +384,8 @@ export async function POST(request: NextRequest) {
     const { data: newBuild, error: insertError } = await supabase
       .from("builds")
       .insert({
-        mode: mode as "pvp" | "pve" | "dimension",
-        party_size: partySize,
+        mode: validModePost,
+        party_size: actualPartySize,
         members,
         element_label: elementLabel,
         title: finalTitle,

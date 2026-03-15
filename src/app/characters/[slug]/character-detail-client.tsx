@@ -41,7 +41,7 @@ function StyledText({ text, className }: { text: string; className?: string }) {
   );
 }
 
-type SortTab = "newest" | "thumbs_up" | "thumbs_down";
+type SortTab = "newest" | "thumbs_up";
 type ReactionState = "up" | "down" | null;
 
 interface CommentItem {
@@ -105,7 +105,6 @@ const ATTACK_TYPE_ICON_MAP: Record<string, string> = {
 const SORT_MAP: Record<SortTab, string> = {
   newest: "new",
   thumbs_up: "thumbs_up",
-  thumbs_down: "thumbs_down",
 };
 
 interface CharacterDetailClientProps {
@@ -592,20 +591,6 @@ export function CharacterDetailClient({
             >
               <svg className="h-3 w-3 text-[#fb64b6]" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M2 20h2c.55 0 1-.45 1-1v-9c0-.55-.45-1-1-1H2v11zm19.83-7.12c.11-.25.17-.52.17-.8V11c0-1.1-.9-2-2-2h-5.5l.92-4.65c.05-.22.02-.46-.08-.66-.23-.45-.52-.86-.88-1.22L14 2 7.59 8.41C7.21 8.79 7 9.3 7 9.83v7.84C7 18.95 8.05 20 9.34 20h8.11c.7 0 1.36-.37 1.72-.97l2.66-6.15z" />
-              </svg>
-              順
-            </button>
-            <button
-              onClick={() => handleSortChange("thumbs_down")}
-              className={cn(
-                "flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors",
-                sortTab === "thumbs_down"
-                  ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
-                  : "border-[rgba(139,122,171,0.3)] text-[#8b7aab] hover:text-[#c4b5d4]"
-              )}
-            >
-              <svg className="h-3 w-3 text-[#60a5fa]" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M22 4h-2c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h2V4zM2.17 11.12c-.11.25-.17.52-.17.8V13c0 1.1.9 2 2 2h5.5l-.92 4.65c-.05.22-.02.46.08.66.23.45.52.86.88 1.22L10 22l6.41-6.41c.38-.38.59-.89.59-1.42V6.34C17 5.05 15.95 4 14.66 4h-8.1c-.71 0-1.36.37-1.72.97l-2.67 6.15z" />
               </svg>
               順
             </button>

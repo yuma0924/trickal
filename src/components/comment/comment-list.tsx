@@ -6,7 +6,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { CommentCard } from "@/components/comment/comment-card";
 import { cn } from "@/lib/utils";
 
-type SortTab = "newest" | "thumbs_up" | "thumbs_down";
+type SortTab = "newest" | "thumbs_up";
 type ReactionState = "up" | "down" | null;
 
 interface Comment {
@@ -40,7 +40,6 @@ interface CommentListProps {
 const SORT_TABS = [
   { value: "newest" as const, label: "新着順" },
   { value: "thumbs_up" as const, label: "👍順" },
-  { value: "thumbs_down" as const, label: "👎順" },
 ];
 
 export function CommentList({

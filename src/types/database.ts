@@ -245,7 +245,7 @@ export interface Database {
       builds: {
         Row: {
           id: string;
-          mode: "pvp" | "pve" | "dimension";
+          mode: "general" | "arena" | "dimension" | "world_tree";
           party_size: number;
           members: string[];
           element_label: string | null;
@@ -261,7 +261,7 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          mode: "pvp" | "pve" | "dimension";
+          mode: "general" | "arena" | "dimension" | "world_tree";
           party_size: number;
           members: string[];
           element_label?: string | null;
@@ -277,7 +277,7 @@ export interface Database {
         };
         Update: {
           id?: string;
-          mode?: "pvp" | "pve" | "dimension";
+          mode?: "general" | "arena" | "dimension" | "world_tree";
           party_size?: number;
           members?: string[];
           element_label?: string | null;

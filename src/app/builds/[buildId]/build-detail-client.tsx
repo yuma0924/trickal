@@ -20,9 +20,18 @@ type CharacterInfo = {
   is_hidden: boolean;
 };
 
+type Mode = "general" | "arena" | "dimension" | "world_tree";
+
+const MODE_LABEL_MAP: Record<Mode, string> = {
+  general: "汎用編成",
+  arena: "PvP",
+  dimension: "次元の衝突",
+  world_tree: "世界樹採掘基地",
+};
+
 type BuildDetail = {
   id: string;
-  mode: "pvp" | "pve";
+  mode: Mode;
   party_size: number;
   element_label: string | null;
   title: string | null;
@@ -37,7 +46,7 @@ type BuildDetail = {
 
 type SimilarBuild = {
   id: string;
-  mode: "pvp" | "pve";
+  mode: Mode;
   title: string | null;
   display_name: string | null;
   comment: string;
@@ -58,12 +67,11 @@ type CommentItem = {
   user_reaction: "up" | "down" | null;
 };
 
-type SortType = "newest" | "thumbs_up" | "thumbs_down";
+type SortType = "newest" | "thumbs_up";
 
 const SORT_TABS = [
   { value: "newest" as SortType, label: "新着順" },
   { value: "thumbs_up" as SortType, label: "👍順" },
-  { value: "thumbs_down" as SortType, label: "👎順" },
 ];
 
 function getKarmaClass(likesCount: number, dislikesCount: number): string {
@@ -316,7 +324,7 @@ export function BuildDetailClient({
         {/* タイトル + 属性タグ */}
         <div className="mb-3 flex items-center gap-2">
           <h1 className="text-lg font-bold text-text-primary">
-            {build.title || `${build.element_label ?? ""}${build.mode.toUpperCase()}編成`}
+            {build.title || `${build.element_label ?? ""}${MODE_LABEL_MAP[build.mode]}`}
           </h1>
           {build.element_label && (
             <Badge
@@ -331,7 +339,7 @@ export function BuildDetailClient({
             </Badge>
           )}
           <Badge variant="outline">
-            {build.mode.toUpperCase()}
+            {MODE_LABEL_MAP[build.mode]}
           </Badge>
         </div>
 
@@ -517,7 +525,7 @@ export function BuildDetailClient({
               >
                 <div className="mb-1 flex items-center gap-2">
                   <span className="text-sm font-medium text-text-primary">
-                    {sb.title || `${sb.element_label ?? ""}${sb.mode.toUpperCase()}編成`}
+                    {sb.title || `${sb.element_label ?? ""}${MODE_LABEL_MAP[sb.mode]}`}
                   </span>
                   {sb.element_label && (
                     <Badge

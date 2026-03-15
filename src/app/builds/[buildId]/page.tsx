@@ -13,9 +13,18 @@ type CharacterInfo = {
   is_hidden: boolean;
 };
 
+type Mode = "general" | "arena" | "dimension" | "world_tree";
+
+const MODE_LABEL_MAP: Record<Mode, string> = {
+  general: "汎用編成",
+  arena: "PvP",
+  dimension: "次元の衝突",
+  world_tree: "世界樹採掘基地",
+};
+
 type BuildData = {
   id: string;
-  mode: "pvp" | "pve";
+  mode: Mode;
   party_size: number;
   members: string[];
   element_label: string | null;
@@ -32,7 +41,7 @@ type BuildData = {
 
 type SimilarBuild = {
   id: string;
-  mode: "pvp" | "pve";
+  mode: Mode;
   title: string | null;
   display_name: string | null;
   comment: string;
@@ -63,7 +72,8 @@ export async function generateMetadata({
   }
 
   const buildData = build as { title: string | null; element_label: string | null; mode: string };
-  const title = buildData.title || `${buildData.element_label ?? ""}${buildData.mode.toUpperCase()}編成`;
+  const modeLabel = MODE_LABEL_MAP[buildData.mode as Mode] ?? buildData.mode;
+  const title = buildData.title || `${buildData.element_label ?? ""}${modeLabel}`;
 
   return {
     title: `${title} | 編成ランキング | みんなで決めるトリッカルランキング`,
