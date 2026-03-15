@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* iOS Safari で input/textarea/select タップ時の自動ズームを防止 */
+@supports (-webkit-touch-callout: none) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
 /* ============================
    テーマシステム（ダーク/ライト/自動）
    標準テーマ: ダーク（パープル×ピンク）

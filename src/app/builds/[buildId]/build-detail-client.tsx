@@ -338,34 +338,31 @@ export function BuildDetailClient({
         >
           通報
         </button>
-        {/* タイトル */}
-        {build.title && (
-          <div className="mb-2">
-            <h1 className="text-sm font-bold text-[#fce7f3]">
-              {build.title}
-            </h1>
+        {/* タイトル + 属性アイコン + モード */}
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <h1 className="min-w-0 truncate text-sm font-bold text-[#fce7f3]">
+            {build.title || MODE_LABEL_MAP[build.mode]}
+          </h1>
+          <div className="flex shrink-0 items-center gap-1.5">
+            {build.members_detail
+              .map((m) => m.element)
+              .filter((e, i, arr) => e && arr.indexOf(e) === i)
+              .map((el) => (
+                ELEMENT_ICONS[el as string] ? (
+                  <Image
+                    key={el}
+                    src={ELEMENT_ICONS[el as string]}
+                    alt={el as string}
+                    width={18}
+                    height={18}
+                    className="h-[18px] w-[18px]"
+                  />
+                ) : null
+              ))}
+            <span className="rounded-md bg-[rgba(36,27,53,0.5)] px-2 py-0.5 text-[10px] font-bold text-[#8b7aab]">
+              {MODE_LABEL_MAP[build.mode]}
+            </span>
           </div>
-        )}
-        {/* 属性アイコン + モード */}
-        <div className="mb-3 flex items-center gap-1.5">
-          {build.members_detail
-            .map((m) => m.element)
-            .filter((e, i, arr) => e && arr.indexOf(e) === i)
-            .map((el) => (
-              ELEMENT_ICONS[el as string] ? (
-                <Image
-                  key={el}
-                  src={ELEMENT_ICONS[el as string]}
-                  alt={el as string}
-                  width={18}
-                  height={18}
-                  className="h-[18px] w-[18px]"
-                />
-              ) : null
-            ))}
-          <span className="rounded-md bg-[rgba(36,27,53,0.5)] px-2 py-0.5 text-[10px] font-bold text-[#8b7aab]">
-            {MODE_LABEL_MAP[build.mode]}
-          </span>
         </div>
 
         {/* キャラ編成グリッド */}
