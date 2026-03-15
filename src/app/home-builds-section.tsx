@@ -214,18 +214,15 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                 <div className="mt-2 flex items-center justify-between">
                   <div className="flex items-center gap-1.5 text-xs text-[#8b7aab]">
                     {build.displayName && (
-                      <>
-                        <span>{build.displayName}</span>
-                        <span>·</span>
-                      </>
+                      <span>{build.displayName}</span>
                     )}
-                    <span className="inline-flex items-center gap-0.5">
-                      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
-                      </svg>
-                      {build.likesCount}
-                    </span>
                   </div>
+                  <span className="inline-flex items-center gap-0.5 text-xs text-thumbs-up">
+                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
+                    </svg>
+                    {build.likesCount}
+                  </span>
                 </div>
               </Link>
             );

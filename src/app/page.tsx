@@ -645,7 +645,7 @@ export default async function Home() {
                                 — {char.featuredCommentAuthor}
                               </span>
                             )}
-                            <span className="inline-flex items-center gap-0.5 text-[10px] text-[#f9a8d4]">
+                            <span className="inline-flex items-center gap-0.5 text-[10px] text-thumbs-up">
                               <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
                               </svg>
