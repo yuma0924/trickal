@@ -70,30 +70,6 @@ const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: "newest", label: "新着" },
 ];
 
-/**
- * 属性カラー
- */
-function getElementBg(element: string): string {
-  const map: Record<string, string> = {
-    純粋: "rgba(74,222,128,0.15)",
-    冷静: "rgba(0,188,255,0.15)",
-    狂気: "rgba(255,99,126,0.15)",
-    活発: "rgba(255,210,48,0.15)",
-    憂鬱: "rgba(166,132,255,0.15)",
-  };
-  return map[element] ?? "rgba(36,27,53,0.5)";
-}
-
-function getElementColor(element: string): string {
-  const map: Record<string, string> = {
-    純粋: "#4ade80",
-    冷静: "#38bdf8",
-    狂気: "#fb7185",
-    活発: "#fcd34d",
-    憂鬱: "#a78bfa",
-  };
-  return map[element] ?? "#8b7aab";
-}
 
 /**
  * 自浄作用の CSS クラスを計算

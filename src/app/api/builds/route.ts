@@ -163,7 +163,7 @@ export async function GET(request: NextRequest) {
     }
 
     // コメント件数を取得
-    let commentCounts: Record<string, number> = {};
+    const commentCounts: Record<string, number> = {};
     if (buildIds.length > 0) {
       const { data: counts } = await supabase
         .from("build_comments")

@@ -63,10 +63,6 @@ const SKILL_CATEGORIES: { key: string; label: string; hasName?: boolean; hasCool
   { key: "passive", label: "パッシブスキル" },
 ];
 
-const NORMAL_ATTACK_CATEGORIES = [
-  { key: "normal_attack_basic", label: "基本" },
-  { key: "normal_attack_enhanced", label: "強化" },
-];
 
 // Element color mappings for header image border/bg
 const ELEMENT_COLORS: Record<string, { border: string; bg: string; text: string }> = {
@@ -122,7 +118,7 @@ export function CharacterDetailClient({
   const [commentsLoading, setCommentsLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [userReactions, setUserReactions] = useState<Record<string, ReactionState>>({});
-  const [_userHash, setUserHash] = useState<string | null>(null);
+  const [, setUserHash] = useState<string | null>(null);
   const [skillsOpen, setSkillsOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const { toast, showToast } = useToast();

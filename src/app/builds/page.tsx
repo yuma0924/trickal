@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { createServerClient } from "@/lib/supabase/server";
-import { StarRatingDisplay } from "@/components/ui/star-rating";
 import { BuildsClient } from "./builds-client";
 
 const ELEMENT_ICON_MAP: Record<string, string> = {
