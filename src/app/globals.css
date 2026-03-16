@@ -158,6 +158,12 @@
 }
 
 /* ベーススタイル */
+@media (min-width: 1024px) {
+  html {
+    font-size: 110%;
+  }
+}
+
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
