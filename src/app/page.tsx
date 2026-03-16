@@ -138,7 +138,7 @@ function SectionFooterButton({
   return (
     <Link
       href={href}
-      className="flex w-full items-center justify-center gap-1 rounded-2xl py-3 text-center text-sm font-bold text-white transition-opacity hover:opacity-90 cursor-pointer"
+      className="flex w-full items-center justify-center gap-1 rounded-2xl py-3 text-center text-sm font-bold text-white transition-opacity hover:opacity-90 cursor-pointer lg:max-w-sm lg:mx-auto"
       style={{
         backgroundImage: `linear-gradient(to right, ${gradientFrom}, ${gradientTo})`,
       }}
