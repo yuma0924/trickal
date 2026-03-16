@@ -29,7 +29,7 @@ export default function RootLayout({
         <ThemeProvider>
           <div className="flex min-h-dvh flex-col">
             <Header />
-            <div className="mx-auto w-full max-w-5xl flex-1 px-4 py-4 md:px-8 md:py-6 lg:grid lg:grid-cols-[1fr_240px] lg:gap-6">
+            <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-4 md:px-8 md:py-6 lg:grid lg:grid-cols-[1fr_240px] lg:gap-6">
               <main>
                 {children}
               </main>

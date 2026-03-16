@@ -37,7 +37,7 @@ export function Header() {
       className="sticky top-0 z-50 bg-bg-primary/90 shadow-lg shadow-black/10 backdrop-blur-sm transition-transform duration-300"
       style={{ transform: hidden ? "translateY(-100%)" : "translateY(0)" }}
     >
-      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 md:px-8">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 md:px-8">
         <Link href="/" className="group flex items-center gap-2.5">
           <Image
             src="/logo.png"
