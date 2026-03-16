@@ -71,12 +71,12 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
   return (
     <div className="space-y-3">
       {/* フィルター: プルダウン + 属性 */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 lg:gap-3">
         <div className="relative shrink-0">
           <select
             value={modeFilter}
             onChange={(e) => setModeFilter(e.target.value as Mode)}
-            className="appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-[rgba(36,27,53,0.8)] px-4 py-2.5 pr-9 text-sm font-bold text-[#fafafa] cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
+            className="appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-[rgba(36,27,53,0.8)] px-4 py-2.5 pr-9 text-sm font-bold text-[#fafafa] cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none lg:w-48"
           >
             {MODE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -90,7 +90,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
         </div>
 
         {/* 属性フィルター */}
-        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide lg:gap-2">
           {Object.keys(ELEMENT_ICONS).map((elem) => {
             const active = elementFilter === elem;
             return (
