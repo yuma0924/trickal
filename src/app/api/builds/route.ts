@@ -162,6 +162,22 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    // コメント件数を取得
+    let commentCounts: Record<string, number> = {};
+    if (buildIds.length > 0) {
+      const { data: counts } = await supabase
+        .from("build_comments")
+        .select("build_id")
+        .in("build_id", buildIds)
+        .eq("is_deleted", false);
+
+      if (counts) {
+        for (const row of counts) {
+          commentCounts[row.build_id] = (commentCounts[row.build_id] ?? 0) + 1;
+        }
+      }
+    }
+
     const fallbackChar: Omit<CharacterInfo, "id"> = {
       name: "不明",
       slug: "",
@@ -177,6 +193,7 @@ export async function GET(request: NextRequest) {
           (id) => characters[id] || { id, ...fallbackChar }
         ),
         user_reaction: userReactions[b.id] || null,
+        comments_count: commentCounts[b.id] ?? 0,
       })),
       next_cursor: nextCursor,
       has_more: hasMore,

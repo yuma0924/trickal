@@ -331,17 +331,10 @@ export function BuildDetailClient({
     <div className="space-y-6">
       {/* 編成情報カード */}
       <div className={cn(
-        "relative rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] p-4",
+        "rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] p-4",
         karmaClass
       )}>
-        {/* 通報（右上） */}
-        <button
-          onClick={() => setReportTarget({ type: "build", id: build.id })}
-          className="absolute right-3 top-3 text-[10px] text-[#8b7aab]/50 hover:text-thumbs-down cursor-pointer"
-        >
-          通報
-        </button>
-        {/* タイトル + 属性アイコン + モード */}
+        {/* タイトル + 属性アイコン + モード + 通報 */}
         <div className="mb-3 flex items-center justify-between gap-2">
           <h1 className="min-w-0 truncate text-sm font-bold text-[#fafafa]">
             {build.title || MODE_LABEL_MAP[build.mode]}
@@ -365,6 +358,12 @@ export function BuildDetailClient({
             <span className="rounded-md bg-[rgba(36,27,53,0.5)] px-2 py-0.5 text-[10px] font-bold text-[#8b7aab]">
               {MODE_LABEL_MAP[build.mode]}
             </span>
+            <button
+              onClick={() => setReportTarget({ type: "build", id: build.id })}
+              className="text-[10px] text-[#8b7aab]/50 hover:text-thumbs-down cursor-pointer"
+            >
+              通報
+            </button>
           </div>
         </div>
 
