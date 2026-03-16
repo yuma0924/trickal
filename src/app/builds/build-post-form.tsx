@@ -302,7 +302,7 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
           <select
             value={formMode}
             onChange={(e) => setFormMode(e.target.value as FormMode)}
-            className="w-full appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-[rgba(36,27,53,0.8)] px-4 py-2.5 pr-9 text-sm font-bold text-[#faf5ff] cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
+            className="w-full appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-[rgba(36,27,53,0.8)] px-4 py-2.5 pr-9 text-sm font-bold text-[#fafafa] cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
           >
             {MODE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -364,7 +364,7 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
         </div>
 
         {/* キャラグリッド */}
-        <div className="max-h-52 overflow-y-auto rounded-xl border border-[rgba(249,168,212,0.1)] bg-[rgba(30,21,48,0.5)] p-2">
+        <div className="max-h-52 overflow-y-auto rounded-xl border border-[rgba(249,168,212,0.1)] bg-[rgba(42,33,62,0.5)] p-2">
           {filteredCharacters.length === 0 ? (
             <p className="py-4 text-center text-xs text-text-muted">
               キャラクターが見つかりません
@@ -432,7 +432,7 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <p className="truncate text-sm font-bold text-[#faf5ff]">{selectedChar.name}</p>
+                  <p className="truncate text-sm font-bold text-[#fafafa]">{selectedChar.name}</p>
                   {selectedChar.position && POSITION_ICON_MAP[selectedChar.position] && (
                     <Image src={POSITION_ICON_MAP[selectedChar.position]} alt={selectedChar.position} width={16} height={16} className="shrink-0" />
                   )}
@@ -440,7 +440,7 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
                 <button
                   type="button"
                   onClick={() => setSelectedChar(null)}
-                  className="shrink-0 text-xs text-[#8b7aab] hover:text-[#faf5ff] cursor-pointer"
+                  className="shrink-0 text-xs text-[#8b7aab] hover:text-[#fafafa] cursor-pointer"
                 >
                   キャンセル
                 </button>
@@ -463,7 +463,7 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
           <button
             type="button"
             onClick={handleClearAll}
-            className="rounded-lg border border-[rgba(249,168,212,0.15)] bg-[rgba(30,21,48,0.5)] px-2.5 py-1 text-[11px] font-bold text-[#8b7aab] transition-colors hover:border-[rgba(255,99,126,0.4)] hover:text-[#fda4af] cursor-pointer"
+            className="rounded-lg border border-[rgba(249,168,212,0.15)] bg-[rgba(42,33,62,0.5)] px-2.5 py-1 text-[11px] font-bold text-[#8b7aab] transition-colors hover:border-[rgba(255,99,126,0.4)] hover:text-[#fda4af] cursor-pointer"
           >
             全解除
           </button>
@@ -472,7 +472,7 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
         {/* 配置グリッド */}
         <div className="overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.1)]">
           {/* 列ヘッダー */}
-          <div className="grid grid-cols-3 bg-[rgba(30,21,48,0.8)]">
+          <div className="grid grid-cols-3 bg-[rgba(42,33,62,0.8)]">
             {POSITION_LABELS.map((label, i) => (
               <span
                 key={label}

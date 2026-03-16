@@ -168,7 +168,7 @@ export default async function BuildsPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                   </svg>
                 </span>
-                <h2 className="text-base font-bold text-[#faf5ff]">
+                <h2 className="text-base font-bold text-[#fafafa]">
                   話題のキャラクター
                 </h2>
               </div>
@@ -203,7 +203,7 @@ export default async function BuildsPage() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1">
-                      <p className="truncate text-sm font-bold text-[#fce7f3]">
+                      <p className="truncate text-sm font-bold text-[#fafafa]">
                         {char.name}
                       </p>
                       {char.element && ELEMENT_ICON_MAP[char.element] && (
@@ -232,7 +232,7 @@ export default async function BuildsPage() {
                 {/* コメント */}
                 {char.latestComment && (
                   <div className="mx-2 mb-2 rounded-[10px] bg-[rgba(30,21,48,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2">
-                    <p className="line-clamp-2 text-[11px] leading-relaxed text-[rgba(252,231,243,0.8)]">
+                    <p className="line-clamp-2 text-[11px] leading-relaxed text-[#fafafa]">
                       {char.latestComment}
                     </p>
                     <div className="mt-1 flex items-center justify-between">

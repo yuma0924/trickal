@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Tab } from "@/components/ui/tab";
+
 import { CharacterIcon } from "@/components/character/character-icon";
 import { ThumbsUpDown } from "@/components/reaction/thumbs-up-down";
 import { cn } from "@/lib/utils";
@@ -116,6 +116,9 @@ export function BuildDetailClient({
 }: BuildDetailClientProps) {
   const [build, setBuild] = useState(initialBuild);
   const [userReaction, setUserReaction] = useState<"up" | "down" | null>(null);
+
+  // コメントフォーム開閉
+  const [commentFormOpen, setCommentFormOpen] = useState(false);
 
   // コメント関連
   const [comments, setComments] = useState<CommentItem[]>([]);
@@ -340,7 +343,7 @@ export function BuildDetailClient({
         </button>
         {/* タイトル + 属性アイコン + モード */}
         <div className="mb-3 flex items-center justify-between gap-2">
-          <h1 className="min-w-0 truncate text-sm font-bold text-[#fce7f3]">
+          <h1 className="min-w-0 truncate text-sm font-bold text-[#fafafa]">
             {build.title || MODE_LABEL_MAP[build.mode]}
           </h1>
           <div className="flex shrink-0 items-center gap-1.5">
@@ -368,7 +371,7 @@ export function BuildDetailClient({
         {/* キャラ編成グリッド */}
         <div className="mb-3 overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.05)]">
           {/* ヘッダー行 */}
-          <div className="grid grid-cols-3 bg-[rgba(30,21,48,0.8)]">
+          <div className="grid grid-cols-3 bg-[rgba(42,33,62,0.8)]">
             <span className="border-r border-[rgba(249,168,212,0.05)] py-1.5 text-center text-[10px] font-bold text-[#a893c0]">後列</span>
             <span className="border-r border-[rgba(249,168,212,0.05)] py-1.5 text-center text-[10px] font-bold text-[#a893c0]">中列</span>
             <span className="py-1.5 text-center text-[10px] font-bold text-[#a893c0]">前列</span>
@@ -438,7 +441,7 @@ export function BuildDetailClient({
 
         {/* コメント */}
         <div className="border-t border-[rgba(249,168,212,0.1)] pt-2.5">
-          <p className="whitespace-pre-wrap text-sm text-[#fce7f3] leading-relaxed">
+          <p className="whitespace-pre-wrap text-sm text-[#fafafa] leading-relaxed">
             {build.comment}
           </p>
         </div>
@@ -459,18 +462,47 @@ export function BuildDetailClient({
         </div>
       </div>
 
-      {/* コメント投稿フォーム */}
-      <section className="space-y-3">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#fb64b6] to-[#ffa1ad]" />
-          <div>
-            <h2 className="text-xl font-bold text-text-primary">この編成にコメントする</h2>
-            <p className="text-sm text-text-tertiary">思ったこと感想や改善点を共有しよう</p>
+      {/* コメント投稿 */}
+      <section>
+        {!commentFormOpen ? (
+          <div className="rounded-[14px] bg-gradient-to-r from-[rgba(246,51,154,0.1)] to-[rgba(255,32,86,0.1)] border border-[rgba(251,100,182,0.3)] p-4 shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <svg className="h-4 w-4 text-[#fafafa]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                  <span className="text-sm font-bold text-[#fafafa]">
+                    この編成にコメントする
+                  </span>
+                </div>
+                <p className="mt-1 text-xs text-[#8b7aab]">感想や改善点を共有しよう</p>
+              </div>
+              <button
+                onClick={() => setCommentFormOpen(true)}
+                className="flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#fb64b6] to-[#ff637e] px-5 py-3 text-xs font-bold text-white shadow-md transition-opacity hover:opacity-90"
+              >
+                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                </svg>
+                投稿する
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="rounded-2xl border border-border-primary bg-bg-card p-4">
-          <form onSubmit={handleSubmitComment} className="space-y-3">
-            <div>
+        ) : (
+          <div className="rounded-2xl border border-border-primary bg-bg-card p-4">
+            <div className="mb-3 flex items-center justify-between">
+              <span className="text-sm font-bold text-[#fafafa]">コメントを投稿</span>
+              <button
+                onClick={() => setCommentFormOpen(false)}
+                className="flex h-7 w-7 items-center justify-center rounded-full text-text-muted hover:bg-bg-tertiary hover:text-text-primary cursor-pointer"
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <form onSubmit={handleSubmitComment} className="space-y-3">
               <input
                 type="text"
                 value={commentName}
@@ -479,38 +511,58 @@ export function BuildDetailClient({
                 maxLength={50}
                 className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
               />
-            </div>
-            <div>
-              <textarea
-                value={commentBody}
-                onChange={(e) => setCommentBody(e.target.value)}
-                placeholder="コメントを入力..."
-                maxLength={300}
-                rows={3}
-                className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none resize-none"
-              />
-              <div className="mt-1 text-right text-xs text-text-tertiary">
-                {commentBody.length}/300
+              <div>
+                <textarea
+                  value={commentBody}
+                  onChange={(e) => setCommentBody(e.target.value)}
+                  placeholder="コメントを入力..."
+                  maxLength={300}
+                  rows={3}
+                  className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none resize-none"
+                />
+                <div className="mt-1 text-right text-xs text-text-tertiary">
+                  {commentBody.length}/300
+                </div>
               </div>
-            </div>
-            {commentError && (
-              <p className="text-sm text-thumbs-down">{commentError}</p>
-            )}
-            <Button type="submit" disabled={commentSubmitting} className="w-full">
-              {commentSubmitting ? "投稿中..." : "コメントする"}
-            </Button>
-          </form>
-        </div>
+              {commentError && (
+                <p className="text-sm text-thumbs-down">{commentError}</p>
+              )}
+              <Button type="submit" disabled={commentSubmitting} className="w-full">
+                {commentSubmitting ? "投稿中..." : "コメントする"}
+              </Button>
+            </form>
+          </div>
+        )}
       </section>
 
       {/* コメント一覧 */}
       <section>
-        <div className="mb-3 flex items-center gap-3">
-          <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#fb64b6] to-[#ffa1ad]" />
-          <h2 className="text-xl font-bold text-text-primary">コメント</h2>
+        <div className="mb-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <svg className="h-4 w-4 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            <span className="text-sm font-bold text-[#fafafa]">
+              コメント ({comments.length})
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
+            {SORT_TABS.map((tab) => (
+              <button
+                key={tab.value}
+                onClick={() => setSort(tab.value)}
+                className={cn(
+                  "rounded-full border px-2.5 py-1 text-xs font-medium transition-colors cursor-pointer",
+                  sort === tab.value
+                    ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
+                    : "border-[rgba(139,122,171,0.3)] text-[#8b7aab] hover:text-[#c4b5d4]"
+                )}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
-
-        <Tab items={SORT_TABS} value={sort} onChange={setSort} className="mb-3" />
 
         {commentsLoaded && comments.length === 0 && !commentsLoading ? (
           <p className="py-4 text-center text-sm text-text-tertiary">
@@ -537,9 +589,10 @@ export function BuildDetailClient({
                     通報
                   </button>
                   <div className="mb-1 flex items-center gap-2 text-xs text-text-tertiary">
-                    <div className="flex h-6 w-6 items-center justify-center rounded-full text-[10px] text-white" style={{backgroundImage: "linear-gradient(135deg, #fb64b6, #ffa1ad)"}}>
-                      {(c.display_name || "名")[0]}
-                    </div>
+                    <div
+                      className="h-2.5 w-2.5 shrink-0 rounded-full"
+                      style={{ backgroundColor: "#34d399" }}
+                    />
                     <span className="font-medium text-text-secondary">
                       {c.display_name || "名無しの教主"}
                     </span>
@@ -594,7 +647,7 @@ export function BuildDetailClient({
               >
                 {sb.title && (
                   <div className="mb-1">
-                    <span className="text-sm font-bold text-[#fce7f3]">
+                    <span className="text-sm font-bold text-[#fafafa]">
                       {sb.title}
                     </span>
                   </div>

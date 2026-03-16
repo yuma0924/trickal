@@ -316,7 +316,7 @@ export function CharacterDetailClient({
         {/* キャラ情報 */}
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
-            <h1 className="text-xl font-bold text-[#fce7f3]">
+            <h1 className="text-xl font-bold text-[#fafafa]">
               {character.name}
             </h1>
             {character.element && ELEMENT_ICON_MAP[character.element] && (
@@ -381,7 +381,7 @@ export function CharacterDetailClient({
             <svg className="h-4 w-4 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
             </svg>
-            <span className="text-sm font-bold text-[#fce7f3]">スキル</span>
+            <span className="text-sm font-bold text-[#fafafa]">スキル</span>
           </div>
           <svg
             className={`h-4 w-4 text-[#8b7aab] transition-transform ${skillsOpen ? "rotate-180" : ""}`}
@@ -476,13 +476,13 @@ export function CharacterDetailClient({
                       <div className="flex flex-col divide-y divide-[rgba(249,168,212,0.08)]">
                         {basicAttack && (
                           <div className="pb-2.5">
-                            <span className="mb-1.5 inline-block rounded border border-[rgba(249,168,212,0.15)] px-1.5 py-0.5 text-[10px] font-bold text-[#fce7f3]/70">基本</span>
+                            <span className="mb-1.5 inline-block rounded border border-[rgba(249,168,212,0.15)] px-1.5 py-0.5 text-[10px] font-bold text-[#fafafa]/70">基本</span>
                             {renderAttackBody(basicAttack)}
                           </div>
                         )}
                         {enhancedAttack && (
                           <div className="pt-2.5">
-                            <span className="mb-1.5 inline-block rounded border border-[rgba(249,168,212,0.15)] px-1.5 py-0.5 text-[10px] font-bold text-[#fce7f3]/70">強化</span>
+                            <span className="mb-1.5 inline-block rounded border border-[rgba(249,168,212,0.15)] px-1.5 py-0.5 text-[10px] font-bold text-[#fafafa]/70">強化</span>
                             {renderAttackBody(enhancedAttack)}
                           </div>
                         )}
@@ -502,7 +502,7 @@ export function CharacterDetailClient({
       {partTimeItem && (
         <div className="border-t border-[rgba(249,168,212,0.1)] pt-3">
           <p className="text-xs text-[#a893c0]">
-            アルバイトアイテム: <span className="font-bold text-[#fce7f3]">{partTimeItem}</span>
+            アルバイトアイテム: <span className="font-bold text-[#fafafa]">{partTimeItem}</span>
           </p>
         </div>
       )}
@@ -514,10 +514,10 @@ export function CharacterDetailClient({
             <div className="flex items-center justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2">
-                  <svg className="h-4 w-4 text-[#fce7f3]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="h-4 w-4 text-[#fafafa]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                   </svg>
-                  <span className="text-sm font-bold text-[#fce7f3]">
+                  <span className="text-sm font-bold text-[#fafafa]">
                     {character.name}を評価する
                   </span>
                 </div>
@@ -551,7 +551,7 @@ export function CharacterDetailClient({
             <svg className="h-4 w-4 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
-            <span className="text-sm font-bold text-[#fce7f3]">
+            <span className="text-sm font-bold text-[#fafafa]">
               コメント ({totalCount})
             </span>
           </div>
@@ -593,7 +593,7 @@ export function CharacterDetailClient({
           userReactions={userReactions}
           onReact={handleReact}
           onReport={handleReport}
-          accentColor={elemColors?.text}
+          accentColor="#34d399"
           hideTab
         />
       </section>
@@ -606,7 +606,7 @@ export function CharacterDetailClient({
               <svg className="h-4 w-4 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              <span className="text-sm font-bold text-[#fce7f3]">次に見る</span>
+              <span className="text-sm font-bold text-[#fafafa]">次に見る</span>
             </div>
             <p className="mt-0.5 text-xs text-[#8b7aab]">同じ性格・レアリティのキャラ</p>
           </div>
@@ -641,7 +641,7 @@ export function CharacterDetailClient({
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm font-bold text-[#fce7f3]">人気キャラランキング</span>
+            <span className="block text-sm font-bold text-[#fafafa]">人気キャラランキング</span>
             <span className="text-[10px] text-[#8b7aab]">投票で決まる最強キャラをチェック</span>
           </div>
           <svg className="h-4 w-4 shrink-0 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -661,7 +661,7 @@ export function CharacterDetailClient({
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm font-bold text-[#fce7f3]">編成ランキング</span>
+            <span className="block text-sm font-bold text-[#fafafa]">編成ランキング</span>
             <span className="text-[10px] text-[#8b7aab]">人気のパーティ編成をチェックしよう</span>
           </div>
           <svg className="h-4 w-4 shrink-0 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

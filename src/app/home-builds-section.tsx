@@ -15,8 +15,7 @@ const ELEMENT_ICONS: Record<string, string> = {
 
 type Mode = "general" | "arena" | "dimension" | "world_tree";
 
-const MODE_OPTIONS: { value: Mode | "all"; label: string }[] = [
-  { value: "all", label: "すべて" },
+const MODE_OPTIONS: { value: Mode; label: string }[] = [
   { value: "general", label: "汎用編成" },
   { value: "arena", label: "PvP" },
   { value: "dimension", label: "次元の衝突" },
@@ -58,14 +57,11 @@ interface HomeuildsSectionProps {
 const PREVIEW_COUNT = 5;
 
 export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
-  const [modeFilter, setModeFilter] = useState<Mode | "all">("all");
+  const [modeFilter, setModeFilter] = useState<Mode>("general");
   const [elementFilter, setElementFilter] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
-    let result = builds;
-    if (modeFilter !== "all") {
-      result = result.filter((b) => b.mode === modeFilter);
-    }
+    let result = builds.filter((b) => b.mode === modeFilter);
     if (elementFilter) {
       result = result.filter((b) => b.memberElements.includes(elementFilter));
     }
@@ -79,8 +75,8 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
         <div className="relative shrink-0">
           <select
             value={modeFilter}
-            onChange={(e) => setModeFilter(e.target.value as Mode | "all")}
-            className="appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-[rgba(36,27,53,0.8)] px-4 py-2.5 pr-9 text-sm font-bold text-[#faf5ff] cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
+            onChange={(e) => setModeFilter(e.target.value as Mode)}
+            className="appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-[rgba(36,27,53,0.8)] px-4 py-2.5 pr-9 text-sm font-bold text-[#fafafa] cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
           >
             {MODE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -146,7 +142,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
               >
                 {/* タイトル + 属性アイコン + モード */}
                 <div className="mb-3 flex items-center justify-between gap-2">
-                  <span className="min-w-0 truncate text-sm font-bold text-[#fce7f3]">
+                  <span className="min-w-0 truncate text-sm font-bold text-[#fafafa]">
                     {build.title || (build.mode ? (MODE_LABEL_MAP[build.mode] ?? build.mode) : "")}
                   </span>
                   <div className="flex shrink-0 items-center gap-1.5">
@@ -172,7 +168,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
 
                 {/* キャラ編成グリッド */}
                 <div className="mb-3 overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.05)]">
-                  <div className="grid grid-cols-3 bg-[rgba(30,21,48,0.8)]">
+                  <div className="grid grid-cols-3 bg-[rgba(42,33,62,0.8)]">
                     <span className="border-r border-[rgba(249,168,212,0.05)] py-1.5 text-center text-[10px] font-bold text-[#a893c0]">後列</span>
                     <span className="border-r border-[rgba(249,168,212,0.05)] py-1.5 text-center text-[10px] font-bold text-[#a893c0]">中列</span>
                     <span className="py-1.5 text-center text-[10px] font-bold text-[#a893c0]">前列</span>
@@ -204,7 +200,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                 {/* コメント */}
                 {build.comment && (
                   <div className="border-t border-[rgba(249,168,212,0.1)] pt-2.5">
-                    <p className="line-clamp-2 text-sm text-[#fce7f3] leading-relaxed">
+                    <p className="line-clamp-2 text-sm text-[#fafafa] leading-relaxed">
                       {build.comment}
                     </p>
                   </div>

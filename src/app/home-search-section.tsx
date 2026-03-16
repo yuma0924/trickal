@@ -108,7 +108,7 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="キャラ名で検索..."
-              className="w-full rounded-[10px] bg-[#1a1225] border border-[rgba(249,168,212,0.1)] pl-8 pr-3 py-1.5 text-xs text-[#faf5ff] placeholder:text-[#8b7aab] focus:border-[rgba(249,168,212,0.3)] focus:outline-none"
+              className="w-full rounded-[10px] bg-[#1a1225] border border-[rgba(249,168,212,0.1)] pl-8 pr-3 py-1.5 text-xs text-[#fafafa] placeholder:text-[#8b7aab] focus:border-[rgba(249,168,212,0.3)] focus:outline-none"
             />
           </div>
           <button

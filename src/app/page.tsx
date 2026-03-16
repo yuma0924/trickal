@@ -466,7 +466,7 @@ export default async function Home() {
           {topChar && (
             <div className="text-sm">
               <span className="text-[#a893c0]">現在の1位は</span>
-              <span className="font-bold text-[#faf5ff]">{topChar.name}</span>
+              <span className="font-bold text-[#fafafa]">{topChar.name}</span>
               <span className="inline-flex -translate-y-[2px] items-center gap-0.5 align-middle">
                 <svg className="h-3.5 w-3.5 text-[#fcd34d]" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -577,7 +577,7 @@ export default async function Home() {
                       {/* 名前・ロール・評価 */}
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-1.5">
-                          <p className="truncate text-base font-bold text-[#faf5ff]">
+                          <p className="truncate text-base font-bold text-[#fafafa]">
                             {char.name}
                           </p>
                           {char.element && ELEMENT_ICON_MAP[char.element] && (
@@ -614,14 +614,6 @@ export default async function Home() {
                           <span className="inline-flex items-center gap-1 rounded-full bg-[#2a1f3d] py-0.5 pl-1.5 pr-2">
                             <StarRatingDisplay rating={char.avgRating} size="sm" showValue />
                           </span>
-                          {char.boardCommentsCount > 0 && (
-                            <span className="inline-flex items-center gap-0.5 text-xs leading-none text-[#8b7aab]">
-                              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                              </svg>
-                              {char.boardCommentsCount}
-                            </span>
-                          )}
                         </div>
                       </div>
                     </div>
@@ -635,8 +627,8 @@ export default async function Home() {
                           </svg>
                           注目コメント
                         </p>
-                        <div className="rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(30,21,48,0.8)] px-3 py-3">
-                          <p className="line-clamp-2 text-[11px] leading-relaxed text-[rgba(252,231,243,0.8)]">
+                        <div className="rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(42,33,62,0.8)] px-3 py-3">
+                          <p className="line-clamp-3 whitespace-pre-wrap text-xs leading-relaxed text-[#fafafa]">
                             {char.featuredComment}
                           </p>
                           <div className="mt-1 flex items-center justify-between">
@@ -718,7 +710,7 @@ export default async function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                   </svg>
                 </span>
-                <h2 className="text-base font-bold text-[#faf5ff]">
+                <h2 className="text-base font-bold text-[#fafafa]">
                   話題のキャラクター
                 </h2>
               </div>
@@ -756,7 +748,7 @@ export default async function Home() {
                     {/* 情報 */}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1">
-                        <p className="truncate text-sm font-bold text-[#fce7f3]">
+                        <p className="truncate text-sm font-bold text-[#fafafa]">
                           {char.name}
                         </p>
                         {char.element && ELEMENT_ICON_MAP[char.element] && (
@@ -784,8 +776,8 @@ export default async function Home() {
                   </div>
                   {/* コメントブロック */}
                   {char.latestComment && (
-                    <div className="mx-2 mb-2 rounded-[10px] bg-[rgba(30,21,48,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2">
-                      <p className="line-clamp-2 text-[11px] leading-relaxed text-[rgba(252,231,243,0.8)]">
+                    <div className="mx-2 mb-2 rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2">
+                      <p className="line-clamp-2 text-[11px] leading-relaxed text-[#fafafa]">
                         {char.latestComment}
                       </p>
                       <div className="mt-1 flex items-center justify-between">

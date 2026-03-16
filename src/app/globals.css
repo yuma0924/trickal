@@ -66,17 +66,17 @@
 
 /* ダークテーマ（デフォルト） - パープル×ピンク */
 :root {
-  --bg-primary: #1a1225;
-  --bg-secondary: #1e1530;
-  --bg-tertiary: #241b35;
-  --bg-card: #1e1530;
-  --bg-card-hover: #2a1f3d;
-  --bg-input: #1a1225;
+  --bg-primary: #191423;
+  --bg-secondary: #1e192b;
+  --bg-tertiary: #241e31;
+  --bg-card: #211b2e;
+  --bg-card-hover: #2a2338;
+  --bg-input: #1b1627;
 
-  --text-primary: #f5e6f0;
-  --text-secondary: rgba(245, 230, 240, 0.78);
-  --text-tertiary: #a893c0;
-  --text-muted: #7b6a9a;
+  --text-primary: #fafafa;
+  --text-secondary: #e5e5e5;
+  --text-tertiary: #d0c3dc;
+  --text-muted: #a99bbe;
   --text-inverse: #0f0a1a;
 
   --border-primary: rgba(249, 168, 212, 0.12);
@@ -128,17 +128,17 @@
 
 /* .dark クラスが明示的に付いた場合 */
 .dark {
-  --bg-primary: #1a1225;
-  --bg-secondary: #1e1530;
-  --bg-tertiary: #241b35;
-  --bg-card: #1e1530;
-  --bg-card-hover: #2a1f3d;
-  --bg-input: #1a1225;
+  --bg-primary: #191423;
+  --bg-secondary: #1e192b;
+  --bg-tertiary: #241e31;
+  --bg-card: #211b2e;
+  --bg-card-hover: #2a2338;
+  --bg-input: #1b1627;
 
-  --text-primary: #f5e6f0;
-  --text-secondary: rgba(245, 230, 240, 0.78);
-  --text-tertiary: #a893c0;
-  --text-muted: #7b6a9a;
+  --text-primary: #fafafa;
+  --text-secondary: #e5e5e5;
+  --text-tertiary: #d0c3dc;
+  --text-muted: #a99bbe;
   --text-inverse: #0f0a1a;
 
   --border-primary: rgba(249, 168, 212, 0.12);

@@ -40,7 +40,7 @@ export function Toast({ message, visible }: ToastState) {
         <svg className="h-4 w-4 text-[#4ade80]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
         </svg>
-        <span className="text-sm font-medium text-[#fce7f3]">{message}</span>
+        <span className="text-sm font-medium text-[#fafafa]">{message}</span>
       </div>
     </div>
   );
