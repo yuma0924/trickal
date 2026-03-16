@@ -633,11 +633,11 @@ export default async function Home() {
                             </svg>
                             注目コメント
                           </p>
-                          <div className="rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(42,33,62,0.8)] px-3 py-3 lg:min-h-[88px] lg:flex lg:flex-col">
+                          <div className="rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(42,33,62,0.8)] px-3 py-3 min-h-[72px] flex flex-col lg:min-h-[88px]">
                             <p className="line-clamp-2 whitespace-pre-wrap text-xs leading-relaxed text-[#fafafa] lg:line-clamp-4">
                               {char.featuredComment}
                             </p>
-                            <div className="mt-1 flex items-center justify-between lg:mt-auto lg:pt-1">
+                            <div className="mt-auto flex items-center justify-between pt-1">
                               {char.featuredCommentAuthor && (
                                 <span className="text-[10px] text-[#8b7aab]">
                                   — {char.featuredCommentAuthor}
