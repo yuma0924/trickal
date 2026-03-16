@@ -314,7 +314,7 @@ export function BuildsClient() {
       {initialLoaded && builds.length === 0 && !loading ? (
         <EmptyState />
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
           {builds.map((build) => (
             <BuildCard
               key={build.id}

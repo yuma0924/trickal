@@ -255,7 +255,7 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
               該当するキャラクターが見つかりません
             </p>
           ) : (
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
               {filtered.map((char) => (
                 <CharacterCard
                   key={char.id}

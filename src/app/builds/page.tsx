@@ -175,7 +175,7 @@ export default async function BuildsPage() {
             </div>
             <p className="text-xs text-[#a893c0]">今注目されているキャラクターをチェック！</p>
           </div>
-          <div className="-mx-4 grid grid-cols-2 gap-2 px-2">
+          <div className="-mx-4 grid grid-cols-2 md:grid-cols-3 gap-2 px-2">
             {trendingCharacters.map((char) => (
               <Link
                 key={char.id}

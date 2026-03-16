@@ -283,9 +283,9 @@ export function CharacterDetailClient({
   const elemColors = character.element ? ELEMENT_COLORS[character.element] : null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 md:space-y-8">
       {/* ヒーローエリア */}
-      <div className="flex items-start gap-4">
+      <div className="flex items-start gap-4 md:gap-6">
         {/* キャラ画像 モバイル96px / PC160px */}
         <div
           className="relative h-24 w-24 shrink-0 overflow-hidden rounded-[10px] md:h-56 md:w-56 md:rounded-[16px]"
@@ -606,7 +606,7 @@ export function CharacterDetailClient({
             </div>
             <p className="mt-0.5 text-xs text-[#8b7aab]">同じ性格・レアリティのキャラ</p>
           </div>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
             {relatedCharacters.map((c) => (
               <CharacterCard
                 key={c.id}

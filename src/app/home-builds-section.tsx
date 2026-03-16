@@ -127,7 +127,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
           該当する編成がありません
         </p>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
           {filtered.map((build) => {
             const uniqueElements = [...new Set(build.memberElements)];
             const row1 = build.members.slice(0, 3);

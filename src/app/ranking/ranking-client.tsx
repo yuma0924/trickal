@@ -70,7 +70,7 @@ export function RankingClient({
       : null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 md:space-y-8">
       {/* 性格フィルター */}
       <div className="flex items-center gap-1.5">
         <button
@@ -148,7 +148,7 @@ export function RankingClient({
         </p>
       ) : (
         <>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
             {visibleRanked.map((char) => (
               <CharacterCard
                 key={char.id}
@@ -201,7 +201,7 @@ export function RankingClient({
             </div>
             <p className="text-xs text-[#a893c0]">今注目されているキャラクターをチェック！</p>
           </div>
-          <div className="-mx-4 grid grid-cols-2 gap-2 px-2">
+          <div className="-mx-4 grid grid-cols-2 md:grid-cols-3 gap-2 px-2">
             {trendingCharacters.map((char) => (
               <Link
                 key={char.id}
@@ -290,7 +290,7 @@ export function RankingClient({
               票が少ないため順位対象外
             </p>
           </div>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
             {filteredUnranked.map((char) => (
               <CharacterCard
                 key={char.id}
