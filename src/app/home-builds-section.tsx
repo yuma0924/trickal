@@ -71,12 +71,12 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
   return (
     <div className="space-y-3">
       {/* フィルター: プルダウン + 属性 */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 lg:gap-3">
         <div className="relative shrink-0">
           <select
             value={modeFilter}
             onChange={(e) => setModeFilter(e.target.value as Mode)}
-            className="appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-[rgba(36,27,53,0.8)] px-4 py-2.5 pr-9 text-sm font-bold text-[#fafafa] cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
+            className="appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-[rgba(36,27,53,0.8)] px-4 py-2.5 pr-9 text-sm font-bold text-[#fafafa] cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none lg:w-48"
           >
             {MODE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -90,7 +90,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
         </div>
 
         {/* 属性フィルター */}
-        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide lg:gap-2">
           {Object.keys(ELEMENT_ICONS).map((elem) => {
             const active = elementFilter === elem;
             return (
@@ -127,7 +127,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
           該当する編成がありません
         </p>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
           {filtered.map((build) => {
             const uniqueElements = [...new Set(build.memberElements)];
             const row1 = build.members.slice(0, 3);
@@ -199,27 +199,25 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
 
                 {/* コメント */}
                 {build.comment && (
-                  <div className="border-t border-[rgba(249,168,212,0.1)] pt-2.5">
-                    <p className="line-clamp-2 text-sm text-[#fafafa] leading-relaxed">
+                  <div className="mx-0.5 mb-1 rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2">
+                    <p className="line-clamp-2 text-[11px] leading-relaxed text-[#fafafa]">
                       {build.comment}
                     </p>
+                    <div className="mt-1 flex items-center justify-between">
+                      {build.displayName && (
+                        <span className="text-[10px] text-[#8b7aab]">
+                          — {build.displayName}
+                        </span>
+                      )}
+                      <span className="inline-flex items-center gap-0.5 text-[10px] text-thumbs-up">
+                        <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
+                        </svg>
+                        {build.likesCount}
+                      </span>
+                    </div>
                   </div>
                 )}
-
-                {/* フッター */}
-                <div className="mt-2 flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-xs text-[#8b7aab]">
-                    {build.displayName && (
-                      <span>{build.displayName}</span>
-                    )}
-                  </div>
-                  <span className="inline-flex items-center gap-0.5 text-xs text-thumbs-up">
-                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
-                    </svg>
-                    {build.likesCount}
-                  </span>
-                </div>
               </Link>
             );
           })}

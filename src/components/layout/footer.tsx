@@ -12,7 +12,7 @@ export function Footer() {
             "linear-gradient(90deg, transparent 0%, #fb64b6 30%, #ffa1ad 70%, transparent 100%)",
         }}
       />
-      <div className="mx-auto max-w-7xl px-4 pt-10 pb-4">
+      <div className="mx-auto max-w-6xl px-4 pt-10 pb-4 md:px-8">
         <div className="flex flex-col items-center gap-5 text-center">
           <div className="flex items-center gap-2">
             <Image

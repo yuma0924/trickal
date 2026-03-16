@@ -29,9 +29,18 @@ export default function RootLayout({
         <ThemeProvider>
           <div className="flex min-h-dvh flex-col">
             <Header />
-            <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-4">
-              {children}
-            </main>
+            <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-4 md:px-8 md:py-6 lg:grid lg:grid-cols-[1fr_240px] lg:gap-6">
+              <main>
+                {children}
+              </main>
+              <aside className="hidden lg:block">
+                <div className="sticky top-20 space-y-4">
+                  <div className="flex h-[600px] items-center justify-center rounded-2xl border border-border-primary bg-bg-card">
+                    <span className="text-xs text-text-muted">AD</span>
+                  </div>
+                </div>
+              </aside>
+            </div>
             <Footer />
           </div>
         </ThemeProvider>

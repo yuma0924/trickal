@@ -138,7 +138,7 @@ function SectionFooterButton({
   return (
     <Link
       href={href}
-      className="flex w-full items-center justify-center gap-1 rounded-2xl py-3 text-center text-sm font-bold text-white transition-opacity hover:opacity-90 cursor-pointer"
+      className="flex w-full items-center justify-center gap-1 rounded-2xl py-3 text-center text-sm font-bold text-white transition-opacity hover:opacity-90 cursor-pointer lg:max-w-sm lg:mx-auto"
       style={{
         backgroundImage: `linear-gradient(to right, ${gradientFrom}, ${gradientTo})`,
       }}
@@ -449,7 +449,7 @@ export default async function Home() {
   });
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 md:space-y-14">
       {/* ====== 第1段: 人気キャラランキング ====== */}
       <section>
         <SectionHeading
@@ -461,21 +461,24 @@ export default async function Home() {
           gradientTo="#ff637e"
         />
 
-        <div className="mt-2 space-y-1 pl-4">
-          <p className="text-xs text-text-muted">みんなの評価で算出 · 毎日 0:00 更新</p>
-          {topChar && (
-            <div className="text-sm">
-              <span className="text-[#a893c0]">現在の1位は</span>
-              <span className="font-bold text-[#fafafa]">{topChar.name}</span>
-              <span className="inline-flex -translate-y-[2px] items-center gap-0.5 align-middle">
-                <svg className="h-3.5 w-3.5 text-[#fcd34d]" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <span className="-translate-y-px font-bold text-[#fcd34d]">{topChar.avgRating.toFixed(1)}</span>
-              </span>
+        {topChar && (
+          <>
+            <div className="mt-2 flex items-baseline pl-4 lg:justify-between">
+              <div className="text-base lg:text-lg">
+                <span className="text-text-tertiary">現在の総合1位は</span>
+                <span className="ml-1 font-bold text-[#fafafa]">{topChar.name}</span>
+                <span className="ml-1 inline-flex -translate-y-[2px] items-center gap-0.5 align-middle">
+                  <svg className="h-4 w-4 text-[#fcd34d]" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  <span className="-translate-y-px font-bold text-[#fcd34d]">{topChar.avgRating.toFixed(1)}</span>
+                </span>
+              </div>
+              <span className="hidden lg:inline text-xs text-text-muted">みんなの評価で算出 · 毎日 0:00 更新</span>
             </div>
-          )}
-        </div>
+            <p className="mt-1 pl-4 text-xs text-text-muted lg:hidden">みんなの評価で算出 · 毎日 0:00 更新</p>
+          </>
+        )}
 
         {rankedCharacters.length === 0 ? (
           <p className="mt-4 py-8 text-center text-sm text-text-tertiary">
@@ -485,7 +488,7 @@ export default async function Home() {
           <>
             {/* ヒーロー表示 (1-3位) */}
             <div className="mt-3 space-y-3">
-              {rankedCharacters.slice(0, 3).map((char) => {
+              {rankedCharacters.slice(0, 3).map((char, idx) => {
                 const rank = char.rank as 1 | 2 | 3;
                 const elemStyle = char.element ? ELEMENT_COLORS[char.element] : null;
 
@@ -555,105 +558,112 @@ export default async function Home() {
                       </span>
                     </div>
 
-                    {/* キャラ情報 */}
-                    <div className="flex gap-3 px-3.5 py-2.5">
-                      {/* キャラ画像 */}
-                      <div className="h-20 w-20 shrink-0 overflow-hidden">
-                        {char.imageUrl ? (
-                          <Image
-                            src={char.imageUrl}
-                            alt={char.name}
-                            width={84}
-                            height={84}
-                            className="h-full w-full object-cover"
-                          />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-lg text-[#8b7aab]">
-                            {char.name.charAt(0)}
+                    <div className="lg:flex">
+                      {/* キャラ情報 */}
+                      <div className="flex gap-3 px-3.5 py-2.5 lg:flex-1 lg:min-w-0 lg:py-4 lg:px-4 lg:gap-4">
+                        {/* キャラ画像 */}
+                        <div className="h-20 w-20 shrink-0 overflow-hidden lg:h-24 lg:w-24">
+                          {char.imageUrl ? (
+                            <Image
+                              src={char.imageUrl}
+                              alt={char.name}
+                              width={84}
+                              height={84}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-lg text-[#8b7aab]">
+                              {char.name.charAt(0)}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* 名前・ロール・評価 */}
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5">
+                            <p className="truncate text-base font-bold text-[#fafafa] lg:text-lg">
+                              {char.name}
+                            </p>
+                            {char.element && ELEMENT_ICON_MAP[char.element] && (
+                              <Image src={ELEMENT_ICON_MAP[char.element]} alt={char.element} width={16} height={16} className="shrink-0 lg:h-5 lg:w-5" />
+                            )}
                           </div>
-                        )}
-                      </div>
-
-                      {/* 名前・ロール・評価 */}
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-1.5">
-                          <p className="truncate text-base font-bold text-[#fafafa]">
-                            {char.name}
-                          </p>
-                          {char.element && ELEMENT_ICON_MAP[char.element] && (
-                            <Image src={ELEMENT_ICON_MAP[char.element]} alt={char.element} width={16} height={16} className="shrink-0" />
-                          )}
-                        </div>
-                        <div className="mt-1 flex flex-wrap items-center gap-1">
-                          {char.role && ROLE_ICON_MAP[char.role] && (
-                            <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
-                              <Image src={ROLE_ICON_MAP[char.role]} alt={char.role} width={13} height={13} />
-                              {char.role}
-                            </span>
-                          )}
-                          {char.position && POSITION_ICON_MAP[char.position] && (
-                            <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
-                              <Image src={POSITION_ICON_MAP[char.position]} alt={char.position} width={13} height={13} />
-                              {char.position}
-                            </span>
-                          )}
-                          {char.attackType && ATTACK_TYPE_ICON_MAP[char.attackType] && (
-                            <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
-                              <Image src={ATTACK_TYPE_ICON_MAP[char.attackType]} alt={char.attackType} width={13} height={13} />
-                              {char.attackType}
-                            </span>
-                          )}
-                          {char.race && (
-                            <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
-                              {char.race}
-                            </span>
-                          )}
-                        </div>
-                        <div className="mt-1.5 flex flex-wrap items-center gap-1">
-                          {/* 評価ピル */}
-                          <span className="inline-flex items-center gap-1 rounded-full bg-[#2a1f3d] py-0.5 pl-1.5 pr-2">
-                            <StarRatingDisplay rating={char.avgRating} size="sm" showValue />
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 注目コメント */}
-                    {char.featuredComment && (
-                      <div className="mx-2.5 mb-2.5">
-                        <p className="mb-1 flex items-center gap-1 px-0.5 text-[10px] font-bold text-[#38bdf8]">
-                          <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
-                          </svg>
-                          注目コメント
-                        </p>
-                        <div className="rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(42,33,62,0.8)] px-3 py-3">
-                          <p className="line-clamp-3 whitespace-pre-wrap text-xs leading-relaxed text-[#fafafa]">
-                            {char.featuredComment}
-                          </p>
-                          <div className="mt-1 flex items-center justify-between">
-                            {char.featuredCommentAuthor && (
-                              <span className="text-[10px] text-[#8b7aab]">
-                                — {char.featuredCommentAuthor}
+                          <div className="mt-1 flex flex-wrap items-center gap-1 lg:mt-1.5">
+                            {char.role && ROLE_ICON_MAP[char.role] && (
+                              <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
+                                <Image src={ROLE_ICON_MAP[char.role]} alt={char.role} width={13} height={13} />
+                                {char.role}
                               </span>
                             )}
-                            <span className="inline-flex items-center gap-0.5 text-[10px] text-thumbs-up">
-                              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
-                              </svg>
-                              {char.featuredCommentThumbsUp}
+                            {char.position && POSITION_ICON_MAP[char.position] && (
+                              <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
+                                <Image src={POSITION_ICON_MAP[char.position]} alt={char.position} width={13} height={13} />
+                                {char.position}
+                              </span>
+                            )}
+                            {char.attackType && ATTACK_TYPE_ICON_MAP[char.attackType] && (
+                              <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
+                                <Image src={ATTACK_TYPE_ICON_MAP[char.attackType]} alt={char.attackType} width={13} height={13} />
+                                {char.attackType}
+                              </span>
+                            )}
+                            {char.race && (
+                              <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
+                                {char.race}
+                              </span>
+                            )}
+                          </div>
+                          <div className="mt-1.5 flex flex-wrap items-center gap-1 lg:mt-2">
+                            {/* 評価ピル */}
+                            <span className="inline-flex items-center gap-1 rounded-full bg-[#2a1f3d] py-0.5 pl-1.5 pr-2 lg:py-1 lg:pl-2 lg:pr-2.5">
+                              <span className="lg:hidden">
+                                <StarRatingDisplay rating={char.avgRating} size="sm" showValue />
+                              </span>
+                              <span className="hidden lg:inline-flex">
+                                <StarRatingDisplay rating={char.avgRating} size="md" showValue />
+                              </span>
                             </span>
                           </div>
                         </div>
                       </div>
-                    )}
+
+                      {/* 注目コメント */}
+                      {char.featuredComment && (
+                        <div className="mx-2.5 mb-2.5 lg:mb-0 lg:flex-1 lg:min-w-0 lg:self-start lg:pt-2.5">
+                          <p className="mb-1 flex items-center gap-1 px-0.5 text-[10px] font-bold text-[#38bdf8]">
+                            <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
+                            </svg>
+                            注目コメント
+                          </p>
+                          <div className="rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(42,33,62,0.8)] px-3 py-3 min-h-[72px] flex flex-col lg:min-h-[88px]">
+                            <p className="line-clamp-2 whitespace-pre-wrap text-xs leading-relaxed text-[#fafafa] lg:line-clamp-4">
+                              {char.featuredComment}
+                            </p>
+                            <div className="mt-auto flex items-center justify-between pt-1">
+                              {char.featuredCommentAuthor && (
+                                <span className="text-[10px] text-[#8b7aab]">
+                                  — {char.featuredCommentAuthor}
+                                </span>
+                              )}
+                              <span className="inline-flex items-center gap-0.5 text-[10px] text-thumbs-up">
+                                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
+                                </svg>
+                                {char.featuredCommentThumbsUp}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </Link>
                 );
               })}
             </div>
 
             {/* 4位以降: グリッド表示 (4列) */}
-            <div className="mt-4 grid grid-cols-4 gap-2">
+            <div className="mt-4 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
               {rankedCharacters.slice(3).map((char) => (
                 <CharacterCard
                   key={char.id}
@@ -718,7 +728,7 @@ export default async function Home() {
             </div>
             <p className="text-xs text-[#a893c0]">今注目されているキャラクターをチェック！</p>
           </div>
-          <div className="-mx-4 grid grid-cols-2 gap-2 px-2">
+          <div className="-mx-4 grid grid-cols-2 md:grid-cols-3 gap-2 px-2">
             {trendingCharacters.map((char) => {
               const elemStyle = char.element ? ELEMENT_COLORS[char.element] : null;
               return (

@@ -97,24 +97,89 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
     <div className="space-y-3">
       {/* フィルターパネル */}
       <div className="rounded-[14px] bg-[rgba(36,27,53,0.8)] border border-[rgba(249,168,212,0.1)] p-3 space-y-2">
-        {/* テキスト検索 */}
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <svg className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="キャラ名で検索..."
-              className="w-full rounded-[10px] bg-[#1a1225] border border-[rgba(249,168,212,0.1)] pl-8 pr-3 py-1.5 text-xs text-[#fafafa] placeholder:text-[#8b7aab] focus:border-[rgba(249,168,212,0.3)] focus:outline-none"
-            />
+        {/* PC: 検索 + 性格 + レア を1行目 */}
+        <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:gap-3">
+          {/* テキスト検索 + モバイルクリア */}
+          <div className="flex items-center gap-2 lg:w-56">
+            <div className="relative flex-1 lg:flex-none lg:w-full">
+              <svg className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="キャラ名で検索..."
+                className="w-full rounded-[10px] bg-[#1a1225] border border-[rgba(249,168,212,0.1)] pl-8 pr-3 py-1.5 text-xs text-[#fafafa] placeholder:text-[#8b7aab] focus:border-[rgba(249,168,212,0.3)] focus:outline-none"
+              />
+            </div>
+            <button
+              onClick={clearAll}
+              className={cn(
+                "shrink-0 rounded-[10px] bg-[#1a1225] border px-2.5 py-1.5 text-[11px] font-bold transition-colors lg:hidden",
+                hasAnyFilter
+                  ? "border-[rgba(255,99,126,0.4)] text-[#fda4af] hover:text-white"
+                  : "border-[rgba(249,168,212,0.1)] text-[#6b5a80]"
+              )}
+            >
+              クリア
+            </button>
           </div>
+
+          {/* 性格フィルター */}
+          <div className="flex items-center gap-1.5">
+            <span className="w-8 shrink-0 text-[10px] font-bold text-[#6b5a80] lg:hidden">性格</span>
+            <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
+              {ELEMENTS.map((elem) => {
+                const active = elementFilters.has(elem);
+                return (
+                  <button
+                    key={elem}
+                    onClick={() => toggleFilter(elementFilters, elem, setElementFilters)}
+                    className={cn(
+                      "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors",
+                      active
+                        ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+                        : "bg-[#1a1225]"
+                    )}
+                    style={{
+                      border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                    }}
+                    title={elem}
+                  >
+                    <Image
+                      src={ELEMENT_ICONS[elem]}
+                      alt={elem}
+                      width={20}
+                      height={20}
+                      className="h-5 w-5"
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* レアリティフィルター */}
+          <div className="flex items-center gap-1.5">
+            <span className="w-8 shrink-0 text-[10px] font-bold text-[#6b5a80] lg:hidden">レア</span>
+            <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
+              {RARITIES.map((rarity) => (
+                <ToggleButton
+                  key={rarity}
+                  label={rarity}
+                  active={rarityFilters.has(rarity)}
+                  onClick={() => toggleFilter(rarityFilters, rarity, setRarityFilters)}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* クリアボタン（右寄せ） */}
           <button
             onClick={clearAll}
             className={cn(
-              "shrink-0 rounded-[10px] bg-[#1a1225] border px-2.5 py-1.5 text-[11px] font-bold transition-colors",
+              "shrink-0 rounded-[10px] bg-[#1a1225] border px-2.5 py-1.5 text-[11px] font-bold transition-colors hidden lg:block lg:ml-auto",
               hasAnyFilter
                 ? "border-[rgba(255,99,126,0.4)] text-[#fda4af] hover:text-white"
                 : "border-[rgba(249,168,212,0.1)] text-[#6b5a80]"
@@ -124,122 +189,86 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
           </button>
         </div>
 
-        {/* 性格フィルター */}
-        <FilterRow label="性格">
-          {ELEMENTS.map((elem) => {
-            const active = elementFilters.has(elem);
-            return (
-              <button
-                key={elem}
-                onClick={() => toggleFilter(elementFilters, elem, setElementFilters)}
-                className={cn(
-                  "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors",
-                  active
-                    ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-                    : "bg-[#1a1225]"
-                )}
-                style={{
-                  border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
-                }}
-                title={elem}
-              >
-                <Image
-                  src={ELEMENT_ICONS[elem]}
-                  alt={elem}
-                  width={20}
-                  height={20}
-                  className="h-5 w-5"
-                />
-              </button>
-            );
-          })}
-        </FilterRow>
-
-        {/* タイプ + 配置フィルター */}
-        <div className="flex items-center gap-1.5">
-          <span className="w-8 shrink-0 text-[10px] font-bold text-[#6b5a80]">タイプ</span>
+        {/* PC: タイプ + 配置 + 種族 を2行目 */}
+        <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:gap-3">
+          {/* タイプ + 配置フィルター */}
           <div className="flex items-center gap-1.5">
-            {TYPES.map((type) => {
-              const active = typeFilters.has(type.value);
-              return (
-                <button
-                  key={type.value}
-                  onClick={() => toggleFilter(typeFilters, type.value, setTypeFilters)}
-                  className={cn(
-                    "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors",
-                    active
-                      ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-                      : "bg-[#1a1225]"
-                  )}
-                  style={{
-                    border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
-                  }}
-                  title={type.value}
-                >
-                  <Image
-                    src={type.icon}
-                    alt={type.value}
-                    width={20}
-                    height={20}
-                    className="h-5 w-5"
-                  />
-                </button>
-              );
-            })}
-            <div className="mx-2.5 h-5 shrink-0" style={{ width: "1px", backgroundColor: "rgba(139,122,171,0.4)" }} />
-            {POSITIONS.map((pos) => {
-              const active = positionFilters.has(pos.value);
-              return (
-                <button
-                  key={pos.value}
-                  onClick={() => toggleFilter(positionFilters, pos.value, setPositionFilters)}
-                  className={cn(
-                    "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors",
-                    active
-                      ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-                      : "bg-[#1a1225]"
-                  )}
-                  style={{
-                    border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
-                  }}
-                  title={pos.value}
-                >
-                  <Image
-                    src={pos.icon}
-                    alt={pos.value}
-                    width={20}
-                    height={20}
-                    className="h-5 w-5"
-                  />
-                </button>
-              );
-            })}
+            <span className="w-8 shrink-0 text-[10px] font-bold text-[#6b5a80] lg:hidden">タイプ</span>
+            <div className="flex items-center gap-1.5">
+              {TYPES.map((type) => {
+                const active = typeFilters.has(type.value);
+                return (
+                  <button
+                    key={type.value}
+                    onClick={() => toggleFilter(typeFilters, type.value, setTypeFilters)}
+                    className={cn(
+                      "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors",
+                      active
+                        ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+                        : "bg-[#1a1225]"
+                    )}
+                    style={{
+                      border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                    }}
+                    title={type.value}
+                  >
+                    <Image
+                      src={type.icon}
+                      alt={type.value}
+                      width={20}
+                      height={20}
+                      className="h-5 w-5"
+                    />
+                  </button>
+                );
+              })}
+              <div className="mx-1.5 h-5 shrink-0" style={{ width: "1px", backgroundColor: "rgba(139,122,171,0.4)" }} />
+              {POSITIONS.map((pos) => {
+                const active = positionFilters.has(pos.value);
+                return (
+                  <button
+                    key={pos.value}
+                    onClick={() => toggleFilter(positionFilters, pos.value, setPositionFilters)}
+                    className={cn(
+                      "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors",
+                      active
+                        ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+                        : "bg-[#1a1225]"
+                    )}
+                    style={{
+                      border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                    }}
+                    title={pos.value}
+                  >
+                    <Image
+                      src={pos.icon}
+                      alt={pos.value}
+                      width={20}
+                      height={20}
+                      className="h-5 w-5"
+                    />
+                  </button>
+                );
+              })}
+            </div>
           </div>
+
+          {/* 種族フィルター */}
+          <div className="flex items-center gap-1.5">
+            <span className="w-8 shrink-0 text-[10px] font-bold text-[#6b5a80] lg:hidden">種族</span>
+            <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
+              {RACES.map((race) => (
+                <ToggleButton
+                  key={race}
+                  label={race}
+                  active={raceFilters.has(race)}
+                  onClick={() => toggleFilter(raceFilters, race, setRaceFilters)}
+                />
+              ))}
+            </div>
+          </div>
+
         </div>
-
-        {/* 種族フィルター */}
-        <FilterRow label="種族">
-          {RACES.map((race) => (
-            <ToggleButton
-              key={race}
-              label={race}
-              active={raceFilters.has(race)}
-              onClick={() => toggleFilter(raceFilters, race, setRaceFilters)}
-            />
-          ))}
-        </FilterRow>
-
-        {/* レアリティフィルター */}
-        <FilterRow label="レア">
-          {RARITIES.map((rarity) => (
-            <ToggleButton
-              key={rarity}
-              label={rarity}
-              active={rarityFilters.has(rarity)}
-              onClick={() => toggleFilter(rarityFilters, rarity, setRarityFilters)}
-            />
-          ))}
-        </FilterRow>
       </div>
 
       {/* 結果 */}
@@ -255,7 +284,7 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
               該当するキャラクターが見つかりません
             </p>
           ) : (
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
               {filtered.map((char) => (
                 <CharacterCard
                   key={char.id}

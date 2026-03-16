@@ -37,7 +37,7 @@ export function Header() {
       className="sticky top-0 z-50 bg-bg-primary/90 shadow-lg shadow-black/10 backdrop-blur-sm transition-transform duration-300"
       style={{ transform: hidden ? "translateY(-100%)" : "translateY(0)" }}
     >
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 md:px-8">
         <Link href="/" className="group flex items-center gap-2.5">
           <Image
             src="/logo.png"
@@ -56,6 +56,14 @@ export function Header() {
           </span>
         </Link>
         <nav className="flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-4 mr-4">
+            <Link href="/ranking" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
+              ランキング
+            </Link>
+            <Link href="/builds" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
+              編成
+            </Link>
+          </div>
           <ThemeToggle />
         </nav>
       </div>
