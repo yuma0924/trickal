@@ -72,11 +72,11 @@ export function RankingClient({
   return (
     <div className="space-y-6 md:space-y-8">
       {/* 性格フィルター */}
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1.5 lg:gap-2">
         <button
           onClick={() => handleFilterChange("all")}
           className={cn(
-            "shrink-0 rounded-[10px] px-2.5 py-1.5 text-[11px] font-bold transition-colors cursor-pointer",
+            "shrink-0 rounded-[10px] px-2.5 py-1.5 text-[11px] font-bold transition-colors cursor-pointer lg:px-3.5 lg:py-2 lg:text-sm",
             elementFilter === "all"
               ? "bg-[rgba(255,99,126,0.15)] text-[#fda4af] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
               : "bg-[#1a1225] text-[#a893c0]"
@@ -94,7 +94,7 @@ export function RankingClient({
               key={elem}
               onClick={() => handleFilterChange(elem)}
               className={cn(
-                "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer",
+                "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer lg:p-2",
                 active
                   ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
                   : "bg-[#1a1225]"
@@ -109,35 +109,49 @@ export function RankingClient({
                 alt={elem}
                 width={20}
                 height={20}
-                className="h-5 w-5"
+                className="h-5 w-5 lg:h-6 lg:w-6"
               />
             </button>
           );
         })}
       </div>
 
-      {/* 1位アナウンス */}
-      {currentTop && (
-        <Link
-          href={`/characters/${currentTop.slug}`}
-          className="block rounded-2xl border border-[rgba(255,191,36,0.3)] bg-gradient-to-r from-[rgba(255,191,36,0.1)] to-[rgba(255,143,0,0.05)] px-4 py-3 transition-colors hover:from-[rgba(255,191,36,0.15)] cursor-pointer"
+      {/* 1位アナウンス + 誘導 */}
+      <div className="-mt-3 flex items-stretch justify-between gap-4">
+        {currentTop && (
+          <Link
+            href={`/characters/${currentTop.slug}`}
+            className="inline-flex items-center rounded-2xl border border-[rgba(255,191,36,0.3)] bg-gradient-to-r from-[rgba(255,191,36,0.1)] to-[rgba(255,143,0,0.05)] px-5 py-3 transition-colors hover:from-[rgba(255,191,36,0.15)] cursor-pointer lg:pl-5 lg:pr-12"
         >
-          <span className="text-sm text-[#a893c0]">
+          <span className="text-base text-[#fafafa]">
             現在の{elementFilter === "all" ? "全性格" : elementFilter}1位は
           </span>
-          <span className="ml-1.5 text-base font-bold text-[#fcd34d]">
+          <span className="ml-1.5 text-lg font-bold text-[#fcd34d] lg:text-xl">
             {currentTop.name}
           </span>
           {currentTop.avgRating !== null && (
-            <span className="ml-1 text-sm font-bold text-[#fcd34d]">
+            <span className="ml-1.5 text-base font-bold text-[#fcd34d] lg:text-lg">
               ★{currentTop.avgRating.toFixed(1)}
             </span>
           )}
-          <span className="ml-1.5 text-sm text-[#a893c0]">
+          <span className="ml-1.5 text-base text-[#fafafa]">
             です
           </span>
-        </Link>
-      )}
+          </Link>
+        )}
+        <div className="hidden lg:flex items-center gap-2 rounded-2xl border border-[rgba(249,168,212,0.15)] bg-[rgba(42,33,62,0.5)] px-4 py-3">
+          <svg className="h-4 w-4 shrink-0 text-[#f9a8d4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+          </svg>
+          <span className="text-sm text-text-tertiary">キャラをクリックして<br />コメントや投票をしよう！</span>
+        </div>
+      </div>
+      <div className="-mt-4 flex items-center gap-1.5 lg:hidden">
+        <svg className="h-3.5 w-3.5 shrink-0 text-[#f9a8d4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+        </svg>
+        <span className="text-xs text-text-tertiary">キャラをタップしてコメントや投票をしよう！</span>
+      </div>
 
       {/* ランキンググリッド (4列) */}
       {filteredRanked.length === 0 ? (
