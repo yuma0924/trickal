@@ -693,7 +693,7 @@ export function BuildDetailClient({
       )}
 
       {/* ページ下部ナビリンク */}
-      <div className="mt-8 space-y-3">
+      <div className="mt-10 space-y-3">
         <p className="pl-1 text-sm font-bold text-text-primary">他のランキングもチェック</p>
         <Link href="/ranking" className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{backgroundImage: "linear-gradient(135deg, #fb64b6, #ffa1ad)"}}>

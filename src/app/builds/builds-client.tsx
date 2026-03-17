@@ -190,7 +190,7 @@ export function BuildsClient() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* コンテンツ選択 + 投稿ボタン */}
       <div className="flex items-center justify-between gap-2">
         <div className="relative">

@@ -449,7 +449,7 @@ export default async function Home() {
   });
 
   return (
-    <div className="space-y-10 md:space-y-14">
+    <div className="space-y-12 md:space-y-16">
       {/* ====== 第1段: 人気キャラランキング ====== */}
       <section>
         <SectionHeading

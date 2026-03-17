@@ -156,7 +156,7 @@ export default async function BuildsPage() {
       {/* 話題のキャラクター（直近24時間） */}
       {trendingCharacters.length > 0 && (
         <section className="space-y-4">
-          <div className="space-y-1">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span

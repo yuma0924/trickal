@@ -70,7 +70,7 @@ export function RankingClient({
       : null;
 
   return (
-    <div className="space-y-4 md:space-y-5">
+    <div className="space-y-6 md:space-y-8">
       {/* 性格フィルター */}
       <div className="flex items-center gap-1.5">
         <button
@@ -177,9 +177,38 @@ export function RankingClient({
         </>
       )}
 
-      {/* 話題のキャラクター（直近24時間） */}
-      {trendingCharacters.length > 0 && (
+      {/* 票が少ないキャラ */}
+      {filteredUnranked.length > 0 && (
         <section className="space-y-4">
+          <div>
+            <h2 className="text-lg font-bold text-text-primary">
+              票が少ないキャラ（順位対象外）
+            </h2>
+            <p className="mt-1 text-xs text-text-muted">
+              票が少ないため順位対象外
+            </p>
+          </div>
+          <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
+            {filteredUnranked.map((char) => (
+              <CharacterCard
+                key={char.id}
+                slug={char.slug}
+                name={char.name}
+                imageUrl={char.imageUrl}
+
+                avgRating={
+                  char.validVotesCount > 0 ? char.avgRating : null
+                }
+                validVotesCount={char.validVotesCount}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 話題のキャラクター */}
+      {trendingCharacters.length > 0 && (
+        <section className="mt-12 space-y-4">
           <div className="space-y-1">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -272,35 +301,6 @@ export function RankingClient({
                   </div>
                 )}
               </Link>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* 票が少ないキャラ */}
-      {filteredUnranked.length > 0 && (
-        <section className="space-y-4">
-          <div>
-            <h2 className="text-lg font-bold text-text-primary">
-              票が少ないキャラ（順位対象外）
-            </h2>
-            <p className="mt-1 text-xs text-text-muted">
-              票が少ないため順位対象外
-            </p>
-          </div>
-          <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
-            {filteredUnranked.map((char) => (
-              <CharacterCard
-                key={char.id}
-                slug={char.slug}
-                name={char.name}
-                imageUrl={char.imageUrl}
-
-                avgRating={
-                  char.validVotesCount > 0 ? char.avgRating : null
-                }
-                validVotesCount={char.validVotesCount}
-              />
             ))}
           </div>
         </section>
