@@ -199,11 +199,11 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
 
                 {/* コメント */}
                 {build.comment && (
-                  <div className="mx-0.5 mb-1 rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2">
+                  <div className="mx-0.5 mb-1 flex flex-col rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2 min-h-[76px]">
                     <p className="line-clamp-2 text-[11px] leading-relaxed text-[#fafafa]">
                       {build.comment}
                     </p>
-                    <div className="mt-1 flex items-center justify-between">
+                    <div className="mt-auto flex items-center justify-between pt-1">
                       {build.displayName && (
                         <span className="text-[10px] text-[#8b7aab]">
                           — {build.displayName}

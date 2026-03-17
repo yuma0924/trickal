@@ -103,7 +103,7 @@ export function CharacterCard({
         )}
       </div>
       <div className="bg-[rgba(36,27,53,0.95)] px-1 py-1.5">
-        <p className="truncate text-center text-[9px] font-bold leading-tight text-[#fafafa]">
+        <p className="truncate text-center text-[11px] font-bold leading-tight text-[#fafafa]">
           {name}
         </p>
       </div>

@@ -70,7 +70,7 @@ export function RankingClient({
       : null;
 
   return (
-    <div className="space-y-6 md:space-y-8">
+    <div className="space-y-4 md:space-y-5">
       {/* 性格フィルター */}
       <div className="flex items-center gap-1.5">
         <button
@@ -120,24 +120,22 @@ export function RankingClient({
       {currentTop && (
         <Link
           href={`/characters/${currentTop.slug}`}
-          className="flex items-center gap-3 rounded-2xl border border-[rgba(255,191,36,0.3)] bg-gradient-to-r from-[rgba(255,191,36,0.1)] to-[rgba(255,143,0,0.05)] px-4 py-3 transition-colors hover:from-[rgba(255,191,36,0.15)] cursor-pointer"
+          className="block rounded-2xl border border-[rgba(255,191,36,0.3)] bg-gradient-to-r from-[rgba(255,191,36,0.1)] to-[rgba(255,143,0,0.05)] px-4 py-3 transition-colors hover:from-[rgba(255,191,36,0.15)] cursor-pointer"
         >
-          <div className="min-w-0 flex-1">
-            <span className="text-sm text-[#a893c0]">
-              現在の{elementFilter === "all" ? "全性格" : elementFilter}1位は
-            </span>
-            <span className="ml-1.5 text-base font-bold text-[#fcd34d]">
-              {currentTop.name}
-            </span>
-            <span className="ml-1 text-sm text-[#a893c0]">
-              です
-            </span>
-          </div>
+          <span className="text-sm text-[#a893c0]">
+            現在の{elementFilter === "all" ? "全性格" : elementFilter}1位は
+          </span>
+          <span className="ml-1.5 text-base font-bold text-[#fcd34d]">
+            {currentTop.name}
+          </span>
           {currentTop.avgRating !== null && (
-            <span className="shrink-0 text-sm font-bold text-[#fcd34d]">
+            <span className="ml-1 text-sm font-bold text-[#fcd34d]">
               ★{currentTop.avgRating.toFixed(1)}
             </span>
           )}
+          <span className="ml-1.5 text-sm text-[#a893c0]">
+            です
+          </span>
         </Link>
       )}
 
@@ -254,11 +252,11 @@ export function RankingClient({
                   </div>
                 </div>
                 {char.latestComment && (
-                  <div className="mx-2 mb-2 rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2">
+                  <div className="mx-2 mb-2 flex flex-col rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2 min-h-[76px]">
                     <p className="line-clamp-2 text-[11px] leading-relaxed text-[#fafafa]">
                       {char.latestComment}
                     </p>
-                    <div className="mt-1 flex items-center justify-between">
+                    <div className="mt-auto flex items-center justify-between pt-1">
                       {char.latestCommentAuthor && (
                         <span className="text-[10px] text-[#8b7aab]">
                           — {char.latestCommentAuthor}
@@ -325,7 +323,7 @@ export function RankingClient({
           </span>
           <div className="flex-1">
             <span className="block text-sm font-bold text-[#fafafa]">編成ランキング</span>
-            <span className="text-[10px] text-[#8b7aab]">人気のパーティ編成をチェックしよう</span>
+            <span className="text-xs text-[#8b7aab]">人気のパーティ編成をチェックしよう</span>
           </div>
           <svg className="h-4 w-4 shrink-0 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

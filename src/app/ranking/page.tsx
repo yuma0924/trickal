@@ -123,15 +123,12 @@ export default async function RankingPage() {
   });
 
   // --- 注目のキャラクター（直近24時間）---
-  const twentyFourHoursAgo = new Date(
-    Date.now() - 24 * 60 * 60 * 1000
-  ).toISOString();
-
   const { data: recentComments } = await supabase
     .from("comments")
     .select("character_id, user_hash, body, display_name, thumbs_up_count")
     .eq("is_deleted", false)
-    .gte("created_at", twentyFourHoursAgo);
+    .order("created_at", { ascending: false })
+    .limit(100);
 
   // 連投ガード: 1キャラにつき同一 user_hash は最大3件まで
   const trendingMap = new Map<string, number>();

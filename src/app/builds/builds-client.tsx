@@ -480,31 +480,32 @@ function BuildCard({
         </div>
 
         {/* コメント */}
-        <div className="border-t border-[rgba(249,168,212,0.1)] pt-2.5">
-          <p className="whitespace-pre-wrap text-sm text-[#fafafa] leading-relaxed">
+        <div className="mx-0.5 flex flex-col rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2 min-h-[76px]">
+          <p className="whitespace-pre-wrap text-[11px] text-[#fafafa] leading-relaxed line-clamp-3">
             {displayComment}
           </p>
           {shouldTruncate && (
             <button
               onClick={(e) => { e.preventDefault(); setExpanded(!expanded); }}
-              className="mt-1.5 flex items-center gap-1 text-xs text-[#a893c0] hover:text-[#fafafa] cursor-pointer"
+              className="mt-1 flex items-center gap-1 text-[10px] text-[#a893c0] hover:text-[#fafafa] cursor-pointer"
             >
-              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
               {expanded ? "閉じる" : "続きを読む"}
             </button>
           )}
+          <div className="mt-auto pt-1">
+            {build.display_name && (
+              <span className="text-[10px] text-[#8b7aab]">— {build.display_name}</span>
+            )}
+          </div>
         </div>
       </Link>
 
-      {/* フッター: 投稿者 · 日時 + コメント数 + リアクション */}
+      {/* フッター: 日時 + コメント数 + リアクション */}
       <div className="mt-2 flex items-center justify-between">
         <div className="flex items-center gap-1.5 text-xs text-[#8b7aab]">
-          {build.display_name && (
-            <span>{build.display_name}</span>
-          )}
-          {build.display_name && <span>·</span>}
           <span>{formatDate(build.updated_at)}</span>
           {build.comments_count > 0 && (
             <>
