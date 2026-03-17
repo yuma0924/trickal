@@ -164,14 +164,27 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
           <div className="flex items-center gap-1.5">
             <span className="w-8 shrink-0 text-[10px] font-bold text-[#6b5a80] lg:hidden">レア</span>
             <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
-              {RARITIES.map((rarity) => (
-                <ToggleButton
-                  key={rarity}
-                  label={rarity}
-                  active={rarityFilters.has(rarity)}
-                  onClick={() => toggleFilter(rarityFilters, rarity, setRarityFilters)}
-                />
-              ))}
+              {RARITIES.map((rarity) => {
+                const active = rarityFilters.has(rarity);
+                const starCount = parseInt(rarity.replace(/[^0-9]/g, "")) || 0;
+                return (
+                  <button
+                    key={rarity}
+                    onClick={() => toggleFilter(rarityFilters, rarity, setRarityFilters)}
+                    className={cn(
+                      "flex shrink-0 items-center gap-0.5 rounded-[10px] px-2.5 py-1 text-xs font-bold transition-colors",
+                      active
+                        ? "bg-[rgba(255,99,126,0.15)] text-[#fda4af] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+                        : "bg-[#1a1225] text-[#a893c0]"
+                    )}
+                    style={{
+                      border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                    }}
+                  >
+                    <span className="text-[#fcd34d]">{"★".repeat(starCount)}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
