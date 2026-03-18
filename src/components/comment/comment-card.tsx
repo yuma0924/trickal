@@ -73,25 +73,25 @@ export function CommentCard({
           />
         )}
         <div className="flex flex-col">
-          <span className="text-sm font-medium text-text-primary">
+          <span className="text-base font-medium text-text-primary">
             {displayName}
           </span>
-          <span className="text-[11px] text-text-muted">
+          <span className="text-xs md:text-sm text-text-muted">
             {new Date(createdAt).toLocaleDateString("ja-JP")}
           </span>
         </div>
         {commentType === "vote" && rating !== null && rating !== undefined && (
           <div className="ml-auto">
-            <StarRatingDisplay rating={rating} size="sm" showValue={false} />
+            <StarRatingDisplay rating={rating} size="md" showValue={false} />
           </div>
         )}
       </div>
 
-      <p className="mt-2.5 whitespace-pre-wrap text-sm text-text-secondary leading-relaxed">
+      <p className="mt-2.5 whitespace-pre-wrap text-base text-text-secondary leading-relaxed">
         {body}
       </p>
 
-      <div className="mt-3 flex items-center gap-4 text-text-muted text-xs">
+      <div className="mt-3 flex items-center gap-4 text-text-muted text-xs md:text-sm">
         <ThumbsUpDown
           thumbsUpCount={thumbsUpCount}
           thumbsDownCount={thumbsDownCount}
@@ -102,7 +102,7 @@ export function CommentCard({
           <button
             type="button"
             onClick={() => onReport(id)}
-            className="ml-auto rounded-full border border-border-primary px-2.5 py-1 text-[10px] text-text-muted transition-colors hover:border-thumbs-down/20 hover:text-thumbs-down cursor-pointer"
+            className="ml-auto rounded-full border border-border-primary px-2.5 py-1 text-[10px] md:text-xs text-text-muted transition-colors hover:border-thumbs-down/20 hover:text-thumbs-down cursor-pointer"
           >
             通報
           </button>

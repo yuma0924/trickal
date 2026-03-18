@@ -29,6 +29,8 @@ export interface Database {
           skills: Json;
           metadata: Json;
           image_url: string | null;
+          favorite_item_id: string | null;
+          part_time_reward_id: string | null;
           is_provisional: boolean;
           is_hidden: boolean;
           created_at: string;
@@ -48,6 +50,8 @@ export interface Database {
           skills?: Json;
           metadata?: Json;
           image_url?: string | null;
+          favorite_item_id?: string | null;
+          part_time_reward_id?: string | null;
           is_provisional?: boolean;
           is_hidden?: boolean;
           created_at?: string;
@@ -67,6 +71,8 @@ export interface Database {
           skills?: Json;
           metadata?: Json;
           image_url?: string | null;
+          favorite_item_id?: string | null;
+          part_time_reward_id?: string | null;
           is_provisional?: boolean;
           is_hidden?: boolean;
           created_at?: string;
@@ -410,6 +416,33 @@ export interface Database {
           },
         ];
       };
+      items: {
+        Row: {
+          id: string;
+          name: string;
+          image_url: string | null;
+          item_type: "favorite" | "reward";
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          image_url?: string | null;
+          item_type: "favorite" | "reward";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          image_url?: string | null;
+          item_type?: "favorite" | "reward";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       reports: {
         Row: {
           id: string;
@@ -467,4 +500,5 @@ export type Build = Tables<"builds">;
 export type BuildReaction = Tables<"build_reactions">;
 export type BuildComment = Tables<"build_comments">;
 export type BuildCommentReaction = Tables<"build_comment_reactions">;
+export type Item = Tables<"items">;
 export type Report = Tables<"reports">;

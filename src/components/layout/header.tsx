@@ -47,20 +47,20 @@ export function Header() {
             className="rounded-[10px]"
           />
           <span className="flex flex-col gap-0.5">
-            <span className="text-[9px] font-bold leading-none text-accent/80">
+            <span className="text-[9px] md:text-[11px] font-bold leading-none text-accent/80">
               みんなで決める！
             </span>
-            <span className="text-[15px] font-bold leading-none text-text-primary">
+            <span className="text-[15px] md:text-lg font-bold leading-none text-text-primary">
               トリッカルランキング
             </span>
           </span>
         </Link>
         <nav className="flex items-center gap-2">
           <div className="hidden md:flex items-center gap-4 mr-4">
-            <Link href="/ranking" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
+            <Link href="/ranking" className="text-sm md:text-base text-text-secondary hover:text-text-primary transition-colors">
               ランキング
             </Link>
-            <Link href="/builds" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
+            <Link href="/builds" className="text-sm md:text-base text-text-secondary hover:text-text-primary transition-colors">
               編成
             </Link>
           </div>

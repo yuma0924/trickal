@@ -107,7 +107,7 @@ function SectionHeading({
         {href && linkLabel && (
           <Link
             href={href}
-            className="flex shrink-0 items-center gap-0.5 text-sm text-[#f9a8d4] transition-colors hover:text-accent cursor-pointer"
+            className="flex shrink-0 items-center gap-0.5 text-sm md:text-base text-[#f9a8d4] transition-colors hover:text-accent cursor-pointer"
           >
             {linkLabel}
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -117,7 +117,7 @@ function SectionHeading({
         )}
       </div>
       {subtitle && (
-        <p className="mt-1.5 pl-2.5 text-xs text-text-muted">{subtitle}</p>
+        <p className="mt-1.5 pl-2.5 text-xs md:text-sm text-text-muted">{subtitle}</p>
       )}
     </div>
   );
@@ -474,9 +474,9 @@ export default async function Home() {
                   <span className="-translate-y-px font-bold text-[#fcd34d]">{topChar.avgRating.toFixed(1)}</span>
                 </span>
               </div>
-              <span className="hidden lg:inline text-xs text-text-muted">みんなの評価で算出 · 毎日 0:00 更新</span>
+              <span className="hidden lg:inline text-xs md:text-sm text-text-muted">みんなの評価で算出 · 毎日 0:00 更新</span>
             </div>
-            <p className="mt-1 pl-4 text-xs text-text-muted lg:hidden">みんなの評価で算出 · 毎日 0:00 更新</p>
+            <p className="mt-1 pl-4 text-xs md:text-sm text-text-muted lg:hidden">みんなの評価で算出 · 毎日 0:00 更新</p>
           </>
         )}
 
@@ -551,7 +551,7 @@ export default async function Home() {
                     >
                       {cfg.badge}
                       <span
-                        className="text-sm font-bold"
+                        className="text-sm md:text-base font-bold"
                         style={{ color: cfg.rankText }}
                       >
                         {rank}位
@@ -590,25 +590,25 @@ export default async function Home() {
                           </div>
                           <div className="mt-1 flex flex-wrap items-center gap-1 lg:mt-1.5">
                             {char.role && ROLE_ICON_MAP[char.role] && (
-                              <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
+                              <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] md:text-xs text-[#a893c0]">
                                 <Image src={ROLE_ICON_MAP[char.role]} alt={char.role} width={13} height={13} />
                                 {char.role}
                               </span>
                             )}
                             {char.position && POSITION_ICON_MAP[char.position] && (
-                              <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
+                              <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] md:text-xs text-[#a893c0]">
                                 <Image src={POSITION_ICON_MAP[char.position]} alt={char.position} width={13} height={13} />
                                 {char.position}
                               </span>
                             )}
                             {char.attackType && ATTACK_TYPE_ICON_MAP[char.attackType] && (
-                              <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
+                              <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] md:text-xs text-[#a893c0]">
                                 <Image src={ATTACK_TYPE_ICON_MAP[char.attackType]} alt={char.attackType} width={13} height={13} />
                                 {char.attackType}
                               </span>
                             )}
                             {char.race && (
-                              <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] text-[#a893c0]">
+                              <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] md:text-xs text-[#a893c0]">
                                 {char.race}
                               </span>
                             )}
@@ -630,23 +630,23 @@ export default async function Home() {
                       {/* 注目コメント */}
                       {char.featuredComment && (
                         <div className="mx-2.5 mb-2.5 lg:mb-0 lg:flex-1 lg:min-w-0 lg:self-start lg:pt-2.5">
-                          <p className="mb-1 flex items-center gap-1 px-0.5 text-[10px] font-bold text-[#38bdf8]">
+                          <p className="mb-1 flex items-center gap-1 px-0.5 text-[10px] md:text-xs font-bold text-[#38bdf8]">
                             <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
                             </svg>
                             注目コメント
                           </p>
                           <div className="rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(42,33,62,0.8)] px-3 py-3 min-h-[72px] flex flex-col lg:min-h-[88px]">
-                            <p className="line-clamp-2 whitespace-pre-wrap text-xs leading-relaxed text-[#fafafa] lg:line-clamp-4">
+                            <p className="line-clamp-2 whitespace-pre-wrap text-xs md:text-sm leading-relaxed text-[#fafafa] lg:line-clamp-4">
                               {char.featuredComment}
                             </p>
                             <div className="mt-auto flex items-center justify-between pt-1">
                               {char.featuredCommentAuthor && (
-                                <span className="text-[10px] text-[#8b7aab]">
+                                <span className="text-[10px] md:text-xs text-[#8b7aab]">
                                   — {char.featuredCommentAuthor}
                                 </span>
                               )}
-                              <span className="inline-flex items-center gap-0.5 text-[10px] text-thumbs-up">
+                              <span className="inline-flex items-center gap-0.5 text-[10px] md:text-xs text-thumbs-up">
                                 <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                   <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
                                 </svg>
@@ -720,13 +720,13 @@ export default async function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                   </svg>
                 </span>
-                <h2 className="text-base font-bold text-[#fafafa]">
+                <h2 className="text-base md:text-lg font-bold text-[#fafafa]">
                   話題のキャラクター
                 </h2>
               </div>
-              <span className="text-xs text-[#8b7aab]">最近の注目</span>
+              <span className="text-xs md:text-sm text-[#8b7aab]">最近の注目</span>
             </div>
-            <p className="text-xs text-[#a893c0]">今注目されているキャラクターをチェック！</p>
+            <p className="text-xs md:text-sm text-[#a893c0]">今注目されているキャラクターをチェック！</p>
           </div>
           <div className="-mx-4 grid grid-cols-2 md:grid-cols-3 gap-2 px-2">
             {trendingCharacters.map((char) => {
@@ -758,7 +758,7 @@ export default async function Home() {
                     {/* 情報 */}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1">
-                        <p className="truncate text-sm font-bold text-[#fafafa]">
+                        <p className="truncate text-sm md:text-base font-bold text-[#fafafa]">
                           {char.name}
                         </p>
                         {char.element && ELEMENT_ICON_MAP[char.element] && (
@@ -767,15 +767,15 @@ export default async function Home() {
                       </div>
                       <div className="mt-1 flex items-center gap-1.5">
                         {char.avgRating !== null && char.validVotesCount >= 1 ? (
-                          <span className="text-sm font-bold text-[#fcd34d]">
+                          <span className="text-sm md:text-base font-bold text-[#fcd34d]">
                             ★{char.avgRating.toFixed(1)}
                           </span>
                         ) : (
-                          <span className="text-xs text-[#8b7aab]">
+                          <span className="text-xs md:text-sm text-[#8b7aab]">
                             未評価
                           </span>
                         )}
-                        <span className="inline-flex items-center gap-0.5 rounded bg-[rgba(246,51,154,0.8)] px-1.5 py-0.5 text-[10px] font-bold text-white">
+                        <span className="inline-flex items-center gap-0.5 rounded bg-[rgba(246,51,154,0.8)] px-1.5 py-0.5 text-[10px] md:text-xs font-bold text-white">
                           <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
                           </svg>
@@ -787,16 +787,16 @@ export default async function Home() {
                   {/* コメントブロック */}
                   {char.latestComment && (
                     <div className="mx-2 mb-2 flex flex-col rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2 min-h-[76px]">
-                      <p className="line-clamp-2 text-[11px] leading-relaxed text-[#fafafa]">
+                      <p className="line-clamp-2 text-[11px] md:text-xs leading-relaxed text-[#fafafa]">
                         {char.latestComment}
                       </p>
                       <div className="mt-auto flex items-center justify-between pt-1">
                         {char.latestCommentAuthor && (
-                          <span className="text-[10px] text-[#8b7aab]">
+                          <span className="text-[10px] md:text-xs text-[#8b7aab]">
                             — {char.latestCommentAuthor}
                           </span>
                         )}
-                        <span className="inline-flex items-center gap-0.5 text-[10px] text-thumbs-up">
+                        <span className="inline-flex items-center gap-0.5 text-[10px] md:text-xs text-thumbs-up">
                           <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
                           </svg>

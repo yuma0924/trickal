@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect, type KeyboardEvent, type ChangeEvent } from "react";
-import type { Character } from "@/types/database";
+import type { Character, Item } from "@/types/database";
+
+interface RelicData {
+  name: string;
+  image_url: string | null;
+  description: string;
+}
 
 type EditableField = {
   key: keyof Character | string;
@@ -55,8 +61,10 @@ const RARITY_OPTIONS = ["★1", "★2", "★3"] as const;
 
 export function CharacterEditor({
   initialCharacters,
+  initialItems,
 }: {
   initialCharacters: Character[];
+  initialItems: Item[];
 }) {
   const [characters, setCharacters] = useState<CharacterDraft[]>(
     initialCharacters.map((c) => ({ ...c }))
@@ -68,7 +76,13 @@ export function CharacterEditor({
   const [saveMessage, setSaveMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [uploadingId, setUploadingId] = useState<string | null>(null);
   const [skillEditIndex, setSkillEditIndex] = useState<number | null>(null);
+  const [relicEditIndex, setRelicEditIndex] = useState<number | null>(null);
+  const [relicUploading, setRelicUploading] = useState(false);
+  const [items] = useState<Item[]>(initialItems);
   const cellRefs = useRef<Map<string, HTMLInputElement | HTMLSelectElement>>(new Map());
+
+  const favoriteItems = items.filter((i) => i.item_type === "favorite");
+  const rewardItems = items.filter((i) => i.item_type === "reward");
 
   // メッセージを一定時間で消す
   useEffect(() => {
@@ -141,6 +155,8 @@ export function CharacterEditor({
       skills: [],
       metadata: {},
       image_url: null,
+      favorite_item_id: null,
+      part_time_reward_id: null,
       is_provisional: false,
       is_hidden: false,
       created_at: new Date().toISOString(),
@@ -311,6 +327,58 @@ export function CharacterEditor({
     });
   };
 
+  // 遺物データ取得・更新
+  const getRelic = (char: Character): RelicData | null => {
+    const meta = char.metadata as Record<string, unknown> | null;
+    if (!meta?.relic) return null;
+    return meta.relic as RelicData;
+  };
+
+  const updateRelicField = (charIndex: number, field: keyof RelicData, value: string | null) => {
+    setCharacters((prev) => {
+      const next = [...prev];
+      const char = { ...next[charIndex], _isDirty: true };
+      const meta = (char.metadata as Record<string, unknown>) ?? {};
+      const relic = (meta.relic as RelicData) ?? { name: "", image_url: null, description: "" };
+      const updated = { ...relic, [field]: value };
+      char.metadata = { ...meta, relic: updated } as Character["metadata"];
+      next[charIndex] = char;
+      return next;
+    });
+  };
+
+  const handleRelicImageUpload = async (charIndex: number, e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const characterId = characters[charIndex].id;
+    setRelicUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("characterId", characterId);
+
+    try {
+      const res = await fetch("/api/admin/characters/upload-relic", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        setSaveMessage({ type: "error", text: err.error || "遺物画像アップロード失敗" });
+        return;
+      }
+
+      const { url } = await res.json();
+      updateRelicField(charIndex, "image_url", url);
+      setSaveMessage({ type: "success", text: "遺物画像をアップロードしました" });
+    } catch {
+      setSaveMessage({ type: "error", text: "遺物画像アップロード中にエラーが発生しました" });
+    } finally {
+      setRelicUploading(false);
+    }
+  };
+
   // フィルタリング: 実インデックスの配列を返す
   const filteredIndices = characters.reduce<number[]>((acc, char, i) => {
     if (filterElement && char.element !== filterElement) return acc;
@@ -415,6 +483,15 @@ export function CharacterEditor({
               ))}
               <th className="px-2 py-2 text-left font-medium text-text-secondary">
                 スキル
+              </th>
+              <th className="px-2 py-2 text-left font-medium text-text-secondary">
+                遺物
+              </th>
+              <th className="px-2 py-2 text-left font-medium text-text-secondary">
+                好物
+              </th>
+              <th className="px-2 py-2 text-left font-medium text-text-secondary">
+                報酬
               </th>
             </tr>
           </thead>
@@ -529,6 +606,44 @@ export function CharacterEditor({
                     {getSkillsArray(char).length > 0 ? `編集(${getSkillsArray(char).length})` : "追加"}
                   </button>
                 </td>
+
+                {/* 遺物編集ボタン */}
+                <td className="px-1 py-1">
+                  <button
+                    onClick={() => setRelicEditIndex(rowIndex)}
+                    className="cursor-pointer rounded bg-purple-500/20 px-2 py-1 text-[10px] font-medium text-purple-400 transition-colors hover:bg-purple-500/30"
+                  >
+                    {getRelic(char) ? "編集" : "追加"}
+                  </button>
+                </td>
+
+                {/* 好物プルダウン */}
+                <td className="px-1 py-1">
+                  <select
+                    value={char.favorite_item_id ?? ""}
+                    onChange={(e) => updateField(rowIndex, "favorite_item_id", e.target.value || null)}
+                    className="w-24 rounded border border-border-secondary bg-bg-input px-1.5 py-1 text-text-primary focus:border-accent focus:outline-none"
+                  >
+                    <option value="">-</option>
+                    {favoriteItems.map((item) => (
+                      <option key={item.id} value={item.id}>{item.name}</option>
+                    ))}
+                  </select>
+                </td>
+
+                {/* アルバイト報酬プルダウン */}
+                <td className="px-1 py-1">
+                  <select
+                    value={char.part_time_reward_id ?? ""}
+                    onChange={(e) => updateField(rowIndex, "part_time_reward_id", e.target.value || null)}
+                    className="w-24 rounded border border-border-secondary bg-bg-input px-1.5 py-1 text-text-primary focus:border-accent focus:outline-none"
+                  >
+                    <option value="">-</option>
+                    {rewardItems.map((item) => (
+                      <option key={item.id} value={item.id}>{item.name}</option>
+                    ))}
+                  </select>
+                </td>
               </tr>
               );
             })}
@@ -617,6 +732,94 @@ export function CharacterEditor({
             <div className="mt-4 flex justify-end">
               <button
                 onClick={() => setSkillEditIndex(null)}
+                className="cursor-pointer rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-text transition-colors hover:bg-accent-hover"
+              >
+                閉じる
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 遺物編集モーダル */}
+      {relicEditIndex !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={() => setRelicEditIndex(null)}>
+          <div
+            className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-xl border border-border-primary bg-bg-primary p-5 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-sm font-bold text-text-primary">
+                専用遺物編集: {characters[relicEditIndex].name || "新規キャラ"}
+              </h3>
+              <button
+                onClick={() => setRelicEditIndex(null)}
+                className="cursor-pointer text-text-tertiary transition-colors hover:text-text-primary"
+              >
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {/* 遺物画像 */}
+              <div className="rounded-lg border border-border-secondary bg-bg-secondary p-3">
+                <p className="mb-2 text-xs font-bold text-text-secondary">遺物画像</p>
+                <div className="flex items-center gap-3">
+                  <label className="relative block h-16 w-16 cursor-pointer overflow-hidden rounded-lg border border-border-primary bg-bg-tertiary">
+                    {getRelic(characters[relicEditIndex])?.image_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={getRelic(characters[relicEditIndex])!.image_url!}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <span className="flex h-full w-full items-center justify-center text-xs text-text-muted">
+                        {relicUploading ? "..." : "img"}
+                      </span>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      className="hidden"
+                      onChange={(e) => handleRelicImageUpload(relicEditIndex, e)}
+                      disabled={characters[relicEditIndex]._isNew || relicUploading}
+                    />
+                  </label>
+                  <p className="text-[10px] text-text-muted">クリックして画像をアップロード（PNG/JPEG/WebP, 2MB以下）</p>
+                </div>
+              </div>
+
+              {/* 遺物名 */}
+              <div className="rounded-lg border border-border-secondary bg-bg-secondary p-3">
+                <label className="mb-1 block text-xs font-bold text-text-secondary">遺物名</label>
+                <input
+                  type="text"
+                  value={getRelic(characters[relicEditIndex])?.name ?? ""}
+                  onChange={(e) => updateRelicField(relicEditIndex, "name", e.target.value)}
+                  className="w-full rounded border border-border-secondary bg-bg-input px-2 py-1.5 text-xs text-text-primary focus:border-accent focus:outline-none"
+                  placeholder="遺物名を入力"
+                />
+              </div>
+
+              {/* 説明文 */}
+              <div className="rounded-lg border border-border-secondary bg-bg-secondary p-3">
+                <label className="mb-1 block text-xs font-bold text-text-secondary">説明文</label>
+                <textarea
+                  value={getRelic(characters[relicEditIndex])?.description ?? ""}
+                  onChange={(e) => updateRelicField(relicEditIndex, "description", e.target.value)}
+                  className="w-full rounded border border-border-secondary bg-bg-input px-2 py-1.5 text-xs text-text-primary focus:border-accent focus:outline-none"
+                  rows={3}
+                  placeholder="遺物の説明文を入力"
+                />
+              </div>
+            </div>
+
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={() => setRelicEditIndex(null)}
                 className="cursor-pointer rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-text transition-colors hover:bg-accent-hover"
               >
                 閉じる

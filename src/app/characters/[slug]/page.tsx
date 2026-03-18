@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { CharacterDetailClient } from "./character-detail-client";
 import type { Element } from "@/lib/constants";
-import type { Character } from "@/types/database";
+import type { Character, Item } from "@/types/database";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -29,6 +29,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+export interface RelicInfo {
+  name: string;
+  imageUrl: string | null;
+  description: string;
+}
+
+export interface ItemInfo {
+  name: string;
+  imageUrl: string | null;
+}
+
 export interface CharacterDetail {
   id: string;
   slug: string;
@@ -48,6 +59,9 @@ export interface CharacterDetail {
   validVotesCount: number;
   boardCommentsCount: number;
   rank: number | null;
+  relic: RelicInfo | null;
+  favoriteItem: ItemInfo | null;
+  partTimeReward: ItemInfo | null;
 }
 
 export interface RelatedCharacter {
@@ -67,7 +81,7 @@ export default async function CharacterPage({ params }: Props) {
   // キャラ情報取得
   const { data: character } = await supabase
     .from("characters")
-    .select("id, slug, name, rarity, element, role, race, position, attack_type, stats, skills, metadata, image_url, is_provisional, is_hidden, created_at, updated_at")
+    .select("id, slug, name, rarity, element, role, race, position, attack_type, stats, skills, metadata, image_url, favorite_item_id, part_time_reward_id, is_provisional, is_hidden, created_at, updated_at")
     .eq("slug", slug)
     .eq("is_hidden", false)
     .returns<Character[]>()
@@ -77,12 +91,30 @@ export default async function CharacterPage({ params }: Props) {
     notFound();
   }
 
-  // ランキング情報取得
-  const { data: ranking } = await supabase
-    .from("character_rankings")
-    .select("avg_rating, valid_votes_count, board_comments_count, rank")
-    .eq("character_id", character.id)
-    .single();
+  // ランキング情報 + アイテム情報を並列取得
+  const itemIds = [character.favorite_item_id, character.part_time_reward_id].filter(Boolean) as string[];
+  const [rankingResult, itemsResult] = await Promise.all([
+    supabase
+      .from("character_rankings")
+      .select("avg_rating, valid_votes_count, board_comments_count, rank")
+      .eq("character_id", character.id)
+      .single(),
+    itemIds.length > 0
+      ? supabase
+          .from("items")
+          .select("id, name, image_url")
+          .in("id", itemIds)
+          .returns<Item[]>()
+      : Promise.resolve({ data: [] as Item[] }),
+  ]);
+
+  const ranking = rankingResult.data;
+  const itemsMap = new Map<string, Item>();
+  if (itemsResult.data) {
+    for (const item of itemsResult.data) {
+      itemsMap.set(item.id, item);
+    }
+  }
 
   // 同属性・同レアリティの関連キャラ取得
   type RelatedRow = { id: string; slug: string; name: string; element: string | null; image_url: string | null };
@@ -139,6 +171,17 @@ export default async function CharacterPage({ params }: Props) {
     stats[key] = typeof val === "number" ? val : null;
   }
 
+  // 遺物情報を metadata から取得
+  const metaObj = (character.metadata as Record<string, unknown>) ?? {};
+  const relicRaw = metaObj.relic as { name?: string; image_url?: string | null; description?: string } | undefined;
+  const relic: RelicInfo | null = relicRaw?.name
+    ? { name: relicRaw.name, imageUrl: relicRaw.image_url ?? null, description: relicRaw.description ?? "" }
+    : null;
+
+  // アイテム情報
+  const favItem = character.favorite_item_id ? itemsMap.get(character.favorite_item_id) : null;
+  const rewardItem = character.part_time_reward_id ? itemsMap.get(character.part_time_reward_id) : null;
+
   const characterDetail: CharacterDetail = {
     id: character.id,
     slug: character.slug,
@@ -158,6 +201,9 @@ export default async function CharacterPage({ params }: Props) {
     validVotesCount: ranking?.valid_votes_count ?? 0,
     boardCommentsCount: ranking?.board_comments_count ?? 0,
     rank: ranking?.rank ?? null,
+    relic,
+    favoriteItem: favItem ? { name: favItem.name, imageUrl: favItem.image_url } : null,
+    partTimeReward: rewardItem ? { name: rewardItem.name, imageUrl: rewardItem.image_url } : null,
   };
 
   return (

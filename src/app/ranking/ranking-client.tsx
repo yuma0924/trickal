@@ -152,7 +152,7 @@ export function RankingClient({
             <svg className="h-3.5 w-3.5 shrink-0 text-[#f9a8d4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
             </svg>
-            <span className="text-xs text-text-tertiary">キャラをタップしてコメントや投票をしよう！</span>
+            <span className="text-xs md:text-sm text-text-tertiary">キャラをタップしてコメントや投票をしよう！</span>
           </div>
         </>
       )}
@@ -202,7 +202,7 @@ export function RankingClient({
             <h2 className="text-lg font-bold text-text-primary">
               票が少ないキャラ（順位対象外）
             </h2>
-            <p className="mt-1 text-xs text-text-muted">
+            <p className="mt-1 text-xs md:text-sm text-text-muted">
               票が少ないため順位対象外
             </p>
           </div>
@@ -238,13 +238,13 @@ export function RankingClient({
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                   </svg>
                 </span>
-                <h2 className="text-base font-bold text-[#fafafa]">
+                <h2 className="text-base md:text-lg font-bold text-[#fafafa]">
                   話題のキャラクター
                 </h2>
               </div>
-              <span className="text-xs text-[#8b7aab]">最近の注目</span>
+              <span className="text-xs md:text-sm text-[#8b7aab]">最近の注目</span>
             </div>
-            <p className="text-xs text-[#a893c0]">今注目されているキャラクターをチェック！</p>
+            <p className="text-xs md:text-sm text-[#a893c0]">今注目されているキャラクターをチェック！</p>
           </div>
           <div className="-mx-4 grid grid-cols-2 md:grid-cols-3 gap-2 px-2">
             {trendingCharacters.map((char) => (
@@ -272,7 +272,7 @@ export function RankingClient({
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1">
-                      <p className="truncate text-sm font-bold text-[#fafafa]">
+                      <p className="truncate text-sm md:text-base font-bold text-[#fafafa]">
                         {char.name}
                       </p>
                       {char.element && ELEMENT_ICON_MAP[char.element] && (
@@ -281,15 +281,15 @@ export function RankingClient({
                     </div>
                     <div className="mt-1 flex items-center gap-1.5">
                       {char.avgRating !== null && char.validVotesCount >= 1 ? (
-                        <span className="text-sm font-bold text-[#fcd34d]">
+                        <span className="text-sm md:text-base font-bold text-[#fcd34d]">
                           ★{char.avgRating.toFixed(1)}
                         </span>
                       ) : (
-                        <span className="text-xs text-[#8b7aab]">
+                        <span className="text-xs md:text-sm text-[#8b7aab]">
                           未評価
                         </span>
                       )}
-                      <span className="inline-flex items-center gap-0.5 rounded bg-[rgba(246,51,154,0.8)] px-1.5 py-0.5 text-[10px] font-bold text-white">
+                      <span className="inline-flex items-center gap-0.5 rounded bg-[rgba(246,51,154,0.8)] px-1.5 py-0.5 text-[10px] md:text-xs font-bold text-white">
                         <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
                         </svg>
@@ -300,16 +300,16 @@ export function RankingClient({
                 </div>
                 {char.latestComment && (
                   <div className="mx-2 mb-2 flex flex-col rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2 min-h-[76px]">
-                    <p className="line-clamp-2 text-[11px] leading-relaxed text-[#fafafa]">
+                    <p className="line-clamp-2 text-[11px] md:text-xs leading-relaxed text-[#fafafa]">
                       {char.latestComment}
                     </p>
                     <div className="mt-auto flex items-center justify-between pt-1">
                       {char.latestCommentAuthor && (
-                        <span className="text-[10px] text-[#8b7aab]">
+                        <span className="text-[10px] md:text-xs text-[#8b7aab]">
                           — {char.latestCommentAuthor}
                         </span>
                       )}
-                      <span className="inline-flex items-center gap-0.5 text-[10px] text-thumbs-up">
+                      <span className="inline-flex items-center gap-0.5 text-[10px] md:text-xs text-thumbs-up">
                         <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
                         </svg>
@@ -326,7 +326,7 @@ export function RankingClient({
 
       {/* 他のランキングもチェック */}
       <section className="space-y-3 lg:max-w-md">
-        <p className="text-xs font-bold text-[#a893c0]">他のランキングもチェック</p>
+        <p className="text-xs md:text-sm font-bold text-[#a893c0]">他のランキングもチェック</p>
         <Link
           href="/builds"
           className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(251,100,182,0.15)] to-[rgba(255,99,126,0.15)] border border-[rgba(249,168,212,0.1)] px-4 py-3 transition-colors hover:from-[rgba(251,100,182,0.25)] hover:to-[rgba(255,99,126,0.25)] cursor-pointer"
@@ -340,8 +340,8 @@ export function RankingClient({
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm font-bold text-[#fafafa]">編成ランキング</span>
-            <span className="text-xs text-[#8b7aab]">人気のパーティ編成をチェックしよう</span>
+            <span className="block text-sm md:text-base font-bold text-[#fafafa]">編成ランキング</span>
+            <span className="text-xs md:text-sm text-[#8b7aab]">人気のパーティ編成をチェックしよう</span>
           </div>
           <svg className="h-4 w-4 shrink-0 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

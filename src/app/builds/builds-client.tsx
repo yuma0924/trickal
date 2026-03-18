@@ -241,7 +241,7 @@ export function BuildsClient() {
           <button
             onClick={() => setElementFilters(new Set())}
             className={cn(
-              "shrink-0 rounded-[10px] px-2.5 py-1.5 text-[11px] font-bold transition-colors cursor-pointer",
+              "shrink-0 rounded-[10px] px-2.5 py-1.5 text-[11px] md:text-xs font-bold transition-colors cursor-pointer",
               elementFilters.size === 0
                 ? "bg-[rgba(255,99,126,0.15)] text-[#fafafa] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
                 : "bg-[#1a1225] text-[#a893c0]"
@@ -297,7 +297,7 @@ export function BuildsClient() {
                 key={opt.value}
                 onClick={() => setSortKey(opt.value)}
                 className={cn(
-                  "rounded-full border px-2.5 py-1 text-xs font-medium transition-colors cursor-pointer",
+                  "rounded-full border px-2.5 py-1 text-xs md:text-sm font-medium transition-colors cursor-pointer",
                   sortKey === opt.value
                     ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
                     : "border-[rgba(139,122,171,0.3)] text-[#8b7aab] hover:text-[#c4b5d4]"
@@ -383,7 +383,7 @@ function BuildCard({
       >
         {/* タイトル + 属性アイコン + モード */}
         <div className="mb-3 flex items-center justify-between gap-2">
-          <span className="min-w-0 truncate text-sm font-bold text-[#fafafa]">
+          <span className="min-w-0 truncate text-sm md:text-base font-bold text-[#fafafa]">
             {build.title || MODE_LABEL_MAP[build.mode]}
           </span>
           <div className="flex shrink-0 items-center gap-1.5">
@@ -402,7 +402,7 @@ function BuildCard({
                   />
                 ) : null
               ))}
-            <span className="rounded-md bg-[rgba(36,27,53,0.5)] px-2 py-0.5 text-[10px] font-bold text-[#8b7aab]">
+            <span className="rounded-md bg-[rgba(36,27,53,0.5)] px-2 py-0.5 text-[10px] md:text-xs font-bold text-[#8b7aab]">
               {MODE_LABEL_MAP[build.mode]}
             </span>
           </div>
@@ -412,9 +412,9 @@ function BuildCard({
         <div className="mb-3 overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.05)]">
           {/* ヘッダー行 */}
           <div className="grid grid-cols-3 bg-[rgba(42,33,62,0.8)]">
-            <span className="border-r border-[rgba(249,168,212,0.05)] py-1.5 text-center text-[10px] font-bold text-[#a893c0]">後列</span>
-            <span className="border-r border-[rgba(249,168,212,0.05)] py-1.5 text-center text-[10px] font-bold text-[#a893c0]">中列</span>
-            <span className="py-1.5 text-center text-[10px] font-bold text-[#a893c0]">前列</span>
+            <span className="border-r border-[rgba(249,168,212,0.05)] py-1.5 text-center text-[10px] md:text-xs font-bold text-[#a893c0]">後列</span>
+            <span className="border-r border-[rgba(249,168,212,0.05)] py-1.5 text-center text-[10px] md:text-xs font-bold text-[#a893c0]">中列</span>
+            <span className="py-1.5 text-center text-[10px] md:text-xs font-bold text-[#a893c0]">前列</span>
           </div>
           {/* 上段 (0,1,2) */}
           <div className="grid grid-cols-3 border-b border-[rgba(249,168,212,0.05)]">
@@ -429,7 +429,7 @@ function BuildCard({
                   isHidden={char.is_hidden}
                   size="md"
                 />
-                <span className="max-w-20 truncate text-center text-[10px] font-bold text-[#a893c0]">
+                <span className="max-w-20 truncate text-center text-[10px] md:text-xs font-bold text-[#a893c0]">
                   {char.name}
                 </span>
               </div>
@@ -449,7 +449,7 @@ function BuildCard({
                     isHidden={char.is_hidden}
                     size="md"
                   />
-                  <span className="max-w-20 truncate text-center text-[10px] font-bold text-[#a893c0]">
+                  <span className="max-w-20 truncate text-center text-[10px] md:text-xs font-bold text-[#a893c0]">
                     {char.name}
                   </span>
                 </div>
@@ -470,7 +470,7 @@ function BuildCard({
                     isHidden={char.is_hidden}
                     size="md"
                   />
-                  <span className="max-w-20 truncate text-center text-[10px] font-bold text-[#a893c0]">
+                  <span className="max-w-20 truncate text-center text-[10px] md:text-xs font-bold text-[#a893c0]">
                     {char.name}
                   </span>
                 </div>
@@ -481,13 +481,13 @@ function BuildCard({
 
         {/* コメント */}
         <div className="mx-0.5 flex flex-col rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2 min-h-[76px]">
-          <p className="whitespace-pre-wrap text-[11px] text-[#fafafa] leading-relaxed line-clamp-3">
+          <p className="whitespace-pre-wrap text-[11px] md:text-xs text-[#fafafa] leading-relaxed line-clamp-3">
             {displayComment}
           </p>
           {shouldTruncate && (
             <button
               onClick={(e) => { e.preventDefault(); setExpanded(!expanded); }}
-              className="mt-1 flex items-center gap-1 text-[10px] text-[#a893c0] hover:text-[#fafafa] cursor-pointer"
+              className="mt-1 flex items-center gap-1 text-[10px] md:text-xs text-[#a893c0] hover:text-[#fafafa] cursor-pointer"
             >
               <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -497,7 +497,7 @@ function BuildCard({
           )}
           <div className="mt-auto pt-1">
             {build.display_name && (
-              <span className="text-[10px] text-[#8b7aab]">— {build.display_name}</span>
+              <span className="text-[10px] md:text-xs text-[#8b7aab]">— {build.display_name}</span>
             )}
           </div>
         </div>
@@ -505,7 +505,7 @@ function BuildCard({
 
       {/* フッター: 日時 + コメント数 + リアクション */}
       <div className="mt-2 flex items-center justify-between">
-        <div className="flex items-center gap-1.5 text-xs text-[#8b7aab]">
+        <div className="flex items-center gap-1.5 text-xs md:text-sm text-[#8b7aab]">
           <span>{formatDate(build.updated_at)}</span>
           {build.comments_count > 0 && (
             <>

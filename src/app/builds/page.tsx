@@ -146,7 +146,7 @@ export default async function BuildsPage() {
           </span>
           <h1 className="text-lg font-bold text-text-primary">編成ランキング</h1>
         </div>
-        <p className="mt-1 pl-[42px] text-xs text-text-muted">
+        <p className="mt-1 pl-[42px] text-xs md:text-sm text-text-muted">
           人気のパーティ編成をチェック・投稿しよう
         </p>
       </div>
@@ -167,13 +167,13 @@ export default async function BuildsPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                   </svg>
                 </span>
-                <h2 className="text-base font-bold text-[#fafafa]">
+                <h2 className="text-base md:text-lg font-bold text-[#fafafa]">
                   話題のキャラクター
                 </h2>
               </div>
-              <span className="text-xs text-[#8b7aab]">最近の注目</span>
+              <span className="text-xs md:text-sm text-[#8b7aab]">最近の注目</span>
             </div>
-            <p className="text-xs text-[#a893c0]">今注目されているキャラクターをチェック！</p>
+            <p className="text-xs md:text-sm text-[#a893c0]">今注目されているキャラクターをチェック！</p>
           </div>
           <div className="-mx-4 grid grid-cols-2 md:grid-cols-3 gap-2 px-2">
             {trendingCharacters.map((char) => (
@@ -215,11 +215,11 @@ export default async function BuildsPage() {
                           ★{char.avgRating.toFixed(1)}
                         </span>
                       ) : (
-                        <span className="text-xs text-[#8b7aab]">
+                        <span className="text-xs md:text-sm text-[#8b7aab]">
                           未評価
                         </span>
                       )}
-                      <span className="inline-flex items-center gap-0.5 rounded bg-[rgba(246,51,154,0.8)] px-1.5 py-0.5 text-[10px] font-bold text-white">
+                      <span className="inline-flex items-center gap-0.5 rounded bg-[rgba(246,51,154,0.8)] px-1.5 py-0.5 text-[10px] md:text-xs font-bold text-white">
                         <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
                         </svg>
@@ -231,16 +231,16 @@ export default async function BuildsPage() {
                 {/* コメント */}
                 {char.latestComment && (
                   <div className="mx-2 mb-2 flex flex-col rounded-[10px] bg-[rgba(30,21,48,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2 min-h-[76px]">
-                    <p className="line-clamp-2 text-[11px] leading-relaxed text-[#fafafa]">
+                    <p className="line-clamp-2 text-[11px] md:text-xs leading-relaxed text-[#fafafa]">
                       {char.latestComment}
                     </p>
                     <div className="mt-auto flex items-center justify-between pt-1">
                       {char.latestCommentAuthor && (
-                        <span className="text-[10px] text-[#8b7aab]">
+                        <span className="text-[10px] md:text-xs text-[#8b7aab]">
                           — {char.latestCommentAuthor}
                         </span>
                       )}
-                      <span className="inline-flex items-center gap-0.5 text-[10px] text-thumbs-up">
+                      <span className="inline-flex items-center gap-0.5 text-[10px] md:text-xs text-thumbs-up">
                         <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" />
                         </svg>
@@ -257,7 +257,7 @@ export default async function BuildsPage() {
 
       {/* 他のランキングもチェック */}
       <section className="space-y-3">
-        <p className="text-sm font-bold text-text-primary">他のランキングもチェック</p>
+        <p className="text-sm md:text-base font-bold text-text-primary">他のランキングもチェック</p>
         <Link
           href="/ranking"
           className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover cursor-pointer"
@@ -272,7 +272,7 @@ export default async function BuildsPage() {
           </span>
           <div className="flex-1">
             <span className="block font-bold text-text-primary">人気キャラランキング</span>
-            <span className="text-xs text-text-muted">投票で決まる最強キャラをチェック</span>
+            <span className="text-xs md:text-sm text-text-muted">投票で決まる最強キャラをチェック</span>
           </div>
           <svg className="h-5 w-5 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

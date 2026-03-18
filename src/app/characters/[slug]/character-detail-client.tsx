@@ -41,6 +41,30 @@ function StyledText({ text, className }: { text: string; className?: string }) {
   );
 }
 
+/** PC版ヒーロー右側の追加情報チップ（画像+ラベル+名前） */
+function InfoChip({ label, name, imageUrl, description }: {
+  label: string;
+  name?: string;
+  imageUrl?: string | null;
+  description?: string;
+}) {
+  if (!name) return null;
+  return (
+    <div className="w-48 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2.5">
+      <p className="text-[10px] text-[#9e99a7]">{label}</p>
+      <div className="mt-1.5 flex items-center gap-2.5">
+        {imageUrl && (
+          <Image src={imageUrl} alt={name} width={36} height={36} className="shrink-0 rounded-md" />
+        )}
+        <p className="text-sm font-bold leading-snug text-[#fafafa]">{name}</p>
+      </div>
+      {description && (
+        <p className="mt-2 text-[11px] leading-relaxed text-[#c0bbc8]">{description}</p>
+      )}
+    </div>
+  );
+}
+
 type SortTab = "newest" | "thumbs_up";
 type ReactionState = "up" | "down" | null;
 
@@ -121,6 +145,7 @@ export function CharacterDetailClient({
   const [, setUserHash] = useState<string | null>(null);
   const [skillsOpen, setSkillsOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
+  const [extraInfoOpen, setExtraInfoOpen] = useState(false);
   const { toast, showToast } = useToast();
 
   // user_hash 取得
@@ -273,10 +298,6 @@ export function CharacterDetailClient({
     fetchComments(sortTab, comments.length, true);
   };
 
-  // メタデータ（アルバイトアイテムなど）
-  const meta = character.metadata as Record<string, unknown> | null;
-  const partTimeItem = meta?.part_time_item as string | undefined;
-
   // スキル情報
   const skills = Array.isArray(character.skills) ? (character.skills as Array<Record<string, unknown>>) : null;
 
@@ -312,41 +333,41 @@ export function CharacterDetailClient({
         {/* キャラ情報 */}
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
-            <h1 className="text-xl font-bold text-[#fafafa]">
+            <h1 className="text-xl md:text-2xl font-bold text-[#fafafa]">
               {character.name}
             </h1>
             {character.element && ELEMENT_ICON_MAP[character.element] && (
-              <Image src={ELEMENT_ICON_MAP[character.element]} alt={character.element} width={22} height={22} className="shrink-0" />
+              <Image src={ELEMENT_ICON_MAP[character.element]} alt={character.element} width={22} height={22} className="shrink-0 md:h-6 md:w-6" />
             )}
           </div>
 
           {/* タグ行 */}
-          <div className="mt-1.5 flex flex-wrap items-center gap-1">
+          <div className="mt-1.5 md:mt-2 flex flex-wrap items-center gap-1 md:gap-1.5">
             {character.role && ROLE_ICON_MAP[character.role] && (
-              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] text-[#a893c0]">
-                <Image src={ROLE_ICON_MAP[character.role]} alt={character.role} width={15} height={15} />
+              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2 md:py-1 md:text-sm text-[#c0bbc8]">
+                <Image src={ROLE_ICON_MAP[character.role]} alt={character.role} width={15} height={15} className="md:h-[18px] md:w-[18px]" />
                 {character.role}
               </span>
             )}
             {character.position && POSITION_ICON_MAP[character.position] && (
-              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] text-[#a893c0]">
-                <Image src={POSITION_ICON_MAP[character.position]} alt={character.position} width={15} height={15} />
+              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2 md:py-1 md:text-sm text-[#c0bbc8]">
+                <Image src={POSITION_ICON_MAP[character.position]} alt={character.position} width={15} height={15} className="md:h-[18px] md:w-[18px]" />
                 {character.position}
               </span>
             )}
             {character.attackType && ATTACK_TYPE_ICON_MAP[character.attackType] && (
-              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] text-[#a893c0]">
-                <Image src={ATTACK_TYPE_ICON_MAP[character.attackType]} alt={character.attackType} width={15} height={15} />
+              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2 md:py-1 md:text-sm text-[#c0bbc8]">
+                <Image src={ATTACK_TYPE_ICON_MAP[character.attackType]} alt={character.attackType} width={15} height={15} className="md:h-[18px] md:w-[18px]" />
                 {character.attackType}
               </span>
             )}
             {character.race && (
-              <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] text-[#a893c0]">
+              <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2 md:py-1 md:text-sm text-[#c0bbc8]">
                 {character.race}
               </span>
             )}
             {character.isProvisional && (
-              <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] font-bold text-[#facc15]">
+              <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2 md:py-1 md:text-sm font-bold text-[#facc15]">
                 暫定
               </span>
             )}
@@ -354,59 +375,121 @@ export function CharacterDetailClient({
 
           {/* 評価 */}
           {character.avgRating !== null && character.validVotesCount >= 1 ? (
-            <div className="mt-2.5 flex items-center">
+            <div className="mt-2.5 md:mt-3 flex items-center">
               <StarRatingDisplay rating={character.avgRating} size="lg" />
             </div>
           ) : (
-            <p className="mt-1.5 text-xs text-[#a893c0]">
+            <p className="mt-1.5 text-xs md:text-sm text-[#c0bbc8]">
               {character.validVotesCount > 0
                 ? `${character.validVotesCount}票（順位対象外）`
                 : "まだ投票がありません"}
             </p>
           )}
+
+          {/* PC版 追加情報（遺物・好物・アルバイト報酬） */}
+          {(character.relic || character.favoriteItem || character.partTimeReward) && (
+            <div className="mt-4 hidden gap-3 md:flex md:flex-wrap">
+              <InfoChip label="専用遺物" name={character.relic?.name} imageUrl={character.relic?.imageUrl} description={character.relic?.description} />
+              <InfoChip label="好物" name={character.favoriteItem?.name} imageUrl={character.favoriteItem?.imageUrl} />
+              <InfoChip label="アルバイト報酬" name={character.partTimeReward?.name} imageUrl={character.partTimeReward?.imageUrl} />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* スキル (アコーディオン) */}
-      <section className="border-t border-[rgba(249,168,212,0.1)] pt-3">
-        <button
-          className="flex w-full items-center justify-between"
-          onClick={() => setSkillsOpen(!skillsOpen)}
-        >
-          <div className="flex items-center gap-2">
-            <svg className="h-4 w-4 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
-            </svg>
-            <span className="text-sm font-bold text-[#fafafa]">スキル</span>
+      {/* モバイル版 専用遺物（スキルの上） */}
+      {character.relic && (
+        <div className="md:hidden border-t border-[rgba(249,168,212,0.1)] pt-3">
+          <div className="flex items-center gap-3 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2.5">
+            {character.relic.imageUrl && (
+              <Image src={character.relic.imageUrl} alt={character.relic.name} width={44} height={44} className="shrink-0 rounded-md" />
+            )}
+            <div className="min-w-0">
+              <p className="text-[10px] text-[#9e99a7]">専用遺物</p>
+              <p className="text-sm font-bold text-[#fafafa]">{character.relic.name}</p>
+            </div>
           </div>
-          <svg
-            className={`h-4 w-4 text-[#8b7aab] transition-transform ${skillsOpen ? "rotate-180" : ""}`}
-            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+        </div>
+      )}
+
+      {/* モバイル版 好物・アルバイト報酬（展開式） */}
+      {(character.favoriteItem || character.partTimeReward) && (
+        <div className="md:hidden border-t border-[rgba(249,168,212,0.1)] pt-3">
+          <button
+            className="flex w-full cursor-pointer items-center justify-between py-1 text-xs font-medium text-[#9e99a7] transition-colors hover:text-[#d4d0de]"
+            onClick={() => setExtraInfoOpen(!extraInfoOpen)}
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            <span>好物・アルバイト報酬</span>
+            <svg
+              className={`h-3.5 w-3.5 transition-transform ${extraInfoOpen ? "rotate-180" : ""}`}
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {extraInfoOpen && (
+            <div className="mt-2 flex flex-col gap-2">
+              {character.favoriteItem && (
+                <div className="flex items-center gap-3 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2">
+                  {character.favoriteItem.imageUrl && (
+                    <Image src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={28} height={28} className="shrink-0 rounded" />
+                  )}
+                  <div className="min-w-0">
+                    <p className="text-[10px] text-[#9e99a7]">好物</p>
+                    <p className="text-xs font-bold text-[#fafafa]">{character.favoriteItem.name}</p>
+                  </div>
+                </div>
+              )}
+              {character.partTimeReward && (
+                <div className="flex items-center gap-3 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2">
+                  {character.partTimeReward.imageUrl && (
+                    <Image src={character.partTimeReward.imageUrl} alt={character.partTimeReward.name} width={28} height={28} className="shrink-0 rounded" />
+                  )}
+                  <div className="min-w-0">
+                    <p className="text-[10px] text-[#9e99a7]">アルバイト報酬</p>
+                    <p className="text-xs font-bold text-[#fafafa]">{character.partTimeReward.name}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* スキル (チラ見せ + 展開) */}
+      <section className="md:max-w-2xl border-t border-[rgba(249,168,212,0.1)] pt-3">
+        <div className="flex items-center gap-2 mb-3">
+          <svg className="h-4 w-4 md:h-5 md:w-5 text-[#c0bbc8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
           </svg>
-        </button>
-        {skillsOpen && (
-          <div className="mt-3 space-y-2">
+          <span className="text-sm md:text-base font-bold text-[#fafafa]">スキル</span>
+        </div>
+        <div className="relative">
+          <div
+            className={cn(
+              "space-y-2 overflow-hidden transition-[max-height] duration-300",
+              skillsOpen ? "max-h-[2000px]" : "max-h-28"
+            )}
+          >
             {SKILL_CATEGORIES.map((cat) => {
               const skillData = skills?.find((s) => s.category === cat.key) as Record<string, unknown> | undefined;
               if (!skillData) return (
                 <div key={cat.key} className="overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
                   <div className="flex items-center gap-2 bg-[rgba(36,27,53,0.7)] px-3 py-2">
-                    <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] font-bold text-[#c4b5d4]">{cat.label}</span>
-                    <span className="text-xs text-[#8b7aab]">—</span>
+                    <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-[#d4d0de]">{cat.label}</span>
+                    <span className="text-xs text-[#9e99a7]">—</span>
                   </div>
                 </div>
               );
               return (
                 <div key={cat.key} className="overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 bg-[rgba(36,27,53,0.7)] px-3 py-2">
-                    <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] font-bold text-[#c4b5d4]">{cat.label}</span>
+                    <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-[#d4d0de]">{cat.label}</span>
                     {cat.hasName && typeof skillData.name === "string" && (
                       <span className="text-sm font-bold text-white">{skillData.name}</span>
                     )}
                     {cat.hasCooltime && typeof skillData.cooltime === "number" && (
-                      <span className="rounded bg-[rgba(249,168,212,0.12)] px-1.5 py-0.5 text-[10px] font-medium text-[#c4b5d4]">
+                      <span className="rounded bg-[rgba(249,168,212,0.12)] px-1.5 py-0.5 text-[10px] font-medium text-[#d4d0de]">
                         CT {skillData.cooltime}秒
                       </span>
                     )}
@@ -414,14 +497,14 @@ export function CharacterDetailClient({
                   {(typeof skillData.description === "string" || (typeof skillData.params === "string" && skillData.params !== "")) && (
                     <div className="bg-[rgba(20,15,35,0.6)] px-3 py-2.5">
                       {typeof skillData.description === "string" && (
-                        <p className="whitespace-pre-line text-xs leading-relaxed text-[#c4b5d4]">
+                        <p className="whitespace-pre-line text-xs md:text-sm leading-relaxed text-[#d4d0de]">
                           <StyledText text={skillData.description as string} />
                         </p>
                       )}
                       {typeof skillData.params === "string" && skillData.params !== "" && (
                         <ul className="mt-3 space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
                           {(skillData.params as string).split("\n").filter(Boolean).map((line, i) => (
-                            <li key={i} className="text-[11px] leading-relaxed text-[#c4b5d4]"><ParamLine text={line} /></li>
+                            <li key={i} className="text-[11px] md:text-xs leading-relaxed text-[#d4d0de]"><ParamLine text={line} /></li>
                           ))}
                         </ul>
                       )}
@@ -439,8 +522,8 @@ export function CharacterDetailClient({
                 return (
                   <div className="overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
                     <div className="flex items-center gap-2 bg-[rgba(36,27,53,0.7)] px-3 py-2">
-                      <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] font-bold text-[#c4b5d4]">普通攻撃</span>
-                      <span className="text-xs text-[#8b7aab]">—</span>
+                      <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-[#d4d0de]">普通攻撃</span>
+                      <span className="text-xs text-[#9e99a7]">—</span>
                     </div>
                   </div>
                 );
@@ -449,14 +532,14 @@ export function CharacterDetailClient({
               const renderAttackBody = (data: Record<string, unknown>) => (
                 <>
                   {typeof data.description === "string" && (
-                    <p className="whitespace-pre-line text-xs leading-relaxed text-[#c4b5d4]">
+                    <p className="whitespace-pre-line text-xs md:text-sm leading-relaxed text-[#d4d0de]">
                       <StyledText text={data.description as string} />
                     </p>
                   )}
                   {typeof data.params === "string" && data.params !== "" && (
                     <ul className="mt-3 space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
                       {(data.params as string).split("\n").filter(Boolean).map((line, i) => (
-                        <li key={i} className="text-[11px] leading-relaxed text-[#c4b5d4]"><ParamLine text={line} /></li>
+                        <li key={i} className="text-[11px] md:text-xs leading-relaxed text-[#d4d0de]"><ParamLine text={line} /></li>
                       ))}
                     </ul>
                   )}
@@ -465,7 +548,7 @@ export function CharacterDetailClient({
               return (
                 <div className="overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
                   <div className="flex items-center bg-[rgba(36,27,53,0.7)] px-3 py-2">
-                    <span className="rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] font-bold text-[#c4b5d4]">普通攻撃</span>
+                    <span className="rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-[#d4d0de]">普通攻撃</span>
                   </div>
                   <div className="bg-[rgba(20,15,35,0.6)] px-3 pb-2.5 pt-1.5">
                     {hasBoth ? (
@@ -491,37 +574,44 @@ export function CharacterDetailClient({
               );
             })()}
           </div>
-        )}
-      </section>
-
-      {/* アルバイトアイテム */}
-      {partTimeItem && (
-        <div className="border-t border-[rgba(249,168,212,0.1)] pt-3">
-          <p className="text-xs text-[#a893c0]">
-            アルバイトアイテム: <span className="font-bold text-[#fafafa]">{partTimeItem}</span>
-          </p>
+          {/* グラデーションオーバーレイ（閉じてる時のみ） */}
+          {!skillsOpen && (
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0d0a14] to-transparent" />
+          )}
         </div>
-      )}
+        <button
+          className="mt-2 flex w-full cursor-pointer items-center justify-center gap-1 py-1.5 text-xs font-medium text-[#9e99a7] transition-colors hover:text-[#d4d0de]"
+          onClick={() => setSkillsOpen(!skillsOpen)}
+        >
+          {skillsOpen ? "スキルを閉じる" : "スキルをすべて表示"}
+          <svg
+            className={`h-3.5 w-3.5 transition-transform ${skillsOpen ? "rotate-180" : ""}`}
+            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+      </section>
 
       {/* 投稿フォーム */}
       <section>
         {!formOpen ? (
-          <div className="rounded-[14px] bg-gradient-to-r from-[rgba(246,51,154,0.1)] to-[rgba(255,32,86,0.1)] border border-[rgba(251,100,182,0.3)] p-4 shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]">
+          <div className="md:max-w-[82%] rounded-[14px] bg-gradient-to-r from-[rgba(246,51,154,0.1)] to-[rgba(255,32,86,0.1)] border border-[rgba(251,100,182,0.3)] p-4 shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2">
                   <svg className="h-4 w-4 text-[#fafafa]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                   </svg>
-                  <span className="text-sm font-bold text-[#fafafa]">
+                  <span className="text-sm md:text-base font-bold text-[#fafafa]">
                     {character.name}を評価する
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-[#8b7aab]">★評価とコメントを投稿できます</p>
+                <p className="mt-1 text-xs md:text-sm text-[#9e99a7]">★評価とコメントを投稿できます</p>
               </div>
               <button
                 onClick={() => setFormOpen(true)}
-                className="flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#fb64b6] to-[#ff637e] px-5 py-3 text-xs font-bold text-white shadow-md transition-opacity hover:opacity-90"
+                className="flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#fb64b6] to-[#ff637e] px-5 md:px-7 py-3 text-xs font-bold text-white shadow-md transition-opacity hover:opacity-90"
               >
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
@@ -544,10 +634,10 @@ export function CharacterDetailClient({
       <section>
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <svg className="h-4 w-4 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="h-4 w-4 md:h-5 md:w-5 text-[#c0bbc8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
-            <span className="text-sm font-bold text-[#fafafa]">
+            <span className="text-sm md:text-base font-bold text-[#fafafa]">
               コメント ({totalCount})
             </span>
           </div>
@@ -555,10 +645,10 @@ export function CharacterDetailClient({
             <button
               onClick={() => handleSortChange("newest")}
               className={cn(
-                "rounded-full border px-2.5 py-1 text-xs font-medium transition-colors",
+                "rounded-full border px-2.5 py-1 text-xs md:text-sm md:px-3 md:py-1.5 font-medium transition-colors",
                 sortTab === "newest"
                   ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
-                  : "border-[rgba(139,122,171,0.3)] text-[#8b7aab] hover:text-[#c4b5d4]"
+                  : "border-[rgba(139,122,171,0.3)] text-[#9e99a7] hover:text-[#d4d0de]"
               )}
             >
               新着順
@@ -566,10 +656,10 @@ export function CharacterDetailClient({
             <button
               onClick={() => handleSortChange("thumbs_up")}
               className={cn(
-                "flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors",
+                "flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs md:text-sm md:px-3 md:py-1.5 font-medium transition-colors",
                 sortTab === "thumbs_up"
                   ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
-                  : "border-[rgba(139,122,171,0.3)] text-[#8b7aab] hover:text-[#c4b5d4]"
+                  : "border-[rgba(139,122,171,0.3)] text-[#9e99a7] hover:text-[#d4d0de]"
               )}
             >
               <svg className="h-3 w-3 text-[#fb64b6]" viewBox="0 0 24 24" fill="currentColor">
@@ -599,12 +689,12 @@ export function CharacterDetailClient({
         <section className="space-y-3">
           <div>
             <div className="flex items-center gap-2">
-              <svg className="h-4 w-4 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="h-4 w-4 md:h-5 md:w-5 text-[#c0bbc8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              <span className="text-sm font-bold text-[#fafafa]">次に見る</span>
+              <span className="text-sm md:text-base font-bold text-[#fafafa]">次に見る</span>
             </div>
-            <p className="mt-0.5 text-xs text-[#8b7aab]">同じ性格・レアリティのキャラ</p>
+            <p className="mt-0.5 text-xs md:text-sm text-[#9e99a7]">同じ性格・レアリティのキャラ</p>
           </div>
           <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
             {relatedCharacters.map((c) => (
@@ -623,7 +713,7 @@ export function CharacterDetailClient({
 
       {/* ページ下部ナビリンク */}
       <section className="space-y-3">
-        <p className="text-xs font-bold text-[#a893c0]">他のランキングもチェック</p>
+        <p className="text-xs md:text-sm font-bold text-[#c0bbc8]">他のランキングもチェック</p>
         <Link
           href="/ranking"
           className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(255,185,0,0.15)] to-[rgba(255,137,4,0.15)] border border-[rgba(249,168,212,0.1)] px-4 py-3 transition-colors hover:from-[rgba(255,185,0,0.25)] hover:to-[rgba(255,137,4,0.25)] cursor-pointer"
@@ -637,10 +727,10 @@ export function CharacterDetailClient({
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm font-bold text-[#fafafa]">人気キャラランキング</span>
-            <span className="text-[10px] text-[#8b7aab]">投票で決まる最強キャラをチェック</span>
+            <span className="block text-sm md:text-base font-bold text-[#fafafa]">人気キャラランキング</span>
+            <span className="text-[10px] md:text-xs text-[#9e99a7]">投票で決まる最強キャラをチェック</span>
           </div>
-          <svg className="h-4 w-4 shrink-0 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </Link>
@@ -657,10 +747,10 @@ export function CharacterDetailClient({
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm font-bold text-[#fafafa]">編成ランキング</span>
-            <span className="text-[10px] text-[#8b7aab]">人気のパーティ編成をチェックしよう</span>
+            <span className="block text-sm md:text-base font-bold text-[#fafafa]">編成ランキング</span>
+            <span className="text-[10px] md:text-xs text-[#9e99a7]">人気のパーティ編成をチェックしよう</span>
           </div>
-          <svg className="h-4 w-4 shrink-0 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </Link>

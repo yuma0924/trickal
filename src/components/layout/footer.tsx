@@ -22,7 +22,7 @@ export function Footer() {
               height={28}
               className="rounded-[10px]"
             />
-            <span className="text-base font-bold text-text-primary">
+            <span className="text-base md:text-lg font-bold text-text-primary">
               トリッカルランキング
             </span>
           </div>
@@ -36,7 +36,7 @@ export function Footer() {
             ガイドライン・利用規約
           </Link>
           <div className="mt-2 w-full border-t border-border-secondary pt-4">
-            <p className="text-xs text-text-muted">
+            <p className="text-xs md:text-sm text-text-muted">
               &copy; 2026 トリッカルランキング. All rights reserved.
             </p>
           </div>
