@@ -14,15 +14,29 @@ import type { CharacterDetail, RelatedCharacter } from "./page";
 
 /** パラメータ行の「ラベル: 値」を分割し、値部分にアクセント色を適用 */
 function ParamLine({ text }: { text: string }) {
-  const match = text.match(/^(.+?)([：:]\s*)(.+)$/);
-  if (!match) return <>{text}</>;
-  const [, label, sep, value] = match;
-  return (
-    <>
-      <span>{label}{sep}</span>
-      <span className="font-medium text-[#fcd34d]">{value}</span>
-    </>
-  );
+  // 「ラベル: 値」形式
+  const colonMatch = text.match(/^(.+?)([：:]\s*)(.+)$/);
+  if (colonMatch) {
+    const [, label, sep, value] = colonMatch;
+    return (
+      <>
+        <span>{label}{sep}</span>
+        <span className="font-medium text-[#fcd34d]">{value}</span>
+      </>
+    );
+  }
+  // 「ラベル +数値%」形式（コロンなし）
+  const numMatch = text.match(/^(.+?\s)([+\-−][\d.]+%?.*)$/);
+  if (numMatch) {
+    const [, label, value] = numMatch;
+    return (
+      <>
+        <span>{label}</span>
+        <span className="font-medium text-[#fcd34d]">{value}</span>
+      </>
+    );
+  }
+  return <>{text}</>;
 }
 
 /** **text** を強調色の <span> に変換して表示 */
@@ -42,13 +56,15 @@ function StyledText({ text, className }: { text: string; className?: string }) {
 }
 
 /** PC版ヒーロー右側の追加情報チップ（画像+ラベル+名前） */
-function InfoChip({ label, name, imageUrl, description }: {
+function InfoChip({ label, name, imageUrl, description, params }: {
   label: string;
   name?: string;
   imageUrl?: string | null;
   description?: string;
+  params?: string;
 }) {
   if (!name) return null;
+  const paramLines = params?.split("\n").filter(Boolean) ?? [];
   return (
     <div className="w-48 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2.5">
       <p className="text-[10px] text-[#9e99a7]">{label}</p>
@@ -58,6 +74,15 @@ function InfoChip({ label, name, imageUrl, description }: {
         )}
         <p className="text-sm font-bold leading-snug text-[#fafafa]">{name}</p>
       </div>
+      {paramLines.length > 0 && (
+        <ul className="mt-2 space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2">
+          {paramLines.map((line, i) => (
+            <li key={i} className="text-[11px] leading-relaxed text-[#d4d0de]">
+              <ParamLine text={line} />
+            </li>
+          ))}
+        </ul>
+      )}
       {description && (
         <p className="mt-2 text-[11px] leading-relaxed text-[#c0bbc8]">{description}</p>
       )}
@@ -389,7 +414,7 @@ export function CharacterDetailClient({
           {/* PC版 追加情報（遺物・好物・アルバイト報酬） */}
           {(character.relic || character.favoriteItem || character.partTimeReward) && (
             <div className="mt-4 hidden gap-3 md:flex md:flex-wrap">
-              <InfoChip label="専用遺物" name={character.relic?.name} imageUrl={character.relic?.imageUrl} description={character.relic?.description} />
+              <InfoChip label="愛用遺物" name={character.relic?.name} imageUrl={character.relic?.imageUrl} description={character.relic?.description} params={character.relic?.params} />
               <InfoChip label="好物" name={character.favoriteItem?.name} imageUrl={character.favoriteItem?.imageUrl} />
               <InfoChip label="アルバイト報酬" name={character.partTimeReward?.name} imageUrl={character.partTimeReward?.imageUrl} />
             </div>
@@ -397,7 +422,7 @@ export function CharacterDetailClient({
         </div>
       </div>
 
-      {/* モバイル版 専用遺物（スキルの上） */}
+      {/* モバイル版 愛用遺物（スキルの上） */}
       {character.relic && (
         <div className="md:hidden border-t border-[rgba(249,168,212,0.1)] pt-3">
           <div className="flex items-center gap-3 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2.5">
@@ -405,7 +430,7 @@ export function CharacterDetailClient({
               <Image src={character.relic.imageUrl} alt={character.relic.name} width={44} height={44} className="shrink-0 rounded-md" />
             )}
             <div className="min-w-0">
-              <p className="text-[10px] text-[#9e99a7]">専用遺物</p>
+              <p className="text-[10px] text-[#9e99a7]">愛用遺物</p>
               <p className="text-sm font-bold text-[#fafafa]">{character.relic.name}</p>
             </div>
           </div>

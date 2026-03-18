@@ -7,6 +7,7 @@ interface RelicData {
   name: string;
   image_url: string | null;
   description: string;
+  params: string;
 }
 
 type EditableField = {
@@ -339,7 +340,7 @@ export function CharacterEditor({
       const next = [...prev];
       const char = { ...next[charIndex], _isDirty: true };
       const meta = (char.metadata as Record<string, unknown>) ?? {};
-      const relic = (meta.relic as RelicData) ?? { name: "", image_url: null, description: "" };
+      const relic = (meta.relic as RelicData) ?? { name: "", image_url: null, description: "", params: "" };
       const updated = { ...relic, [field]: value };
       char.metadata = { ...meta, relic: updated } as Character["metadata"];
       next[charIndex] = char;
@@ -750,7 +751,7 @@ export function CharacterEditor({
           >
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-sm font-bold text-text-primary">
-                専用遺物編集: {characters[relicEditIndex].name || "新規キャラ"}
+                愛用遺物編集: {characters[relicEditIndex].name || "新規キャラ"}
               </h3>
               <button
                 onClick={() => setRelicEditIndex(null)}
@@ -763,6 +764,18 @@ export function CharacterEditor({
             </div>
 
             <div className="space-y-4">
+              {/* 遺物名 */}
+              <div className="rounded-lg border border-border-secondary bg-bg-secondary p-3">
+                <label className="mb-1 block text-xs font-bold text-text-secondary">遺物名</label>
+                <input
+                  type="text"
+                  value={getRelic(characters[relicEditIndex])?.name ?? ""}
+                  onChange={(e) => updateRelicField(relicEditIndex, "name", e.target.value)}
+                  className="w-full rounded border border-border-secondary bg-bg-input px-2 py-1.5 text-xs text-text-primary focus:border-accent focus:outline-none"
+                  placeholder="遺物名を入力"
+                />
+              </div>
+
               {/* 遺物画像 */}
               <div className="rounded-lg border border-border-secondary bg-bg-secondary p-3">
                 <p className="mb-2 text-xs font-bold text-text-secondary">遺物画像</p>
@@ -792,15 +805,15 @@ export function CharacterEditor({
                 </div>
               </div>
 
-              {/* 遺物名 */}
+              {/* パラメータ */}
               <div className="rounded-lg border border-border-secondary bg-bg-secondary p-3">
-                <label className="mb-1 block text-xs font-bold text-text-secondary">遺物名</label>
-                <input
-                  type="text"
-                  value={getRelic(characters[relicEditIndex])?.name ?? ""}
-                  onChange={(e) => updateRelicField(relicEditIndex, "name", e.target.value)}
+                <label className="mb-1 block text-xs font-bold text-text-secondary">パラメータ（1行に1つ）</label>
+                <textarea
+                  value={getRelic(characters[relicEditIndex])?.params ?? ""}
+                  onChange={(e) => updateRelicField(relicEditIndex, "params", e.target.value)}
                   className="w-full rounded border border-border-secondary bg-bg-input px-2 py-1.5 text-xs text-text-primary focus:border-accent focus:outline-none"
-                  placeholder="遺物名を入力"
+                  rows={4}
+                  placeholder={"HP増加: +25.7%\n物理攻撃力増加: +12.3%"}
                 />
               </div>
 

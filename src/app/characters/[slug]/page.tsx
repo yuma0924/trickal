@@ -33,6 +33,7 @@ export interface RelicInfo {
   name: string;
   imageUrl: string | null;
   description: string;
+  params: string;
 }
 
 export interface ItemInfo {
@@ -173,9 +174,9 @@ export default async function CharacterPage({ params }: Props) {
 
   // 遺物情報を metadata から取得
   const metaObj = (character.metadata as Record<string, unknown>) ?? {};
-  const relicRaw = metaObj.relic as { name?: string; image_url?: string | null; description?: string } | undefined;
+  const relicRaw = metaObj.relic as { name?: string; image_url?: string | null; description?: string; params?: string } | undefined;
   const relic: RelicInfo | null = relicRaw?.name
-    ? { name: relicRaw.name, imageUrl: relicRaw.image_url ?? null, description: relicRaw.description ?? "" }
+    ? { name: relicRaw.name, imageUrl: relicRaw.image_url ?? null, description: relicRaw.description ?? "", params: relicRaw.params ?? "" }
     : null;
 
   // アイテム情報

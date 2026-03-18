@@ -7,7 +7,7 @@ const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/webp"];
 
 /**
- * 専用遺物画像アップロード API
+ * 愛用遺物画像アップロード API
  * POST /api/admin/characters/upload-relic
  * FormData: { file: File, characterId: string }
  */
