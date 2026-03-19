@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { href: "/admin", label: "ダッシュボード", icon: "grid" },
   { href: "/admin/characters", label: "キャラ管理", icon: "users" },
+  { href: "/admin/items", label: "アイテム管理", icon: "package" },
   { href: "/admin/builds", label: "編成管理", icon: "layers" },
   { href: "/admin/comments", label: "コメント管理", icon: "message" },
   { href: "/admin/reports", label: "通報管理", icon: "flag" },
@@ -28,6 +29,12 @@ function NavIcon({ name }: { name: IconName }) {
       return (
         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+        </svg>
+      );
+    case "package":
+      return (
+        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
         </svg>
       );
     case "layers":

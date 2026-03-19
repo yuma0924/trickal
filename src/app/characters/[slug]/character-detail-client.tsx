@@ -56,8 +56,10 @@ function StyledText({ text, className }: { text: string; className?: string }) {
 }
 
 /** PC版ヒーロー右側の追加情報チップ（画像+ラベル+名前） */
-function InfoChip({ label, name, imageUrl, description, params }: {
+function InfoChip({ label, labelIcon, badgeIcon, name, imageUrl, description, params }: {
   label: string;
+  labelIcon?: string;
+  badgeIcon?: string;
   name?: string;
   imageUrl?: string | null;
   description?: string;
@@ -67,10 +69,18 @@ function InfoChip({ label, name, imageUrl, description, params }: {
   const paramLines = params?.split("\n").filter(Boolean) ?? [];
   return (
     <div className="w-48 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2.5">
-      <p className="text-[10px] text-[#9e99a7]">{label}</p>
+      <p className="flex items-center gap-1 text-[10px] text-[#9e99a7]">
+        {labelIcon && <Image src={labelIcon} alt="" width={14} height={14} className="shrink-0" />}
+        {label}
+      </p>
       <div className="mt-1.5 flex items-center gap-2.5">
         {imageUrl && (
-          <Image src={imageUrl} alt={name} width={36} height={36} className="shrink-0 rounded-md" />
+          <div className="relative shrink-0">
+            <Image src={imageUrl} alt={name} width={36} height={36} className="rounded-md" />
+            {badgeIcon && (
+              <Image src={badgeIcon} alt="" width={16} height={16} className="absolute -left-1 -top-1" />
+            )}
+          </div>
         )}
         <p className="text-sm font-bold leading-snug text-[#fafafa]">{name}</p>
       </div>
@@ -170,7 +180,8 @@ export function CharacterDetailClient({
   const [, setUserHash] = useState<string | null>(null);
   const [skillsOpen, setSkillsOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
-  const [extraInfoOpen, setExtraInfoOpen] = useState(false);
+  const [favoriteOpen, setFavoriteOpen] = useState(false);
+  const [rewardsOpen, setRewardsOpen] = useState(false);
   const { toast, showToast } = useToast();
 
   // user_hash 取得
@@ -412,17 +423,19 @@ export function CharacterDetailClient({
           )}
 
           {/* PC版 追加情報（遺物・好物・アルバイト報酬） */}
-          {(character.relic || character.favoriteItem || character.partTimeReward) && (
+          {(character.relic || character.favoriteItem || character.partTimeRewards.length > 0) && (
             <div className="mt-4 hidden gap-3 md:flex md:flex-wrap">
-              <InfoChip label="愛用遺物" name={character.relic?.name} imageUrl={character.relic?.imageUrl} description={character.relic?.description} params={character.relic?.params} />
-              <InfoChip label="好物" name={character.favoriteItem?.name} imageUrl={character.favoriteItem?.imageUrl} />
-              <InfoChip label="アルバイト報酬" name={character.partTimeReward?.name} imageUrl={character.partTimeReward?.imageUrl} />
+              <InfoChip label="愛用カード" name={character.relic?.name} imageUrl={character.relic?.imageUrl} description={character.relic?.description} params={character.relic?.params} />
+              <InfoChip label="大好物" labelIcon="/icons/favorite.png" name={character.favoriteItem?.name} imageUrl={character.favoriteItem?.imageUrl} />
+              {character.partTimeRewards.map((reward, i) => (
+                <InfoChip key={i} label="アルバイト報酬" badgeIcon={i === 0 ? "/icons/good.png" : undefined} name={reward.name} imageUrl={reward.imageUrl} />
+              ))}
             </div>
           )}
         </div>
       </div>
 
-      {/* モバイル版 愛用遺物（スキルの上） */}
+      {/* モバイル版 愛用カード（スキルの上） */}
       {character.relic && (
         <div className="md:hidden border-t border-[rgba(249,168,212,0.1)] pt-3">
           <div className="flex items-center gap-3 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2.5">
@@ -430,7 +443,7 @@ export function CharacterDetailClient({
               <Image src={character.relic.imageUrl} alt={character.relic.name} width={44} height={44} className="shrink-0 rounded-md" />
             )}
             <div className="min-w-0">
-              <p className="text-[10px] text-[#9e99a7]">愛用遺物</p>
+              <p className="text-[10px] text-[#9e99a7]">愛用カード</p>
               <p className="text-sm font-bold text-[#fafafa]">{character.relic.name}</p>
             </div>
           </div>
@@ -438,44 +451,67 @@ export function CharacterDetailClient({
       )}
 
       {/* モバイル版 好物・アルバイト報酬（展開式） */}
-      {(character.favoriteItem || character.partTimeReward) && (
+      {/* モバイル版 大好物（展開式） */}
+      {character.favoriteItem && (
         <div className="md:hidden border-t border-[rgba(249,168,212,0.1)] pt-3">
           <button
             className="flex w-full cursor-pointer items-center justify-between py-1 text-xs font-medium text-[#9e99a7] transition-colors hover:text-[#d4d0de]"
-            onClick={() => setExtraInfoOpen(!extraInfoOpen)}
+            onClick={() => setFavoriteOpen(!favoriteOpen)}
           >
-            <span>好物・アルバイト報酬</span>
+            <span className="flex items-center gap-1">
+              <Image src="/icons/favorite.png" alt="" width={12} height={12} className="shrink-0" />
+              大好物
+            </span>
             <svg
-              className={`h-3.5 w-3.5 transition-transform ${extraInfoOpen ? "rotate-180" : ""}`}
+              className={`h-3.5 w-3.5 transition-transform ${favoriteOpen ? "rotate-180" : ""}`}
               fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
-          {extraInfoOpen && (
+          {favoriteOpen && (
+            <div className="mt-2">
+              <div className="flex items-center gap-3 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2">
+                {character.favoriteItem.imageUrl && (
+                  <Image src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={28} height={28} className="shrink-0 rounded" />
+                )}
+                <p className="text-xs font-bold text-[#fafafa]">{character.favoriteItem.name}</p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* モバイル版 アルバイト報酬（展開式） */}
+      {character.partTimeRewards.length > 0 && (
+        <div className="md:hidden border-t border-[rgba(249,168,212,0.1)] pt-3">
+          <button
+            className="flex w-full cursor-pointer items-center justify-between py-1 text-xs font-medium text-[#9e99a7] transition-colors hover:text-[#d4d0de]"
+            onClick={() => setRewardsOpen(!rewardsOpen)}
+          >
+            <span>アルバイト報酬</span>
+            <svg
+              className={`h-3.5 w-3.5 transition-transform ${rewardsOpen ? "rotate-180" : ""}`}
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {rewardsOpen && (
             <div className="mt-2 flex flex-col gap-2">
-              {character.favoriteItem && (
-                <div className="flex items-center gap-3 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2">
-                  {character.favoriteItem.imageUrl && (
-                    <Image src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={28} height={28} className="shrink-0 rounded" />
+              {character.partTimeRewards.map((reward, i) => (
+                <div key={i} className="flex items-center gap-3 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2">
+                  {reward.imageUrl && (
+                    <div className="relative shrink-0">
+                      <Image src={reward.imageUrl} alt={reward.name} width={28} height={28} className="rounded" />
+                      {i === 0 && (
+                        <Image src="/icons/good.png" alt="" width={14} height={14} className="absolute -left-1 -top-1" />
+                      )}
+                    </div>
                   )}
-                  <div className="min-w-0">
-                    <p className="text-[10px] text-[#9e99a7]">好物</p>
-                    <p className="text-xs font-bold text-[#fafafa]">{character.favoriteItem.name}</p>
-                  </div>
+                  <p className="min-w-0 text-xs font-bold text-[#fafafa]">{reward.name}</p>
                 </div>
-              )}
-              {character.partTimeReward && (
-                <div className="flex items-center gap-3 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2">
-                  {character.partTimeReward.imageUrl && (
-                    <Image src={character.partTimeReward.imageUrl} alt={character.partTimeReward.name} width={28} height={28} className="shrink-0 rounded" />
-                  )}
-                  <div className="min-w-0">
-                    <p className="text-[10px] text-[#9e99a7]">アルバイト報酬</p>
-                    <p className="text-xs font-bold text-[#fafafa]">{character.partTimeReward.name}</p>
-                  </div>
-                </div>
-              )}
+              ))}
             </div>
           )}
         </div>

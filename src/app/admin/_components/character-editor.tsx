@@ -55,7 +55,7 @@ const SKILL_SLOTS: {
   { category: "normal_attack_enhanced", label: "普通攻撃（強化）", hasName: false, hasCooltime: false },
 ];
 
-type CharacterDraft = Character & { _isNew?: boolean; _isDirty?: boolean };
+type CharacterDraft = Character & { _isNew?: boolean; _isDirty?: boolean; _rewardItemIds?: string[] };
 
 const ELEMENT_OPTIONS = ["純粋", "冷静", "狂気", "活発", "憂鬱"] as const;
 const RARITY_OPTIONS = ["★1", "★2", "★3"] as const;
@@ -63,12 +63,14 @@ const RARITY_OPTIONS = ["★1", "★2", "★3"] as const;
 export function CharacterEditor({
   initialCharacters,
   initialItems,
+  initialRewards,
 }: {
   initialCharacters: Character[];
   initialItems: Item[];
+  initialRewards: Record<string, string[]>;
 }) {
   const [characters, setCharacters] = useState<CharacterDraft[]>(
-    initialCharacters.map((c) => ({ ...c }))
+    initialCharacters.map((c) => ({ ...c, _rewardItemIds: initialRewards[c.id] ?? [] }))
   );
   const [saving, setSaving] = useState(false);
   const [filterElement, setFilterElement] = useState("");
@@ -157,7 +159,6 @@ export function CharacterEditor({
       metadata: {},
       image_url: null,
       favorite_item_id: null,
-      part_time_reward_id: null,
       is_provisional: false,
       is_hidden: false,
       created_at: new Date().toISOString(),
@@ -193,9 +194,10 @@ export function CharacterEditor({
           errors.push(`新規キャラ: 名前とスラッグは必須です`);
           continue;
         }
-        const { _isNew, _isDirty, ...data } = char;
+        const { _isNew, _isDirty, _rewardItemIds, ...data } = char;
         void _isNew;
         void _isDirty;
+        void _rewardItemIds;
         const res = await fetch("/api/admin/characters", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -210,9 +212,10 @@ export function CharacterEditor({
       // 既存キャラ更新
       if (existingChars.length > 0) {
         const updates = existingChars.map((char) => {
-          const { _isNew, _isDirty, created_at, ...fields } = char;
+          const { _isNew, _isDirty, _rewardItemIds, created_at, ...fields } = char;
           void _isNew;
           void _isDirty;
+          void _rewardItemIds;
           void created_at;
           return fields;
         });
@@ -232,6 +235,21 @@ export function CharacterEditor({
             for (const e of result.errors) {
               errors.push(`${e.id}: ${e.error}`);
             }
+          }
+        }
+      }
+
+      // アルバイト報酬の保存（中間テーブル更新）
+      for (const char of dirtyChars) {
+        if (char._rewardItemIds) {
+          const res = await fetch("/api/admin/characters/rewards", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ character_id: char.id, item_ids: char._rewardItemIds }),
+          });
+          if (!res.ok) {
+            const err = await res.json();
+            errors.push(`${char.name} 報酬: ${err.error}`);
           }
         }
       }
@@ -489,7 +507,7 @@ export function CharacterEditor({
                 遺物
               </th>
               <th className="px-2 py-2 text-left font-medium text-text-secondary">
-                好物
+                大好物
               </th>
               <th className="px-2 py-2 text-left font-medium text-text-secondary">
                 報酬
@@ -618,7 +636,7 @@ export function CharacterEditor({
                   </button>
                 </td>
 
-                {/* 好物プルダウン */}
+                {/* 大好物プルダウン */}
                 <td className="px-1 py-1">
                   <select
                     value={char.favorite_item_id ?? ""}
@@ -632,18 +650,80 @@ export function CharacterEditor({
                   </select>
                 </td>
 
-                {/* アルバイト報酬プルダウン */}
+                {/* アルバイト報酬（複数選択・並び替え可） */}
                 <td className="px-1 py-1">
-                  <select
-                    value={char.part_time_reward_id ?? ""}
-                    onChange={(e) => updateField(rowIndex, "part_time_reward_id", e.target.value || null)}
-                    className="w-24 rounded border border-border-secondary bg-bg-input px-1.5 py-1 text-text-primary focus:border-accent focus:outline-none"
-                  >
-                    <option value="">-</option>
-                    {rewardItems.map((item) => (
-                      <option key={item.id} value={item.id}>{item.name}</option>
-                    ))}
-                  </select>
+                  <div className="flex flex-col gap-1">
+                    {(char._rewardItemIds ?? []).map((itemId, idx) => {
+                      const item = rewardItems.find((i) => i.id === itemId);
+                      const ids = char._rewardItemIds ?? [];
+                      return item ? (
+                        <span key={itemId} className={`flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] ${idx === 0 ? "bg-yellow-500/15 text-yellow-400" : "bg-accent/15 text-accent"}`}>
+                          {idx === 0 && <span title="優先枠">★</span>}
+                          {item.name}
+                          {idx > 0 && (
+                            <button
+                              onClick={() => {
+                                const next = [...ids];
+                                [next[idx - 1], next[idx]] = [next[idx], next[idx - 1]];
+                                setCharacters((prev) => {
+                                  const arr = [...prev];
+                                  arr[rowIndex] = { ...arr[rowIndex], _rewardItemIds: next, _isDirty: true };
+                                  return arr;
+                                });
+                              }}
+                              className="ml-0.5 cursor-pointer text-text-muted hover:text-text-primary"
+                              title="上に移動"
+                            >↑</button>
+                          )}
+                          {idx < ids.length - 1 && (
+                            <button
+                              onClick={() => {
+                                const next = [...ids];
+                                [next[idx], next[idx + 1]] = [next[idx + 1], next[idx]];
+                                setCharacters((prev) => {
+                                  const arr = [...prev];
+                                  arr[rowIndex] = { ...arr[rowIndex], _rewardItemIds: next, _isDirty: true };
+                                  return arr;
+                                });
+                              }}
+                              className="ml-0.5 cursor-pointer text-text-muted hover:text-text-primary"
+                              title="下に移動"
+                            >↓</button>
+                          )}
+                          <button
+                            onClick={() => {
+                              const next = ids.filter((id) => id !== itemId);
+                              setCharacters((prev) => {
+                                const arr = [...prev];
+                                arr[rowIndex] = { ...arr[rowIndex], _rewardItemIds: next, _isDirty: true };
+                                return arr;
+                              });
+                            }}
+                            className="ml-0.5 cursor-pointer text-text-muted hover:text-text-primary"
+                          >x</button>
+                        </span>
+                      ) : null;
+                    })}
+                    <select
+                      value=""
+                      onChange={(e) => {
+                        if (!e.target.value) return;
+                        const current = char._rewardItemIds ?? [];
+                        if (current.includes(e.target.value)) return;
+                        setCharacters((prev) => {
+                          const arr = [...prev];
+                          arr[rowIndex] = { ...arr[rowIndex], _rewardItemIds: [...current, e.target.value], _isDirty: true };
+                          return arr;
+                        });
+                      }}
+                      className="w-20 rounded border border-border-secondary bg-bg-input px-1 py-0.5 text-[10px] text-text-primary focus:border-accent focus:outline-none"
+                    >
+                      <option value="">+追加</option>
+                      {rewardItems.filter((i) => !(char._rewardItemIds ?? []).includes(i.id)).map((item) => (
+                        <option key={item.id} value={item.id}>{item.name}</option>
+                      ))}
+                    </select>
+                  </div>
                 </td>
               </tr>
               );
@@ -751,7 +831,7 @@ export function CharacterEditor({
           >
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-sm font-bold text-text-primary">
-                愛用遺物編集: {characters[relicEditIndex].name || "新規キャラ"}
+                愛用カード編集: {characters[relicEditIndex].name || "新規キャラ"}
               </h3>
               <button
                 onClick={() => setRelicEditIndex(null)}

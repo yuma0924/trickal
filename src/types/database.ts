@@ -30,7 +30,7 @@ export interface Database {
           metadata: Json;
           image_url: string | null;
           favorite_item_id: string | null;
-          part_time_reward_id: string | null;
+
           is_provisional: boolean;
           is_hidden: boolean;
           created_at: string;
@@ -51,7 +51,7 @@ export interface Database {
           metadata?: Json;
           image_url?: string | null;
           favorite_item_id?: string | null;
-          part_time_reward_id?: string | null;
+
           is_provisional?: boolean;
           is_hidden?: boolean;
           created_at?: string;
@@ -72,7 +72,7 @@ export interface Database {
           metadata?: Json;
           image_url?: string | null;
           favorite_item_id?: string | null;
-          part_time_reward_id?: string | null;
+
           is_provisional?: boolean;
           is_hidden?: boolean;
           created_at?: string;
@@ -412,6 +412,39 @@ export interface Database {
             columns: ["build_comment_id"];
             isOneToOne: false;
             referencedRelation: "build_comments";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      character_rewards: {
+        Row: {
+          character_id: string;
+          item_id: string;
+          sort_order: number;
+        };
+        Insert: {
+          character_id: string;
+          item_id: string;
+          sort_order?: number;
+        };
+        Update: {
+          character_id?: string;
+          item_id?: string;
+          sort_order?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "character_rewards_character_id_fkey";
+            columns: ["character_id"];
+            isOneToOne: false;
+            referencedRelation: "characters";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "character_rewards_item_id_fkey";
+            columns: ["item_id"];
+            isOneToOne: false;
+            referencedRelation: "items";
             referencedColumns: ["id"];
           },
         ];

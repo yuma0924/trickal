@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { name, item_type } = body as { name?: string; item_type?: string };
+    const { id, name, item_type } = body as { id?: string; name?: string; item_type?: string };
 
     if (!name || !item_type) {
       return NextResponse.json(
@@ -52,9 +52,11 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = createAdminClient();
+    const insertData: { name: string; item_type: "favorite" | "reward"; id?: string } = { name, item_type };
+    if (id) insertData.id = id;
     const { data, error } = await supabase
       .from("items")
-      .insert({ name, item_type })
+      .insert(insertData)
       .select()
       .single();
 

@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { href: "/admin", label: "ダッシュボード" },
   { href: "/admin/characters", label: "キャラ管理" },
+  { href: "/admin/items", label: "アイテム管理" },
   { href: "/admin/builds", label: "編成管理" },
   { href: "/admin/comments", label: "コメント管理" },
   { href: "/admin/reports", label: "通報管理" },

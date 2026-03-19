@@ -62,7 +62,7 @@ export interface CharacterDetail {
   rank: number | null;
   relic: RelicInfo | null;
   favoriteItem: ItemInfo | null;
-  partTimeReward: ItemInfo | null;
+  partTimeRewards: ItemInfo[];
 }
 
 export interface RelatedCharacter {
@@ -82,7 +82,7 @@ export default async function CharacterPage({ params }: Props) {
   // キャラ情報取得
   const { data: character } = await supabase
     .from("characters")
-    .select("id, slug, name, rarity, element, role, race, position, attack_type, stats, skills, metadata, image_url, favorite_item_id, part_time_reward_id, is_provisional, is_hidden, created_at, updated_at")
+    .select("id, slug, name, rarity, element, role, race, position, attack_type, stats, skills, metadata, image_url, favorite_item_id, is_provisional, is_hidden, created_at, updated_at")
     .eq("slug", slug)
     .eq("is_hidden", false)
     .returns<Character[]>()
@@ -92,29 +92,43 @@ export default async function CharacterPage({ params }: Props) {
     notFound();
   }
 
-  // ランキング情報 + アイテム情報を並列取得
-  const itemIds = [character.favorite_item_id, character.part_time_reward_id].filter(Boolean) as string[];
-  const [rankingResult, itemsResult] = await Promise.all([
+  // ランキング情報 + 好物アイテム + 報酬アイテムを並列取得
+  const [rankingResult, favoriteItemResult, rewardsResult] = await Promise.all([
     supabase
       .from("character_rankings")
       .select("avg_rating, valid_votes_count, board_comments_count, rank")
       .eq("character_id", character.id)
       .single(),
-    itemIds.length > 0
+    character.favorite_item_id
       ? supabase
           .from("items")
           .select("id, name, image_url")
-          .in("id", itemIds)
+          .eq("id", character.favorite_item_id)
           .returns<Item[]>()
-      : Promise.resolve({ data: [] as Item[] }),
+          .maybeSingle()
+      : Promise.resolve({ data: null }),
+    supabase
+      .from("character_rewards")
+      .select("item_id, sort_order")
+      .eq("character_id", character.id)
+      .order("sort_order", { ascending: true }),
   ]);
 
   const ranking = rankingResult.data;
-  const itemsMap = new Map<string, Item>();
-  if (itemsResult.data) {
-    for (const item of itemsResult.data) {
-      itemsMap.set(item.id, item);
-    }
+  const favItem = favoriteItemResult.data as Item | null;
+
+  // 報酬アイテムの詳細を取得
+  const rewardItemIds = (rewardsResult.data ?? []).map((r) => r.item_id);
+  let rewardItems: Item[] = [];
+  if (rewardItemIds.length > 0) {
+    const { data } = await supabase
+      .from("items")
+      .select("id, name, image_url")
+      .in("id", rewardItemIds)
+      .returns<Item[]>();
+    // sort_order 順に並べ替え
+    const itemMap = new Map((data ?? []).map((i) => [i.id, i]));
+    rewardItems = rewardItemIds.map((id) => itemMap.get(id)).filter(Boolean) as Item[];
   }
 
   // 同属性・同レアリティの関連キャラ取得
@@ -180,8 +194,6 @@ export default async function CharacterPage({ params }: Props) {
     : null;
 
   // アイテム情報
-  const favItem = character.favorite_item_id ? itemsMap.get(character.favorite_item_id) : null;
-  const rewardItem = character.part_time_reward_id ? itemsMap.get(character.part_time_reward_id) : null;
 
   const characterDetail: CharacterDetail = {
     id: character.id,
@@ -204,7 +216,7 @@ export default async function CharacterPage({ params }: Props) {
     rank: ranking?.rank ?? null,
     relic,
     favoriteItem: favItem ? { name: favItem.name, imageUrl: favItem.image_url } : null,
-    partTimeReward: rewardItem ? { name: rewardItem.name, imageUrl: rewardItem.image_url } : null,
+    partTimeRewards: rewardItems.map((i) => ({ name: i.name, imageUrl: i.image_url })),
   };
 
   return (

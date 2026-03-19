@@ -4,7 +4,7 @@ import type { Character, Item } from "@/types/database";
 
 export default async function CharactersManagePage() {
   const supabase = createAdminClient();
-  const [charactersResult, itemsResult] = await Promise.all([
+  const [charactersResult, itemsResult, rewardsResult] = await Promise.all([
     supabase
       .from("characters")
       .select("*")
@@ -16,6 +16,10 @@ export default async function CharactersManagePage() {
       .order("item_type")
       .order("name")
       .returns<Item[]>(),
+    supabase
+      .from("character_rewards")
+      .select("character_id, item_id, sort_order")
+      .order("sort_order", { ascending: true }),
   ]);
 
   if (charactersResult.error) {
@@ -29,6 +33,15 @@ export default async function CharactersManagePage() {
     );
   }
 
+  // character_id → item_id[] のマッピング
+  const rewardsMap: Record<string, string[]> = {};
+  if (rewardsResult.data) {
+    for (const r of rewardsResult.data) {
+      if (!rewardsMap[r.character_id]) rewardsMap[r.character_id] = [];
+      rewardsMap[r.character_id].push(r.item_id);
+    }
+  }
+
   return (
     <div className="space-y-4">
       <div>
@@ -40,6 +53,7 @@ export default async function CharactersManagePage() {
       <CharacterEditor
         initialCharacters={charactersResult.data ?? []}
         initialItems={itemsResult.data ?? []}
+        initialRewards={rewardsMap}
       />
     </div>
   );
