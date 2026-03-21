@@ -430,7 +430,7 @@ export function CharacterDetailClient({
               <button
                 ref={relicBtnRef}
                 className={cn(
-                  "flex cursor-pointer items-center gap-3 rounded-[12px] border px-3 py-2.5 transition-colors",
+                  "flex cursor-pointer items-start gap-3 rounded-[12px] border px-3 py-2.5 transition-colors",
                   relicDetailOpen
                     ? "border-[rgba(249,168,212,0.25)] bg-[rgba(36,27,53,0.7)]"
                     : "border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.4)] hover:border-[rgba(249,168,212,0.2)] hover:bg-[rgba(36,27,53,0.6)]"
@@ -442,7 +442,7 @@ export function CharacterDetailClient({
                 )}
                 <div className="min-w-0 text-left">
                   <p className="text-sm text-[#c0bbc8]">愛用カード</p>
-                  <p className="text-base font-bold leading-snug text-[#fafafa]">{character.relic.name}</p>
+                  <p className="mt-0.5 text-base font-bold leading-snug text-[#fafafa]">{character.relic.name}</p>
                 </div>
                 <svg
                   className={`h-4 w-4 shrink-0 text-[#9e99a7] transition-transform ${relicDetailOpen ? "rotate-180" : ""}`}
@@ -478,7 +478,7 @@ export function CharacterDetailClient({
         {(character.favoriteItem || character.partTimeRewards.length > 0) && (
           <div className="hidden shrink-0 flex-col gap-3 pt-[3rem] md:flex">
             {character.favoriteItem && (
-              <div className="flex items-center gap-3 rounded-[12px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.4)] px-3 py-2.5">
+              <div className="flex items-start gap-3 rounded-[12px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.4)] px-3 py-2.5">
                 {character.favoriteItem.imageUrl && (
                   <Image src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={56} height={56} className="shrink-0 rounded-lg" />
                 )}
@@ -487,7 +487,7 @@ export function CharacterDetailClient({
                     <Image src="/icons/favorite.png" alt="" width={14} height={14} className="shrink-0" />
                     大好物
                   </p>
-                  <p className="text-base font-bold leading-snug text-[#fafafa]">{character.favoriteItem.name}</p>
+                  <p className="mt-0.5 text-base font-bold leading-snug text-[#fafafa]">{character.favoriteItem.name}</p>
                 </div>
               </div>
             )}
@@ -599,7 +599,7 @@ export function CharacterDetailClient({
       )}
 
       {/* スキル (チラ見せ + 展開) */}
-      <section className="md:max-w-2xl border-t border-[rgba(249,168,212,0.1)] pt-3">
+      <section className="border-t border-[rgba(249,168,212,0.1)] pt-3">
         <div className="flex items-center gap-2 mb-3">
           <svg className="h-4 w-4 md:h-5 md:w-5 text-[#c0bbc8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
@@ -609,112 +609,134 @@ export function CharacterDetailClient({
         <div className="relative">
           <div
             className={cn(
-              "space-y-2 overflow-hidden transition-[max-height] duration-300",
-              skillsOpen ? "max-h-[2000px]" : "max-h-28"
+              "overflow-hidden transition-[max-height] duration-300",
+              skillsOpen ? "max-h-[3000px]" : "max-h-28"
             )}
           >
-            {SKILL_CATEGORIES.map((cat) => {
-              const skillData = skills?.find((s) => s.category === cat.key) as Record<string, unknown> | undefined;
-              if (!skillData) return (
-                <div key={cat.key} className="overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
-                  <div className="flex items-center gap-2 bg-[rgba(36,27,53,0.7)] px-3 py-2">
-                    <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-[#d4d0de]">{cat.label}</span>
-                    <span className="text-xs text-[#9e99a7]">—</span>
+            {/* PC: 2列グリッド / モバイル: 縦積み */}
+            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+              {/* 上段: 低学年スキル / 高学年スキル */}
+              {SKILL_CATEGORIES.map((cat) => {
+                const skillData = skills?.find((s) => s.category === cat.key) as Record<string, unknown> | undefined;
+                if (!skillData) return (
+                  <div key={cat.key} className="flex flex-col overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
+                    <div className="flex items-center gap-2 bg-[rgba(36,27,53,0.7)] px-3 py-2">
+                      <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-[#d4d0de]">{cat.label}</span>
+                      <span className="text-xs text-[#9e99a7]">—</span>
+                    </div>
+                    <div className="flex-1 bg-[rgba(20,15,35,0.6)]" />
                   </div>
-                </div>
-              );
-              return (
-                <div key={cat.key} className="overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
-                  <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 bg-[rgba(36,27,53,0.7)] px-3 py-2">
-                    <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-[#d4d0de]">{cat.label}</span>
-                    {cat.hasName && typeof skillData.name === "string" && (
-                      <span className="text-sm font-bold text-white">{skillData.name}</span>
-                    )}
-                    {cat.hasCooltime && typeof skillData.cooltime === "number" && (
-                      <span className="rounded bg-[rgba(249,168,212,0.12)] px-1.5 py-0.5 text-[10px] font-medium text-[#d4d0de]">
-                        CT {skillData.cooltime}秒
-                      </span>
-                    )}
-                  </div>
-                  {(typeof skillData.description === "string" || (typeof skillData.params === "string" && skillData.params !== "")) && (
+                );
+                return (
+                  <div key={cat.key} className="flex flex-col overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 bg-[rgba(36,27,53,0.7)] px-3 py-2">
+                      <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-[#d4d0de]">{cat.label}</span>
+                      {cat.hasName && typeof skillData.name === "string" && (
+                        <span className="text-sm font-bold text-white">{skillData.name}</span>
+                      )}
+                      {cat.hasCooltime && typeof skillData.cooltime === "number" && (
+                        <span className="rounded bg-[rgba(249,168,212,0.12)] px-1.5 py-0.5 text-[10px] font-medium text-[#d4d0de]">
+                          CT {skillData.cooltime}秒
+                        </span>
+                      )}
+                    </div>
+                    {/* 説明文エリア */}
                     <div className="bg-[rgba(20,15,35,0.6)] px-3 py-2.5">
                       {typeof skillData.description === "string" && (
                         <p className="whitespace-pre-line text-xs md:text-sm leading-relaxed text-[#d4d0de]">
                           <StyledText text={skillData.description as string} />
                         </p>
                       )}
-                      {typeof skillData.params === "string" && skillData.params !== "" && (
-                        <ul className="mt-3 space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
+                    </div>
+                    {/* パラメータエリア */}
+                    <div className="border-t border-[rgba(249,168,212,0.06)] bg-[rgba(20,15,35,0.6)] px-3 py-2">
+                      {typeof skillData.params === "string" && skillData.params !== "" ? (
+                        <ul className="space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
                           {(skillData.params as string).split("\n").filter(Boolean).map((line, i) => (
                             <li key={i} className="text-[11px] md:text-xs leading-relaxed text-[#d4d0de]"><ParamLine text={line} /></li>
                           ))}
                         </ul>
+                      ) : (
+                        <span className="text-xs text-[#9e99a7]">—</span>
                       )}
                     </div>
-                  )}
-                </div>
-              );
-            })}
-
-            {/* 普通攻撃セクション — 1カードにまとめる */}
-            {(() => {
-              const basicAttack = skills?.find((s) => s.category === "normal_attack_basic") as Record<string, unknown> | undefined;
-              const enhancedAttack = skills?.find((s) => s.category === "normal_attack_enhanced") as Record<string, unknown> | undefined;
-              if (!basicAttack && !enhancedAttack) {
-                return (
-                  <div className="overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
-                    <div className="flex items-center gap-2 bg-[rgba(36,27,53,0.7)] px-3 py-2">
-                      <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-[#d4d0de]">普通攻撃</span>
-                      <span className="text-xs text-[#9e99a7]">—</span>
-                    </div>
+                    {/* 余白（パラメータが少ない方を下に伸ばす） */}
+                    <div className="flex-1 bg-[rgba(20,15,35,0.6)]" />
                   </div>
                 );
-              }
-              const hasBoth = !!basicAttack && !!enhancedAttack;
-              const renderAttackBody = (data: Record<string, unknown>) => (
-                <>
-                  {typeof data.description === "string" && (
-                    <p className="whitespace-pre-line text-xs md:text-sm leading-relaxed text-[#d4d0de]">
+              })}
+
+              {/* 下段: 普通攻撃（1カード内で基本・強化を横並び） — グリッド2列分使う */}
+              {(() => {
+                const basicAttack = skills?.find((s) => s.category === "normal_attack_basic") as Record<string, unknown> | undefined;
+                const enhancedAttack = skills?.find((s) => s.category === "normal_attack_enhanced") as Record<string, unknown> | undefined;
+                if (!basicAttack && !enhancedAttack) {
+                  return (
+                    <div className="flex flex-col overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
+                      <div className="flex items-center gap-2 bg-[rgba(36,27,53,0.7)] px-3 py-2">
+                        <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-[#d4d0de]">普通攻撃</span>
+                        <span className="text-xs text-[#9e99a7]">—</span>
+                      </div>
+                      <div className="flex-1 bg-[rgba(20,15,35,0.6)]" />
+                    </div>
+                  );
+                }
+                const renderAttackDesc = (data: Record<string, unknown>) => (
+                  typeof data.description === "string" ? (
+                    <p className="whitespace-pre-line text-xs leading-relaxed text-[#d4d0de]">
                       <StyledText text={data.description as string} />
                     </p>
-                  )}
-                  {typeof data.params === "string" && data.params !== "" && (
-                    <ul className="mt-3 space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
+                  ) : null
+                );
+                const renderAttackParams = (data: Record<string, unknown>) => (
+                  typeof data.params === "string" && data.params !== "" ? (
+                    <ul className="space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
                       {(data.params as string).split("\n").filter(Boolean).map((line, i) => (
                         <li key={i} className="text-[11px] md:text-xs leading-relaxed text-[#d4d0de]"><ParamLine text={line} /></li>
                       ))}
                     </ul>
-                  )}
-                </>
-              );
-              return (
-                <div className="overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
-                  <div className="flex items-center bg-[rgba(36,27,53,0.7)] px-3 py-2">
-                    <span className="rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-[#d4d0de]">普通攻撃</span>
-                  </div>
-                  <div className="bg-[rgba(20,15,35,0.6)] px-3 pb-2.5 pt-1.5">
-                    {hasBoth ? (
-                      <div className="flex flex-col divide-y divide-[rgba(249,168,212,0.08)]">
+                  ) : <span className="text-xs text-[#9e99a7]">—</span>
+                );
+                return (
+                  <div className="flex flex-col overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
+                    <div className="flex items-center bg-[rgba(36,27,53,0.7)] px-3 py-2">
+                      <span className="rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-[#d4d0de]">普通攻撃</span>
+                    </div>
+                    {/* 基本・強化を独立カラムで横並び、各カラム内で説明→パラメータの順 */}
+                    <div className="flex-1 bg-[rgba(20,15,35,0.6)]">
+                      <div className="flex flex-col md:flex-row">
                         {basicAttack && (
-                          <div className="pb-2.5">
-                            <span className="mb-1.5 inline-block rounded border border-[rgba(249,168,212,0.15)] px-1.5 py-0.5 text-[10px] font-bold text-[#fafafa]/70">基本</span>
-                            {renderAttackBody(basicAttack)}
+                          <div className="flex flex-1 flex-col md:border-r md:border-[rgba(249,168,212,0.1)]">
+                            <div className="flex-1 px-3 py-2.5">
+                              <div className="mb-1.5">
+                                <span className="rounded border border-[rgba(249,168,212,0.15)] px-1.5 py-0.5 text-[10px] font-bold text-[#fafafa]/70">基本</span>
+                              </div>
+                              {renderAttackDesc(basicAttack)}
+                            </div>
+                            <div className="border-t border-[rgba(249,168,212,0.06)] px-3 py-2">
+                              {renderAttackParams(basicAttack)}
+                            </div>
                           </div>
                         )}
                         {enhancedAttack && (
-                          <div className="pt-2.5">
-                            <span className="mb-1.5 inline-block rounded border border-[rgba(249,168,212,0.15)] px-1.5 py-0.5 text-[10px] font-bold text-[#fafafa]/70">強化</span>
-                            {renderAttackBody(enhancedAttack)}
+                          <div className="flex flex-1 flex-col border-t border-[rgba(249,168,212,0.08)] md:border-t-0">
+                            <div className="flex-1 px-3 py-2.5">
+                              <div className="mb-1.5">
+                                <span className="rounded border border-[rgba(249,168,212,0.15)] px-1.5 py-0.5 text-[10px] font-bold text-[#fafafa]/70">強化</span>
+                              </div>
+                              {renderAttackDesc(enhancedAttack)}
+                            </div>
+                            <div className="border-t border-[rgba(249,168,212,0.06)] px-3 py-2">
+                              {renderAttackParams(enhancedAttack)}
+                            </div>
                           </div>
                         )}
                       </div>
-                    ) : (
-                      renderAttackBody((basicAttack ?? enhancedAttack)!)
-                    )}
+                    </div>
                   </div>
-                </div>
-              );
-            })()}
+                );
+              })()}
+            </div>
           </div>
           {/* グラデーションオーバーレイ（閉じてる時のみ） */}
           {!skillsOpen && (
@@ -738,18 +760,16 @@ export function CharacterDetailClient({
       {/* 投稿フォーム */}
       <section>
         {!formOpen ? (
-          <div className="md:max-w-[82%] rounded-[14px] bg-gradient-to-r from-[rgba(246,51,154,0.1)] to-[rgba(255,32,86,0.1)] border border-[rgba(251,100,182,0.3)] p-4 shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]">
+          <div className="rounded-[14px] bg-gradient-to-r from-[rgba(246,51,154,0.1)] to-[rgba(255,32,86,0.1)] border border-[rgba(251,100,182,0.3)] p-4 shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]">
             <div className="flex items-center justify-between gap-3">
-              <div>
-                <div className="flex items-center gap-2">
-                  <svg className="h-4 w-4 text-[#fafafa]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                  </svg>
-                  <span className="text-sm md:text-base font-bold text-[#fafafa]">
-                    {character.name}を評価する
-                  </span>
-                </div>
-                <p className="mt-1 text-xs md:text-sm text-[#9e99a7]">★評価とコメントを投稿できます</p>
+              <div className="flex items-center gap-2">
+                <svg className="h-5 w-5 shrink-0 text-[#fcd34d]" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />
+                </svg>
+                <span className="text-sm md:text-lg font-bold text-[#fafafa]">
+                  {character.name}を評価する
+                </span>
+                <span className="hidden text-base text-[#c0bbc8] md:inline md:ml-3"><span className="text-[#fcd34d]">★</span>評価とコメントを投稿できます</span>
               </div>
               <button
                 onClick={() => setFormOpen(true)}
