@@ -652,9 +652,9 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder=""
+            placeholder={MODE_OPTIONS.find((o) => o.value === formMode)?.label ?? ""}
             maxLength={100}
-            className="min-w-0 flex-1 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+            className="min-w-0 flex-1 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted/50 focus:border-accent focus:outline-none"
           />
         </div>
 
@@ -684,10 +684,10 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            placeholder="この編成のポイントを教えてください"
+            placeholder="この編成について入力"
             maxLength={200}
             rows={3}
-            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none resize-none"
+            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-3 text-base text-text-primary placeholder:text-text-muted/50 focus:border-accent focus:outline-none resize-none"
           />
         </div>
 
