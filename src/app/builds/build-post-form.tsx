@@ -652,7 +652,7 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder={`未入力の場合「${MODE_OPTIONS.find((o) => o.value === formMode)?.label ?? ""}」になります`}
+            placeholder=""
             maxLength={100}
             className="min-w-0 flex-1 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
           />
@@ -669,7 +669,7 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder="名無しの教主"
             maxLength={50}
-            className="min-w-0 flex-1 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+            className="min-w-0 flex-1 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted/50 focus:border-accent focus:outline-none"
           />
         </div>
 
