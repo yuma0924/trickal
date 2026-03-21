@@ -6,7 +6,7 @@ import {
   setCookieHeaders,
 } from "@/app/api/_helpers";
 
-type BuildRow = { id: string; likes_count: number; dislikes_count: number };
+type BuildRow = { id: string };
 type ReactionRow = { id: string; reaction_type: "up" | "down" };
 
 /**
@@ -59,7 +59,7 @@ export async function POST(
     // 編成の存在確認
     const { data: rawBuild } = await supabase
       .from("builds")
-      .select("id, likes_count, dislikes_count")
+      .select("id")
       .eq("id", buildId)
       .eq("is_deleted", false)
       .single();
@@ -83,15 +83,9 @@ export async function POST(
 
     const existing = rawExisting as ReactionRow | null;
 
-    let newLikesCount = build.likes_count;
-    let newDislikesCount = build.dislikes_count;
-
     if (reaction_type === null) {
       // 取り消し
       if (existing) {
-        if (existing.reaction_type === "up") newLikesCount--;
-        if (existing.reaction_type === "down") newDislikesCount--;
-
         await supabase
           .from("build_reactions")
           .delete()
@@ -100,11 +94,6 @@ export async function POST(
     } else if (existing) {
       // 変更
       if (existing.reaction_type !== reaction_type) {
-        if (existing.reaction_type === "up") newLikesCount--;
-        if (existing.reaction_type === "down") newDislikesCount--;
-        if (reaction_type === "up") newLikesCount++;
-        if (reaction_type === "down") newDislikesCount++;
-
         await supabase
           .from("build_reactions")
           .update({
@@ -115,9 +104,6 @@ export async function POST(
       }
     } else {
       // 新規
-      if (reaction_type === "up") newLikesCount++;
-      if (reaction_type === "down") newDislikesCount++;
-
       await supabase.from("build_reactions").insert({
         build_id: buildId,
         user_hash: userHash,
@@ -125,20 +111,18 @@ export async function POST(
       });
     }
 
-    // カウントを更新
-    await supabase
+    // カウントは build_reactions のトリガーで自動更新、最新値を取得
+    const { data: updatedBuild } = await supabase
       .from("builds")
-      .update({
-        likes_count: newLikesCount,
-        dislikes_count: newDislikesCount,
-      })
-      .eq("id", buildId);
+      .select("likes_count, dislikes_count")
+      .eq("id", buildId)
+      .single();
 
     const headers = setCookieHeaders(cookieUuid, isNewCookie);
     return NextResponse.json(
       {
-        likes_count: newLikesCount,
-        dislikes_count: newDislikesCount,
+        likes_count: updatedBuild?.likes_count ?? 0,
+        dislikes_count: updatedBuild?.dislikes_count ?? 0,
         user_reaction: reaction_type,
       },
       { headers }

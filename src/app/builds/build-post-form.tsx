@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import { CharacterIcon } from "@/components/character/character-icon";
 import { Button } from "@/components/ui/button";
@@ -72,6 +72,8 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
   const [formation, setFormation] = useState<(CharacterInfo | null)[]>(
     Array(6).fill(null)
   );
+  const nameFieldRef = useRef<HTMLDivElement>(null);
+
   // 選択中のキャラ（スロットに配置する前の一時状態）
   const [selectedChar, setSelectedChar] = useState<CharacterInfo | null>(null);
   // 選択中のスロット（＋タップで選択、キャラタップで自動配置）
@@ -190,6 +192,9 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
 
     // 選択状態にする（スロットはまだ決まらない）
     setSelectedChar(char);
+    setTimeout(() => {
+      nameFieldRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 100);
   };
 
   // スロットタップ
@@ -659,7 +664,7 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
         </div>
 
         {/* 投稿者名（任意） */}
-        <div className="flex min-w-0 items-center gap-3">
+        <div ref={nameFieldRef} className="flex min-w-0 items-center gap-3">
           <label className="w-12 shrink-0 text-sm text-text-secondary">
             名前
           </label>
