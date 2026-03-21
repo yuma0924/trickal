@@ -424,17 +424,20 @@ export function BuildDetailClient({
         })()}
 
         {/* コメント */}
-        <div className="border-t border-[rgba(249,168,212,0.1)] pt-2.5">
-          <p className="whitespace-pre-wrap text-sm text-[#fafafa] leading-relaxed">
+        <div className="mx-0.5 flex flex-col rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.15)] px-2.5 py-2 min-h-[76px]">
+          <p className="whitespace-pre-wrap text-[11px] md:text-xs text-[#fafafa] leading-relaxed">
             {build.comment}
           </p>
+          <div className="mt-auto pt-1">
+            {build.display_name && (
+              <span className="text-[10px] md:text-xs text-[#8b7aab]">— {build.display_name}</span>
+            )}
+          </div>
         </div>
 
-        {/* フッター: 投稿者 · 日時 + リアクション */}
-        <div className="mt-3 flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs text-[#8b7aab]">
-            <span>{build.display_name || "名無しの教主"}</span>
-            <span>·</span>
+        {/* フッター: 日時 + リアクション */}
+        <div className="mt-2 flex items-center justify-between">
+          <div className="flex items-center gap-1.5 text-xs md:text-sm text-[#8b7aab]">
             <span>{formatDate(build.updated_at)}</span>
           </div>
           <ThumbsUpDown
