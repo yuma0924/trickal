@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { CharacterCard } from "@/components/character/character-card";
@@ -68,33 +68,33 @@ function InfoChip({ label, labelIcon, badgeIcon, name, imageUrl, description, pa
   if (!name) return null;
   const paramLines = params?.split("\n").filter(Boolean) ?? [];
   return (
-    <div className="w-48 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2.5">
-      <p className="flex items-center gap-1 text-[10px] text-[#9e99a7]">
-        {labelIcon && <Image src={labelIcon} alt="" width={14} height={14} className="shrink-0" />}
+    <div className="w-52 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2.5">
+      <p className="flex items-center gap-1 text-xs text-[#c0bbc8]">
+        {labelIcon && <Image src={labelIcon} alt="" width={16} height={16} className="shrink-0" />}
         {label}
       </p>
       <div className="mt-1.5 flex items-center gap-2.5">
         {imageUrl && (
           <div className="relative shrink-0">
-            <Image src={imageUrl} alt={name} width={36} height={36} className="rounded-md" />
+            <Image src={imageUrl} alt={name} width={48} height={48} className="rounded-md" />
             {badgeIcon && (
               <Image src={badgeIcon} alt="" width={16} height={16} className="absolute -left-1 -top-1" />
             )}
           </div>
         )}
-        <p className="text-sm font-bold leading-snug text-[#fafafa]">{name}</p>
+        <p className="text-base font-bold leading-snug text-[#fafafa]">{name}</p>
       </div>
       {paramLines.length > 0 && (
         <ul className="mt-2 space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2">
           {paramLines.map((line, i) => (
-            <li key={i} className="text-[11px] leading-relaxed text-[#d4d0de]">
+            <li key={i} className="text-xs leading-relaxed text-[#d4d0de]">
               <ParamLine text={line} />
             </li>
           ))}
         </ul>
       )}
       {description && (
-        <p className="mt-2 text-[11px] leading-relaxed text-[#c0bbc8]">{description}</p>
+        <p className="mt-2 text-xs leading-relaxed text-[#c0bbc8]">{description}</p>
       )}
     </div>
   );
@@ -180,6 +180,8 @@ export function CharacterDetailClient({
   const [, setUserHash] = useState<string | null>(null);
   const [skillsOpen, setSkillsOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
+  const [relicDetailOpen, setRelicDetailOpen] = useState(false);
+  const relicBtnRef = useRef<HTMLButtonElement>(null);
   const [favoriteOpen, setFavoriteOpen] = useState(false);
   const [rewardsOpen, setRewardsOpen] = useState(false);
   const { toast, showToast } = useToast();
@@ -342,8 +344,8 @@ export function CharacterDetailClient({
   return (
     <div className="space-y-6 md:space-y-8">
       {/* ヒーローエリア */}
-      <div className="flex items-start gap-4 md:gap-6">
-        {/* キャラ画像 モバイル96px / PC160px */}
+      <div className="flex items-start gap-4 md:gap-5">
+        {/* キャラ画像 モバイル96px / PC224px */}
         <div
           className="relative h-24 w-24 shrink-0 overflow-hidden rounded-[10px] md:h-56 md:w-56 md:rounded-[16px]"
           style={{
@@ -367,43 +369,43 @@ export function CharacterDetailClient({
         </div>
 
         {/* キャラ情報 */}
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 md:flex-initial">
           <div className="flex items-center gap-1.5">
-            <h1 className="text-xl md:text-2xl font-bold text-[#fafafa]">
+            <h1 className="text-xl md:text-3xl font-bold text-[#fafafa]">
               {character.name}
             </h1>
             {character.element && ELEMENT_ICON_MAP[character.element] && (
-              <Image src={ELEMENT_ICON_MAP[character.element]} alt={character.element} width={22} height={22} className="shrink-0 md:h-6 md:w-6" />
+              <Image src={ELEMENT_ICON_MAP[character.element]} alt={character.element} width={22} height={22} className="shrink-0 md:h-7 md:w-7" />
             )}
           </div>
 
           {/* タグ行 */}
-          <div className="mt-1.5 md:mt-2 flex flex-wrap items-center gap-1 md:gap-1.5">
+          <div className="mt-1.5 md:mt-3 flex flex-wrap items-center gap-1 md:gap-2">
             {character.role && ROLE_ICON_MAP[character.role] && (
-              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2 md:py-1 md:text-sm text-[#c0bbc8]">
-                <Image src={ROLE_ICON_MAP[character.role]} alt={character.role} width={15} height={15} className="md:h-[18px] md:w-[18px]" />
+              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base text-[#c0bbc8]">
+                <Image src={ROLE_ICON_MAP[character.role]} alt={character.role} width={15} height={15} className="md:h-5 md:w-5" />
                 {character.role}
               </span>
             )}
             {character.position && POSITION_ICON_MAP[character.position] && (
-              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2 md:py-1 md:text-sm text-[#c0bbc8]">
-                <Image src={POSITION_ICON_MAP[character.position]} alt={character.position} width={15} height={15} className="md:h-[18px] md:w-[18px]" />
+              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base text-[#c0bbc8]">
+                <Image src={POSITION_ICON_MAP[character.position]} alt={character.position} width={15} height={15} className="md:h-5 md:w-5" />
                 {character.position}
               </span>
             )}
             {character.attackType && ATTACK_TYPE_ICON_MAP[character.attackType] && (
-              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2 md:py-1 md:text-sm text-[#c0bbc8]">
-                <Image src={ATTACK_TYPE_ICON_MAP[character.attackType]} alt={character.attackType} width={15} height={15} className="md:h-[18px] md:w-[18px]" />
+              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base text-[#c0bbc8]">
+                <Image src={ATTACK_TYPE_ICON_MAP[character.attackType]} alt={character.attackType} width={15} height={15} className="md:h-5 md:w-5" />
                 {character.attackType}
               </span>
             )}
             {character.race && (
-              <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2 md:py-1 md:text-sm text-[#c0bbc8]">
+              <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base text-[#c0bbc8]">
                 {character.race}
               </span>
             )}
             {character.isProvisional && (
-              <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2 md:py-1 md:text-sm font-bold text-[#facc15]">
+              <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base font-bold text-[#facc15]">
                 暫定
               </span>
             )}
@@ -411,28 +413,108 @@ export function CharacterDetailClient({
 
           {/* 評価 */}
           {character.avgRating !== null && character.validVotesCount >= 1 ? (
-            <div className="mt-2.5 md:mt-3 flex items-center">
+            <div className="mt-2.5 md:mt-4 flex items-center">
               <StarRatingDisplay rating={character.avgRating} size="lg" />
             </div>
           ) : (
-            <p className="mt-1.5 text-xs md:text-sm text-[#c0bbc8]">
+            <p className="mt-1.5 text-xs md:text-base text-[#c0bbc8]">
               {character.validVotesCount > 0
                 ? `${character.validVotesCount}票（順位対象外）`
                 : "まだ投票がありません"}
             </p>
           )}
 
-          {/* PC版 追加情報（遺物・好物・アルバイト報酬） */}
-          {(character.relic || character.favoriteItem || character.partTimeRewards.length > 0) && (
-            <div className="mt-4 hidden gap-3 md:flex md:flex-wrap">
-              <InfoChip label="愛用カード" name={character.relic?.name} imageUrl={character.relic?.imageUrl} description={character.relic?.description} params={character.relic?.params} />
-              <InfoChip label="大好物" labelIcon="/icons/favorite.png" name={character.favoriteItem?.name} imageUrl={character.favoriteItem?.imageUrl} />
-              {character.partTimeRewards.map((reward, i) => (
-                <InfoChip key={i} label="アルバイト報酬" badgeIcon={i === 0 ? "/icons/good.png" : undefined} name={reward.name} imageUrl={reward.imageUrl} />
-              ))}
+          {/* PC版 愛用カード（★の下・展開式） */}
+          {character.relic && (
+            <div className="relative mt-3 hidden md:mt-5 md:block">
+              <button
+                ref={relicBtnRef}
+                className={cn(
+                  "flex cursor-pointer items-center gap-3 rounded-[12px] border px-3 py-2.5 transition-colors",
+                  relicDetailOpen
+                    ? "border-[rgba(249,168,212,0.25)] bg-[rgba(36,27,53,0.7)]"
+                    : "border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.4)] hover:border-[rgba(249,168,212,0.2)] hover:bg-[rgba(36,27,53,0.6)]"
+                )}
+                onClick={() => setRelicDetailOpen(!relicDetailOpen)}
+              >
+                {character.relic.imageUrl && (
+                  <Image src={character.relic.imageUrl} alt={character.relic.name} width={60} height={60} className="shrink-0 rounded-lg" />
+                )}
+                <div className="min-w-0 text-left">
+                  <p className="text-sm text-[#c0bbc8]">愛用カード</p>
+                  <p className="text-base font-bold leading-snug text-[#fafafa]">{character.relic.name}</p>
+                </div>
+                <svg
+                  className={`h-4 w-4 shrink-0 text-[#9e99a7] transition-transform ${relicDetailOpen ? "rotate-180" : ""}`}
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {relicDetailOpen && (
+                <div
+                  className="absolute left-0 top-full z-10 mt-1 rounded-[12px] border border-[rgba(249,168,212,0.2)] bg-[#1a1425] px-4 py-3 shadow-xl"
+                  style={{ width: relicBtnRef.current?.offsetWidth }}
+                >
+                  {character.relic.params && (
+                    <ul className="space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
+                      {character.relic.params.split("\n").filter(Boolean).map((line, i) => (
+                        <li key={i} className="text-sm leading-relaxed text-[#d4d0de]">
+                          <ParamLine text={line} />
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {character.relic.description && (
+                    <p className={`text-sm leading-relaxed text-[#c0bbc8] ${character.relic.params ? "mt-2.5" : ""}`}>{character.relic.description}</p>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
+
+        {/* PC版 大好物・アルバイト報酬（右側） */}
+        {(character.favoriteItem || character.partTimeRewards.length > 0) && (
+          <div className="hidden shrink-0 flex-col gap-3 pt-[3rem] md:flex">
+            {character.favoriteItem && (
+              <div className="flex items-center gap-3 rounded-[12px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.4)] px-3 py-2.5">
+                {character.favoriteItem.imageUrl && (
+                  <Image src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={56} height={56} className="shrink-0 rounded-lg" />
+                )}
+                <div className="min-w-0">
+                  <p className="flex items-center gap-1 text-xs text-[#c0bbc8]">
+                    <Image src="/icons/favorite.png" alt="" width={14} height={14} className="shrink-0" />
+                    大好物
+                  </p>
+                  <p className="text-base font-bold leading-snug text-[#fafafa]">{character.favoriteItem.name}</p>
+                </div>
+              </div>
+            )}
+            {character.partTimeRewards.length > 0 && (
+              <div className="rounded-[12px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.4)] px-3 py-2.5">
+                <p className="text-xs text-[#c0bbc8]">アルバイト報酬</p>
+                <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                  {character.partTimeRewards.map((reward, i) => (
+                    <div key={i} className="group relative shrink-0">
+                      {reward.imageUrl ? (
+                        <Image src={reward.imageUrl} alt={reward.name} width={48} height={48} className="rounded-md" />
+                      ) : (
+                        <div className="flex h-12 w-12 items-center justify-center rounded-md bg-[rgba(249,168,212,0.1)] text-[10px] text-[#9e99a7]">?</div>
+                      )}
+                      {i === 0 && (
+                        <Image src="/icons/good.png" alt="" width={16} height={16} className="absolute -left-1 -top-1" />
+                      )}
+                      <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 hidden -translate-x-1/2 whitespace-nowrap rounded-md bg-[#1a1425] px-2 py-1 text-[11px] text-[#d4d0de] shadow-lg group-hover:block">
+                        {reward.name}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* モバイル版 愛用カード（スキルの上） */}
@@ -498,18 +580,17 @@ export function CharacterDetailClient({
             </svg>
           </button>
           {rewardsOpen && (
-            <div className="mt-2 flex flex-col gap-2">
+            <div className="mt-2 flex items-center gap-2 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2.5">
               {character.partTimeRewards.map((reward, i) => (
-                <div key={i} className="flex items-center gap-3 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2">
-                  {reward.imageUrl && (
-                    <div className="relative shrink-0">
-                      <Image src={reward.imageUrl} alt={reward.name} width={28} height={28} className="rounded" />
-                      {i === 0 && (
-                        <Image src="/icons/good.png" alt="" width={14} height={14} className="absolute -left-1 -top-1" />
-                      )}
-                    </div>
+                <div key={i} className="relative shrink-0">
+                  {reward.imageUrl ? (
+                    <Image src={reward.imageUrl} alt={reward.name} width={28} height={28} className="rounded" />
+                  ) : (
+                    <div className="flex h-7 w-7 items-center justify-center rounded bg-[rgba(249,168,212,0.1)] text-[10px] text-[#9e99a7]">?</div>
                   )}
-                  <p className="min-w-0 text-xs font-bold text-[#fafafa]">{reward.name}</p>
+                  {i === 0 && (
+                    <Image src="/icons/good.png" alt="" width={14} height={14} className="absolute -left-1 -top-1" />
+                  )}
                 </div>
               ))}
             </div>
