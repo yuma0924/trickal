@@ -38,7 +38,7 @@ interface CharInfo {
 interface BuildData {
   id: string;
   mode: string | null;
-  members: string[];
+  members: (string | null)[];
   elementLabel: string | null;
   title: string | null;
   displayName: string | null;
@@ -130,9 +130,12 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
         <div className="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
           {filtered.map((build) => {
             const uniqueElements = [...new Set(build.memberElements)];
-            const row1 = build.members.slice(0, 3);
-            const row2 = build.members.slice(3, 6);
-            const row3 = build.members.slice(6, 9);
+            // 9スロット固定配列からスロット位置を再現
+            const slots = [...build.members];
+            while (slots.length < 9) slots.push(null);
+            const rowCount = 3;
+            const hasContent = (rowIdx: number) =>
+              [0, 1, 2].some((colIdx) => slots[colIdx * rowCount + rowIdx] !== null);
 
             return (
               <Link
@@ -167,34 +170,44 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                 </div>
 
                 {/* キャラ編成グリッド */}
-                <div className="mb-3 overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.05)]">
+                <div className="mb-2 overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.15)]">
                   <div className="grid grid-cols-3 bg-[rgba(42,33,62,0.8)]">
-                    <span className="border-r border-[rgba(249,168,212,0.05)] py-1.5 text-center text-[10px] font-bold text-[#a893c0]">後列</span>
-                    <span className="border-r border-[rgba(249,168,212,0.05)] py-1.5 text-center text-[10px] font-bold text-[#a893c0]">中列</span>
-                    <span className="py-1.5 text-center text-[10px] font-bold text-[#a893c0]">前列</span>
+                    <span className="border-r border-[rgba(249,168,212,0.15)] py-1 text-center text-[10px] font-bold text-[#a893c0]">後列</span>
+                    <span className="border-r border-[rgba(249,168,212,0.15)] py-1 text-center text-[10px] font-bold text-[#a893c0]">中列</span>
+                    <span className="py-1 text-center text-[10px] font-bold text-[#a893c0]">前列</span>
                   </div>
-                  {[row1, ...(row2.length > 0 ? [row2] : []), ...(row3.length > 0 ? [row3] : [])].map((row, rowIdx, rows) => (
-                    <div key={rowIdx} className={cn("grid grid-cols-3", rowIdx < rows.length - 1 && "border-b border-[rgba(249,168,212,0.05)]")}>
-                      {row.map((mId, i) => {
-                        const char = charMap[mId];
-                        return (
-                          <div key={`${mId}-${rowIdx}-${i}`} className={cn(
-                            "flex flex-col items-center gap-1 py-3",
-                            i < 2 && "border-r border-[rgba(249,168,212,0.05)]"
-                          )}>
-                            <div className="h-12 w-12 overflow-hidden rounded-lg">
-                              {char?.imageUrl ? (
-                                <Image src={char.imageUrl} alt={char?.name ?? "?"} width={48} height={48} className="h-full w-full object-cover" loading="lazy" />
+                  {Array.from({ length: rowCount }).map((_, rowIdx) => {
+                    if (!hasContent(rowIdx)) return null;
+                    return (
+                      <div key={rowIdx} className={cn("grid grid-cols-3", "border-b border-[rgba(249,168,212,0.15)] last:border-b-0")}>
+                        {[0, 1, 2].map((colIdx) => {
+                          const mId = slots[colIdx * rowCount + rowIdx];
+                          const char = mId ? charMap[mId] : null;
+                          return (
+                            <div key={colIdx} className={cn(
+                              "flex flex-col items-center gap-0.5 pt-2 pb-1.5",
+                              colIdx < 2 && "border-r border-[rgba(249,168,212,0.15)]"
+                            )}>
+                              {char ? (
+                                <>
+                                  <div className="h-12 w-12 overflow-hidden rounded-lg">
+                                    {char.imageUrl ? (
+                                      <Image src={char.imageUrl} alt={char.name} width={48} height={48} className="h-full w-full object-cover" loading="lazy" />
+                                    ) : (
+                                      <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-xs text-[#8b7aab]">{char.name.charAt(0)}</div>
+                                    )}
+                                  </div>
+                                  <span className="max-w-20 truncate text-center text-[10px] font-bold text-[#a893c0]">{char.name}</span>
+                                </>
                               ) : (
-                                <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-xs text-[#8b7aab]">{char?.name?.charAt(0) ?? "?"}</div>
+                                <div className="h-12 w-12" />
                               )}
                             </div>
-                            <span className="max-w-20 truncate text-center text-[10px] font-bold text-[#a893c0]">{char?.name ?? "?"}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ))}
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
                 </div>
 
                 {/* コメント */}

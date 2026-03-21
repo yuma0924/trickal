@@ -421,8 +421,9 @@ export default async function Home() {
 
   // 編成ランキング用データ変換
   const buildsData = (topBuilds ?? []).map((build) => {
-    const memberIds = build.members as string[];
+    const memberIds = build.members as (string | null)[];
     const memberElements = memberIds
+      .filter((id): id is string => id !== null)
       .map((mId) => charMap.get(mId)?.element)
       .filter((e): e is string => e !== null && e !== undefined);
     const commentCount = Array.isArray(build.build_comments) && build.build_comments.length > 0
