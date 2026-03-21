@@ -357,7 +357,7 @@ export function CharacterDetailClient({
   const elemColors = character.element ? ELEMENT_COLORS[character.element] : null;
 
   return (
-    <div className="space-y-4 md:space-y-8">
+    <div className="space-y-4 md:space-y-6">
       {/* ヒーローエリア */}
       <div className="flex items-start gap-4 md:gap-5">
         {/* キャラ画像 モバイル96px / PC224px */}
@@ -666,7 +666,7 @@ export function CharacterDetailClient({
           <div
             className={cn(
               "overflow-hidden transition-[max-height] duration-300",
-              skillsOpen ? "max-h-[3000px]" : "max-h-0 md:max-h-28"
+              skillsOpen ? "max-h-[3000px] pb-3" : "max-h-0 md:max-h-28"
             )}
           >
             {/* PC: 2列グリッド / モバイル: 縦積み */}
@@ -814,7 +814,7 @@ export function CharacterDetailClient({
       </section>
 
       {/* 投稿フォーム */}
-      <section>
+      <section className="-mt-1.5 md:mt-0">
         {!formOpen ? (
           <div className="rounded-[14px] bg-gradient-to-r from-[rgba(246,51,154,0.1)] to-[rgba(255,32,86,0.1)] border border-[rgba(251,100,182,0.3)] px-4 py-2.5 shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]">
             <div className="flex items-center justify-between gap-3">
@@ -849,7 +849,7 @@ export function CharacterDetailClient({
       </section>
 
       {/* コメント一覧 */}
-      <section>
+      <section className="-mt-2 md:-mt-3">
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <svg className="h-4 w-4 md:h-5 md:w-5 text-[#c0bbc8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
