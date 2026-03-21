@@ -748,7 +748,7 @@ export function CharacterDetailClient({
                   typeof data.params === "string" && data.params !== "" ? (
                     <ul className="space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
                       {(data.params as string).split("\n").filter(Boolean).map((line, i) => (
-                        <li key={i} className="text-[11px] md:text-xs leading-relaxed text-[#d4d0de]"><ParamLine text={line} /></li>
+                        <li key={i} className="text-[10px] md:text-[11px] leading-relaxed text-[#d4d0de]"><ParamLine text={line} /></li>
                       ))}
                     </ul>
                   ) : <span className="text-xs text-[#9e99a7]">—</span>
@@ -763,7 +763,7 @@ export function CharacterDetailClient({
                       <div className="flex flex-col md:flex-row">
                         {basicAttack && (
                           <div className="flex flex-1 flex-col md:border-r md:border-[rgba(249,168,212,0.1)]">
-                            <div className="flex-1 px-3 py-2.5">
+                            <div className="px-3 pt-1 pb-2.5">
                               <div className="mb-1.5">
                                 <span className="rounded border border-[rgba(249,168,212,0.15)] px-1.5 py-0.5 text-[10px] font-bold text-[#fafafa]/70">基本</span>
                               </div>
@@ -772,11 +772,12 @@ export function CharacterDetailClient({
                             <div className="border-t border-[rgba(249,168,212,0.06)] px-3 py-2">
                               {renderAttackParams(basicAttack)}
                             </div>
+                            <div className="flex-1" />
                           </div>
                         )}
                         {enhancedAttack && (
                           <div className="flex flex-1 flex-col border-t border-[rgba(249,168,212,0.08)] md:border-t-0">
-                            <div className="flex-1 px-3 py-2.5">
+                            <div className="px-3 pt-1 pb-2.5">
                               <div className="mb-1.5">
                                 <span className="rounded border border-[rgba(249,168,212,0.15)] px-1.5 py-0.5 text-[10px] font-bold text-[#fafafa]/70">強化</span>
                               </div>
@@ -785,6 +786,7 @@ export function CharacterDetailClient({
                             <div className="border-t border-[rgba(249,168,212,0.06)] px-3 py-2">
                               {renderAttackParams(enhancedAttack)}
                             </div>
+                            <div className="flex-1" />
                           </div>
                         )}
                       </div>
