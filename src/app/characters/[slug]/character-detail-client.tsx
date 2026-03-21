@@ -430,7 +430,7 @@ export function CharacterDetailClient({
               <button
                 ref={relicBtnRef}
                 className={cn(
-                  "flex cursor-pointer items-start gap-3 rounded-[12px] border px-3 py-2.5 transition-colors",
+                  "flex cursor-pointer items-start gap-3 rounded-[12px] border px-2 py-2 transition-colors",
                   relicDetailOpen
                     ? "border-[rgba(249,168,212,0.25)] bg-[rgba(36,27,53,0.7)]"
                     : "border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.4)] hover:border-[rgba(249,168,212,0.2)] hover:bg-[rgba(36,27,53,0.6)]"
@@ -438,7 +438,7 @@ export function CharacterDetailClient({
                 onClick={() => setRelicDetailOpen(!relicDetailOpen)}
               >
                 {character.relic.imageUrl && (
-                  <Image src={character.relic.imageUrl} alt={character.relic.name} width={60} height={60} className="shrink-0 rounded-lg" />
+                  <Image src={character.relic.imageUrl} alt={character.relic.name} width={68} height={68} className="shrink-0 rounded-lg" />
                 )}
                 <div className="min-w-0 text-left">
                   <p className="text-sm text-[#c0bbc8]">愛用カード</p>
@@ -476,7 +476,7 @@ export function CharacterDetailClient({
 
         {/* PC版 大好物・アルバイト報酬（右側） */}
         {(character.favoriteItem || character.partTimeRewards.length > 0) && (
-          <div className="hidden shrink-0 flex-col gap-3 pt-[3rem] md:flex">
+          <div className="hidden flex-1 flex-col gap-3 pt-[3rem] md:flex">
             {character.favoriteItem && (
               <div className="flex items-start gap-3 rounded-[12px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.4)] px-3 py-2.5">
                 {character.favoriteItem.imageUrl && (
@@ -492,15 +492,15 @@ export function CharacterDetailClient({
               </div>
             )}
             {character.partTimeRewards.length > 0 && (
-              <div className="rounded-[12px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.4)] px-3 py-2.5">
-                <p className="text-xs text-[#c0bbc8]">アルバイト報酬</p>
-                <div className="mt-1.5 flex flex-wrap items-center gap-2">
+              <div className="rounded-[12px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.4)] px-2 py-2.5">
+                <p className="px-0.5 text-xs text-[#c0bbc8]">アルバイト報酬</p>
+                <div className="mt-1.5 flex flex-wrap items-center gap-1">
                   {character.partTimeRewards.map((reward, i) => (
                     <div key={i} className="group relative shrink-0">
                       {reward.imageUrl ? (
-                        <Image src={reward.imageUrl} alt={reward.name} width={48} height={48} className="rounded-md" />
+                        <Image src={reward.imageUrl} alt={reward.name} width={52} height={52} className="rounded-md" />
                       ) : (
-                        <div className="flex h-12 w-12 items-center justify-center rounded-md bg-[rgba(249,168,212,0.1)] text-[10px] text-[#9e99a7]">?</div>
+                        <div className="flex h-[52px] w-[52px] items-center justify-center rounded-md bg-[rgba(249,168,212,0.1)] text-[10px] text-[#9e99a7]">?</div>
                       )}
                       {i === 0 && (
                         <Image src="/icons/good.png" alt="" width={16} height={16} className="absolute -left-1 -top-1" />
