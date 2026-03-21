@@ -60,7 +60,7 @@ export function CommentCard({
   return (
     <div
       className={cn(
-        "rounded-2xl bg-bg-card border border-border-primary p-4 transition-all",
+        "rounded-2xl bg-bg-card border border-border-primary px-4 pt-4 pb-3 transition-all",
         karmaClass,
         className
       )}
@@ -68,11 +68,11 @@ export function CommentCard({
       <div className="flex items-start gap-2.5">
         {accentColor && (
           <div
-            className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full"
+            className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full"
             style={{ backgroundColor: accentColor }}
           />
         )}
-        <div className="flex flex-col">
+        <div className="flex flex-col -mt-1">
           <span className="text-base font-medium text-text-primary">
             {displayName}
           </span>
@@ -91,7 +91,7 @@ export function CommentCard({
         {body}
       </p>
 
-      <div className="mt-3 flex items-center gap-4 text-text-muted text-xs md:text-sm">
+      <div className="mt-4 flex items-center gap-4 text-text-muted text-xs md:text-sm">
         <ThumbsUpDown
           thumbsUpCount={thumbsUpCount}
           thumbsDownCount={thumbsDownCount}

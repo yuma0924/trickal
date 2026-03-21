@@ -67,7 +67,7 @@ export function CommentList({
           まだコメントがありません
         </p>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {comments.map((comment) => (
             <CommentCard
               key={comment.id}
