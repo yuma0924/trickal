@@ -232,7 +232,7 @@ export function BuildsClient() {
               showToast("編成を投稿しました！");
               // 新着順で再取得後、リスト先頭にスクロール
               setTimeout(() => {
-                document.getElementById("build-list")?.scrollIntoView({ behavior: "smooth" });
+                document.getElementById("build-list-top")?.scrollIntoView({ behavior: "smooth" });
               }, 300);
             }}
             onClose={() => setFormOpen(false)}
@@ -241,7 +241,7 @@ export function BuildsClient() {
       )}
 
       {/* 性格フィルター + ソート */}
-      <div className="flex items-center justify-between gap-2">
+      <div id="build-list-top" className="flex items-center justify-between gap-2">
         <div className="flex gap-1.5 overflow-x-auto">
           <button
             onClick={() => setElementFilters(new Set())}
@@ -319,7 +319,7 @@ export function BuildsClient() {
       {initialLoaded && builds.length === 0 && !loading ? (
         <EmptyState />
       ) : (
-        <div id="build-list" className="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
+        <div className="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
           {builds.map((build) => (
             <BuildCard
               key={build.id}
