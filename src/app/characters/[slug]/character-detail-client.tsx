@@ -904,7 +904,7 @@ export function CharacterDetailClient({
 
       {/* 回遊エリア: 関連キャラ */}
       {relatedCharacters.length > 0 && (
-        <section className="space-y-3">
+        <section className="!mt-10 space-y-3">
           <div>
             <div className="flex items-center gap-2">
               <svg className="h-4 w-4 md:h-5 md:w-5 text-[#c0bbc8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -930,7 +930,7 @@ export function CharacterDetailClient({
       )}
 
       {/* ページ下部ナビリンク */}
-      <section className="space-y-3">
+      <section className="!mt-10 space-y-3">
         <p className="text-xs md:text-sm font-bold text-[#c0bbc8]">他のランキングもチェック</p>
         <Link
           href="/ranking"
