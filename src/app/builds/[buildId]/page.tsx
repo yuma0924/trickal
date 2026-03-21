@@ -9,6 +9,7 @@ type CharacterInfo = {
   name: string;
   slug: string;
   element: string | null;
+  position: string | null;
   image_url: string | null;
   is_hidden: boolean;
 };
@@ -26,7 +27,7 @@ type BuildData = {
   id: string;
   mode: Mode;
   party_size: number;
-  members: string[];
+  members: (string | null)[];
   element_label: string | null;
   title: string | null;
   display_name: string | null;
@@ -111,22 +112,26 @@ export default async function BuildDetailPage({
   }
 
   // メンバーのキャラ情報
-  const { data: rawChars } = await supabase
-    .from("characters")
-    .select("id, name, slug, element, image_url, is_hidden")
-    .in("id", build.members);
+  const actualMemberIds = build.members.filter((id): id is string => id !== null);
+  const { data: rawChars } = actualMemberIds.length > 0
+    ? await supabase
+        .from("characters")
+        .select("id, name, slug, element, position, image_url, is_hidden")
+        .in("id", actualMemberIds)
+    : { data: [] };
 
   const charMap = new Map(
     ((rawChars as CharacterInfo[] | null) ?? []).map((c) => [c.id, c])
   );
 
-  const membersDetail = build.members.map(
+  const membersDetail = actualMemberIds.map(
     (id) =>
       charMap.get(id) ?? {
         id,
         name: "不明",
         slug: "",
         element: null,
+        position: null,
         image_url: null,
         is_hidden: false,
       }
@@ -145,7 +150,7 @@ export default async function BuildDetailPage({
   const candidates = ((rawCandidates as BuildData[] | null) ?? [])
     .map((sb) => ({
       ...sb,
-      commonCount: sb.members.filter((m) => build.members.includes(m)).length,
+      commonCount: sb.members.filter((m): m is string => m !== null).filter((m) => actualMemberIds.includes(m)).length,
       sameElement: sb.element_label === build.element_label,
     }))
     .filter((sb) => sb.commonCount > 0 || sb.sameElement)
@@ -157,12 +162,12 @@ export default async function BuildDetailPage({
 
   // 似ている編成のキャラ情報
   const similarMemberIds = [
-    ...new Set(candidates.flatMap((sb) => sb.members)),
+    ...new Set(candidates.flatMap((sb) => sb.members).filter((id): id is string => id !== null)),
   ];
   if (similarMemberIds.length > 0) {
     const { data: sc } = await supabase
       .from("characters")
-      .select("id, name, slug, element, image_url, is_hidden")
+      .select("id, name, slug, element, position, image_url, is_hidden")
       .in("id", similarMemberIds);
 
     for (const c of (sc as CharacterInfo[] | null) ?? []) {
@@ -178,13 +183,14 @@ export default async function BuildDetailPage({
     comment: sb.comment,
     element_label: sb.element_label,
     likes_count: sb.likes_count,
-    members_detail: sb.members.map(
+    members_detail: sb.members.filter((id): id is string => id !== null).map(
       (id) =>
         charMap.get(id) ?? {
           id,
           name: "不明",
           slug: "",
           element: null,
+          position: null,
           image_url: null,
           is_hidden: false,
         }
@@ -206,6 +212,7 @@ export default async function BuildDetailPage({
         dislikes_count: build.dislikes_count,
         created_at: build.created_at,
         updated_at: build.updated_at,
+        members: build.members,
         members_detail: membersDetail,
       }}
       similarBuilds={similarBuilds}
