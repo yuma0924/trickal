@@ -198,8 +198,7 @@ export function CharacterDetailClient({
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, [relicDetailOpen]);
-  const [favoriteOpen, setFavoriteOpen] = useState(false);
-  const [rewardsOpen, setRewardsOpen] = useState(false);
+  const [itemsOpen, setItemsOpen] = useState(false);
   const { toast, showToast } = useToast();
 
   // user_hash 取得
@@ -358,7 +357,7 @@ export function CharacterDetailClient({
   const elemColors = character.element ? ELEMENT_COLORS[character.element] : null;
 
   return (
-    <div className="space-y-6 md:space-y-8">
+    <div className="space-y-4 md:space-y-8">
       {/* ヒーローエリア */}
       <div className="flex items-start gap-4 md:gap-5">
         {/* キャラ画像 モバイル96px / PC224px */}
@@ -500,7 +499,7 @@ export function CharacterDetailClient({
                 )}
                 <div className="min-w-0">
                   <p className="flex items-center gap-1 text-xs text-[#c0bbc8]">
-                    <Image src="/icons/favorite.png" alt="" width={14} height={14} className="shrink-0" />
+                    <Image src="/icons/favorite.png" alt="" width={20} height={20} className="shrink-0" />
                     大好物
                   </p>
                   <p className="mt-0.5 text-base font-bold leading-snug text-[#fafafa]">{character.favoriteItem.name}</p>
@@ -538,7 +537,7 @@ export function CharacterDetailClient({
         <div ref={relicMobileRef} className="relative md:hidden border-t border-[rgba(249,168,212,0.1)] pt-3">
           <button
             className={cn(
-              "flex w-full cursor-pointer items-center gap-3 rounded-[10px] border px-3 py-2.5 transition-colors",
+              "flex w-full cursor-pointer items-center gap-3 rounded-[10px] border px-2 py-1.5 transition-colors",
               relicDetailOpen
                 ? "border-[rgba(249,168,212,0.25)] bg-[rgba(36,27,53,0.7)]"
                 : "border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)]"
@@ -546,10 +545,10 @@ export function CharacterDetailClient({
             onClick={() => setRelicDetailOpen(!relicDetailOpen)}
           >
             {character.relic.imageUrl && (
-              <Image src={character.relic.imageUrl} alt={character.relic.name} width={44} height={44} className="shrink-0 rounded-md" />
+              <Image src={character.relic.imageUrl} alt={character.relic.name} width={52} height={52} className="shrink-0 rounded-md" />
             )}
             <div className="min-w-0 text-left flex-1">
-              <p className="text-[10px] text-[#9e99a7]">愛用カード</p>
+              <p className="text-[10px] text-[#c0bbc8]">愛用カード</p>
               <p className="text-sm font-bold text-[#fafafa]">{character.relic.name}</p>
             </div>
             <svg
@@ -578,85 +577,96 @@ export function CharacterDetailClient({
         </div>
       )}
 
-      {/* モバイル版 好物・アルバイト報酬（展開式） */}
-      {/* モバイル版 大好物（展開式） */}
-      {character.favoriteItem && (
+      {/* モバイル版 大好物・アルバイト報酬（折りたたみ） */}
+      {(character.favoriteItem || character.partTimeRewards.length > 0) && (
         <div className="md:hidden border-t border-[rgba(249,168,212,0.1)] pt-3">
           <button
-            className="flex w-full cursor-pointer items-center justify-between py-1 text-xs font-medium text-[#9e99a7] transition-colors hover:text-[#d4d0de]"
-            onClick={() => setFavoriteOpen(!favoriteOpen)}
+            className="flex w-full cursor-pointer items-center justify-between pr-2 py-1 text-xs font-medium text-[#c0bbc8] transition-colors hover:text-[#d4d0de]"
+            onClick={() => setItemsOpen(!itemsOpen)}
           >
             <span className="flex items-center gap-1">
-              <Image src="/icons/favorite.png" alt="" width={12} height={12} className="shrink-0" />
-              大好物
+              <Image src="/icons/favorite.png" alt="" width={18} height={18} className="shrink-0" />
+              大好物・アルバイト報酬
             </span>
             <svg
-              className={`h-3.5 w-3.5 transition-transform ${favoriteOpen ? "rotate-180" : ""}`}
+              className={`h-3.5 w-3.5 transition-transform ${itemsOpen ? "rotate-180" : ""}`}
               fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
-          {favoriteOpen && (
-            <div className="mt-2">
-              <div className="flex items-center gap-3 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2">
-                {character.favoriteItem.imageUrl && (
-                  <Image src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={28} height={28} className="shrink-0 rounded" />
-                )}
-                <p className="text-xs font-bold text-[#fafafa]">{character.favoriteItem.name}</p>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* モバイル版 アルバイト報酬（展開式） */}
-      {character.partTimeRewards.length > 0 && (
-        <div className="md:hidden border-t border-[rgba(249,168,212,0.1)] pt-3">
-          <button
-            className="flex w-full cursor-pointer items-center justify-between py-1 text-xs font-medium text-[#9e99a7] transition-colors hover:text-[#d4d0de]"
-            onClick={() => setRewardsOpen(!rewardsOpen)}
-          >
-            <span>アルバイト報酬</span>
-            <svg
-              className={`h-3.5 w-3.5 transition-transform ${rewardsOpen ? "rotate-180" : ""}`}
-              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          {rewardsOpen && (
-            <div className="mt-2 flex items-center gap-2 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2.5">
-              {character.partTimeRewards.map((reward, i) => (
-                <div key={i} className="relative shrink-0">
-                  {reward.imageUrl ? (
-                    <Image src={reward.imageUrl} alt={reward.name} width={28} height={28} className="rounded" />
-                  ) : (
-                    <div className="flex h-7 w-7 items-center justify-center rounded bg-[rgba(249,168,212,0.1)] text-[10px] text-[#9e99a7]">?</div>
+          {itemsOpen && (
+          <div className="mt-2 flex items-stretch gap-2">
+            {character.favoriteItem && (
+              <div className="flex flex-1 flex-col justify-center rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-2.5 py-2">
+                <p className="flex items-center gap-1 text-[10px] text-[#9e99a7]">
+                  <Image src="/icons/favorite.png" alt="" width={16} height={16} className="shrink-0" />
+                  大好物
+                </p>
+                <div className="mt-1 flex items-center gap-2">
+                  {character.favoriteItem.imageUrl && (
+                    <Image src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={36} height={36} className="shrink-0 rounded-md" />
                   )}
-                  {i === 0 && (
-                    <Image src="/icons/good.png" alt="" width={14} height={14} className="absolute -left-1 -top-1" />
-                  )}
+                  <p className="text-xs font-bold leading-snug text-[#fafafa]">{character.favoriteItem.name}</p>
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
+            {character.partTimeRewards.length > 0 && (
+              <div className="flex flex-1 flex-col justify-center rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-2.5 py-2">
+                <p className="text-[10px] text-[#9e99a7]">アルバイト報酬</p>
+                <div className="mt-1 flex items-center gap-1">
+                  {character.partTimeRewards.map((reward, i) => (
+                    <div key={i} className="relative shrink-0">
+                      {reward.imageUrl ? (
+                        <Image src={reward.imageUrl} alt={reward.name} width={36} height={36} className="rounded" />
+                      ) : (
+                        <div className="flex h-9 w-9 items-center justify-center rounded bg-[rgba(249,168,212,0.1)] text-[10px] text-[#9e99a7]">?</div>
+                      )}
+                      {i === 0 && (
+                        <Image src="/icons/good.png" alt="" width={12} height={12} className="absolute -left-0.5 -top-0.5" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
           )}
         </div>
       )}
 
       {/* スキル (チラ見せ + 展開) */}
       <section className="border-t border-[rgba(249,168,212,0.1)] pt-3">
-        <div className="flex items-center gap-2 mb-3">
-          <svg className="h-4 w-4 md:h-5 md:w-5 text-[#c0bbc8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        {/* モバイル: 見出しタップで展開 */}
+        <button
+          className="flex w-full cursor-pointer items-center justify-between pr-2 mb-3 md:hidden"
+          onClick={() => setSkillsOpen(!skillsOpen)}
+        >
+          <span className="flex items-center gap-2">
+            <svg className="h-4 w-4 text-[#c0bbc8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            <span className="text-sm font-bold text-[#fafafa]">スキル</span>
+          </span>
+          <svg
+            className={`h-3.5 w-3.5 text-[#9e99a7] transition-transform ${skillsOpen ? "rotate-180" : ""}`}
+            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        {/* PC: 見出しのみ（展開ボタンは下） */}
+        <div className="hidden items-center gap-2 mb-3 md:flex">
+          <svg className="h-5 w-5 text-[#c0bbc8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
           </svg>
-          <span className="text-sm md:text-base font-bold text-[#fafafa]">スキル</span>
+          <span className="text-base font-bold text-[#fafafa]">スキル</span>
         </div>
         <div className="relative">
           <div
             className={cn(
               "overflow-hidden transition-[max-height] duration-300",
-              skillsOpen ? "max-h-[3000px]" : "max-h-28"
+              skillsOpen ? "max-h-[3000px]" : "max-h-0 md:max-h-28"
             )}
           >
             {/* PC: 2列グリッド / モバイル: 縦積み */}
@@ -786,11 +796,11 @@ export function CharacterDetailClient({
           </div>
           {/* グラデーションオーバーレイ（閉じてる時のみ） */}
           {!skillsOpen && (
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0d0a14] to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden bg-gradient-to-t from-[#0d0a14] to-transparent md:block md:h-16" />
           )}
         </div>
         <button
-          className="mt-2 flex w-full cursor-pointer items-center justify-center gap-1 py-1.5 text-xs font-medium text-[#9e99a7] transition-colors hover:text-[#d4d0de]"
+          className="mt-2 hidden w-full cursor-pointer items-center justify-center gap-1 py-1.5 text-xs font-medium text-[#9e99a7] transition-colors hover:text-[#d4d0de] md:flex"
           onClick={() => setSkillsOpen(!skillsOpen)}
         >
           {skillsOpen ? "スキルを閉じる" : "スキルをすべて表示"}
@@ -806,7 +816,7 @@ export function CharacterDetailClient({
       {/* 投稿フォーム */}
       <section>
         {!formOpen ? (
-          <div className="rounded-[14px] bg-gradient-to-r from-[rgba(246,51,154,0.1)] to-[rgba(255,32,86,0.1)] border border-[rgba(251,100,182,0.3)] p-4 shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]">
+          <div className="rounded-[14px] bg-gradient-to-r from-[rgba(246,51,154,0.1)] to-[rgba(255,32,86,0.1)] border border-[rgba(251,100,182,0.3)] px-4 py-2.5 shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <svg className="h-5 w-5 shrink-0 text-[#fcd34d]" fill="currentColor" viewBox="0 0 24 24">
@@ -819,7 +829,7 @@ export function CharacterDetailClient({
               </div>
               <button
                 onClick={() => setFormOpen(true)}
-                className="flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#fb64b6] to-[#ff637e] px-5 md:px-7 py-3 text-xs font-bold text-white shadow-md transition-opacity hover:opacity-90"
+                className="flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#fb64b6] to-[#ff637e] px-4 md:px-6 py-2 text-xs font-bold text-white shadow-md transition-opacity hover:opacity-90"
               >
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
