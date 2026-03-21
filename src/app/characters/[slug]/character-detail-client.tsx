@@ -849,7 +849,7 @@ export function CharacterDetailClient({
       </section>
 
       {/* コメント一覧 */}
-      <section className="-mt-2 md:-mt-3">
+      <section className="md:-mt-3">
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <svg className="h-4 w-4 md:h-5 md:w-5 text-[#c0bbc8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
