@@ -88,16 +88,16 @@ export function CommentForm({
 
       {showRating && (
         <div>
-          <label className="mb-1 block text-xs text-text-secondary">
+          <label className="mb-2 flex items-baseline gap-2 text-xs text-text-secondary">
             評価（任意）
+            <span className="text-xs text-text-tertiary">※入力するとランキングに反映されます</span>
           </label>
           <StarRatingInput value={rating} onChange={setRating} />
-          <p className="mt-1 text-xs text-text-tertiary">評価するとランキングに反映されます</p>
         </div>
       )}
 
       <div>
-        <label className="mb-1 block text-xs text-text-secondary">コメント</label>
+        <label className="mb-1 block text-xs text-text-secondary">コメント<span className="text-[#f87171]">*</span></label>
         <textarea
           value={body}
           onChange={handleBodyChange}
