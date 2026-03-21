@@ -47,6 +47,7 @@ export async function GET(request: NextRequest) {
           return elems;
         })()
       : [];
+    const sortKey = searchParams.get("sort") || "popular";
     const cursor = searchParams.get("cursor");
     const limit = Math.min(
       Number(searchParams.get("limit")) || PAGE_SIZE,
@@ -81,18 +82,26 @@ export async function GET(request: NextRequest) {
           .from("builds")
           .select("*")
           .eq("mode", validMode)
-          .eq("is_deleted", false)
-          .or(
+          .eq("is_deleted", false);
+
+        if (sortKey === "newest") {
+          q = q.lt("updated_at", cursorBuild.updated_at);
+        } else {
+          q = q.or(
             `likes_count.lt.${cursorBuild.likes_count},` +
             `and(likes_count.eq.${cursorBuild.likes_count},updated_at.lt.${cursorBuild.updated_at})`
           );
+        }
 
         if (elementLabels.length > 0) q = q.in("element_label", elementLabels);
 
-        const { data, error } = await q
-          .order("likes_count", { ascending: false })
-          .order("updated_at", { ascending: false })
-          .limit(limit + 1);
+        if (sortKey === "newest") {
+          q = q.order("updated_at", { ascending: false });
+        } else {
+          q = q.order("likes_count", { ascending: false }).order("updated_at", { ascending: false });
+        }
+
+        const { data, error } = await q.limit(limit + 1);
 
         if (error) queryError = error.message;
         builds = (data as Build[]) ?? [];
@@ -109,9 +118,13 @@ export async function GET(request: NextRequest) {
 
         if (elementLabels.length > 0) q = q.in("element_label", elementLabels);
 
+        if (sortKey === "newest") {
+          q = q.order("updated_at", { ascending: false });
+        } else {
+          q = q.order("likes_count", { ascending: false }).order("updated_at", { ascending: false });
+        }
+
         const { data, error } = await q
-          .order("likes_count", { ascending: false })
-          .order("updated_at", { ascending: false })
           .limit(limit + 1);
 
         if (error) queryError = error.message;
