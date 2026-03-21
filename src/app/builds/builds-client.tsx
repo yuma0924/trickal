@@ -227,9 +227,13 @@ export function BuildsClient() {
           <BuildPostForm
             initialMode={mode}
             onPosted={() => {
-              fetchBuilds();
-              showToast("編成を投稿しました！");
+              setSortKey("newest");
               setFormOpen(false);
+              showToast("編成を投稿しました！");
+              // 新着順で再取得後、リスト先頭にスクロール
+              setTimeout(() => {
+                document.getElementById("build-list")?.scrollIntoView({ behavior: "smooth" });
+              }, 300);
             }}
             onClose={() => setFormOpen(false)}
           />
@@ -315,7 +319,7 @@ export function BuildsClient() {
       {initialLoaded && builds.length === 0 && !loading ? (
         <EmptyState />
       ) : (
-        <div className="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
+        <div id="build-list" className="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
           {builds.map((build) => (
             <BuildCard
               key={build.id}
