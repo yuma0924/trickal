@@ -125,10 +125,21 @@ export async function GET(request: NextRequest) {
         }
 
         const { data, error } = await q
-          .limit(limit + 1);
+          .limit(sortKey === "popular" ? 200 : limit + 1);
 
         if (error) queryError = error.message;
-        builds = (data as Build[]) ?? [];
+
+        if (sortKey === "popular" && data) {
+          // ネットスコア（likes - dislikes）で再ソート
+          builds = (data as Build[]).sort((a, b) => {
+            const scoreA = a.likes_count - a.dislikes_count;
+            const scoreB = b.likes_count - b.dislikes_count;
+            if (scoreB !== scoreA) return scoreB - scoreA;
+            return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+          });
+        } else {
+          builds = (data as Build[]) ?? [];
+        }
       }
     }
 

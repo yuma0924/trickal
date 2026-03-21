@@ -436,10 +436,8 @@ function BuildCard({
                 <span className="py-1 text-center text-[10px] md:text-xs font-bold text-[#a893c0]">前列</span>
               </div>
               {Array.from({ length: rowCount }).map((_, rowIdx) => {
-                if (!hasContent(rowIdx)) return null;
-                const isLast = visibleRows.indexOf(undefined as never) === -1 && rowIdx === visibleRows.length - 1;
                 return (
-                  <div key={rowIdx} className={cn("grid grid-cols-3", !isLast && "border-b border-[rgba(249,168,212,0.15)]")}>
+                  <div key={rowIdx} className={cn("grid grid-cols-3", "border-b border-[rgba(249,168,212,0.15)] last:border-b-0")}>
                     {[0, 1, 2].map((colIdx) => {
                       const char = slots[colIdx * rowCount + rowIdx];
                       return (
@@ -460,7 +458,10 @@ function BuildCard({
                               </span>
                             </>
                           ) : (
-                            <div className="h-16 w-16" />
+                            <>
+                              <div className="h-16 w-16" />
+                              <span className="text-[10px] md:text-xs">&nbsp;</span>
+                            </>
                           )}
                         </div>
                       );
