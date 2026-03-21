@@ -319,12 +319,13 @@ export function BuildsClient() {
       {initialLoaded && builds.length === 0 && !loading ? (
         <EmptyState />
       ) : (
-        <div className="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
-          {builds.map((build) => (
+        <div className="space-y-6 md:grid md:grid-cols-2 md:gap-5 md:space-y-0">
+          {builds.map((build, idx) => (
             <BuildCard
               key={build.id}
               build={build}
               onReaction={handleReaction}
+              rank={sortKey === "popular" ? idx : -1}
             />
           ))}
         </div>
@@ -362,10 +363,15 @@ export function BuildsClient() {
 function BuildCard({
   build,
   onReaction,
+  rank = -1,
 }: {
   build: BuildItem;
   onReaction: (buildId: string, reaction: "up" | "down" | null) => void;
+  rank?: number;
 }) {
+  const netScore = build.likes_count - build.dislikes_count;
+  const isTop = rank === 0 && netScore >= 2;
+  const isSecond = rank === 1 && netScore >= 2;
   const [expanded, setExpanded] = useState(false);
   const karmaClass = getKarmaClass(build.likes_count, build.dislikes_count);
 
@@ -378,10 +384,23 @@ function BuildCard({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] p-4",
+        "relative rounded-2xl border p-4",
+        isTop
+          ? "border-[rgba(252,211,77,0.5)] bg-[rgba(36,27,53,0.8)]"
+          : isSecond
+            ? "border-[rgba(192,192,210,0.5)] bg-[rgba(36,27,53,0.8)]"
+            : "border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)]",
         karmaClass
       )}
     >
+      {(isTop || isSecond) && (
+        <div className="absolute -top-3 left-3 flex items-center gap-1 rounded-full bg-[#1a1225] px-2 py-0.5 md:gap-1.5 md:px-2.5 md:py-1">
+          <svg className={cn("h-3.5 w-3.5 md:h-4 md:w-4", isTop ? "text-[#fcd34d]" : "text-[#c0c0d2]")} viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2 20h2c.55 0 1-.45 1-1v-9c0-.55-.45-1-1-1H2v11zm19.83-7.12c.11-.25.17-.52.17-.8V11c0-1.1-.9-2-2-2h-5.5l.92-4.65c.05-.22.02-.46-.08-.66-.23-.45-.52-.86-.88-1.22L14 2 7.59 8.41C7.21 8.79 7 9.3 7 9.83v7.84C7 18.95 8.05 20 9.34 20h8.11c.7 0 1.36-.37 1.72-.97l2.66-6.15z" />
+          </svg>
+          <span className={cn("text-[10px] md:text-xs font-bold", isTop ? "text-[#fcd34d]" : "text-[#c0c0d2]")}>高評価</span>
+        </div>
+      )}
       <Link
         href={`/builds/${build.id}`}
         className="block cursor-pointer"
@@ -436,6 +455,19 @@ function BuildCard({
                 <span className="py-1 text-center text-[10px] md:text-xs font-bold text-[#a893c0]">前列</span>
               </div>
               {Array.from({ length: rowCount }).map((_, rowIdx) => {
+                if (!hasContent(rowIdx)) return (
+                  <div key={rowIdx} className="hidden md:grid grid-cols-3 border-b border-[rgba(249,168,212,0.15)] last:border-b-0">
+                    {[0, 1, 2].map((colIdx) => (
+                      <div key={colIdx} className={cn(
+                        "flex flex-col items-center gap-0.5 pt-2 pb-1.5",
+                        colIdx < 2 && "border-r border-[rgba(249,168,212,0.15)]"
+                      )}>
+                        <div className="h-16 w-16" />
+                        <span className="text-[10px] md:text-xs">&nbsp;</span>
+                      </div>
+                    ))}
+                  </div>
+                );
                 return (
                   <div key={rowIdx} className={cn("grid grid-cols-3", "border-b border-[rgba(249,168,212,0.15)] last:border-b-0")}>
                     {[0, 1, 2].map((colIdx) => {
