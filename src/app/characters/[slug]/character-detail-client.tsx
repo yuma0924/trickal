@@ -182,6 +182,22 @@ export function CharacterDetailClient({
   const [formOpen, setFormOpen] = useState(false);
   const [relicDetailOpen, setRelicDetailOpen] = useState(false);
   const relicBtnRef = useRef<HTMLButtonElement>(null);
+  const relicPcRef = useRef<HTMLDivElement>(null);
+  const relicMobileRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!relicDetailOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (
+        relicPcRef.current?.contains(target) ||
+        relicMobileRef.current?.contains(target)
+      ) return;
+      setRelicDetailOpen(false);
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, [relicDetailOpen]);
   const [favoriteOpen, setFavoriteOpen] = useState(false);
   const [rewardsOpen, setRewardsOpen] = useState(false);
   const { toast, showToast } = useToast();
@@ -426,7 +442,7 @@ export function CharacterDetailClient({
 
           {/* PC版 愛用カード（★の下・展開式） */}
           {character.relic && (
-            <div className="relative mt-3 hidden md:mt-5 md:block">
+            <div ref={relicPcRef} className="relative mt-3 hidden md:mt-5 md:block">
               <button
                 ref={relicBtnRef}
                 className={cn(
@@ -517,18 +533,48 @@ export function CharacterDetailClient({
         )}
       </div>
 
-      {/* モバイル版 愛用カード（スキルの上） */}
+      {/* モバイル版 愛用カード（スキルの上・タップで展開） */}
       {character.relic && (
-        <div className="md:hidden border-t border-[rgba(249,168,212,0.1)] pt-3">
-          <div className="flex items-center gap-3 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2.5">
+        <div ref={relicMobileRef} className="relative md:hidden border-t border-[rgba(249,168,212,0.1)] pt-3">
+          <button
+            className={cn(
+              "flex w-full cursor-pointer items-center gap-3 rounded-[10px] border px-3 py-2.5 transition-colors",
+              relicDetailOpen
+                ? "border-[rgba(249,168,212,0.25)] bg-[rgba(36,27,53,0.7)]"
+                : "border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)]"
+            )}
+            onClick={() => setRelicDetailOpen(!relicDetailOpen)}
+          >
             {character.relic.imageUrl && (
               <Image src={character.relic.imageUrl} alt={character.relic.name} width={44} height={44} className="shrink-0 rounded-md" />
             )}
-            <div className="min-w-0">
+            <div className="min-w-0 text-left flex-1">
               <p className="text-[10px] text-[#9e99a7]">愛用カード</p>
               <p className="text-sm font-bold text-[#fafafa]">{character.relic.name}</p>
             </div>
-          </div>
+            <svg
+              className={`h-3.5 w-3.5 shrink-0 text-[#9e99a7] transition-transform ${relicDetailOpen ? "rotate-180" : ""}`}
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {relicDetailOpen && (
+            <div className="absolute left-0 right-0 top-full z-10 mt-1 rounded-[10px] border border-[rgba(249,168,212,0.2)] bg-[#1a1425] px-3 py-2.5 shadow-xl">
+              {character.relic.params && (
+                <ul className="space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
+                  {character.relic.params.split("\n").filter(Boolean).map((line, i) => (
+                    <li key={i} className="text-xs leading-relaxed text-[#d4d0de]">
+                      <ParamLine text={line} />
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {character.relic.description && (
+                <p className={`text-xs leading-relaxed text-[#c0bbc8] ${character.relic.params ? "mt-2" : ""}`}>{character.relic.description}</p>
+              )}
+            </div>
+          )}
         </div>
       )}
 
