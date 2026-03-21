@@ -17,6 +17,7 @@ type CharacterInfo = {
   name: string;
   slug: string;
   element: string | null;
+  position: string | null;
   image_url: string | null;
   is_hidden: boolean;
 };
@@ -127,13 +128,13 @@ export async function GET(request: NextRequest) {
     const nextCursor = hasMore ? items[items.length - 1]?.id : null;
 
     // メンバーのキャラ情報を取得
-    const memberIds = [...new Set(items.flatMap((b) => b.members))];
+    const memberIds = [...new Set(items.flatMap((b) => b.members).filter((id): id is string => id !== null))];
     let characters: Record<string, CharacterInfo> = {};
 
     if (memberIds.length > 0) {
       const { data: chars } = await supabase
         .from("characters")
-        .select("id, name, slug, element, image_url, is_hidden")
+        .select("id, name, slug, element, position, image_url, is_hidden")
         .in("id", memberIds);
 
       if (chars) {
@@ -182,6 +183,7 @@ export async function GET(request: NextRequest) {
       name: "不明",
       slug: "",
       element: null,
+      position: null,
       image_url: null,
       is_hidden: false,
     };
@@ -189,9 +191,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       builds: items.map((b) => ({
         ...b,
-        members_detail: b.members.map(
-          (id) => characters[id] || { id, ...fallbackChar }
-        ),
+        members_detail: b.members
+          .filter((id): id is string => id !== null)
+          .map((id) => characters[id] || { id, ...fallbackChar }),
         user_reaction: userReactions[b.id] || null,
         comments_count: commentCounts[b.id] ?? 0,
       })),
@@ -279,15 +281,24 @@ export async function POST(request: NextRequest) {
     }
     const validModePost = mode as ValidModePost;
 
-    if (!Array.isArray(members) || members.length === 0) {
+    if (!Array.isArray(members)) {
       return NextResponse.json(
         { error: "members は必須です" },
         { status: 400 }
       );
     }
 
+    // null を含む9枠配列から実際のキャラIDを抽出
+    const actualMembers = members.filter((id): id is string => id !== null && id !== undefined);
+    if (actualMembers.length === 0) {
+      return NextResponse.json(
+        { error: "キャラクターを1体以上選択してください" },
+        { status: 400 }
+      );
+    }
+
     const maxPartySize = validModePost === "dimension" ? 9 : 6;
-    if (members.length > maxPartySize) {
+    if (actualMembers.length > maxPartySize) {
       return NextResponse.json(
         { error: `メンバーは${maxPartySize}人以内で選択してください` },
         { status: 400 }
@@ -319,7 +330,7 @@ export async function POST(request: NextRequest) {
     const { data: chars, error: charsError } = await supabase
       .from("characters")
       .select("id, element")
-      .in("id", members);
+      .in("id", actualMembers);
 
     if (charsError) {
       return NextResponse.json(
@@ -330,7 +341,7 @@ export async function POST(request: NextRequest) {
 
     const charList = chars as { id: string; element: string | null }[] | null;
 
-    if (!charList || charList.length !== members.length) {
+    if (!charList || charList.length !== actualMembers.length) {
       return NextResponse.json(
         { error: "無効なキャラクターが含まれています" },
         { status: 400 }
@@ -353,49 +364,32 @@ export async function POST(request: NextRequest) {
       title?.trim() || (modeLabelMap[validModePost] ?? validModePost);
     const finalDisplayName = display_name?.trim() || DEFAULT_DISPLAY_NAME;
 
-    const actualPartySize = members.length;
+    const actualPartySize = actualMembers.length;
 
-    // 同一 user_hash * mode の既存投稿を検索（上書き判定）
-    const { data: existing } = await supabase
+    // 同一ユーザー・同一モード・同一メンバー構成の重複チェック
+    const sortedMembers = [...actualMembers].sort();
+    const { data: duplicates } = await supabase
       .from("builds")
-      .select("id")
+      .select("id, members")
       .eq("user_hash", userHash)
       .eq("mode", validModePost)
-      .eq("is_deleted", false)
-      .single();
+      .eq("is_deleted", false);
 
-    const existingRow = existing as { id: string } | null;
-    const headers = setCookieHeaders(cookieUuid, isNewCookie);
-
-    if (existingRow) {
-      // 上書き更新
-      const { data: updated, error: updateError } = await supabase
-        .from("builds")
-        .update({
-          members,
-          party_size: actualPartySize,
-          element_label: elementLabel,
-          title: finalTitle,
-          display_name: finalDisplayName,
-          comment: comment.trim(),
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", existingRow.id)
-        .select()
-        .single();
-
-      if (updateError) {
+    if (duplicates) {
+      const isDuplicate = duplicates.some((b) => {
+        const existing = b.members.filter((id: string | null) => id !== null).sort();
+        return existing.length === sortedMembers.length &&
+          existing.every((id: string, i: number) => id === sortedMembers[i]);
+      });
+      if (isDuplicate) {
         return NextResponse.json(
-          { error: updateError.message },
-          { status: 500 }
+          { error: "同じメンバー構成の編成が既に投稿されています" },
+          { status: 409 }
         );
       }
-
-      return NextResponse.json(
-        { build: updated, updated: true },
-        { headers }
-      );
     }
+
+    const headers = setCookieHeaders(cookieUuid, isNewCookie);
 
     // 新規投稿
     const { data: newBuild, error: insertError } = await supabase

@@ -17,6 +17,7 @@ type CharacterInfo = {
   name: string;
   slug: string;
   element: string | null;
+  position: string | null;
   image_url: string | null;
   is_hidden: boolean;
 };
@@ -409,78 +410,66 @@ function BuildCard({
         </div>
 
         {/* キャラ編成グリッド */}
-        <div className="mb-3 overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.05)]">
-          {/* ヘッダー行 */}
-          <div className="grid grid-cols-3 bg-[rgba(42,33,62,0.8)]">
-            <span className="border-r border-[rgba(249,168,212,0.05)] py-1.5 text-center text-[10px] md:text-xs font-bold text-[#a893c0]">後列</span>
-            <span className="border-r border-[rgba(249,168,212,0.05)] py-1.5 text-center text-[10px] md:text-xs font-bold text-[#a893c0]">中列</span>
-            <span className="py-1.5 text-center text-[10px] md:text-xs font-bold text-[#a893c0]">前列</span>
-          </div>
-          {/* 上段 (0,1,2) */}
-          <div className="grid grid-cols-3 border-b border-[rgba(249,168,212,0.05)]">
-            {build.members_detail.slice(0, 3).map((char, i) => (
-              <div key={`${char.id}-${i}`} className={cn(
-                "flex flex-col items-center gap-1 py-3",
-                i < 2 && "border-r border-[rgba(249,168,212,0.05)]"
-              )}>
-                <CharacterIcon
-                  name={char.name}
-                  imageUrl={char.image_url}
-                  isHidden={char.is_hidden}
-                  size="md"
-                />
-                <span className="max-w-20 truncate text-center text-[10px] md:text-xs font-bold text-[#a893c0]">
-                  {char.name}
-                </span>
+        {(() => {
+          // members配列からスロット位置を再現（9枠: 後列×3, 中列×3, 前列×3）
+          const charMap = new Map(build.members_detail.map((c) => [c.id, c]));
+          const slots: (CharacterInfo | null)[] = build.members.map(
+            (id: string | null) => (id ? charMap.get(id) ?? null : null)
+          );
+          // 9枠に満たない場合はnullで埋める
+          while (slots.length < 9) slots.push(null);
+          const rowCount = 3;
+          // 全スロットが空の行は非表示にする
+          const hasContent = (rowIdx: number) =>
+            [0, 1, 2].some((colIdx) => slots[colIdx * rowCount + rowIdx] !== null);
+          const visibleRows = Array.from({ length: rowCount }).filter((_, i) => hasContent(i));
+
+          return (
+            <div className="mb-2 overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.15)]">
+              <div className="grid grid-cols-3 bg-[rgba(42,33,62,0.8)]">
+                <span className="border-r border-[rgba(249,168,212,0.15)] py-1 text-center text-[10px] md:text-xs font-bold text-[#a893c0]">後列</span>
+                <span className="border-r border-[rgba(249,168,212,0.15)] py-1 text-center text-[10px] md:text-xs font-bold text-[#a893c0]">中列</span>
+                <span className="py-1 text-center text-[10px] md:text-xs font-bold text-[#a893c0]">前列</span>
               </div>
-            ))}
-          </div>
-          {/* 下段 (3,4,5) */}
-          {build.members_detail.length > 3 && (
-            <div className={cn("grid grid-cols-3", build.members_detail.length > 6 && "border-b border-[rgba(249,168,212,0.05)]")}>
-              {build.members_detail.slice(3, 6).map((char, i) => (
-                <div key={`${char.id}-${i + 3}`} className={cn(
-                  "flex flex-col items-center gap-1 py-3",
-                  i < 2 && "border-r border-[rgba(249,168,212,0.05)]"
-                )}>
-                  <CharacterIcon
-                    name={char.name}
-                    imageUrl={char.image_url}
-                    isHidden={char.is_hidden}
-                    size="md"
-                  />
-                  <span className="max-w-20 truncate text-center text-[10px] md:text-xs font-bold text-[#a893c0]">
-                    {char.name}
-                  </span>
-                </div>
-              ))}
+              {Array.from({ length: rowCount }).map((_, rowIdx) => {
+                if (!hasContent(rowIdx)) return null;
+                const isLast = visibleRows.indexOf(undefined as never) === -1 && rowIdx === visibleRows.length - 1;
+                return (
+                  <div key={rowIdx} className={cn("grid grid-cols-3", !isLast && "border-b border-[rgba(249,168,212,0.15)]")}>
+                    {[0, 1, 2].map((colIdx) => {
+                      const char = slots[colIdx * rowCount + rowIdx];
+                      return (
+                        <div key={colIdx} className={cn(
+                          "flex flex-col items-center gap-0.5 pt-2 pb-1.5",
+                          colIdx < 2 && "border-r border-[rgba(249,168,212,0.15)]"
+                        )}>
+                          {char ? (
+                            <>
+                              <CharacterIcon
+                                name={char.name}
+                                imageUrl={char.image_url}
+                                isHidden={char.is_hidden}
+                                size="md"
+                              />
+                              <span className="max-w-20 truncate text-center text-[10px] md:text-xs font-bold text-[#a893c0]">
+                                {char.name}
+                              </span>
+                            </>
+                          ) : (
+                            <div className="h-16 w-16" />
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
             </div>
-          )}
-          {/* 3段目 (6,7,8) — 次元の衝突 9体 */}
-          {build.members_detail.length > 6 && (
-            <div className="grid grid-cols-3">
-              {build.members_detail.slice(6, 9).map((char, i) => (
-                <div key={`${char.id}-${i + 6}`} className={cn(
-                  "flex flex-col items-center gap-1 py-3",
-                  i < 2 && "border-r border-[rgba(249,168,212,0.05)]"
-                )}>
-                  <CharacterIcon
-                    name={char.name}
-                    imageUrl={char.image_url}
-                    isHidden={char.is_hidden}
-                    size="md"
-                  />
-                  <span className="max-w-20 truncate text-center text-[10px] md:text-xs font-bold text-[#a893c0]">
-                    {char.name}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+          );
+        })()}
 
         {/* コメント */}
-        <div className="mx-0.5 flex flex-col rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2 min-h-[76px]">
+        <div className="mx-0.5 flex flex-col rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.15)] px-2.5 py-2 min-h-[76px]">
           <p className="whitespace-pre-wrap text-[11px] md:text-xs text-[#fafafa] leading-relaxed line-clamp-3">
             {displayComment}
           </p>

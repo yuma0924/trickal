@@ -54,7 +54,7 @@ function getPartySize(mode: FormMode): number {
 }
 
 function getRowCount(mode: FormMode): number {
-  return mode === "dimension" ? 3 : 2;
+  return 3;
 }
 
 // スロットインデックスからポジション列を取得
@@ -66,12 +66,16 @@ function getSlotColumn(slotIndex: number, rowCount: number): string {
 export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormProps) {
   const [formMode, setFormMode] = useState<FormMode>(initialMode ?? "general");
   const [elementFilter, setElementFilter] = useState<string>("");
+  const [positionFilter, setPositionFilter] = useState<string>("");
+  const [positionFilterManual, setPositionFilterManual] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [formation, setFormation] = useState<(CharacterInfo | null)[]>(
     Array(6).fill(null)
   );
   // 選択中のキャラ（スロットに配置する前の一時状態）
   const [selectedChar, setSelectedChar] = useState<CharacterInfo | null>(null);
+  // 選択中のスロット（＋タップで選択、キャラタップで自動配置）
+  const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [comment, setComment] = useState("");
   const [title, setTitle] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -118,6 +122,9 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
     const size = getPartySize(formMode);
     setFormation(Array(size).fill(null));
     setSelectedChar(null);
+    setSelectedSlot(null);
+    setPositionFilter("");
+    setPositionFilterManual(false);
   }, [formMode]);
 
   const partySize = getPartySize(formMode);
@@ -135,12 +142,15 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
     if (elementFilter) {
       result = result.filter((c) => c.element === elementFilter);
     }
+    if (positionFilter) {
+      result = result.filter((c) => c.position === positionFilter);
+    }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       result = result.filter((c) => c.name.toLowerCase().includes(q));
     }
     return result;
-  }, [allCharacters, elementFilter, searchQuery]);
+  }, [allCharacters, elementFilter, positionFilter, searchQuery]);
 
   // キャラグリッドタップ
   const handleCharacterTap = (char: CharacterInfo) => {
@@ -152,6 +162,23 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
       if (selectedChar?.id === char.id) {
         setSelectedChar(null);
       }
+      return;
+    }
+
+    // スロットが選択されている → そのスロットに自動配置
+    if (selectedSlot !== null) {
+      const slotColumn = getSlotColumn(selectedSlot, rowCount);
+      if (char.position && char.position !== slotColumn) {
+        return; // ポジション不一致
+      }
+      setFormation((prev) => {
+        const next = [...prev];
+        next[selectedSlot] = char;
+        return next;
+      });
+      setSelectedSlot(null);
+      setSelectedChar(null);
+      if (!positionFilterManual) setPositionFilter("");
       return;
     }
 
@@ -177,23 +204,33 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
       return;
     }
 
-    // キャラが選択されていなければ何もしない
-    if (!selectedChar) return;
-
-    // ポジション制約チェック
     const slotColumn = getSlotColumn(slotIndex, rowCount);
-    const requiredPosition = slotColumn;
-    if (selectedChar.position && selectedChar.position !== requiredPosition) {
-      return; // 配置不可
+
+    // スロットを選択してポジションフィルタをかける
+    if (selectedSlot === slotIndex) {
+      // 同じスロットを再タップ → 解除
+      setSelectedSlot(null);
+      setPositionFilter("");
+      return;
     }
 
-    // 配置
-    setFormation((prev) => {
-      const next = [...prev];
-      next[slotIndex] = selectedChar;
-      return next;
-    });
+    setSelectedSlot(slotIndex);
     setSelectedChar(null);
+    setPositionFilter(slotColumn);
+
+    // キャラが既に選択されている場合は配置を試みる
+    if (selectedChar) {
+      if (!selectedChar.position || selectedChar.position === slotColumn) {
+        setFormation((prev) => {
+          const next = [...prev];
+          next[slotIndex] = selectedChar;
+          return next;
+        });
+        setSelectedChar(null);
+        setSelectedSlot(null);
+        if (!positionFilterManual) setPositionFilter("");
+      }
+    }
   };
 
   // キャラがスロットに配置可能か判定
@@ -201,8 +238,17 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
     if (!selectedChar) return false;
     if (formation[slotIndex]) return false;
     const slotColumn = getSlotColumn(slotIndex, rowCount);
-    const requiredPosition = slotColumn;
-    if (selectedChar.position && selectedChar.position !== requiredPosition) {
+    if (selectedChar.position && selectedChar.position !== slotColumn) {
+      return false;
+    }
+    return true;
+  };
+
+  // キャラがその列に配置可能か判定（スロットの空き関係なく）
+  const isMatchingColumn = (slotIndex: number): boolean => {
+    if (!selectedChar) return false;
+    const slotColumn = getSlotColumn(slotIndex, rowCount);
+    if (selectedChar.position && selectedChar.position !== slotColumn) {
       return false;
     }
     return true;
@@ -212,6 +258,9 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
   const handleClearAll = () => {
     setFormation(Array(partySize).fill(null));
     setSelectedChar(null);
+    setSelectedSlot(null);
+    setPositionFilter("");
+    setPositionFilterManual(false);
   };
 
   // 投稿
@@ -238,7 +287,7 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           mode: formMode,
-          members: formation.filter(Boolean).map((c) => c!.id),
+          members: formation.map((c) => c?.id ?? null),
           comment: comment.trim(),
           title: title.trim() || undefined,
           display_name: displayName.trim() || undefined,
@@ -267,7 +316,7 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
   };
 
   return (
-    <div className="rounded-2xl border border-border-primary bg-bg-card p-4">
+    <div className="border border-border-primary bg-bg-card p-3 -mx-2 rounded-lg md:mx-0 md:rounded-2xl md:p-4">
       {/* ヘッダー */}
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-bold text-text-primary">
@@ -319,8 +368,7 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* 性格フィルター + 検索 */}
         <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="shrink-0 text-[10px] text-text-muted">性格</span>
+          <div className="flex items-center justify-between">
             <div className="flex gap-1.5">
               {ELEMENTS.map((elem) => {
                 const active = elementFilter === elem;
@@ -353,6 +401,43 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
                 );
               })}
             </div>
+            <div className="h-6 w-px bg-[rgba(249,168,212,0.15)]" />
+            <div className="flex gap-1.5">
+              {POSITION_LABELS.map((pos) => {
+                const active = positionFilter === pos;
+                return (
+                  <button
+                    key={pos}
+                    type="button"
+                    onClick={() =>
+                    {
+                      const next = positionFilter === pos ? "" : pos;
+                      setPositionFilter(next);
+                      setPositionFilterManual(!!next);
+                    }
+                    }
+                    className={cn(
+                      "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer",
+                      active
+                        ? "bg-[rgba(56,189,248,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+                        : "bg-[#1a1225]"
+                    )}
+                    style={{
+                      border: `1.2px solid ${active ? "rgba(56,189,248,0.4)" : "rgba(249,168,212,0.1)"}`,
+                    }}
+                    title={pos}
+                  >
+                    <Image
+                      src={POSITION_ICON_MAP[pos]}
+                      alt={pos}
+                      width={20}
+                      height={20}
+                      className="h-5 w-5"
+                    />
+                  </button>
+                );
+              })}
+            </div>
           </div>
           <input
             type="text"
@@ -370,7 +455,7 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
               キャラクターが見つかりません
             </p>
           ) : (
-            <div className="grid grid-cols-5 gap-1.5">
+            <div className="grid grid-cols-5 gap-0.5">
               {filteredCharacters.map((char) => {
                 const isPlaced = placedIds.has(char.id);
                 const isSelected = selectedChar?.id === char.id;
@@ -380,7 +465,7 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
                     type="button"
                     onClick={() => handleCharacterTap(char)}
                     className={cn(
-                      "relative flex flex-col items-center gap-0.5 rounded-xl p-1.5 transition-all cursor-pointer",
+                      "relative flex flex-col items-center gap-0 rounded-lg p-0.5 transition-all cursor-pointer",
                       isPlaced
                         ? "bg-[rgba(236,72,153,0.15)] border border-[rgba(244,114,182,0.4)]"
                         : isSelected
@@ -392,7 +477,11 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
                       name={char.name}
                       imageUrl={char.image_url}
                       size="sm"
+                      className="!h-14 !w-14"
                     />
+                    <span className="max-w-14 truncate text-center text-[8px] font-bold text-[#a893c0]">
+                      {char.name}
+                    </span>
                     {/* チェックマーク */}
                     {isPlaced && (
                       <div className="absolute right-0.5 top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[8px] text-white">
@@ -411,9 +500,6 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
                         </svg>
                       </div>
                     )}
-                    <span className="max-w-14 truncate text-center text-[8px] font-bold text-[#a893c0]">
-                      {char.name}
-                    </span>
                   </button>
                 );
               })}
@@ -421,9 +507,9 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
           )}
         </div>
 
-        {/* 選択中のキャラ表示 */}
+        {/* 選択中のキャラ表示（PCのみ） */}
         {selectedChar && (
-          <div className="flex items-start gap-2 rounded-xl border border-[rgba(56,189,248,0.3)] bg-[rgba(56,189,248,0.08)] px-3 py-2">
+          <div className="hidden items-start gap-2 rounded-xl border border-[rgba(56,189,248,0.3)] bg-[rgba(56,189,248,0.08)] px-3 py-2 md:flex">
             <CharacterIcon
               name={selectedChar.name}
               imageUrl={selectedChar.image_url}
@@ -445,17 +531,18 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
                   キャンセル
                 </button>
               </div>
-              <p className="mt-1 text-xs text-[#8b7aab]">
+              <p className="mt-1 hidden text-xs text-[#8b7aab] md:block">
                 下のスロットをタップして配置
               </p>
             </div>
           </div>
         )}
 
-        {/* 選択カウンター + 全解除 */}
+        {/* 選択カウンター + 全解除（スロット選択中は非表示） */}
+        {selectedSlot === null && !selectedChar && (
         <div className="flex items-center justify-between">
           <span className="text-xs text-text-secondary">
-            キャラクター選択（{partySize}体）
+            キャラクター選択<span className="text-[#f87171]">*</span>（{partySize}体）
             <span className="ml-1 font-bold text-accent">
               {formation.filter(Boolean).length}/{partySize}
             </span>
@@ -468,6 +555,7 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
             全解除
           </button>
         </div>
+        )}
 
         {/* 配置グリッド */}
         <div className="overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.1)]">
@@ -506,11 +594,13 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
                     type="button"
                     onClick={() => handleSlotTap(slotIndex)}
                     className={cn(
-                      "flex flex-col items-center gap-0.5 py-2.5 transition-all cursor-pointer",
+                      "flex flex-col items-center gap-0.5 py-1.5 transition-all cursor-pointer",
                       colIdx < 2 &&
                         "border-r border-[rgba(249,168,212,0.05)]",
-                      placeable && "bg-[rgba(56,189,248,0.08)]",
-                      !placeable && selectedChar && !char && "opacity-30"
+                      selectedSlot === slotIndex && "bg-[rgba(56,189,248,0.15)]",
+                      placeable && selectedSlot !== slotIndex && "bg-[rgba(56,189,248,0.08)]",
+                      !placeable && isMatchingColumn(slotIndex) && char && "bg-[rgba(56,189,248,0.06)]",
+                      !isMatchingColumn(slotIndex) && selectedChar && "opacity-30"
                     )}
                   >
                     {char ? (
@@ -519,15 +609,13 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
                           name={char.name}
                           imageUrl={char.image_url}
                           size="sm"
+                          className="!h-14 !w-14"
                         />
-                        <span className="max-w-16 truncate text-center text-[8px] font-bold text-[#a893c0]">
-                          {char.name}
-                        </span>
                       </>
                     ) : (
                       <div
                         className={cn(
-                          "flex h-12 w-12 items-center justify-center rounded-lg border-2 border-dashed",
+                          "flex h-14 w-14 items-center justify-center rounded-lg border-2 border-dashed",
                           placeable
                             ? "border-[rgba(56,189,248,0.5)] bg-[rgba(56,189,248,0.05)]"
                             : "border-[rgba(249,168,212,0.15)]"
@@ -588,7 +676,7 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
         {/* コメント（必須） */}
         <div>
           <label className="mb-1 block text-sm text-text-secondary">
-            コメント
+            コメント<span className="text-[#f87171]">*</span>
             <span className="ml-2 text-xs text-text-tertiary">
               {comment.length}/200
             </span>
@@ -609,9 +697,6 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
           <Button type="submit" disabled={submitting} className="w-full">
             {submitting ? "投稿中..." : "投稿する"}
           </Button>
-          <p className="text-center text-[10px] text-text-muted">
-            同一コンテンツ・人数の既存投稿は上書きされます
-          </p>
         </div>
       </form>
     </div>
