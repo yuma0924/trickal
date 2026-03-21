@@ -97,9 +97,11 @@ Rank-lab プロジェクト統合仕様書
 - レイアウト: 基本情報は左右に並べて表示
 - 表示優先順位:
   1) キャラ名・評価（最優先・ヒーローエリア）
-  2) 戦闘に関わる属性・ステータス数値（展開）
-  3) スキル（展開）
-  4) アルバイトアイテム（紹介文末尾やデータ表末尾に注釈として配置）
+  2) 愛用カード（metadata.relic: name, image_url, description, params）— PC: ★の下に展開式、モバイル: スキルの上にタップ展開
+  3) 大好物（favorite_item_id → items テーブル）— PC: 右カラム、モバイル: 折りたたみ
+  4) アルバイト報酬（character_rewards junction、複数対応、sort_order で並び順管理）— PC: 右カラム、モバイル: 折りたたみ
+  5) スキル（PC: 2列グリッド展開、モバイル: 完全展開式）
+  6) 戦闘に関わる属性・ステータス数値（展開）
 - スキル表示仕様:
   - 各キャラに以下の5スロット（4カテゴリ）のスキルを表示する:
     | カテゴリ | key | スキル名 | クールタイム | 説明 | パラメータ |
@@ -181,7 +183,14 @@ Rank-lab プロジェクト統合仕様書
 3-7. 管理者ダッシュボード
 - 認証: 環境変数ベースの簡易認証（ADMIN_PASSWORD）。管理者1人想定
 - キャラ登録（一括エディタ）
-  - キャラアイコン画像: 管理画面からアップロード → Supabase Storage に保存
+  - キャラアイコン画像: 管理画面からアップロード → Supabase Storage（character-icons）に保存
+  - 愛用カード（relic）編集モーダル: 遺物名 / 画像アップロード（Supabase Storage: relic-icons） / パラメータ / 説明文
+  - 大好物: items テーブルからプルダウン選択（item_type = 'favorite'）
+  - アルバイト報酬: items テーブルから複数選択（item_type = 'reward'）、並び替え可（sort_order）、1番目が優先枠
+- アイテム管理（/admin/items）
+  - 大好物・アルバイト報酬アイテムの登録・編集・削除
+  - アイテム画像アップロード（Supabase Storage: item-icons）
+  - 種別フィルタ（大好物 / 報酬）
 - 通報管理
 - コメント管理（削除）:
   - 論理削除（is_deleted フラグ）。サイト上は「このコメントは削除されました」と表示
@@ -402,10 +411,10 @@ Rank-lab プロジェクト統合仕様書
   - 同じキャラを含む / 同属性の編成を回遊導線として表示
 
 【ユーザー識別・重複投稿（キャラ側思想に準拠）】
-- user_hash を必須とする（荒らし対策・上書き判定）
-- 同一 user_hash × 同一 mode × 同一 party_size の投稿は最新で上書き
-  - 上書き時に members, comment, title, display_name を更新し、updated_at を更新する
-  ※投票コメントの「本文履歴を残す」運用は、編成には初期は適用しない（必要になったら拡張）
+- user_hash を必須とする（荒らし対策）
+- 同一 user_hash × 同一 mode で複数投稿を許可
+- 同一メンバー構成（members の実 ID が一致）の重複投稿は拒否（409エラー）
+- members は 9スロット固定配列（null含む）で保存し、配置位置を正確に保持する
 
 【👍/👎（編成単位）】
 - 👍/👎は “編成（build）単位” で付与する
@@ -450,8 +459,9 @@ Rank-lab プロジェクト統合仕様書
   - position (text) — 配置（前列/中列/後列）
   - stats (jsonb) — ステータス値（HP, 物理攻撃, 魔法攻撃, 防御, 速度, クリティカル 等）
   - skills (jsonb) — スキル情報（Skill[] 配列。各要素: { category: "low_grade"|"high_grade"|"passive"|"normal_attack_basic"|"normal_attack_enhanced", name?: string, cooltime?: number, description: string, params?: string }）
-  - metadata (jsonb) — その他メタ情報（アルバイトアイテム等）
+  - metadata (jsonb) — 愛用カード情報（relic: { name: string, image_url: string | null, description: string, params: string }）
   - image_url (text) — キャラアイコン画像URL
+  - favorite_item_id (UUID, FK → items.id, nullable) — 大好物アイテム
   - is_provisional (boolean, default false) — 暫定値フラグ（サイト上に「⚠️」表示）
   - is_hidden (boolean, default false) — 非表示フラグ（サイト上に表示しないが、DB上のデータは維持）
     - is_hidden = true のキャラは全公開ページ（人気キャラランキング、キャラ検索、ホーム各セクション、character_rankings）から除外
@@ -461,6 +471,20 @@ Rank-lab プロジェクト統合仕様書
   - 設計方針: skills/metadata/stats は JSONB を活用した汎用設計
   - ステータス基準: 「装備なし・ボード未解放」の最大レベル時の素の数値
   - 未入力データ: 数値欄に「未入力」と表示し、ソート時は常にリスト最下部
+
+- items（アイテムマスタ — 大好物・アルバイト報酬の共通管理）:
+  - id (UUID, PK)
+  - name (text, NOT NULL) — アイテム名
+  - image_url (text) — アイコン画像URL（Supabase Storage: item-icons）
+  - item_type (text, NOT NULL) — 'favorite'（大好物）/ 'reward'（アルバイト報酬）
+  - created_at (timestamptz)
+  - updated_at (timestamptz)
+
+- character_rewards（キャラ × アルバイト報酬 中間テーブル）:
+  - character_id (UUID, FK → characters.id ON DELETE CASCADE, NOT NULL)
+  - item_id (UUID, FK → items.id ON DELETE CASCADE, NOT NULL)
+  - sort_order (int, NOT NULL, default 0) — 表示順（0 = 優先枠）
+  - PRIMARY KEY (character_id, item_id)
 
 - comments（投票コメント / 掲示板コメント）:
   - id (UUID, PK)
@@ -521,7 +545,7 @@ Rank-lab プロジェクト統合仕様書
   - id (UUID, PK)
   - mode (text, NOT NULL) — 'pvp' / 'pve' / 'dimension'
   - party_size (int, NOT NULL)
-  - members (UUID[], NOT NULL) — キャラID配列
+  - members ((UUID|null)[], NOT NULL) — 9スロット固定配列（配置位置を保持、空きスロットは null）
   - element_label (text) — 単色属性名 / '混合'
   - title (text) — 編成名（任意。未入力時はアプリ側で自動生成）
   - display_name (text) — 投稿者名（任意。未入力時はデフォルト名「名無しの教主」を適用）

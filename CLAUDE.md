@@ -98,11 +98,13 @@ trickal/
 
 | テーブル | 概要 |
 |---------|------|
-| characters | キャラクター情報（stats/skills/metadata は JSONB） |
+| characters | キャラクター情報（stats/skills/metadata は JSONB、favorite_item_id FK） |
+| items | アイテムマスタ（大好物・アルバイト報酬の共通管理） |
+| character_rewards | キャラ×アルバイト報酬 中間テーブル（sort_order付き） |
 | comments | 投票コメント(vote) + 掲示板コメント(board) |
 | character_rankings | ランキング集計キャッシュ（バッチ更新） |
 | comment_reactions | コメント👍/👎 |
-| builds | 編成投稿（PvP/PvE） |
+| builds | 編成投稿（members は9スロット固定配列） |
 | build_reactions | 編成👍/👎 |
 | build_comments | 編成コメント |
 | build_comment_reactions | 編成コメント👍/👎 |
@@ -119,6 +121,7 @@ trickal/
 - **集計除外**: 365日超え or ネットスコア(👍-👎) -10以下 → 集計除外（表示は維持）
 - **最低投票数**: 有効票4件以上でランキング参加
 - **レートリミット**: 投票30秒、掲示板コメント10秒、編成投稿30秒
+- **編成投稿**: 同一ユーザー×同一モードで複数投稿可。同一メンバー構成の重複は拒否
 - **自浄作用**: ネットスコアに応じた見た目変化（+30金枠、+15太字、-15グレー、-30さらに薄く）
 - **BAN**: blacklist の user_hash は全投稿を拒否（BAN理由は非表示）
 
