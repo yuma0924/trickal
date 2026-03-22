@@ -283,6 +283,13 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
           charMap={charMap}
           elementFilter={elementFilter}
           onElementFilterChange={setElementFilter}
+          hasAssigned={tierState.unassigned.length < characters.length}
+          onResetAll={() => {
+            setTierState({
+              S: [], A: [], B: [], C: [], D: [], E: [],
+              unassigned: characters.map((c) => c.id),
+            });
+          }}
         />
 
         {/* 投稿ボタン */}
@@ -323,12 +330,16 @@ function UnassignedPanel({
   charMap,
   elementFilter,
   onElementFilterChange,
+  hasAssigned,
+  onResetAll,
 }: {
   filteredIds: string[];
   allUnassignedIds: string[];
   charMap: Map<string, { id: string; name: string; element: string | null; image_url: string | null }>;
   elementFilter: string | null;
   onElementFilterChange: (v: string | null) => void;
+  hasAssigned: boolean;
+  onResetAll: () => void;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: "unassigned" });
 
@@ -375,12 +386,12 @@ function UnassignedPanel({
             })}
           </div>
         </div>
-        {elementFilter && (
+        {hasAssigned && (
           <button
-            onClick={() => onElementFilterChange(null)}
-            className="text-xs text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+            onClick={onResetAll}
+            className="text-xs text-text-muted hover:text-thumbs-down transition-colors cursor-pointer"
           >
-            解除
+            全解除
           </button>
         )}
       </div>
