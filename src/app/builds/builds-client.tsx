@@ -225,7 +225,8 @@ export function BuildsClient() {
       {formOpen && (
         <div id="build-form" className="mb-6">
           <BuildPostForm
-            initialMode={mode}
+            mode={mode}
+            onModeChange={(newMode) => setMode(newMode)}
             onPosted={() => {
               setSortKey("newest");
               setFormOpen(false);

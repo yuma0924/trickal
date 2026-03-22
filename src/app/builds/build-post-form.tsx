@@ -5,7 +5,7 @@ import Image from "next/image";
 import { CharacterIcon } from "@/components/character/character-icon";
 import { Button } from "@/components/ui/button";
 import { createBrowserClient } from "@/lib/supabase/client";
-import { cn } from "@/lib/utils";
+import { cn, matchesName } from "@/lib/utils";
 import { ELEMENTS } from "@/lib/constants";
 
 type FormMode = "general" | "arena" | "dimension" | "world_tree";
@@ -21,7 +21,8 @@ type CharacterInfo = {
 };
 
 interface BuildPostFormProps {
-  initialMode?: FormMode;
+  mode?: FormMode;
+  onModeChange?: (mode: FormMode) => void;
   onPosted: () => void;
   onClose?: () => void;
 }
@@ -63,8 +64,8 @@ function getSlotColumn(slotIndex: number, rowCount: number): string {
   return POSITION_LABELS[colIdx];
 }
 
-export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormProps) {
-  const [formMode, setFormMode] = useState<FormMode>(initialMode ?? "general");
+export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onClose }: BuildPostFormProps) {
+  const [formMode, setFormMode] = useState<FormMode>(externalMode ?? "general");
   const [elementFilter, setElementFilter] = useState<string>("");
   const [positionFilter, setPositionFilter] = useState<string>("");
   const [positionFilterManual, setPositionFilterManual] = useState(false);
@@ -73,6 +74,14 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
     Array(6).fill(null)
   );
   const nameFieldRef = useRef<HTMLDivElement>(null);
+
+  // 外部のモード変更を同期
+  useEffect(() => {
+    if (externalMode && externalMode !== formMode) {
+      setFormMode(externalMode);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [externalMode]);
 
   // 選択中のキャラ（スロットに配置する前の一時状態）
   const [selectedChar, setSelectedChar] = useState<CharacterInfo | null>(null);
@@ -148,8 +157,7 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
       result = result.filter((c) => c.position === positionFilter);
     }
     if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter((c) => c.name.toLowerCase().includes(q));
+      result = result.filter((c) => matchesName(c.name, searchQuery));
     }
     return result;
   }, [allCharacters, elementFilter, positionFilter, searchQuery]);
@@ -355,7 +363,11 @@ export function BuildPostForm({ initialMode, onPosted, onClose }: BuildPostFormP
         <div className="relative">
           <select
             value={formMode}
-            onChange={(e) => setFormMode(e.target.value as FormMode)}
+            onChange={(e) => {
+              const newMode = e.target.value as FormMode;
+              setFormMode(newMode);
+              onModeChange?.(newMode);
+            }}
             className="w-full appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-[rgba(36,27,53,0.8)] px-4 py-2.5 pr-9 text-sm font-bold text-[#fafafa] cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
           >
             {MODE_OPTIONS.map((opt) => (

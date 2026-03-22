@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { cn, matchesName } from "@/lib/utils";
 import { ELEMENTS } from "@/lib/constants";
 import { CharacterCard } from "@/components/character/character-card";
 
@@ -61,8 +61,7 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
   const filtered = useMemo(() => {
     let result = characters;
     if (searchQuery.trim()) {
-      const q = searchQuery.trim().toLowerCase();
-      result = result.filter((c) => c.name.toLowerCase().includes(q));
+      result = result.filter((c) => matchesName(c.name, searchQuery));
     }
     if (elementFilters.size > 0) {
       result = result.filter((c) => c.element && elementFilters.has(c.element));

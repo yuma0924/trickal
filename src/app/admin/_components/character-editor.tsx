@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect, type KeyboardEvent, type ChangeEvent } from "react";
 import type { Character, Item } from "@/types/database";
+import { matchesName } from "@/lib/utils";
 
 interface RelicData {
   name: string;
@@ -402,7 +403,7 @@ export function CharacterEditor({
   const filteredIndices = characters.reduce<number[]>((acc, char, i) => {
     if (filterElement && char.element !== filterElement) return acc;
     if (filterRarity && char.rarity !== filterRarity) return acc;
-    if (filterName && !char.name.toLowerCase().includes(filterName.toLowerCase())) return acc;
+    if (filterName && !matchesName(char.name, filterName)) return acc;
     acc.push(i);
     return acc;
   }, []);
