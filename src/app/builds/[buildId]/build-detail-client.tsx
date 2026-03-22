@@ -338,7 +338,7 @@ export function BuildDetailClient({
     <div className="space-y-6">
       {/* 編成情報カード */}
       <div className={cn(
-        "relative rounded-2xl border p-4",
+        "relative rounded-2xl border p-4 md:max-w-xl",
         isTopRank
           ? "border-[rgba(252,211,77,0.5)] bg-[rgba(36,27,53,0.8)]"
           : isSecondRank
@@ -643,7 +643,7 @@ export function BuildDetailClient({
             <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#fb64b6] to-[#ffa1ad]" />
             <h2 className="text-xl font-bold text-text-primary">似ている編成</h2>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
             {similarBuilds.map((sb) => (
               <Link
                 key={sb.id}
