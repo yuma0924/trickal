@@ -544,10 +544,10 @@ export function BuildDetailClient({
       <section>
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <svg className="h-4 w-4 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="h-4 w-4 md:h-5 md:w-5 text-[#c0bbc8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
-            <span className="text-sm font-bold text-[#fafafa]">
+            <span className="text-sm md:text-base font-bold text-[#fafafa]">
               コメント ({comments.length})
             </span>
           </div>
@@ -557,13 +557,18 @@ export function BuildDetailClient({
                 key={tab.value}
                 onClick={() => setSort(tab.value)}
                 className={cn(
-                  "rounded-full border px-2.5 py-1 text-xs font-medium transition-colors cursor-pointer",
+                  "flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs md:text-sm md:px-3 md:py-1.5 font-medium transition-colors cursor-pointer",
                   sort === tab.value
                     ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
                     : "border-[rgba(139,122,171,0.3)] text-[#8b7aab] hover:text-[#c4b5d4]"
                 )}
               >
-                {tab.label}
+                {tab.value === "thumbs_up" && (
+                  <svg className="h-3 w-3 text-[#fb64b6]" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M2 20h2c.55 0 1-.45 1-1v-9c0-.55-.45-1-1-1H2v11zm19.83-7.12c.11-.25.17-.52.17-.8V11c0-1.1-.9-2-2-2h-5.5l.92-4.65c.05-.22.02-.46-.08-.66-.23-.45-.52-.86-.88-1.22L14 2 7.59 8.41C7.21 8.79 7 9.3 7 9.83v7.84C7 18.95 8.05 20 9.34 20h8.11c.7 0 1.36-.37 1.72-.97l2.66-6.15z" />
+                  </svg>
+                )}
+                {tab.value === "thumbs_up" ? "順" : tab.label}
               </button>
             ))}
           </div>
@@ -581,39 +586,42 @@ export function BuildDetailClient({
                 <div
                   key={c.id}
                   className={cn(
-                    "relative rounded-2xl border border-border-primary bg-bg-card/30 p-4",
+                    "rounded-2xl bg-bg-card border border-border-primary px-4 pt-4 pb-3",
                     cKarma
                   )}
                 >
-                  <button
-                    onClick={() =>
-                      setReportTarget({ type: "build_comment", id: c.id })
-                    }
-                    className="absolute right-3 top-3 text-[10px] text-[#8b7aab]/50 hover:text-thumbs-down cursor-pointer"
-                  >
-                    通報
-                  </button>
-                  <div className="mb-1 flex items-center gap-2 text-xs text-text-tertiary">
+                  <div className="flex items-start gap-2.5">
                     <div
-                      className="h-2.5 w-2.5 shrink-0 rounded-full"
+                      className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full"
                       style={{ backgroundColor: "#34d399" }}
                     />
-                    <span className="font-medium text-text-secondary">
-                      {c.display_name || "名無しの教主"}
-                    </span>
-                    <span>{formatDate(c.created_at)}</span>
+                    <div className="flex flex-col -mt-1">
+                      <span className="text-base font-medium text-text-primary">
+                        {c.display_name || "名無しの教主"}
+                      </span>
+                      <span className="text-xs md:text-sm text-text-muted">{formatDate(c.created_at)}</span>
+                    </div>
                   </div>
-                  <p className="mb-2 whitespace-pre-wrap text-sm text-text-secondary leading-relaxed">
+                  <p className="mt-2.5 whitespace-pre-wrap text-base text-text-secondary leading-relaxed">
                     {c.body}
                   </p>
-                  <ThumbsUpDown
-                    thumbsUpCount={c.thumbs_up_count}
-                    thumbsDownCount={c.thumbs_down_count}
-                    userReaction={c.user_reaction}
-                    onReact={(reaction) =>
-                      handleCommentReaction(c.id, reaction)
-                    }
-                  />
+                  <div className="mt-4 flex items-center gap-4 text-text-muted text-xs md:text-sm">
+                    <ThumbsUpDown
+                      thumbsUpCount={c.thumbs_up_count}
+                      thumbsDownCount={c.thumbs_down_count}
+                      userReaction={c.user_reaction}
+                      onReact={(reaction) =>
+                        handleCommentReaction(c.id, reaction)
+                      }
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setReportTarget({ type: "build_comment", id: c.id })}
+                      className="ml-auto rounded-full border border-border-primary px-2.5 py-1 text-[10px] md:text-xs text-text-muted transition-colors hover:border-thumbs-down/20 hover:text-thumbs-down cursor-pointer"
+                    >
+                      通報
+                    </button>
+                  </div>
                 </div>
               );
             })}
