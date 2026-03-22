@@ -499,14 +499,70 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
           />
         </div>
 
+        {/* PC: 上段ヘッダー（選択中案内 | カウンター+全解除） */}
+        <div className="hidden md:flex md:items-center md:gap-4 md:mb-2 md:h-[60px]">
+          <div className="flex-1">
+            {selectedChar ? (
+              <div className="flex items-center gap-2 rounded-xl border border-[rgba(56,189,248,0.3)] bg-[rgba(56,189,248,0.08)] px-3 py-2">
+                <CharacterIcon
+                  name={selectedChar.name}
+                  imageUrl={selectedChar.image_url}
+                  size="sm"
+                  className="!h-10 !w-10"
+                />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1">
+                    <p className="truncate text-sm font-bold text-[#fafafa]">{selectedChar.name}</p>
+                    {selectedChar.position && POSITION_ICON_MAP[selectedChar.position] && (
+                      <Image src={POSITION_ICON_MAP[selectedChar.position]} alt={selectedChar.position} width={16} height={16} className="shrink-0" />
+                    )}
+                  </div>
+                  <p className="text-xs text-[#8b7aab]">右のスロットをタップして配置</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedChar(null)}
+                  className="shrink-0 text-xs text-[#8b7aab] hover:text-[#fafafa] cursor-pointer"
+                >
+                  キャンセル
+                </button>
+              </div>
+            ) : (
+              <div className="flex h-full items-center text-sm text-text-muted">キャラクターをタップして選択</div>
+            )}
+          </div>
+          <div className="w-64 shrink-0">
+            {selectedSlot === null && !selectedChar && (
+              <div className="flex items-center justify-between py-2">
+                <span className="text-xs text-text-secondary">
+                  キャラクター選択<span className="text-[#f87171]">*</span>（{partySize}体）
+                  <span className="ml-1 font-bold text-accent">
+                    {formation.filter(Boolean).length}/{partySize}
+                  </span>
+                </span>
+                <button
+                  type="button"
+                  onClick={handleClearAll}
+                  className="rounded-lg border border-[rgba(249,168,212,0.15)] bg-[rgba(42,33,62,0.5)] px-2.5 py-1 text-[11px] font-bold text-[#8b7aab] transition-colors hover:border-[rgba(255,99,126,0.4)] hover:text-[#fda4af] cursor-pointer"
+                >
+                  全解除
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* PC: キャラ選択（左）+ 配置グリッド（右）横並び */}
+        <div className="md:flex md:gap-4">
+        <div className="md:flex-1">
         {/* キャラグリッド */}
-        <div className="max-h-52 overflow-y-auto rounded-xl border border-[rgba(249,168,212,0.1)] bg-[rgba(42,33,62,0.5)] p-2">
+        <div className="max-h-52 overflow-y-auto rounded-xl border border-[rgba(249,168,212,0.1)] bg-[rgba(42,33,62,0.5)] p-2 md:max-h-80">
           {filteredCharacters.length === 0 ? (
             <p className="py-4 text-center text-xs text-text-muted">
               キャラクターが見つかりません
             </p>
           ) : (
-            <div className="grid grid-cols-5 gap-0.5">
+            <div className="grid grid-cols-5 gap-0.5 md:grid-cols-7 md:gap-0">
               {filteredCharacters.map((char) => {
                 const isPlaced = placedIds.has(char.id);
                 const isSelected = selectedChar?.id === char.id;
@@ -516,7 +572,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                     type="button"
                     onClick={() => handleCharacterTap(char)}
                     className={cn(
-                      "relative flex flex-col items-center gap-0 rounded-lg p-0.5 transition-all cursor-pointer",
+                      "relative flex flex-col items-center gap-0 rounded-lg p-0.5 md:p-px transition-all cursor-pointer",
                       isPlaced
                         ? "bg-[rgba(236,72,153,0.15)] border border-[rgba(244,114,182,0.4)]"
                         : isSelected
@@ -557,41 +613,9 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
             </div>
           )}
         </div>
-
-        {/* 選択中のキャラ表示（PCのみ） */}
-        {selectedChar && (
-          <div className="hidden items-start gap-2 rounded-xl border border-[rgba(56,189,248,0.3)] bg-[rgba(56,189,248,0.08)] px-3 py-2 md:flex">
-            <CharacterIcon
-              name={selectedChar.name}
-              imageUrl={selectedChar.image_url}
-              size="sm"
-            />
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <p className="truncate text-sm font-bold text-[#fafafa]">{selectedChar.name}</p>
-                  {selectedChar.position && POSITION_ICON_MAP[selectedChar.position] && (
-                    <Image src={POSITION_ICON_MAP[selectedChar.position]} alt={selectedChar.position} width={16} height={16} className="shrink-0" />
-                  )}
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setSelectedChar(null)}
-                  className="shrink-0 text-xs text-[#8b7aab] hover:text-[#fafafa] cursor-pointer"
-                >
-                  キャンセル
-                </button>
-              </div>
-              <p className="mt-1 hidden text-xs text-[#8b7aab] md:block">
-                下のスロットをタップして配置
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* 選択カウンター + 全解除（スロット選択中は非表示） */}
+        {/* モバイル: 選択カウンター + 全解除 */}
         {selectedSlot === null && !selectedChar && (
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-4 md:hidden">
           <span className="text-xs text-text-secondary">
             キャラクター選択<span className="text-[#f87171]">*</span>（{partySize}体）
             <span className="ml-1 font-bold text-accent">
@@ -607,8 +631,10 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
           </button>
         </div>
         )}
+        </div>{/* 左カラム閉じ */}
 
-        {/* 配置グリッド */}
+        {/* 配置グリッド（PC: 右カラム） */}
+        <div className="mt-2 md:mt-0 md:w-64 md:shrink-0">
         <div className="overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.1)]">
           {/* 列ヘッダー */}
           <div className="grid grid-cols-3 bg-[rgba(42,33,62,0.8)]">
@@ -693,26 +719,27 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
             </div>
           ))}
         </div>
+        </div>{/* 配置グリッド右カラム閉じ */}
+        </div>{/* PC横並び閉じ */}
 
-        {/* 編成名（任意） */}
-        <div className="flex min-w-0 items-center gap-3">
-          <label className="w-12 shrink-0 text-sm text-text-secondary">
-            編成名
-          </label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder={MODE_OPTIONS.find((o) => o.value === formMode)?.label ?? ""}
-            maxLength={100}
-            className="min-w-0 flex-1 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted/50 focus:border-accent focus:outline-none"
-          />
-        </div>
-
-        {/* 投稿者名（任意） */}
-        <div ref={nameFieldRef} className="flex min-w-0 items-center gap-3">
-          <label className="w-12 shrink-0 text-sm text-text-secondary">
-            名前
+        {/* 編成名 + 名前（PC: 横並び） */}
+        <div ref={nameFieldRef} className="flex flex-col gap-4 md:flex-row md:gap-6 md:max-w-[93%]">
+          <div className="flex min-w-0 flex-1 items-center gap-3">
+            <label className="w-12 shrink-0 text-sm text-text-secondary md:w-auto">
+              編成名
+            </label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder={MODE_OPTIONS.find((o) => o.value === formMode)?.label ?? ""}
+              maxLength={100}
+              className="min-w-0 flex-1 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted/50 focus:border-accent focus:outline-none"
+            />
+          </div>
+          <div className="flex min-w-0 flex-1 items-center gap-3">
+            <label className="w-12 shrink-0 text-sm text-text-secondary md:w-auto">
+              名前
           </label>
           <input
             type="text"
@@ -722,6 +749,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
             maxLength={50}
             className="min-w-0 flex-1 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted/50 focus:border-accent focus:outline-none"
           />
+          </div>
         </div>
 
         {/* コメント（必須） */}
