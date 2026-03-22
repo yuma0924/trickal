@@ -16,9 +16,10 @@ interface TierRowProps {
   label: TierLabel;
   characters: CharacterData[];
   isDraggable?: boolean;
+  iconClassName?: string;
 }
 
-export function TierRow({ label, characters, isDraggable = false }: TierRowProps) {
+export function TierRow({ label, characters, isDraggable = false, iconClassName }: TierRowProps) {
   const color = TIER_COLORS[label];
 
   if (!isDraggable) {
@@ -30,7 +31,7 @@ export function TierRow({ label, characters, isDraggable = false }: TierRowProps
         >
           {label}
         </div>
-        <div className="flex min-h-[60px] flex-1 flex-wrap items-center gap-1 px-2 py-1.5">
+        <div className="flex min-h-[68px] flex-1 flex-wrap items-center gap-1 px-2 py-1.5">
           {characters.map((char) => (
             <TierCharacterItem
               key={char.id}
@@ -38,6 +39,7 @@ export function TierRow({ label, characters, isDraggable = false }: TierRowProps
               name={char.name}
               imageUrl={char.image_url}
               showName={false}
+              iconClassName={iconClassName}
             />
           ))}
         </div>
@@ -45,17 +47,19 @@ export function TierRow({ label, characters, isDraggable = false }: TierRowProps
     );
   }
 
-  return <DroppableTierRow label={label} characters={characters} color={color} />;
+  return <DroppableTierRow label={label} characters={characters} color={color} iconClassName={iconClassName} />;
 }
 
 function DroppableTierRow({
   label,
   characters,
   color,
+  iconClassName,
 }: {
   label: TierLabel;
   characters: CharacterData[];
   color: string;
+  iconClassName?: string;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: label });
 
@@ -74,7 +78,7 @@ function DroppableTierRow({
       </div>
       <div
         ref={setNodeRef}
-        className="flex min-h-[60px] flex-1 flex-wrap items-center gap-1 px-2 py-1.5"
+        className="flex min-h-[68px] flex-1 flex-wrap items-center gap-1 px-2 py-1.5"
       >
         <SortableContext items={characters.map((c) => c.id)} strategy={rectSortingStrategy}>
           {characters.map((char) => (
@@ -85,6 +89,7 @@ function DroppableTierRow({
               imageUrl={char.image_url}
               isDraggable
               showName={false}
+              iconClassName={iconClassName}
             />
           ))}
         </SortableContext>

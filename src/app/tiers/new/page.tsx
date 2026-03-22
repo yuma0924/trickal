@@ -27,8 +27,8 @@ export default async function TierCreatePage() {
   const characters = (rawChars as CharacterInfo[] | null) ?? [];
 
   return (
-    <div className="space-y-6">
-      <div>
+    <div className="-mx-4 space-y-4 md:mx-0">
+      <div className="px-4 md:px-0">
         <div className="flex items-center gap-2.5">
           <span
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[14px]"
@@ -45,7 +45,9 @@ export default async function TierCreatePage() {
         </p>
       </div>
 
-      <TierCreateClient characters={characters} />
+      <div className="px-1 md:px-0">
+        <TierCreateClient characters={characters} />
+      </div>
     </div>
   );
 }

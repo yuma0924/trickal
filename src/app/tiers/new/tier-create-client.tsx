@@ -188,8 +188,11 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
       }
     }
 
-    if (totalChars === 0) {
-      setError("キャラクターを1体以上配置してください");
+    const errors: string[] = [];
+    if (!title.trim()) errors.push("タイトルを入力してください");
+    if (totalChars === 0) errors.push("キャラクターを1体以上配置してください");
+    if (errors.length > 0) {
+      setError(errors.join("\n"));
       return;
     }
 
@@ -243,7 +246,7 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="タイトル（任意）"
+            placeholder="タイトル（必須）"
             maxLength={100}
             className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
           />
@@ -272,6 +275,7 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
                 };
               })}
               isDraggable
+              iconClassName="h-14 w-14"
             />
           ))}
         </div>
@@ -293,16 +297,23 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
         />
 
         {/* 投稿ボタン */}
-        {error && (
-          <p className="text-sm text-thumbs-down">{error}</p>
-        )}
         <Button
           onClick={handleSubmit}
           disabled={submitting}
-          className="w-full"
+          className={cn(
+            "w-full py-3",
+            !submitting && (!title.trim() || tierState.unassigned.length === characters.length) && "opacity-50"
+          )}
         >
           {submitting ? "投稿中..." : "ティアを投稿する"}
         </Button>
+        {error && (
+          <div className="space-y-0.5 px-4">
+            {error.split("\n").map((line) => (
+              <p key={line} className="text-sm text-thumbs-down">※ {line}</p>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ドラッグオーバーレイ */}
@@ -313,10 +324,8 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
               name={activeChar.name}
               imageUrl={activeChar.image_url}
               size="sm"
+              className="h-14 w-14"
             />
-            <span className="max-w-12 truncate text-center text-[9px] text-text-muted">
-              {activeChar.name}
-            </span>
           </div>
         )}
       </DragOverlay>
@@ -345,61 +354,17 @@ function UnassignedPanel({
 
   return (
     <div
-      className="rounded-2xl border border-border-primary bg-bg-card p-4"
+      className="rounded-2xl border border-border-primary bg-bg-card select-none"
       style={{
         backgroundColor: isOver ? "rgba(251, 100, 182, 0.05)" : undefined,
+        WebkitTouchCallout: "none",
       }}
+      onContextMenu={(e) => e.preventDefault()}
     >
-      <div className="mb-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-text-primary">
-            未配置キャラ ({allUnassignedIds.length})
-          </span>
-          {/* 性格フィルター */}
-          <div className="flex gap-1.5">
-            {ELEMENTS.map((el) => {
-              const active = elementFilter === el;
-              return (
-                <button
-                  key={el}
-                  onClick={() => onElementFilterChange(active ? null : el)}
-                  className={cn(
-                    "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer",
-                    active
-                      ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-                      : "bg-[#1a1225]"
-                  )}
-                  style={{
-                    border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
-                  }}
-                  title={el}
-                >
-                  <Image
-                    src={ELEMENT_ICONS[el]}
-                    alt={el}
-                    width={20}
-                    height={20}
-                    className="h-5 w-5"
-                  />
-                </button>
-              );
-            })}
-          </div>
-        </div>
-        {hasAssigned && (
-          <button
-            onClick={onResetAll}
-            className="text-xs text-text-muted hover:text-thumbs-down transition-colors cursor-pointer"
-          >
-            全解除
-          </button>
-        )}
-      </div>
-
-      {/* キャラグリッド */}
+      {/* キャラグリッド（ティア行に最も近い位置） */}
       <div
         ref={setNodeRef}
-        className="grid grid-cols-6 gap-1 md:grid-cols-10"
+        className="grid grid-cols-6 gap-1.5 px-3 pt-3 md:grid-cols-10"
       >
         <SortableContext items={filteredIds} strategy={rectSortingStrategy}>
           {filteredIds.map((id) => {
@@ -412,6 +377,8 @@ function UnassignedPanel({
                 name={char.name}
                 imageUrl={char.image_url}
                 isDraggable
+                showName={false}
+                iconClassName="h-14 w-14"
               />
             );
           })}
@@ -423,6 +390,52 @@ function UnassignedPanel({
               : "条件に一致するキャラがいません"}
           </div>
         )}
+      </div>
+
+      {/* フッター行: フィルター + ラベル + 全解除 */}
+      <div className="flex items-center gap-2 px-3 pb-3 pt-3">
+        <div className="flex gap-1.5">
+          {ELEMENTS.map((el) => {
+            const active = elementFilter === el;
+            return (
+              <button
+                key={el}
+                onClick={() => onElementFilterChange(active ? null : el)}
+                className={cn(
+                  "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer",
+                  active
+                    ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+                    : "bg-[#1a1225]"
+                )}
+                style={{
+                  border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                }}
+                title={el}
+              >
+                <Image
+                  src={ELEMENT_ICONS[el]}
+                  alt={el}
+                  width={20}
+                  height={20}
+                  className="h-5 w-5"
+                />
+              </button>
+            );
+          })}
+        </div>
+        <span className="text-xs text-text-muted">
+          未配置 ({allUnassignedIds.length})
+        </span>
+        <div className="ml-auto">
+          {hasAssigned && (
+            <button
+              onClick={onResetAll}
+              className="rounded-lg border border-border-primary bg-bg-tertiary px-2.5 py-1 text-xs text-text-muted hover:text-thumbs-down hover:border-thumbs-down/30 transition-colors cursor-pointer"
+            >
+              全解除
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
