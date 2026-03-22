@@ -483,7 +483,7 @@ function BuildCard({
   return (
     <div
       className={cn(
-        "relative rounded-2xl border p-4",
+        "relative flex flex-col rounded-2xl border p-4",
         isTop
           ? "border-[rgba(252,211,77,0.5)] bg-[rgba(36,27,53,0.8)]"
           : isSecond
@@ -502,7 +502,7 @@ function BuildCard({
       )}
       <Link
         href={`/builds/${build.id}${isTop ? "?rank=1" : isSecond ? "?rank=2" : ""}`}
-        className="block cursor-pointer"
+        className="flex flex-1 flex-col cursor-pointer"
       >
         {/* タイトル + 属性アイコン + モード */}
         <div className="mb-3 flex items-center justify-between gap-2">
@@ -554,19 +554,7 @@ function BuildCard({
                 <span className="py-1 text-center text-[10px] md:text-xs font-bold text-[#a893c0]">前列</span>
               </div>
               {Array.from({ length: rowCount }).map((_, rowIdx) => {
-                if (!hasContent(rowIdx)) return (
-                  <div key={rowIdx} className="hidden md:grid grid-cols-3 border-b border-[rgba(249,168,212,0.15)] last:border-b-0">
-                    {[0, 1, 2].map((colIdx) => (
-                      <div key={colIdx} className={cn(
-                        "flex flex-col items-center gap-0.5 pt-2 pb-1.5",
-                        colIdx < 2 && "border-r border-[rgba(249,168,212,0.15)]"
-                      )}>
-                        <div className="h-16 w-16" />
-                        <span className="text-[10px] md:text-xs">&nbsp;</span>
-                      </div>
-                    ))}
-                  </div>
-                );
+                if (!hasContent(rowIdx)) return null;
                 return (
                   <div key={rowIdx} className={cn("grid grid-cols-3", "border-b border-[rgba(249,168,212,0.15)] last:border-b-0")}>
                     {[0, 1, 2].map((colIdx) => {
@@ -629,7 +617,7 @@ function BuildCard({
       </Link>
 
       {/* フッター: 日時 + コメント数 + リアクション */}
-      <div className="mt-2 flex items-center justify-between">
+      <div className="mt-auto pt-2 flex items-center justify-between">
         <div className="flex items-center gap-1.5 text-xs md:text-sm text-[#8b7aab]">
           <span>{formatDate(build.updated_at)}</span>
           {build.comments_count > 0 && (
