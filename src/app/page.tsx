@@ -390,6 +390,33 @@ export default async function Home() {
     })
     .filter((c): c is TrendingChar => c !== null);
 
+  // --- ティアメーカー（人気上位5件）---
+  const { data: topTiers } = await supabase
+    .from("tiers")
+    .select("id, title, display_name, data, likes_count, created_at")
+    .eq("is_deleted", false)
+    .order("likes_count", { ascending: false })
+    .order("created_at", { ascending: false })
+    .limit(5);
+
+  type TierPreview = {
+    id: string;
+    title: string | null;
+    displayName: string | null;
+    data: Record<string, string[]>;
+    likesCount: number;
+    createdAt: string;
+  };
+
+  const tiersData: TierPreview[] = (topTiers ?? []).map((t) => ({
+    id: t.id,
+    title: t.title as string | null,
+    displayName: t.display_name as string | null,
+    data: t.data as Record<string, string[]>,
+    likesCount: t.likes_count,
+    createdAt: t.created_at,
+  }));
+
   // --- 第3段: 編成ランキング（フィルター用に多めに取得）---
   const { data: topBuilds } = await supabase
     .from("builds")
@@ -689,6 +716,119 @@ export default async function Home() {
           />
         </div>
       </section>
+
+      {/* ====== ティアメーカー ====== */}
+      {tiersData.length > 0 && (
+        <section className="space-y-4">
+          <SectionHeading
+            icon={
+              <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+              </svg>
+            }
+            title="ティアメーカー"
+            subtitle="キャラクターをランク付けして共有しよう"
+            href="/tiers"
+            linkLabel="もっと見る"
+            gradientFrom="#a855f7"
+            gradientTo="#ec4899"
+          />
+
+          <div className="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
+            {tiersData.map((tier) => {
+              const tierLabels = ["S", "A", "B", "C"] as const;
+              return (
+                <Link
+                  key={tier.id}
+                  href={`/tiers/${tier.id}`}
+                  className="block rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] p-4 transition-colors hover:from-[rgba(36,27,53,0.9)] hover:to-[rgba(36,27,53,0.6)] cursor-pointer"
+                >
+                  {/* タイトル + 投稿者 */}
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <span className="min-w-0 truncate text-sm font-bold text-[#fafafa]">
+                      {tier.title || "無題のティア"}
+                    </span>
+                    {tier.displayName && (
+                      <span className="shrink-0 text-[10px] text-[#8b7aab]">
+                        by {tier.displayName}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* ティアプレビュー（S〜C） */}
+                  <div className="mb-2 overflow-hidden rounded-lg border border-[rgba(249,168,212,0.15)]">
+                    {tierLabels.map((label) => {
+                      const charIds = tier.data[label] ?? [];
+                      if (charIds.length === 0 && label !== "S") return null;
+                      const colors: Record<string, string> = {
+                        S: "#ef4444", A: "#f97316", B: "#eab308", C: "#22c55e",
+                      };
+                      return (
+                        <div
+                          key={label}
+                          className="flex border-b border-[rgba(249,168,212,0.15)] last:border-b-0"
+                        >
+                          <div
+                            className="flex w-8 shrink-0 items-center justify-center text-xs font-bold text-white"
+                            style={{ backgroundColor: colors[label] }}
+                          >
+                            {label}
+                          </div>
+                          <div className="flex min-h-[36px] flex-1 flex-wrap items-center gap-0.5 px-1 py-0.5">
+                            {charIds.slice(0, 8).map((charId) => {
+                              const char = charMap.get(charId);
+                              if (!char) return null;
+                              return (
+                                <div key={charId} className="h-8 w-8 shrink-0 overflow-hidden rounded">
+                                  {char.imageUrl ? (
+                                    <Image
+                                      src={char.imageUrl}
+                                      alt={char.name}
+                                      width={32}
+                                      height={32}
+                                      className="h-full w-full object-cover"
+                                      loading="lazy"
+                                    />
+                                  ) : (
+                                    <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-[10px] text-[#8b7aab]">
+                                      {char.name.charAt(0)}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                            {charIds.length > 8 && (
+                              <span className="text-[10px] text-[#8b7aab]">+{charIds.length - 8}</span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* フッター */}
+                  <div className="flex items-center justify-between text-[10px] text-[#8b7aab]">
+                    <span>{Object.values(tier.data).flat().length}キャラ配置</span>
+                    <span className="inline-flex items-center gap-0.5 text-thumbs-up">
+                      <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M2 20h2c.55 0 1-.45 1-1v-9c0-.55-.45-1-1-1H2v11zm19.83-7.12c.11-.25.17-.52.17-.8V11c0-1.1-.9-2-2-2h-5.5l.92-4.65c.05-.22.02-.46-.08-.66-.23-.45-.52-.86-.88-1.22L14 2 7.59 8.41C7.21 8.79 7 9.3 7 9.83v7.84C7 18.95 8.05 20 9.34 20h8.11c.7 0 1.36-.37 1.72-.97l2.66-6.15z" />
+                      </svg>
+                      {tier.likesCount}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          <SectionFooterButton
+            href="/tiers"
+            label="ティアメーカーをすべて見る"
+            gradientFrom="#a855f7"
+            gradientTo="#ec4899"
+          />
+        </section>
+      )}
 
       {/* ====== 第2段: キャラクターを探す ====== */}
       <section className="space-y-4">
