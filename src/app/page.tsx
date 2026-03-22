@@ -718,22 +718,22 @@ export default async function Home() {
       </section>
 
       {/* ====== ティアメーカー ====== */}
-      {tiersData.length > 0 && (
-        <section className="space-y-4">
-          <SectionHeading
-            icon={
-              <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-              </svg>
-            }
-            title="ティアメーカー"
-            subtitle="キャラクターをランク付けして共有しよう"
-            href="/tiers"
-            linkLabel="もっと見る"
-            gradientFrom="#a855f7"
-            gradientTo="#ec4899"
-          />
+      <section className="space-y-4">
+        <SectionHeading
+          icon={
+            <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            </svg>
+          }
+          title="ティアメーカー"
+          subtitle="キャラクターをランク付けして共有しよう"
+          href="/tiers"
+          linkLabel="もっと見る"
+          gradientFrom="#a855f7"
+          gradientTo="#ec4899"
+        />
 
+        {tiersData.length > 0 ? (
           <div className="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
             {tiersData.map((tier) => {
               const tierLabels = ["S", "A", "B", "C"] as const;
@@ -820,15 +820,28 @@ export default async function Home() {
               );
             })}
           </div>
+        ) : (
+          <div className="rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] py-8 text-center">
+            <p className="text-sm text-text-muted">まだティアが投稿されていません</p>
+            <Link
+              href="/tiers/new"
+              className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#a855f7] to-[#ec4899] px-5 py-2.5 text-sm font-bold text-white shadow-md transition-opacity hover:opacity-90"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              最初のティアを作成する
+            </Link>
+          </div>
+        )}
 
-          <SectionFooterButton
-            href="/tiers"
-            label="ティアメーカーをすべて見る"
-            gradientFrom="#a855f7"
-            gradientTo="#ec4899"
-          />
-        </section>
-      )}
+        <SectionFooterButton
+          href="/tiers"
+          label="ティアメーカーをすべて見る"
+          gradientFrom="#a855f7"
+          gradientTo="#ec4899"
+        />
+      </section>
 
       {/* ====== 第2段: キャラクターを探す ====== */}
       <section className="space-y-4">
