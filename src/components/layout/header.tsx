@@ -63,6 +63,9 @@ export function Header() {
             <Link href="/builds" className="text-sm md:text-base text-text-secondary hover:text-text-primary transition-colors">
               編成
             </Link>
+            <Link href="/tiers" className="text-sm md:text-base text-text-secondary hover:text-text-primary transition-colors">
+              ティア
+            </Link>
           </div>
           <ThemeToggle />
         </nav>

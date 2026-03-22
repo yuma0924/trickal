@@ -476,6 +476,77 @@ export interface Database {
         };
         Relationships: [];
       };
+      tiers: {
+        Row: {
+          id: string;
+          title: string | null;
+          display_name: string | null;
+          data: Record<string, string[]>;
+          user_hash: string;
+          likes_count: number;
+          is_deleted: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          title?: string | null;
+          display_name?: string | null;
+          data: Record<string, string[]>;
+          user_hash: string;
+          likes_count?: number;
+          is_deleted?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string | null;
+          display_name?: string | null;
+          data?: Record<string, string[]>;
+          user_hash?: string;
+          likes_count?: number;
+          is_deleted?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      tier_reactions: {
+        Row: {
+          id: string;
+          tier_id: string;
+          user_hash: string;
+          reaction_type: "up";
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          tier_id: string;
+          user_hash: string;
+          reaction_type?: "up";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          tier_id?: string;
+          user_hash?: string;
+          reaction_type?: "up";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tier_reactions_tier_id_fkey";
+            columns: ["tier_id"];
+            isOneToOne: false;
+            referencedRelation: "tiers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       reports: {
         Row: {
           id: string;
@@ -535,3 +606,5 @@ export type BuildComment = Tables<"build_comments">;
 export type BuildCommentReaction = Tables<"build_comment_reactions">;
 export type Item = Tables<"items">;
 export type Report = Tables<"reports">;
+export type Tier = Tables<"tiers">;
+export type TierReaction = Tables<"tier_reactions">;

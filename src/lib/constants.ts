@@ -12,3 +12,15 @@ export const ELEMENT_COLORS: Record<Element, string> = {
   活発: "#eab308",
   憂鬱: "#a855f7",
 };
+
+export const TIER_LABELS = ["S", "A", "B", "C", "D", "E"] as const;
+export type TierLabel = (typeof TIER_LABELS)[number];
+
+export const TIER_COLORS: Record<TierLabel, string> = {
+  S: "#ef4444",
+  A: "#f97316",
+  B: "#eab308",
+  C: "#22c55e",
+  D: "#3b82f6",
+  E: "#a855f7",
+};

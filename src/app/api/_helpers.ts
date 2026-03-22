@@ -61,7 +61,7 @@ export async function isUserBanned(
  */
 export async function checkRateLimit(
   supabase: SupabaseClient<Database>,
-  table: "comments" | "builds" | "build_comments" | "reports",
+  table: "comments" | "builds" | "build_comments" | "reports" | "tiers",
   filters: Record<string, string>,
   limitSeconds: number
 ): Promise<{ limited: boolean; retryAfter?: number }> {
