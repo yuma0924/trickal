@@ -37,6 +37,7 @@ export function TierRow({ label, characters, isDraggable = false }: TierRowProps
               id={char.id}
               name={char.name}
               imageUrl={char.image_url}
+              showName={false}
             />
           ))}
         </div>
@@ -83,6 +84,7 @@ function DroppableTierRow({
               name={char.name}
               imageUrl={char.image_url}
               isDraggable
+              showName={false}
             />
           ))}
         </SortableContext>
