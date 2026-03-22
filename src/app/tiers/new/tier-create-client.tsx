@@ -17,7 +17,7 @@ import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import { TIER_LABELS, ELEMENTS } from "@/lib/constants";
 import type { TierLabel } from "@/lib/constants";
-import { cn, matchesName } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { TierRow } from "@/components/tier/tier-row";
 import { TierCharacterItem } from "@/components/tier/tier-character-item";
 import { CharacterIcon } from "@/components/character/character-icon";
@@ -58,7 +58,6 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
   const [error, setError] = useState<string | null>(null);
 
   // フィルター
-  const [search, setSearch] = useState("");
   const [elementFilter, setElementFilter] = useState<string | null>(null);
 
   const sensors = useSensors(
@@ -216,7 +215,6 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
     const char = charMap.get(id);
     if (!char) return false;
     if (elementFilter && char.element !== elementFilter) return false;
-    if (search && !matchesName(char.name, search)) return false;
     return true;
   });
 
@@ -274,8 +272,6 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
           filteredIds={filteredUnassigned}
           allUnassignedIds={tierState.unassigned}
           charMap={charMap}
-          search={search}
-          onSearchChange={setSearch}
           elementFilter={elementFilter}
           onElementFilterChange={setElementFilter}
         />
@@ -316,16 +312,12 @@ function UnassignedPanel({
   filteredIds,
   allUnassignedIds,
   charMap,
-  search,
-  onSearchChange,
   elementFilter,
   onElementFilterChange,
 }: {
   filteredIds: string[];
   allUnassignedIds: string[];
   charMap: Map<string, { id: string; name: string; element: string | null; image_url: string | null }>;
-  search: string;
-  onSearchChange: (v: string) => void;
   elementFilter: string | null;
   onElementFilterChange: (v: string | null) => void;
 }) {
@@ -345,14 +337,7 @@ function UnassignedPanel({
       </div>
 
       {/* フィルター */}
-      <div className="mb-3 space-y-2">
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="キャラ名で検索..."
-          className="w-full rounded-lg border border-border-primary bg-bg-input px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
-        />
+      <div className="mb-3">
         <div className="flex flex-wrap gap-1">
           <button
             onClick={() => onElementFilterChange(null)}
