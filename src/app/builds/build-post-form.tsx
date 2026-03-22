@@ -358,8 +358,8 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
         )}
       </div>
 
-      {/* モード選択 */}
-      <div className="mb-4">
+      {/* モード選択（モバイルのみ） */}
+      <div className="mb-4 md:hidden">
         <div className="relative">
           <select
             value={formMode}
@@ -385,7 +385,29 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* 性格フィルター + 検索 */}
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center gap-2 md:gap-3">
+            {/* PC: モード選択 */}
+            <div className="relative hidden md:block">
+              <select
+                value={formMode}
+                onChange={(e) => {
+                  const newMode = e.target.value as FormMode;
+                  setFormMode(newMode);
+                  onModeChange?.(newMode);
+                }}
+                className="appearance-none rounded-[12px] border border-[rgba(249,168,212,0.2)] bg-[rgba(36,27,53,0.8)] px-4 py-2 pr-9 text-sm font-bold text-[#fafafa] cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
+              >
+                {MODE_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+              <svg className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+            <span className="hidden shrink-0 text-sm text-text-muted md:inline">性格</span>
             <div className="flex gap-1.5">
               {ELEMENTS.map((elem) => {
                 const active = elementFilter === elem;
@@ -419,6 +441,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
               })}
             </div>
             <div className="h-6 w-px bg-[rgba(249,168,212,0.15)]" />
+            <span className="hidden shrink-0 text-sm text-text-muted md:inline">配置</span>
             <div className="flex gap-1.5">
               {POSITION_LABELS.map((pos) => {
                 const active = positionFilter === pos;
@@ -455,13 +478,24 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                 );
               })}
             </div>
+            {/* PC: 検索 */}
+            <div className="hidden md:block">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="検索..."
+                className="w-48 rounded-[12px] border border-border-primary bg-bg-input px-3 py-2 text-sm text-text-primary placeholder:text-text-muted/50 focus:border-accent focus:outline-none"
+              />
+            </div>
           </div>
+          {/* モバイル: 検索 */}
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="キャラ名で検索..."
-            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-2 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-2 text-base text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none md:hidden"
           />
         </div>
 
