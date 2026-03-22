@@ -15,6 +15,7 @@ import {
 } from "@dnd-kit/core";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
+import Image from "next/image";
 import { TIER_LABELS, ELEMENTS } from "@/lib/constants";
 import type { TierLabel } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,14 @@ import { TierRow } from "@/components/tier/tier-row";
 import { TierCharacterItem } from "@/components/tier/tier-character-item";
 import { CharacterIcon } from "@/components/character/character-icon";
 import { Button } from "@/components/ui/button";
+
+const ELEMENT_ICONS: Record<string, string> = {
+  純粋: "/icons/pure.png",
+  冷静: "/icons/calm.png",
+  狂気: "/icons/madness.png",
+  活発: "/icons/lively.png",
+  憂鬱: "/icons/melancholy.png",
+};
 
 type CharacterInfo = {
   id: string;
@@ -331,40 +340,49 @@ function UnassignedPanel({
       }}
     >
       <div className="mb-3 flex items-center justify-between">
-        <span className="text-sm font-bold text-text-primary">
-          未配置キャラ ({allUnassignedIds.length})
-        </span>
-      </div>
-
-      {/* フィルター */}
-      <div className="mb-3">
-        <div className="flex flex-wrap gap-1">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-bold text-text-primary">
+            未配置キャラ ({allUnassignedIds.length})
+          </span>
+          {/* 性格フィルター */}
+          <div className="flex gap-1.5">
+            {ELEMENTS.map((el) => {
+              const active = elementFilter === el;
+              return (
+                <button
+                  key={el}
+                  onClick={() => onElementFilterChange(active ? null : el)}
+                  className={cn(
+                    "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer",
+                    active
+                      ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+                      : "bg-[#1a1225]"
+                  )}
+                  style={{
+                    border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                  }}
+                  title={el}
+                >
+                  <Image
+                    src={ELEMENT_ICONS[el]}
+                    alt={el}
+                    width={20}
+                    height={20}
+                    className="h-5 w-5"
+                  />
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        {elementFilter && (
           <button
             onClick={() => onElementFilterChange(null)}
-            className={cn(
-              "rounded-full border px-2 py-0.5 text-xs cursor-pointer transition-colors",
-              elementFilter === null
-                ? "border-accent/40 bg-accent/10 text-accent"
-                : "border-border-primary text-text-muted hover:text-text-secondary"
-            )}
+            className="text-xs text-text-muted hover:text-text-primary transition-colors cursor-pointer"
           >
-            全て
+            解除
           </button>
-          {ELEMENTS.map((el) => (
-            <button
-              key={el}
-              onClick={() => onElementFilterChange(elementFilter === el ? null : el)}
-              className={cn(
-                "rounded-full border px-2 py-0.5 text-xs cursor-pointer transition-colors",
-                elementFilter === el
-                  ? "border-accent/40 bg-accent/10 text-accent"
-                  : "border-border-primary text-text-muted hover:text-text-secondary"
-              )}
-            >
-              {el}
-            </button>
-          ))}
-        </div>
+        )}
       </div>
 
       {/* キャラグリッド */}
