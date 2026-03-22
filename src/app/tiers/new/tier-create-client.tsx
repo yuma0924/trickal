@@ -241,22 +241,22 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
     >
       <div className="space-y-4">
         {/* 投稿フォーム */}
-        <div className="space-y-3 rounded-2xl border border-border-primary bg-bg-card p-4">
+        <div className="flex flex-col gap-2 rounded-2xl border border-border-primary bg-bg-card p-3 md:flex-row">
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="タイトル（必須）"
             maxLength={100}
-            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+            className="min-w-0 flex-1 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
           />
           <input
             type="text"
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-            placeholder="名前（任意）"
+            placeholder="投稿者名（任意）"
             maxLength={50}
-            className="w-full rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+            className="rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none md:w-40 md:shrink-0"
           />
         </div>
 
