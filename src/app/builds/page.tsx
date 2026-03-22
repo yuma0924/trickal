@@ -13,9 +13,9 @@ const ELEMENT_ICON_MAP: Record<string, string> = {
 };
 
 export const metadata: Metadata = {
-  title: "編成ランキング | みんなで決めるトリッカルランキング",
+  title: "人気編成ランキング | みんなで決めるトリッカルランキング",
   description:
-    "トリッカルのおすすめ編成ランキング。コンテンツ別の人気編成をチェック",
+    "トリッカルの人気編成ランキング。コンテンツ別の人気編成をチェック",
 };
 
 export default async function BuildsPage() {
@@ -144,7 +144,7 @@ export default async function BuildsPage() {
               <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
             </svg>
           </span>
-          <h1 className="text-lg font-bold text-text-primary">編成ランキング</h1>
+          <h1 className="text-lg font-bold text-text-primary">人気編成ランキング</h1>
         </div>
         <p className="mt-1 pl-[42px] text-xs md:text-sm text-text-muted">
           人気のパーティ編成をチェック・投稿しよう

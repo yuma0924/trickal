@@ -817,7 +817,7 @@ export default async function Home() {
       <section className="space-y-4">
         <SectionHeading
           icon={<TeamIcon className="h-4 w-4 text-white" />}
-          title="編成ランキング"
+          title="人気編成ランキング"
           subtitle="人気のパーティ編成をチェック・投稿しよう"
           href="/builds"
           linkLabel="もっと見る"
@@ -829,7 +829,7 @@ export default async function Home() {
 
         <SectionFooterButton
           href="/builds"
-          label="編成ランキングをすべて見る"
+          label="人気編成ランキングをすべて見る"
           gradientFrom="#fb64b6"
           gradientTo="#ff637e"
         />

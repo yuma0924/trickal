@@ -340,7 +340,7 @@ export function RankingClient({
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm md:text-base font-bold text-[#fafafa]">編成ランキング</span>
+            <span className="block text-sm md:text-base font-bold text-[#fafafa]">人気編成ランキング</span>
             <span className="text-xs md:text-sm text-[#8b7aab]">人気のパーティ編成をチェックしよう</span>
           </div>
           <svg className="h-4 w-4 shrink-0 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

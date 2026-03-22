@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -117,6 +118,10 @@ export function BuildDetailClient({
   similarBuilds,
 }: BuildDetailClientProps) {
   const [build, setBuild] = useState(initialBuild);
+  const searchParams = useSearchParams();
+  const rankParam = searchParams.get("rank");
+  const isTopRank = rankParam === "1";
+  const isSecondRank = rankParam === "2";
   const [userReaction, setUserReaction] = useState<"up" | "down" | null>(null);
 
   // コメントフォーム開閉
@@ -333,9 +338,22 @@ export function BuildDetailClient({
     <div className="space-y-6">
       {/* 編成情報カード */}
       <div className={cn(
-        "rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] p-4",
+        "relative rounded-2xl border p-4",
+        isTopRank
+          ? "border-[rgba(252,211,77,0.5)] bg-[rgba(36,27,53,0.8)]"
+          : isSecondRank
+            ? "border-[rgba(192,192,210,0.5)] bg-[rgba(36,27,53,0.8)]"
+            : "border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)]",
         karmaClass
       )}>
+        {(isTopRank || isSecondRank) && (
+          <div className="absolute -top-3 left-3 flex items-center gap-1 rounded-full bg-[#1a1225] px-2 py-0.5 md:gap-1.5 md:px-2.5 md:py-1">
+            <svg className={cn("h-3.5 w-3.5 md:h-4 md:w-4", isTopRank ? "text-[#fcd34d]" : "text-[#c0c0d2]")} viewBox="0 0 24 24" fill="currentColor">
+              <path d="M2 20h2c.55 0 1-.45 1-1v-9c0-.55-.45-1-1-1H2v11zm19.83-7.12c.11-.25.17-.52.17-.8V11c0-1.1-.9-2-2-2h-5.5l.92-4.65c.05-.22.02-.46-.08-.66-.23-.45-.52-.86-.88-1.22L14 2 7.59 8.41C7.21 8.79 7 9.3 7 9.83v7.84C7 18.95 8.05 20 9.34 20h8.11c.7 0 1.36-.37 1.72-.97l2.66-6.15z" />
+            </svg>
+            <span className={cn("text-[10px] md:text-xs font-bold", isTopRank ? "text-[#fcd34d]" : "text-[#c0c0d2]")}>高評価</span>
+          </div>
+        )}
         {/* タイトル + 属性アイコン + モード + 通報 */}
         <div className="mb-3 flex items-center justify-between gap-2">
           <h1 className="min-w-0 truncate text-sm font-bold text-[#fafafa]">
@@ -630,36 +648,36 @@ export function BuildDetailClient({
               <Link
                 key={sb.id}
                 href={`/builds/${sb.id}`}
-                className="block rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover cursor-pointer"
+                className="block rounded-2xl border border-border-primary bg-bg-card px-4 pt-2.5 pb-3 transition-colors hover:bg-bg-card-hover cursor-pointer"
               >
-                {sb.title && (
-                  <div className="mb-1">
-                    <span className="text-sm font-bold text-[#fafafa]">
-                      {sb.title}
+                {/* タイトル + 性格アイコン + モード */}
+                <div className="mb-2 flex items-center justify-between gap-2">
+                  <span className="min-w-0 truncate text-sm font-bold text-[#fafafa]">
+                    {sb.title || MODE_LABEL_MAP[sb.mode]}
+                  </span>
+                  <div className="flex shrink-0 items-center gap-1.5">
+                    {sb.members_detail
+                      .map((m) => m.element)
+                      .filter((e, i, arr) => e && arr.indexOf(e) === i)
+                      .map((el) => (
+                        ELEMENT_ICONS[el as string] ? (
+                          <Image
+                            key={el}
+                            src={ELEMENT_ICONS[el as string]}
+                            alt={el as string}
+                            width={16}
+                            height={16}
+                            className="h-4 w-4"
+                          />
+                        ) : null
+                      ))}
+                    <span className="rounded-md bg-[rgba(36,27,53,0.5)] px-2 py-0.5 text-[10px] font-bold text-[#8b7aab]">
+                      {MODE_LABEL_MAP[sb.mode]}
                     </span>
                   </div>
-                )}
-                <div className="mb-2 flex items-center gap-1.5">
-                  {sb.members_detail
-                    .map((m) => m.element)
-                    .filter((e, i, arr) => e && arr.indexOf(e) === i)
-                    .map((el) => (
-                      ELEMENT_ICONS[el as string] ? (
-                        <Image
-                          key={el}
-                          src={ELEMENT_ICONS[el as string]}
-                          alt={el as string}
-                          width={16}
-                          height={16}
-                          className="h-4 w-4"
-                        />
-                      ) : null
-                    ))}
-                  <span className="rounded-md bg-[rgba(36,27,53,0.5)] px-2 py-0.5 text-[10px] font-bold text-[#8b7aab]">
-                    {MODE_LABEL_MAP[sb.mode]}
-                  </span>
                 </div>
-                <div className="mb-1 flex gap-1">
+                {/* キャラアイコン */}
+                <div className="mb-2 flex gap-1">
                   {sb.members_detail.map((char, i) => (
                     <CharacterIcon
                       key={`${char.id}-${i}`}
@@ -670,9 +688,15 @@ export function BuildDetailClient({
                     />
                   ))}
                 </div>
-                <div className="flex items-center gap-2 text-xs text-[#8b7aab]">
-                  <span>👍 {sb.likes_count}</span>
+                {/* 日時 + いいね数 */}
+                <div className="mt-1 flex items-center justify-between text-xs text-[#8b7aab]">
                   <span>{formatDate(sb.updated_at)}</span>
+                  <span className="flex items-center gap-0.5 text-thumbs-up">
+                    <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M2 20h2c.55 0 1-.45 1-1v-9c0-.55-.45-1-1-1H2v11zm19.83-7.12c.11-.25.17-.52.17-.8V11c0-1.1-.9-2-2-2h-5.5l.92-4.65c.05-.22.02-.46-.08-.66-.23-.45-.52-.86-.88-1.22L14 2 7.59 8.41C7.21 8.79 7 9.3 7 9.83v7.84C7 18.95 8.05 20 9.34 20h8.11c.7 0 1.36-.37 1.72-.97l2.66-6.15z" />
+                    </svg>
+                    {sb.likes_count}
+                  </span>
                 </div>
               </Link>
             ))}
@@ -701,7 +725,7 @@ export function BuildDetailClient({
             </svg>
           </span>
           <div>
-            <span className="block font-bold text-text-primary">編成ランキング</span>
+            <span className="block font-bold text-text-primary">人気編成ランキング</span>
             <span className="text-xs text-text-tertiary">人気のパーティ編成をチェックしよう</span>
           </div>
         </Link>

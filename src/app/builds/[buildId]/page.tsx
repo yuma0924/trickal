@@ -77,7 +77,7 @@ export async function generateMetadata({
   const title = buildData.title || `${buildData.element_label ?? ""}${modeLabel}`;
 
   return {
-    title: `${title} | 編成ランキング | みんなで決めるトリッカルランキング`,
+    title: `${title} | 人気編成ランキング | みんなで決めるトリッカルランキング`,
     description: `トリッカルの編成「${title}」の詳細・コメント`,
   };
 }

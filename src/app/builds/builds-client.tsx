@@ -192,8 +192,8 @@ export function BuildsClient() {
 
   return (
     <div className="space-y-6">
-      {/* コンテンツ選択 + 投稿ボタン */}
-      <div className="flex items-center justify-between gap-2">
+      {/* モバイル: コンテンツ選択 + 投稿ボタン */}
+      <div className="flex items-center justify-between gap-2 md:hidden">
         <div className="relative">
           <select
             value={mode}
@@ -231,7 +231,6 @@ export function BuildsClient() {
               setSortKey("newest");
               setFormOpen(false);
               showToast("編成を投稿しました！");
-              // 新着順で再取得後、リスト先頭にスクロール
               setTimeout(() => {
                 document.getElementById("build-list-top")?.scrollIntoView({ behavior: "smooth" });
               }, 300);
@@ -241,13 +240,13 @@ export function BuildsClient() {
         </div>
       )}
 
-      {/* 性格フィルター + ソート */}
-      <div id="build-list-top" className="flex items-center justify-between gap-2">
+      {/* モバイル: 性格フィルター + ソート */}
+      <div id="build-list-top" className="flex items-center justify-between gap-2 md:hidden">
         <div className="flex gap-1.5 overflow-x-auto">
           <button
             onClick={() => setElementFilters(new Set())}
             className={cn(
-              "shrink-0 rounded-[10px] px-2.5 py-1.5 text-[11px] md:text-xs font-bold transition-colors cursor-pointer",
+              "shrink-0 rounded-[10px] px-2.5 py-1.5 text-[11px] font-bold transition-colors cursor-pointer",
               elementFilters.size === 0
                 ? "bg-[rgba(255,99,126,0.15)] text-[#fafafa] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
                 : "bg-[#1a1225] text-[#a893c0]"
@@ -314,6 +313,105 @@ export function BuildsClient() {
             ))}
           </div>
         )}
+      </div>
+
+      {/* PC: モード + フィルター + ソート + 投稿を1行に */}
+      <div className="hidden items-center gap-3 md:flex">
+        <div className="relative shrink-0">
+          <select
+            value={mode}
+            onChange={(e) => setMode(e.target.value as Mode)}
+            className="appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-[rgba(36,27,53,0.8)] px-4 py-2 pr-9 text-sm font-bold text-[#fafafa] cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
+          >
+            {MODE_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+          <svg className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+        <div className="flex gap-1.5">
+          <button
+            onClick={() => setElementFilters(new Set())}
+            className={cn(
+              "shrink-0 rounded-[10px] px-2.5 py-1.5 text-xs font-bold transition-colors cursor-pointer",
+              elementFilters.size === 0
+                ? "bg-[rgba(255,99,126,0.15)] text-[#fafafa] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+                : "bg-[#1a1225] text-[#a893c0]"
+            )}
+            style={{
+              border: `1.2px solid ${elementFilters.size === 0 ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+            }}
+          >
+            全て
+          </button>
+          {ELEMENTS.map((elem) => {
+            const active = elementFilters.has(elem);
+            return (
+              <button
+                key={elem}
+                onClick={() => {
+                  setElementFilters((prev) => {
+                    const next = new Set(prev);
+                    if (next.has(elem)) next.delete(elem);
+                    else next.add(elem);
+                    return next;
+                  });
+                }}
+                className={cn(
+                  "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer",
+                  active
+                    ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+                    : "bg-[#1a1225]"
+                )}
+                style={{
+                  border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                }}
+                title={elem}
+              >
+                <Image
+                  src={ELEMENT_ICONS[elem]}
+                  alt={elem}
+                  width={20}
+                  height={20}
+                  className="h-5 w-5"
+                />
+              </button>
+            );
+          })}
+        </div>
+        <div className="ml-auto flex items-center gap-4">
+          {builds.length > 0 && (
+            <div className="flex gap-1">
+              {SORT_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => setSortKey(opt.value)}
+                  className={cn(
+                    "rounded-full border px-3 py-1.5 text-sm font-medium transition-colors cursor-pointer",
+                    sortKey === opt.value
+                      ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
+                      : "border-[rgba(139,122,171,0.3)] text-[#8b7aab] hover:text-[#c4b5d4]"
+                  )}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          )}
+          <button
+            onClick={() => setFormOpen(!formOpen)}
+            className="flex shrink-0 items-center gap-1.5 rounded-[14px] bg-gradient-to-r from-[#fb64b6] to-[#ff637e] px-5 py-2 text-sm font-bold text-white shadow-[0px_10px_15px_0px_rgba(246,51,154,0.2),0px_4px_6px_0px_rgba(246,51,154,0.2)] cursor-pointer"
+          >
+            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            投稿
+          </button>
+        </div>
       </div>
 
       {/* 編成一覧 */}
@@ -403,7 +501,7 @@ function BuildCard({
         </div>
       )}
       <Link
-        href={`/builds/${build.id}`}
+        href={`/builds/${build.id}${isTop ? "?rank=1" : isSecond ? "?rank=2" : ""}`}
         className="block cursor-pointer"
       >
         {/* タイトル + 属性アイコン + モード */}
