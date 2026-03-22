@@ -61,7 +61,7 @@ function DraggableItem({
       style={style}
       {...attributes}
       {...listeners}
-      className="flex flex-col items-center gap-0.5 touch-manipulation"
+      className="flex flex-col items-center gap-0.5 touch-none select-none"
     >
       <CharacterIcon name={name} imageUrl={imageUrl} size="sm" />
       <span className="max-w-12 truncate text-center text-[9px] text-text-muted">
