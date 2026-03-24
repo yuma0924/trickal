@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   DndContext,
   DragOverlay,
-  PointerSensor,
+  MouseSensor,
   TouchSensor,
   useSensor,
   useSensors,
@@ -70,11 +70,11 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
   const [elementFilter, setElementFilter] = useState<string | null>(null);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
       activationConstraint: { distance: 5 },
     }),
     useSensor(TouchSensor, {
-      activationConstraint: { delay: 150, tolerance: 5 },
+      activationConstraint: { delay: 200, tolerance: 5 },
     })
   );
 
@@ -239,7 +239,11 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className="space-y-4">
+      <div
+        className="space-y-4 select-none"
+        style={{ WebkitTouchCallout: "none" }}
+        onContextMenu={(e) => e.preventDefault()}
+      >
         {/* 投稿フォーム */}
         <div className="flex flex-col gap-2 rounded-2xl border border-border-primary bg-bg-card p-3 md:flex-row">
           <input
@@ -319,7 +323,7 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
       {/* ドラッグオーバーレイ */}
       <DragOverlay>
         {activeChar && (
-          <div className="flex flex-col items-center gap-0.5 opacity-80">
+          <div className="brightness-50">
             <CharacterIcon
               name={activeChar.name}
               imageUrl={activeChar.image_url}
@@ -354,12 +358,10 @@ function UnassignedPanel({
 
   return (
     <div
-      className="rounded-2xl border border-border-primary bg-bg-card select-none"
+      className="rounded-2xl border border-border-primary bg-bg-card"
       style={{
         backgroundColor: isOver ? "rgba(251, 100, 182, 0.05)" : undefined,
-        WebkitTouchCallout: "none",
       }}
-      onContextMenu={(e) => e.preventDefault()}
     >
       {/* キャラグリッド（ティア行に最も近い位置） */}
       <div

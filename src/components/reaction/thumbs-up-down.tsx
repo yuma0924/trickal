@@ -35,28 +35,28 @@ export function ThumbsUpDown({
         type="button"
         onClick={() => handleClick("up")}
         className={cn(
-          "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs transition-all duration-150 cursor-pointer",
+          "inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm transition-all duration-150 cursor-pointer",
           userReaction === "up"
             ? "border-thumbs-up/30 bg-thumbs-up/10 text-thumbs-up font-medium"
             : "border-border-primary text-text-muted hover:text-thumbs-up hover:border-thumbs-up/20 hover:bg-thumbs-up/5"
         )}
         aria-label="いいね"
       >
-        <ThumbsUpIcon className="h-3.5 w-3.5" />
+        <ThumbsUpIcon className="h-4 w-4" />
         <span>{thumbsUpCount}</span>
       </button>
       <button
         type="button"
         onClick={() => handleClick("down")}
         className={cn(
-          "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs transition-all duration-150 cursor-pointer",
+          "inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm transition-all duration-150 cursor-pointer",
           userReaction === "down"
             ? "border-thumbs-down/30 bg-thumbs-down/10 text-thumbs-down font-medium"
             : "border-border-primary text-text-muted hover:text-thumbs-down hover:border-thumbs-down/20 hover:bg-thumbs-down/5"
         )}
         aria-label="よくない"
       >
-        <ThumbsDownIcon className="h-3.5 w-3.5" />
+        <ThumbsDownIcon className="h-4 w-4" />
         <span>{thumbsDownCount}</span>
       </button>
     </div>

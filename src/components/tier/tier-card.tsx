@@ -72,49 +72,60 @@ export function TierCard({
         </div>
 
         {/* ティアプレビュー（S〜C） */}
-        <div className="mx-3 mb-2 overflow-hidden rounded-lg border border-border-primary">
-          {PREVIEW_LABELS.map((label) => {
-            const charIds = data[label] ?? [];
-            if (charIds.length === 0 && label !== "S") return null;
-            return (
-              <div
-                key={label}
-                className="flex border-b border-border-primary last:border-b-0"
-              >
+        <div className="relative mx-3 mb-2">
+          <div className="overflow-hidden rounded-lg border border-border-primary">
+            {PREVIEW_LABELS.map((label) => {
+              const charIds = data[label] ?? [];
+              if (charIds.length === 0 && label !== "S") return null;
+              return (
                 <div
-                  className="flex w-8 shrink-0 items-center justify-center text-xs font-bold text-white"
-                  style={{ backgroundColor: TIER_COLORS[label] }}
+                  key={label}
+                  className="flex border-b border-border-primary last:border-b-0"
                 >
-                  {label}
+                  <div
+                    className="flex w-8 shrink-0 items-center justify-center text-xs font-bold text-white"
+                    style={{ backgroundColor: TIER_COLORS[label] }}
+                  >
+                    {label}
+                  </div>
+                  <div className="flex min-h-[36px] flex-1 flex-wrap items-center gap-0.5 px-1 py-0.5">
+                    {charIds.slice(0, 8).map((charId) => {
+                      const char = characters[charId];
+                      if (!char) return null;
+                      return (
+                        <CharacterIcon
+                          key={charId}
+                          name={char.name}
+                          imageUrl={char.image_url}
+                          size="sm"
+                          className="!h-8 !w-8"
+                        />
+                      );
+                    })}
+                    {charIds.length > 8 && (
+                      <span className="text-[10px] text-text-muted">
+                        +{charIds.length - 8}
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <div className="flex min-h-[36px] flex-1 flex-wrap items-center gap-0.5 px-1 py-0.5">
-                  {charIds.slice(0, 8).map((charId) => {
-                    const char = characters[charId];
-                    if (!char) return null;
-                    return (
-                      <CharacterIcon
-                        key={charId}
-                        name={char.name}
-                        imageUrl={char.image_url}
-                        size="sm"
-                        className="!h-8 !w-8"
-                      />
-                    );
-                  })}
-                  {charIds.length > 8 && (
-                    <span className="text-[10px] text-text-muted">
-                      +{charIds.length - 8}
-                    </span>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+          {/* グラデーションフェード */}
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 rounded-b-lg bg-gradient-to-t from-bg-card to-transparent" />
         </div>
       </Link>
 
+      {/* 全て表示 */}
+      <div className="flex justify-center -mt-1 mb-0">
+        <Link href={`/tiers/${id}`} className="text-[10px] text-text-muted hover:text-text-primary transition-colors">
+          全て表示 ▼
+        </Link>
+      </div>
+
       {/* フッター */}
-      <div className="flex items-center justify-between px-3 pb-3">
+      <div className="flex items-center justify-between px-3 pb-1.5 -mt-0.5">
         <div className="flex items-center gap-2 text-xs text-text-muted">
           {(() => {
             const totalChars = Object.values(data).flat().length;

@@ -117,24 +117,28 @@ export function TierDetailClient({
   return (
     <div className="space-y-6">
       {/* ヘッダー */}
-      <div>
-        <div className="flex items-center gap-2.5">
-          <span
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[14px]"
-            style={{ backgroundImage: "linear-gradient(135deg, #a855f7, #ec4899)" }}
+      <div className="flex items-center justify-between">
+        <h1 className="flex items-center gap-3 pl-2 text-xl font-bold text-text-primary">
+          <svg className="h-5 w-5 shrink-0" viewBox="0 0 16 16" fill="none">
+            <rect x="0" y="0.5" width="3" height="3" rx="0.5" fill="#ef4444" />
+            <rect x="4" y="0.5" width="12" height="3" rx="0.5" fill="currentColor" className="text-text-muted" />
+            <rect x="0" y="4.5" width="3" height="3" rx="0.5" fill="#f97316" />
+            <rect x="4" y="4.5" width="9" height="3" rx="0.5" fill="currentColor" className="text-text-muted" />
+            <rect x="0" y="8.5" width="3" height="3" rx="0.5" fill="#eab308" />
+            <rect x="4" y="8.5" width="6" height="3" rx="0.5" fill="currentColor" className="text-text-muted" />
+            <rect x="0" y="12.5" width="3" height="3" rx="0.5" fill="#22c55e" />
+            <rect x="4" y="12.5" width="4" height="3" rx="0.5" fill="currentColor" className="text-text-muted" />
+          </svg>
+          {tier.title || "無題のティア"}
+        </h1>
+        {isOwner && (
+          <button
+            onClick={handleDelete}
+            className="mr-2 shrink-0 rounded-lg border border-border-primary bg-bg-tertiary px-2.5 py-1 text-xs text-text-muted transition-colors hover:text-thumbs-down hover:border-thumbs-down/30 cursor-pointer"
           >
-            <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-            </svg>
-          </span>
-          <h1 className="text-lg font-bold text-text-primary">
-            {tier.title || "無題のティア"}
-          </h1>
-        </div>
-        <div className="mt-1 flex items-center gap-3 pl-[42px] text-xs text-text-muted">
-          {tier.display_name && <span>by {tier.display_name}</span>}
-          <span>{formatDate(tier.created_at)}</span>
-        </div>
+            削除
+          </button>
+        )}
       </div>
 
       {/* ティア表 */}
@@ -153,50 +157,45 @@ export function TierDetailClient({
                 name: c.name,
                 image_url: c.image_url,
               }))}
+              iconClassName="h-14 w-14"
             />
           );
         })}
-      </div>
-
-      {/* アクション */}
-      <div className="flex items-center justify-between">
-        <TierLikeButton
-          likesCount={tier.likes_count}
-          userLiked={userLiked}
-          onToggle={handleToggleLike}
-        />
-        <div className="flex items-center gap-2">
-          {isOwner && (
-            <button
-              onClick={handleDelete}
-              className="rounded-full border border-border-primary px-3 py-1 text-xs text-text-muted transition-colors hover:border-thumbs-down/30 hover:text-thumbs-down cursor-pointer"
-            >
-              削除
-            </button>
-          )}
+        {/* フッター */}
+        <div className="flex items-center justify-between border-t border-border-primary bg-bg-tertiary/50 px-4 py-3">
+          <div className="flex items-center gap-3 text-xs text-text-muted">
+            {tier.display_name && <span>by {tier.display_name}</span>}
+            <span>{formatDate(tier.created_at)}</span>
+          </div>
+          <TierLikeButton
+            likesCount={tier.likes_count}
+            userLiked={userLiked}
+            onToggle={handleToggleLike}
+          />
         </div>
       </div>
 
-      {/* ナビリンク */}
+      {/* ティア一覧へ戻る */}
+      <Link
+        href="/tiers"
+        className="mt-10 flex items-center justify-center gap-2 rounded-2xl border border-border-primary bg-bg-card py-3 text-sm font-medium text-text-primary transition-colors hover:bg-bg-card-hover"
+      >
+        <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
+          <rect x="0" y="0.5" width="3" height="3" rx="0.5" fill="#ef4444" />
+          <rect x="4" y="0.5" width="12" height="3" rx="0.5" fill="currentColor" className="text-text-muted" />
+          <rect x="0" y="4.5" width="3" height="3" rx="0.5" fill="#f97316" />
+          <rect x="4" y="4.5" width="9" height="3" rx="0.5" fill="currentColor" className="text-text-muted" />
+          <rect x="0" y="8.5" width="3" height="3" rx="0.5" fill="#eab308" />
+          <rect x="4" y="8.5" width="6" height="3" rx="0.5" fill="currentColor" className="text-text-muted" />
+          <rect x="0" y="12.5" width="3" height="3" rx="0.5" fill="#22c55e" />
+          <rect x="4" y="12.5" width="4" height="3" rx="0.5" fill="currentColor" className="text-text-muted" />
+        </svg>
+        他のティア表を見る
+      </Link>
+
+      {/* 他のページもチェック */}
       <div className="mt-10 space-y-3">
         <p className="pl-1 text-sm font-bold text-text-primary">他のページもチェック</p>
-        <Link
-          href="/tiers"
-          className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover"
-        >
-          <span
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
-            style={{ backgroundImage: "linear-gradient(135deg, #a855f7, #ec4899)" }}
-          >
-            <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-            </svg>
-          </span>
-          <div>
-            <span className="block font-bold text-text-primary">ティアメーカー一覧</span>
-            <span className="text-xs text-text-tertiary">他のティア表も見てみよう</span>
-          </div>
-        </Link>
         <Link
           href="/ranking"
           className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover"
@@ -212,6 +211,23 @@ export function TierDetailClient({
           <div>
             <span className="block font-bold text-text-primary">人気キャラランキング</span>
             <span className="text-xs text-text-tertiary">投票で決まる最強キャラをチェック</span>
+          </div>
+        </Link>
+        <Link
+          href="/builds"
+          className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover"
+        >
+          <span
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            style={{ backgroundImage: "linear-gradient(135deg, #fb64b6, #ff637e)" }}
+          >
+            <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+            </svg>
+          </span>
+          <div>
+            <span className="block font-bold text-text-primary">人気編成ランキング</span>
+            <span className="text-xs text-text-tertiary">人気のパーティ編成をチェック</span>
           </div>
         </Link>
       </div>

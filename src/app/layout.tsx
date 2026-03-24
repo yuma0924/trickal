@@ -34,7 +34,7 @@ export default function RootLayout({
                 {children}
               </main>
               <aside className="hidden lg:block">
-                <div className="sticky top-20 space-y-4">
+                <div className="sticky top-4 space-y-4">
                   <div className="flex h-[600px] items-center justify-center rounded-2xl border border-border-primary bg-bg-card">
                     <span className="text-xs text-text-muted">AD</span>
                   </div>

@@ -172,7 +172,11 @@ export default function GuidelinesPage() {
             当サイトは非公式のファンサイトです。
           </p>
           <p className="text-sm leading-relaxed text-text-secondary">
-            作品名・キャラクター名・画像等の権利は各権利者に帰属します。
+            当サイトで使用しているゲーム内画像・キャラクター名・ステータス情報・スキル情報等の素材に関する権利は、Epid
+            GAMES / Bilibili に帰属します。
+          </p>
+          <p className="text-sm leading-relaxed text-text-secondary">
+            これらの素材は『トリッカル・もちもちほっぺ大作戦』の公式に公開されたゲーム内リソースに基づき、非営利のファンサイト運営の範囲で使用しています。
           </p>
           <p className="text-sm leading-relaxed text-text-secondary">
             問題がある場合は権利者からの連絡により速やかに対応します。

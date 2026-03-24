@@ -721,8 +721,15 @@ export default async function Home() {
       <section className="space-y-4">
         <SectionHeading
           icon={
-            <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
+              <rect x="0" y="0.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="0.5" width="12" height="3" rx="0.5" fill="white" />
+              <rect x="0" y="4.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="4.5" width="9" height="3" rx="0.5" fill="white" />
+              <rect x="0" y="8.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="8.5" width="6" height="3" rx="0.5" fill="white" />
+              <rect x="0" y="12.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="12.5" width="4" height="3" rx="0.5" fill="white" />
             </svg>
           }
           title="ティアメーカー"
@@ -756,55 +763,59 @@ export default async function Home() {
                   </div>
 
                   {/* ティアプレビュー（S〜C） */}
-                  <div className="mb-2 overflow-hidden rounded-lg border border-[rgba(249,168,212,0.15)]">
-                    {tierLabels.map((label) => {
-                      const charIds = tier.data[label] ?? [];
-                      if (charIds.length === 0 && label !== "S") return null;
-                      const colors: Record<string, string> = {
-                        S: "#ef4444", A: "#f97316", B: "#eab308", C: "#22c55e",
-                      };
-                      return (
-                        <div
-                          key={label}
-                          className="flex border-b border-[rgba(249,168,212,0.15)] last:border-b-0"
-                        >
+                  <div className="relative mb-2">
+                    <div className="overflow-hidden rounded-lg border border-[rgba(249,168,212,0.15)]">
+                      {tierLabels.map((label) => {
+                        const charIds = tier.data[label] ?? [];
+                        if (charIds.length === 0 && label !== "S") return null;
+                        const colors: Record<string, string> = {
+                          S: "#ef4444", A: "#f97316", B: "#eab308", C: "#22c55e",
+                        };
+                        return (
                           <div
-                            className="flex w-8 shrink-0 items-center justify-center text-xs font-bold text-white"
-                            style={{ backgroundColor: colors[label] }}
+                            key={label}
+                            className="flex border-b border-[rgba(249,168,212,0.15)] last:border-b-0"
                           >
-                            {label}
+                            <div
+                              className="flex w-8 shrink-0 items-center justify-center text-xs font-bold text-white"
+                              style={{ backgroundColor: colors[label] }}
+                            >
+                              {label}
+                            </div>
+                            <div className="flex min-h-[36px] flex-1 flex-wrap items-center gap-0.5 px-1 py-0.5">
+                              {charIds.slice(0, 8).map((charId) => {
+                                const char = charMap.get(charId);
+                                if (!char) return null;
+                                return (
+                                  <div key={charId} className="h-8 w-8 shrink-0 overflow-hidden rounded">
+                                    {char.imageUrl ? (
+                                      <Image
+                                        src={char.imageUrl}
+                                        alt={char.name}
+                                        width={32}
+                                        height={32}
+                                        className="pointer-events-none h-full w-full object-cover"
+                                        loading="lazy"
+                                      />
+                                    ) : (
+                                      <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-[10px] text-[#8b7aab]">
+                                        {char.name.charAt(0)}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                              {charIds.length > 8 && (
+                                <span className="text-[10px] text-[#8b7aab]">+{charIds.length - 8}</span>
+                              )}
+                            </div>
                           </div>
-                          <div className="flex min-h-[36px] flex-1 flex-wrap items-center gap-0.5 px-1 py-0.5">
-                            {charIds.slice(0, 8).map((charId) => {
-                              const char = charMap.get(charId);
-                              if (!char) return null;
-                              return (
-                                <div key={charId} className="h-8 w-8 shrink-0 overflow-hidden rounded">
-                                  {char.imageUrl ? (
-                                    <Image
-                                      src={char.imageUrl}
-                                      alt={char.name}
-                                      width={32}
-                                      height={32}
-                                      className="h-full w-full object-cover"
-                                      loading="lazy"
-                                    />
-                                  ) : (
-                                    <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-[10px] text-[#8b7aab]">
-                                      {char.name.charAt(0)}
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            })}
-                            {charIds.length > 8 && (
-                              <span className="text-[10px] text-[#8b7aab]">+{charIds.length - 8}</span>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
+                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 rounded-b-lg bg-gradient-to-t from-[rgba(36,27,53,0.95)] to-transparent" />
                   </div>
+                  <p className="mb-1 text-center text-[10px] text-[#8b7aab]">全て表示 ▼</p>
 
                   {/* フッター */}
                   <div className="flex items-center justify-between text-[10px] text-[#8b7aab]">

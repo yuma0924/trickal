@@ -41,7 +41,7 @@ export function CharacterIcon({
           alt={name}
           width={imageSize}
           height={imageSize}
-          className="h-full w-full object-cover"
+          className="pointer-events-none h-full w-full object-cover"
           loading="lazy"
         />
       ) : (

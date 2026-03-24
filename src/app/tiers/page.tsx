@@ -37,8 +37,15 @@ export default async function TiersPage() {
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[14px]"
             style={{ backgroundImage: "linear-gradient(135deg, #a855f7, #ec4899)" }}
           >
-            <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
+              <rect x="0" y="0.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="0.5" width="12" height="3" rx="0.5" fill="white" />
+              <rect x="0" y="4.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="4.5" width="9" height="3" rx="0.5" fill="white" />
+              <rect x="0" y="8.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="8.5" width="6" height="3" rx="0.5" fill="white" />
+              <rect x="0" y="12.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="12.5" width="4" height="3" rx="0.5" fill="white" />
             </svg>
           </span>
           <h1 className="text-lg font-bold text-text-primary">ティアメーカー</h1>
