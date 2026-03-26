@@ -311,6 +311,16 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
         >
           {submitting ? "投稿中..." : "ティアを投稿する"}
         </Button>
+        {!submitting && (!title.trim() || tierState.unassigned.length === characters.length) && (
+          <div className="space-y-0.5 px-4">
+            {!title.trim() && (
+              <p className="text-xs text-[#8b7aab]">※ タイトルを入力してください</p>
+            )}
+            {tierState.unassigned.length === characters.length && (
+              <p className="text-xs text-[#8b7aab]">※ キャラクターを1体以上配置してください</p>
+            )}
+          </div>
+        )}
         {error && (
           <div className="space-y-0.5 px-4">
             {error.split("\n").map((line) => (
