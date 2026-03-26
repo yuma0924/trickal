@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   DndContext,
@@ -328,6 +329,24 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
             ))}
           </div>
         )}
+
+        {/* ティア一覧へ戻る */}
+        <Link
+          href="/tiers"
+          className="mt-10 flex items-center justify-center gap-2 rounded-2xl border border-border-primary bg-bg-card py-3 text-sm font-medium text-text-primary transition-colors hover:bg-bg-card-hover"
+        >
+          <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
+            <rect x="0" y="0.5" width="3" height="3" rx="0.5" fill="#ef4444" />
+            <rect x="4" y="0.5" width="12" height="3" rx="0.5" fill="currentColor" className="text-text-muted" />
+            <rect x="0" y="4.5" width="3" height="3" rx="0.5" fill="#f97316" />
+            <rect x="4" y="4.5" width="9" height="3" rx="0.5" fill="currentColor" className="text-text-muted" />
+            <rect x="0" y="8.5" width="3" height="3" rx="0.5" fill="#eab308" />
+            <rect x="4" y="8.5" width="6" height="3" rx="0.5" fill="currentColor" className="text-text-muted" />
+            <rect x="0" y="12.5" width="3" height="3" rx="0.5" fill="#22c55e" />
+            <rect x="4" y="12.5" width="4" height="3" rx="0.5" fill="currentColor" className="text-text-muted" />
+          </svg>
+          他のティア表を見る
+        </Link>
       </div>
 
       {/* ドラッグオーバーレイ */}

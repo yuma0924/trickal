@@ -9,7 +9,7 @@ type CharacterInfo = {
 };
 
 export const metadata: Metadata = {
-  title: "ティアメーカー | みんなで決めるトリッカルランキング",
+  title: "みんなのティア表 | みんなで決めるトリッカルランキング",
   description: "トリッカルのキャラクターをS〜Eの6段にランク付け。自分だけのティア表を作成・共有しよう",
 };
 
@@ -48,7 +48,7 @@ export default async function TiersPage() {
               <rect x="4" y="12.5" width="4" height="3" rx="0.5" fill="white" />
             </svg>
           </span>
-          <h1 className="text-lg font-bold text-text-primary">ティアメーカー</h1>
+          <h1 className="text-lg font-bold text-text-primary">みんなのティア表</h1>
         </div>
         <p className="mt-1 pl-[42px] text-xs md:text-sm text-text-muted">
           キャラクターをランク付けして共有しよう

@@ -45,7 +45,7 @@ export async function generateMetadata({
 
   const title = (tier as { title: string | null }).title || "無題のティア";
   return {
-    title: `${title} | ティアメーカー | みんなで決めるトリッカルランキング`,
+    title: `${title} | みんなのティア表 | みんなで決めるトリッカルランキング`,
     description: `トリッカルのティア表「${title}」を見る`,
   };
 }

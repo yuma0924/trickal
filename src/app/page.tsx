@@ -390,7 +390,7 @@ export default async function Home() {
     })
     .filter((c): c is TrendingChar => c !== null);
 
-  // --- ティアメーカー（人気上位2件）---
+  // --- みんなのティア表（人気上位2件）---
   const { data: topTiers } = await supabase
     .from("tiers")
     .select("id, title, display_name, data, likes_count, created_at")
@@ -717,7 +717,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ====== ティアメーカー ====== */}
+      {/* ====== みんなのティア表 ====== */}
       <section className="space-y-4">
         <SectionHeading
           icon={
@@ -732,7 +732,7 @@ export default async function Home() {
               <rect x="4" y="12.5" width="4" height="3" rx="0.5" fill="white" />
             </svg>
           }
-          title="ティアメーカー"
+          title="みんなのティア表"
           subtitle="キャラクターをランク付けして共有しよう"
           href="/tiers"
           linkLabel="もっと見る"
@@ -848,7 +848,7 @@ export default async function Home() {
 
         <SectionFooterButton
           href="/tiers"
-          label="ティアメーカーをすべて見る"
+          label="みんなのティア表を見る"
           gradientFrom="#a855f7"
           gradientTo="#ec4899"
         />

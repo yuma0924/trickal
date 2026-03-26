@@ -11,7 +11,7 @@ type CharacterInfo = {
 };
 
 export const metadata: Metadata = {
-  title: "ティアメーカー作成 | みんなで決めるトリッカルランキング",
+  title: "ティア表作成 | みんなで決めるトリッカルランキング",
   description: "トリッカルのキャラクターをS〜Eの6段にランク付け。自分だけのティア表を作成しよう",
 };
 
@@ -38,7 +38,7 @@ export default async function TierCreatePage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
             </svg>
           </span>
-          <h1 className="text-lg font-bold text-text-primary">ティアメーカー作成</h1>
+          <h1 className="text-lg font-bold text-text-primary">ティア表作成</h1>
         </div>
         <p className="mt-1 pl-[42px] text-xs md:text-sm text-text-muted">
           キャラクターをドラッグ＆ドロップでランク付けしよう
