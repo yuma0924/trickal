@@ -335,7 +335,7 @@ export function BuildDetailClient({
   const karmaClass = getKarmaClass(build.likes_count, build.dislikes_count);
 
   return (
-    <div className="space-y-6">
+    <div className="pt-2 space-y-6">
       {/* 編成情報カード */}
       <div className={cn(
         "relative rounded-2xl border p-4 md:max-w-xl",

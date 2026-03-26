@@ -4,7 +4,7 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
 
 export function Header() {
   return (
-    <header className="bg-bg-primary shadow-lg shadow-black/10">
+    <header className="bg-bg-primary pt-[env(safe-area-inset-top)] shadow-lg shadow-black/10">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 md:px-8">
         <Link href="/" className="group flex items-center gap-2.5">
           <Image
