@@ -390,14 +390,14 @@ export default async function Home() {
     })
     .filter((c): c is TrendingChar => c !== null);
 
-  // --- ティアメーカー（人気上位5件）---
+  // --- ティアメーカー（人気上位2件）---
   const { data: topTiers } = await supabase
     .from("tiers")
     .select("id, title, display_name, data, likes_count, created_at")
     .eq("is_deleted", false)
     .order("likes_count", { ascending: false })
     .order("created_at", { ascending: false })
-    .limit(5);
+    .limit(2);
 
   type TierPreview = {
     id: string;
@@ -815,7 +815,7 @@ export default async function Home() {
                     </div>
                     <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 rounded-b-lg bg-gradient-to-t from-[rgba(36,27,53,0.95)] to-transparent" />
                   </div>
-                  <p className="mb-1 text-center text-[10px] text-[#8b7aab]">全て表示 ▼</p>
+                  <p className="mb-1 text-center text-[10px] text-[#8b7aab]">このティア表を見る ▼</p>
 
                   {/* フッター */}
                   <div className="flex items-center justify-between text-[10px] text-[#8b7aab]">
