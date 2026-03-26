@@ -985,8 +985,8 @@ export default async function Home() {
           subtitle="人気のパーティ編成をチェック・投稿しよう"
           href="/builds"
           linkLabel="もっと見る"
-          gradientFrom="#fb64b6"
-          gradientTo="#ff637e"
+          gradientFrom="#3b82f6"
+          gradientTo="#06b6d4"
         />
 
         <HomeBuildsSection builds={buildsData} charMap={charMapPlain} />
@@ -994,8 +994,8 @@ export default async function Home() {
         <SectionFooterButton
           href="/builds"
           label="人気編成ランキングをすべて見る"
-          gradientFrom="#fb64b6"
-          gradientTo="#ff637e"
+          gradientFrom="#3b82f6"
+          gradientTo="#06b6d4"
         />
       </section>
     </div>

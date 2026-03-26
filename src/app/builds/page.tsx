@@ -256,7 +256,7 @@ export default async function BuildsPage() {
       )}
 
       {/* 他のランキングもチェック */}
-      <section className="space-y-3">
+      <section className="mt-10 space-y-3">
         <p className="text-sm md:text-base font-bold text-text-primary">他のランキングもチェック</p>
         <Link
           href="/ranking"
@@ -273,6 +273,33 @@ export default async function BuildsPage() {
           <div className="flex-1">
             <span className="block font-bold text-text-primary">人気キャラランキング</span>
             <span className="text-xs md:text-sm text-text-muted">投票で決まる最強キャラをチェック</span>
+          </div>
+          <svg className="h-5 w-5 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
+        <Link
+          href="/tiers"
+          className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover cursor-pointer"
+        >
+          <span
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            style={{ backgroundImage: "linear-gradient(135deg, #a855f7, #ec4899)" }}
+          >
+            <svg className="h-5 w-5 text-white" viewBox="0 0 16 16" fill="none">
+              <rect x="0" y="0.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="0.5" width="12" height="3" rx="0.5" fill="white" />
+              <rect x="0" y="4.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="4.5" width="9" height="3" rx="0.5" fill="white" />
+              <rect x="0" y="8.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="8.5" width="6" height="3" rx="0.5" fill="white" />
+              <rect x="0" y="12.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="12.5" width="4" height="3" rx="0.5" fill="white" />
+            </svg>
+          </span>
+          <div className="flex-1">
+            <span className="block font-bold text-text-primary">みんなのティア表</span>
+            <span className="text-xs md:text-sm text-text-muted">キャラクターをランク付けして共有しよう</span>
           </div>
           <svg className="h-5 w-5 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

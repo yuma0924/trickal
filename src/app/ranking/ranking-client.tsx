@@ -325,25 +325,52 @@ export function RankingClient({
       )}
 
       {/* 他のランキングもチェック */}
-      <section className="space-y-3 lg:max-w-md">
-        <p className="text-xs md:text-sm font-bold text-[#a893c0]">他のランキングもチェック</p>
+      <section className="mt-10 space-y-3">
+        <p className="text-sm md:text-base font-bold text-text-primary">他のランキングもチェック</p>
         <Link
           href="/builds"
-          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(251,100,182,0.15)] to-[rgba(255,99,126,0.15)] border border-[rgba(249,168,212,0.1)] px-4 py-3 transition-colors hover:from-[rgba(251,100,182,0.25)] hover:to-[rgba(255,99,126,0.25)] cursor-pointer"
+          className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover cursor-pointer"
         >
           <span
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-            style={{ backgroundImage: "linear-gradient(135deg, #fb64b6, #ff637e)" }}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            style={{ backgroundImage: "linear-gradient(135deg, #3b82f6, #06b6d4)" }}
           >
             <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm md:text-base font-bold text-[#fafafa]">人気編成ランキング</span>
-            <span className="text-xs md:text-sm text-[#8b7aab]">人気のパーティ編成をチェックしよう</span>
+            <span className="block font-bold text-text-primary">人気編成ランキング</span>
+            <span className="text-xs md:text-sm text-text-muted">人気のパーティ編成をチェックしよう</span>
           </div>
-          <svg className="h-4 w-4 shrink-0 text-[#8b7aab]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-5 w-5 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
+        <Link
+          href="/tiers"
+          className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover cursor-pointer"
+        >
+          <span
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            style={{ backgroundImage: "linear-gradient(135deg, #a855f7, #ec4899)" }}
+          >
+            <svg className="h-5 w-5 text-white" viewBox="0 0 16 16" fill="none">
+              <rect x="0" y="0.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="0.5" width="12" height="3" rx="0.5" fill="white" />
+              <rect x="0" y="4.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="4.5" width="9" height="3" rx="0.5" fill="white" />
+              <rect x="0" y="8.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="8.5" width="6" height="3" rx="0.5" fill="white" />
+              <rect x="0" y="12.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="12.5" width="4" height="3" rx="0.5" fill="white" />
+            </svg>
+          </span>
+          <div className="flex-1">
+            <span className="block font-bold text-text-primary">みんなのティア表</span>
+            <span className="text-xs md:text-sm text-text-muted">キャラクターをランク付けして共有しよう</span>
+          </div>
+          <svg className="h-5 w-5 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </Link>

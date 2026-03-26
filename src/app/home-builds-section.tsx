@@ -54,7 +54,7 @@ interface HomeuildsSectionProps {
   charMap: Record<string, CharInfo>;
 }
 
-const PREVIEW_COUNT = 5;
+const PREVIEW_COUNT = 2;
 
 export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
   const [modeFilter, setModeFilter] = useState<Mode>("general");
