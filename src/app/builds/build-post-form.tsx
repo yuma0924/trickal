@@ -556,7 +556,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                 <button
                   type="button"
                   onClick={handleClearAll}
-                  className="rounded-lg border border-border-primary bg-bg-inset px-2.5 py-1 text-[11px] font-bold text-text-muted transition-colors hover:border-[rgba(255,99,126,0.4)] hover:text-[#fda4af] cursor-pointer"
+                  className="rounded-lg border border-border-primary bg-bg-inset px-2.5 py-1 text-[11px] font-bold text-text-muted transition-colors hover:border-[rgba(255,99,126,0.4)] hover:text-accent cursor-pointer"
                 >
                   全解除
                 </button>
@@ -638,7 +638,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
           <button
             type="button"
             onClick={handleClearAll}
-            className="rounded-lg border border-border-primary bg-bg-inset px-2.5 py-1 text-[11px] font-bold text-text-muted transition-colors hover:border-[rgba(255,99,126,0.4)] hover:text-[#fda4af] cursor-pointer"
+            className="rounded-lg border border-border-primary bg-bg-inset px-2.5 py-1 text-[11px] font-bold text-text-muted transition-colors hover:border-[rgba(255,99,126,0.4)] hover:text-accent cursor-pointer"
           >
             全解除
           </button>

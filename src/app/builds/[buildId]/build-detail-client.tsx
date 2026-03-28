@@ -348,10 +348,10 @@ export function BuildDetailClient({
       )}>
         {(isTopRank || isSecondRank) && (
           <div className="absolute -top-3 left-3 flex items-center gap-1 rounded-full bg-bg-input px-2 py-0.5 md:gap-1.5 md:px-2.5 md:py-1">
-            <svg className={cn("h-3.5 w-3.5 md:h-4 md:w-4", isTopRank ? "text-[#fcd34d]" : "text-[#c0c0d2]")} viewBox="0 0 24 24" fill="currentColor">
+            <svg className={cn("h-3.5 w-3.5 md:h-4 md:w-4", isTopRank ? "text-star" : "text-rank-silver")} viewBox="0 0 24 24" fill="currentColor">
               <path d="M2 20h2c.55 0 1-.45 1-1v-9c0-.55-.45-1-1-1H2v11zm19.83-7.12c.11-.25.17-.52.17-.8V11c0-1.1-.9-2-2-2h-5.5l.92-4.65c.05-.22.02-.46-.08-.66-.23-.45-.52-.86-.88-1.22L14 2 7.59 8.41C7.21 8.79 7 9.3 7 9.83v7.84C7 18.95 8.05 20 9.34 20h8.11c.7 0 1.36-.37 1.72-.97l2.66-6.15z" />
             </svg>
-            <span className={cn("text-[10px] md:text-xs font-bold", isTopRank ? "text-[#fcd34d]" : "text-[#c0c0d2]")}>高評価</span>
+            <span className={cn("text-[10px] md:text-xs font-bold", isTopRank ? "text-star" : "text-rank-silver")}>高評価</span>
           </div>
         )}
         {/* タイトル + 属性アイコン + モード + 通報 */}
@@ -470,7 +470,7 @@ export function BuildDetailClient({
       {/* コメント投稿 */}
       <section>
         {!commentFormOpen ? (
-          <div className="rounded-[14px] bg-gradient-to-r from-[rgba(246,51,154,0.1)] to-[rgba(255,32,86,0.1)] border border-[rgba(251,100,182,0.3)] p-4 shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]">
+          <div className="rounded-[14px] bg-gradient-to-r from-[rgba(246,51,154,0.1)] to-[rgba(255,32,86,0.1)] border border-accent-active/30 p-4 shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2">
@@ -559,12 +559,12 @@ export function BuildDetailClient({
                 className={cn(
                   "flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs md:text-sm md:px-3 md:py-1.5 font-medium transition-colors cursor-pointer",
                   sort === tab.value
-                    ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
-                    : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-[#c4b5d4]"
+                    ? "border-accent-active/40 bg-accent-active/12 text-accent-active"
+                    : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-text-tertiary"
                 )}
               >
                 {tab.value === "thumbs_up" && (
-                  <svg className="h-3 w-3 text-[#fb64b6]" viewBox="0 0 24 24" fill="currentColor">
+                  <svg className="h-3 w-3 text-accent-active" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M2 20h2c.55 0 1-.45 1-1v-9c0-.55-.45-1-1-1H2v11zm19.83-7.12c.11-.25.17-.52.17-.8V11c0-1.1-.9-2-2-2h-5.5l.92-4.65c.05-.22.02-.46-.08-.66-.23-.45-.52-.86-.88-1.22L14 2 7.59 8.41C7.21 8.79 7 9.3 7 9.83v7.84C7 18.95 8.05 20 9.34 20h8.11c.7 0 1.36-.37 1.72-.97l2.66-6.15z" />
                   </svg>
                 )}

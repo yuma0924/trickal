@@ -21,7 +21,7 @@ function ParamLine({ text }: { text: string }) {
     return (
       <>
         <span>{label}{sep}</span>
-        <span className="font-medium text-[#fcd34d]">{value}</span>
+        <span className="font-medium text-star">{value}</span>
       </>
     );
   }
@@ -32,7 +32,7 @@ function ParamLine({ text }: { text: string }) {
     return (
       <>
         <span>{label}</span>
-        <span className="font-medium text-[#fcd34d]">{value}</span>
+        <span className="font-medium text-star">{value}</span>
       </>
     );
   }
@@ -818,16 +818,16 @@ export function CharacterDetailClient({
       {/* 投稿フォーム */}
       <section className="-mt-1.5 md:mt-0">
         {!formOpen ? (
-          <div className="rounded-[14px] bg-gradient-to-r from-[rgba(246,51,154,0.1)] to-[rgba(255,32,86,0.1)] border border-[rgba(251,100,182,0.3)] px-4 py-2.5 shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]">
+          <div className="rounded-[14px] bg-gradient-to-r from-[rgba(246,51,154,0.1)] to-[rgba(255,32,86,0.1)] border border-accent-active/30 px-4 py-2.5 shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
-                <svg className="h-5 w-5 shrink-0 text-[#fcd34d]" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="h-5 w-5 shrink-0 text-star" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />
                 </svg>
                 <span className="text-sm md:text-lg font-bold text-text-primary">
                   {character.name}を評価する
                 </span>
-                <span className="hidden text-base text-text-tertiary md:inline md:ml-3"><span className="text-[#fcd34d]">★</span>評価とコメントを投稿できます</span>
+                <span className="hidden text-base text-text-tertiary md:inline md:ml-3"><span className="text-star">★</span>評価とコメントを投稿できます</span>
               </div>
               <button
                 onClick={() => setFormOpen(true)}
@@ -867,7 +867,7 @@ export function CharacterDetailClient({
               className={cn(
                 "rounded-full border px-2.5 py-1 text-xs md:text-sm md:px-3 md:py-1.5 font-medium transition-colors",
                 sortTab === "newest"
-                  ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
+                  ? "border-accent-active/40 bg-accent-active/12 text-accent-active"
                   : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-text-tertiary"
               )}
             >
@@ -878,11 +878,11 @@ export function CharacterDetailClient({
               className={cn(
                 "flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs md:text-sm md:px-3 md:py-1.5 font-medium transition-colors",
                 sortTab === "thumbs_up"
-                  ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
+                  ? "border-accent-active/40 bg-accent-active/12 text-accent-active"
                   : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-text-tertiary"
               )}
             >
-              <svg className="h-3 w-3 text-[#fb64b6]" viewBox="0 0 24 24" fill="currentColor">
+              <svg className="h-3 w-3 text-accent-active" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M2 20h2c.55 0 1-.45 1-1v-9c0-.55-.45-1-1-1H2v11zm19.83-7.12c.11-.25.17-.52.17-.8V11c0-1.1-.9-2-2-2h-5.5l.92-4.65c.05-.22.02-.46-.08-.66-.23-.45-.52-.86-.88-1.22L14 2 7.59 8.41C7.21 8.79 7 9.3 7 9.83v7.84C7 18.95 8.05 20 9.34 20h8.11c.7 0 1.36-.37 1.72-.97l2.66-6.15z" />
               </svg>
               順

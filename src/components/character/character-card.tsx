@@ -48,15 +48,15 @@ export function CharacterCard({
         )}
         {/* 順位バッジ (左上) */}
         {rankDisplay && rank === 1 && (
-          <div className="absolute left-0.5 top-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-bg-card-alpha drop-shadow-md">
+          <div className="absolute left-0.5 top-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-bg-card-alpha drop-shadow-md text-star">
             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none">
-              <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z" fill="#ffd700" />
-              <path d="M5 18h14v2H5z" fill="#ffd700" />
+              <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z" fill="currentColor" />
+              <path d="M5 18h14v2H5z" fill="currentColor" />
             </svg>
           </div>
         )}
         {rankDisplay && rank === 2 && (
-          <div className="absolute left-0.5 top-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-bg-card-alpha drop-shadow-md">
+          <div className="absolute left-0.5 top-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-bg-card-alpha drop-shadow-md text-star">
             <svg className="h-5 w-5" viewBox="0 0 32 32" fill="none">
               <path d="M13 22l-4 6h14l-4-6" fill="#7a8fa3" />
               <circle cx="16" cy="14" r="10" fill="#b0c4d8" stroke="#90a1b9" strokeWidth="1.5" />
@@ -65,7 +65,7 @@ export function CharacterCard({
           </div>
         )}
         {rankDisplay && rank === 3 && (
-          <div className="absolute left-0.5 top-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-bg-card-alpha drop-shadow-md">
+          <div className="absolute left-0.5 top-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-bg-card-alpha drop-shadow-md text-star">
             <svg className="h-5 w-5" viewBox="0 0 32 32" fill="none">
               <path d="M13 22l-4 6h14l-4-6" fill="#92400e" />
               <circle cx="16" cy="14" r="10" fill="#d97706" stroke="#b45309" strokeWidth="1.5" />
@@ -85,10 +85,10 @@ export function CharacterCard({
           <div
             className="absolute bottom-1 left-0.5 flex items-center justify-center gap-0.5 rounded-[10px] px-1.5 py-[1px] shadow-[0px_10px_15px_rgba(0,0,0,0.1)] bg-bg-card-alpha border border-border-primary"
           >
-            <svg className="h-3 w-3 text-[#fcd34d]" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="h-3 w-3 text-star" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
             </svg>
-            <span className="-translate-y-px text-[11px] md:text-xs font-bold leading-none text-[#fcd34d]">
+            <span className="-translate-y-px text-[11px] md:text-xs font-bold leading-none text-star">
               {avgRating.toFixed(1)}
             </span>
           </div>

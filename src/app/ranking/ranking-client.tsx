@@ -78,7 +78,7 @@ export function RankingClient({
           className={cn(
             "shrink-0 rounded-[10px] px-2.5 py-1.5 text-[11px] font-bold transition-colors cursor-pointer lg:px-3.5 lg:py-2 lg:text-sm",
             elementFilter === "all"
-              ? "bg-[rgba(255,99,126,0.15)] text-[#fda4af] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+              ? "bg-[rgba(255,99,126,0.15)] text-accent shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
               : "bg-bg-input text-text-tertiary"
           )}
           style={{
@@ -132,7 +132,7 @@ export function RankingClient({
                   {currentTop.name}
                 </span>
                 {currentTop.avgRating !== null && (
-                  <span className="ml-1.5 text-base font-bold text-[#fcd34d] lg:text-lg">
+                  <span className="ml-1.5 text-base font-bold text-star lg:text-lg">
                     ★{currentTop.avgRating.toFixed(1)}
                   </span>
                 )}
@@ -142,14 +142,14 @@ export function RankingClient({
               </Link>
             )}
             <div className="hidden lg:flex items-center gap-2 rounded-2xl border border-border-primary bg-bg-inset px-4 py-3">
-              <svg className="h-4 w-4 shrink-0 text-[#f9a8d4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="h-4 w-4 shrink-0 text-accent-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
               </svg>
               <span className="text-sm text-text-tertiary">キャラをクリックして<br />コメントや投票をしよう！</span>
             </div>
           </div>
           <div className="-mt-4 flex items-center gap-1.5 lg:hidden">
-            <svg className="h-3.5 w-3.5 shrink-0 text-[#f9a8d4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="h-3.5 w-3.5 shrink-0 text-accent-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
             </svg>
             <span className="text-xs md:text-sm text-text-tertiary">キャラをタップしてコメントや投票をしよう！</span>
@@ -281,7 +281,7 @@ export function RankingClient({
                     </div>
                     <div className="mt-1 flex items-center gap-1.5">
                       {char.avgRating !== null && char.validVotesCount >= 1 ? (
-                        <span className="text-sm md:text-base font-bold text-[#fcd34d]">
+                        <span className="text-sm md:text-base font-bold text-star">
                           ★{char.avgRating.toFixed(1)}
                         </span>
                       ) : (

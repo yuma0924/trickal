@@ -211,7 +211,7 @@ export default async function BuildsPage() {
                     </div>
                     <div className="mt-1 flex items-center gap-1.5">
                       {char.avgRating !== null && char.validVotesCount >= 1 ? (
-                        <span className="text-sm font-bold text-[#fcd34d]">
+                        <span className="text-sm font-bold text-star">
                           ★{char.avgRating.toFixed(1)}
                         </span>
                       ) : (

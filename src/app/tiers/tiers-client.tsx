@@ -115,8 +115,8 @@ export function TiersClient({ characters }: TiersClientProps) {
               className={cn(
                 "rounded-full border px-2.5 py-1 text-xs md:text-sm font-medium transition-colors cursor-pointer",
                 sort === tab.value
-                  ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
-                  : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-[#c4b5d4]"
+                  ? "border-accent-active/40 bg-accent-active/12 text-accent-active"
+                  : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-text-tertiary"
               )}
             >
               {tab.label}

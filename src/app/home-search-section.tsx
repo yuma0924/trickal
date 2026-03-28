@@ -127,7 +127,7 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
               className={cn(
                 "shrink-0 rounded-[10px] bg-bg-input border px-2.5 py-1.5 text-[11px] font-bold transition-colors lg:hidden",
                 hasAnyFilter
-                  ? "border-[rgba(255,99,126,0.4)] text-[#fda4af] hover:text-white"
+                  ? "border-[rgba(255,99,126,0.4)] text-accent hover:text-white"
                   : "border-border-primary text-text-muted"
               )}
             >
@@ -183,14 +183,14 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
                     className={cn(
                       "flex shrink-0 items-center gap-0.5 rounded-[10px] px-2.5 py-1 text-xs font-bold transition-colors",
                       active
-                        ? "bg-[rgba(255,99,126,0.15)] text-[#fda4af] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+                        ? "bg-[rgba(255,99,126,0.15)] text-accent shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
                         : "bg-bg-input text-text-tertiary"
                     )}
                     style={{
                       border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
                     }}
                   >
-                    <span className="text-[#fcd34d]">{"★".repeat(starCount)}</span>
+                    <span className="text-star">{"★".repeat(starCount)}</span>
                   </button>
                 );
               })}
@@ -203,7 +203,7 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
             className={cn(
               "shrink-0 rounded-[10px] bg-bg-input border px-2.5 py-1.5 text-[11px] font-bold transition-colors hidden lg:block lg:ml-auto",
               hasAnyFilter
-                ? "border-[rgba(255,99,126,0.4)] text-[#fda4af] hover:text-white"
+                ? "border-[rgba(255,99,126,0.4)] text-accent hover:text-white"
                 : "border-border-primary text-text-muted"
             )}
           >
@@ -353,7 +353,7 @@ function ToggleButton({ label, active, onClick }: { label: string; active: boole
       className={cn(
         "shrink-0 rounded-[10px] px-2.5 py-1 text-[11px] font-bold transition-colors",
         active
-          ? "bg-[rgba(255,99,126,0.15)] text-[#fda4af] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+          ? "bg-[rgba(255,99,126,0.15)] text-accent shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
           : "bg-bg-input text-text-tertiary"
       )}
       style={{

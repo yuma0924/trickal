@@ -58,10 +58,14 @@
   --color-thumbs-up: var(--thumbs-up);
   --color-thumbs-down: var(--thumbs-down);
 
-  /* ランクカラー */
-  --color-rank-gold: #fbbf24;
-  --color-rank-silver: #94a3b8;
-  --color-rank-bronze: #d97706;
+  /* ランクカラー（テーマ対応） */
+  --color-rank-gold: var(--rank-gold);
+  --color-rank-silver: var(--rank-silver);
+  --color-rank-bronze: var(--rank-bronze);
+
+  /* アクセント補助 */
+  --color-accent-active: var(--accent-active);
+  --color-accent-muted: var(--accent-muted);
 
   /* フォントファミリー */
   --font-sans: var(--font-zen-maru-gothic), "Hiragino Sans",
@@ -95,6 +99,12 @@
   --star: #fbbf24;
   --thumbs-up: #f9a8d4;
   --thumbs-down: #60a5fa;
+
+  --rank-gold: #fbbf24;
+  --rank-silver: #94a3b8;
+  --rank-bronze: #d97706;
+  --accent-active: #fb64b6;
+  --accent-muted: #f9a8d4;
 
   --bg-card-alpha: rgba(36, 27, 53, 0.8);
   --bg-card-alpha-light: rgba(36, 27, 53, 0.5);
@@ -132,6 +142,12 @@
   --star: #a16207;
   --thumbs-up: #be185d;
   --thumbs-down: #1d4ed8;
+
+  --rank-gold: #b45309;
+  --rank-silver: #64748b;
+  --rank-bronze: #92400e;
+  --accent-active: #c42d8a;
+  --accent-muted: #9b1d6a;
 
   --bg-card-alpha: rgba(255, 255, 255, 0.95);
   --bg-card-alpha-light: rgba(255, 255, 255, 0.85);
@@ -178,6 +194,12 @@
   --star: #fbbf24;
   --thumbs-up: #f9a8d4;
   --thumbs-down: #60a5fa;
+
+  --rank-gold: #fbbf24;
+  --rank-silver: #94a3b8;
+  --rank-bronze: #d97706;
+  --accent-active: #fb64b6;
+  --accent-muted: #f9a8d4;
 
   --bg-card-alpha: rgba(36, 27, 53, 0.8);
   --bg-card-alpha-light: rgba(36, 27, 53, 0.5);

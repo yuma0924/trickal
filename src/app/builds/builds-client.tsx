@@ -304,8 +304,8 @@ export function BuildsClient() {
                 className={cn(
                   "rounded-full border px-2.5 py-1 text-xs md:text-sm font-medium transition-colors cursor-pointer",
                   sortKey === opt.value
-                    ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
-                    : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-[#c4b5d4]"
+                    ? "border-accent-active/40 bg-accent-active/12 text-accent-active"
+                    : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-text-tertiary"
                 )}
               >
                 {opt.label}
@@ -393,8 +393,8 @@ export function BuildsClient() {
                   className={cn(
                     "rounded-full border px-3 py-1.5 text-sm font-medium transition-colors cursor-pointer",
                     sortKey === opt.value
-                      ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
-                      : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-[#c4b5d4]"
+                      ? "border-accent-active/40 bg-accent-active/12 text-accent-active"
+                      : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-text-tertiary"
                   )}
                 >
                   {opt.label}
@@ -494,10 +494,10 @@ function BuildCard({
     >
       {(isTop || isSecond) && (
         <div className="absolute -top-3 left-3 flex items-center gap-1 rounded-full bg-bg-input px-2 py-0.5 md:gap-1.5 md:px-2.5 md:py-1">
-          <svg className={cn("h-3.5 w-3.5 md:h-4 md:w-4", isTop ? "text-[#fcd34d]" : "text-[#c0c0d2]")} viewBox="0 0 24 24" fill="currentColor">
+          <svg className={cn("h-3.5 w-3.5 md:h-4 md:w-4", isTop ? "text-star" : "text-rank-silver")} viewBox="0 0 24 24" fill="currentColor">
             <path d="M2 20h2c.55 0 1-.45 1-1v-9c0-.55-.45-1-1-1H2v11zm19.83-7.12c.11-.25.17-.52.17-.8V11c0-1.1-.9-2-2-2h-5.5l.92-4.65c.05-.22.02-.46-.08-.66-.23-.45-.52-.86-.88-1.22L14 2 7.59 8.41C7.21 8.79 7 9.3 7 9.83v7.84C7 18.95 8.05 20 9.34 20h8.11c.7 0 1.36-.37 1.72-.97l2.66-6.15z" />
           </svg>
-          <span className={cn("text-[10px] md:text-xs font-bold", isTop ? "text-[#fcd34d]" : "text-[#c0c0d2]")}>高評価</span>
+          <span className={cn("text-[10px] md:text-xs font-bold", isTop ? "text-star" : "text-rank-silver")}>高評価</span>
         </div>
       )}
       <Link

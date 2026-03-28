@@ -107,7 +107,7 @@ function SectionHeading({
         {href && linkLabel && (
           <Link
             href={href}
-            className="flex shrink-0 items-center gap-0.5 text-sm md:text-base text-[#f9a8d4] transition-colors hover:text-accent cursor-pointer"
+            className="flex shrink-0 items-center gap-0.5 text-sm md:text-base text-accent-muted transition-colors hover:text-accent cursor-pointer"
           >
             {linkLabel}
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -494,10 +494,10 @@ export default async function Home() {
                 <span className="text-text-tertiary">現在の総合1位は</span>
                 <span className="ml-1 text-lg font-bold text-text-primary lg:text-xl">{topChar.name}</span>
                 <span className="ml-1 inline-flex -translate-y-[2px] items-center gap-0.5 align-middle text-base lg:text-lg">
-                  <svg className="h-4 w-4 text-[#fcd34d] lg:h-5 lg:w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="h-4 w-4 text-star lg:h-5 lg:w-5" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
-                  <span className="-translate-y-px font-bold text-[#fcd34d]">{topChar.avgRating.toFixed(1)}</span>
+                  <span className="-translate-y-px font-bold text-star">{topChar.avgRating.toFixed(1)}</span>
                 </span>
               </div>
               <span className="hidden lg:inline text-xs md:text-sm text-text-muted">みんなの評価で算出 · 毎日 0:00 更新</span>
@@ -523,12 +523,12 @@ export default async function Home() {
                   1: {
                     borderColor: "#d4a017",
                     bannerBg: "rgba(255,185,0,0.15)",
-                    rankText: "#fcd34d",
+                    rankText: "var(--star)",
                     badge: (
-                      <span className="flex h-7 w-7 items-center justify-center">
+                      <span className="flex h-7 w-7 items-center justify-center text-star">
                         <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
-                          <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z" fill="#ffd700" />
-                          <path d="M5 18h14v2H5z" fill="#ffd700" />
+                          <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z" fill="currentColor" />
+                          <path d="M5 18h14v2H5z" fill="currentColor" />
                         </svg>
                       </span>
                     ),
@@ -536,7 +536,7 @@ export default async function Home() {
                   2: {
                     borderColor: "#9ca3af",
                     bannerBg: "rgba(144,161,185,0.1)",
-                    rankText: "#d1d5db",
+                    rankText: "var(--rank-silver)",
                     badge: (
                       <svg className="h-7 w-7" viewBox="0 0 32 32" fill="none">
                         <path d="M13 22l-4 6h14l-4-6" fill="#7a8fa3" />
@@ -932,7 +932,7 @@ export default async function Home() {
                       </div>
                       <div className="mt-1 flex items-center gap-1.5">
                         {char.avgRating !== null && char.validVotesCount >= 1 ? (
-                          <span className="text-sm md:text-base font-bold text-[#fcd34d]">
+                          <span className="text-sm md:text-base font-bold text-star">
                             ★{char.avgRating.toFixed(1)}
                           </span>
                         ) : (
