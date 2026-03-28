@@ -82,7 +82,7 @@ export function RankingClient({
               : "bg-bg-input text-text-tertiary"
           )}
           style={{
-            border: `1.2px solid ${elementFilter === "all" ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+            border: `1.2px solid ${elementFilter === "all" ? "rgba(255,99,126,0.4)" : "var(--border-primary)"}`,
           }}
         >
           全性格
@@ -100,7 +100,7 @@ export function RankingClient({
                   : "bg-bg-input"
               )}
               style={{
-                border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "var(--border-primary)"}`,
               }}
               title={elem}
             >

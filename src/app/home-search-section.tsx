@@ -119,7 +119,7 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="キャラ名で検索..."
-                className="w-full rounded-[10px] bg-bg-input border border-border-primary pl-8 pr-3 py-1.5 text-xs text-text-primary placeholder:text-text-muted focus:border-[rgba(249,168,212,0.3)] focus:outline-none"
+                className="w-full rounded-[10px] bg-bg-input border border-border-primary pl-8 pr-3 py-1.5 text-xs text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
               />
             </div>
             <button
@@ -152,7 +152,7 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
                         : "bg-bg-input"
                     )}
                     style={{
-                      border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                      border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "var(--border-primary)"}`,
                     }}
                     title={elem}
                   >
@@ -187,7 +187,7 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
                         : "bg-bg-input text-text-tertiary"
                     )}
                     style={{
-                      border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                      border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "var(--border-primary)"}`,
                     }}
                   >
                     <span className="text-star">{"★".repeat(starCount)}</span>
@@ -230,7 +230,7 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
                         : "bg-bg-input"
                     )}
                     style={{
-                      border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                      border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "var(--border-primary)"}`,
                     }}
                     title={type.value}
                   >
@@ -258,7 +258,7 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
                         : "bg-bg-input"
                     )}
                     style={{
-                      border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                      border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "var(--border-primary)"}`,
                     }}
                     title={pos.value}
                   >
@@ -357,7 +357,7 @@ function ToggleButton({ label, active, onClick }: { label: string; active: boole
           : "bg-bg-input text-text-tertiary"
       )}
       style={{
-        border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+        border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "var(--border-primary)"}`,
       }}
     >
       {label}

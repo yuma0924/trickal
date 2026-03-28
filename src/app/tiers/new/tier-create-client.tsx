@@ -253,7 +253,7 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="タイトル（必須）"
             maxLength={100}
-            className="min-w-0 rounded-xl border border-[rgba(249,168,212,0.25)] bg-bg-input px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none md:flex-[3]"
+            className="min-w-0 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none md:flex-[3]"
           />
           <input
             type="text"
@@ -261,7 +261,7 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder="投稿者名（任意）"
             maxLength={50}
-            className="rounded-xl border border-[rgba(249,168,212,0.25)] bg-bg-input px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none md:flex-[2]"
+            className="rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none md:flex-[2]"
           />
         </div>
 
@@ -440,7 +440,7 @@ function UnassignedPanel({
                     : "bg-bg-input"
                 )}
                 style={{
-                  border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                  border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "var(--border-primary)"}`,
                 }}
                 title={el}
               >

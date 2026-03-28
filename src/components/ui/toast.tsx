@@ -30,7 +30,7 @@ export function Toast({ message, visible }: ToastState) {
 
   return (
     <div
-      className={`fixed bottom-24 left-1/2 z-[100] -translate-x-1/2 rounded-full bg-[rgba(36,27,53,0.95)] border border-border-primary px-5 py-2.5 shadow-lg backdrop-blur-sm transition-all duration-300 ${
+      className={`fixed bottom-24 left-1/2 z-[100] -translate-x-1/2 rounded-full bg-bg-card-alpha-heavy border border-border-primary px-5 py-2.5 shadow-lg backdrop-blur-sm transition-all duration-300 ${
         visible
           ? "translate-y-0 opacity-100"
           : "translate-y-2 opacity-0 pointer-events-none"

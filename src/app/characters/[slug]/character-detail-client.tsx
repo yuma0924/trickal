@@ -85,7 +85,7 @@ function InfoChip({ label, labelIcon, badgeIcon, name, imageUrl, description, pa
         <p className="text-base font-bold leading-snug text-text-primary">{name}</p>
       </div>
       {paramLines.length > 0 && (
-        <ul className="mt-2 space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2">
+        <ul className="mt-2 space-y-0.5 border-l-2 border-border-primary pl-2">
           {paramLines.map((line, i) => (
             <li key={i} className="text-xs leading-relaxed text-text-tertiary">
               <ParamLine text={line} />
@@ -447,7 +447,7 @@ export function CharacterDetailClient({
                 className={cn(
                   "flex cursor-pointer items-start gap-3 rounded-[12px] border px-2 py-2 transition-colors",
                   relicDetailOpen
-                    ? "border-[rgba(249,168,212,0.25)] bg-bg-card-alpha"
+                    ? "border-border-primary bg-bg-card-alpha"
                     : "border-border-primary bg-bg-card-alpha-lighter hover:border-border-primary hover:bg-bg-card-alpha-light"
                 )}
                 onClick={() => setRelicDetailOpen(!relicDetailOpen)}
@@ -472,7 +472,7 @@ export function CharacterDetailClient({
                   style={{ width: relicBtnRef.current?.offsetWidth }}
                 >
                   {character.relic.params && (
-                    <ul className="space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
+                    <ul className="space-y-0.5 border-l-2 border-border-primary pl-2.5">
                       {character.relic.params.split("\n").filter(Boolean).map((line, i) => (
                         <li key={i} className="text-sm leading-relaxed text-text-tertiary">
                           <ParamLine text={line} />
@@ -539,7 +539,7 @@ export function CharacterDetailClient({
             className={cn(
               "flex w-full cursor-pointer items-center gap-3 rounded-[10px] border px-2 py-1.5 transition-colors",
               relicDetailOpen
-                ? "border-[rgba(249,168,212,0.25)] bg-bg-card-alpha"
+                ? "border-border-primary bg-bg-card-alpha"
                 : "border-border-primary bg-bg-card-alpha-light"
             )}
             onClick={() => setRelicDetailOpen(!relicDetailOpen)}
@@ -561,7 +561,7 @@ export function CharacterDetailClient({
           {relicDetailOpen && (
             <div className="absolute left-0 right-0 top-full z-10 mt-1 rounded-[10px] border border-border-primary bg-bg-input px-3 py-2.5 shadow-xl">
               {character.relic.params && (
-                <ul className="space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
+                <ul className="space-y-0.5 border-l-2 border-border-primary pl-2.5">
                   {character.relic.params.split("\n").filter(Boolean).map((line, i) => (
                     <li key={i} className="text-xs leading-relaxed text-text-tertiary">
                       <ParamLine text={line} />
@@ -707,7 +707,7 @@ export function CharacterDetailClient({
                     {/* パラメータエリア */}
                     <div className="border-t border-border-secondary bg-[rgba(20,15,35,0.6)] px-3 py-2">
                       {typeof skillData.params === "string" && skillData.params !== "" ? (
-                        <ul className="space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
+                        <ul className="space-y-0.5 border-l-2 border-border-primary pl-2.5">
                           {(skillData.params as string).split("\n").filter(Boolean).map((line, i) => (
                             <li key={i} className="text-[11px] md:text-xs leading-relaxed text-text-tertiary"><ParamLine text={line} /></li>
                           ))}
@@ -746,7 +746,7 @@ export function CharacterDetailClient({
                 );
                 const renderAttackParams = (data: Record<string, unknown>) => (
                   typeof data.params === "string" && data.params !== "" ? (
-                    <ul className="space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
+                    <ul className="space-y-0.5 border-l-2 border-border-primary pl-2.5">
                       {(data.params as string).split("\n").filter(Boolean).map((line, i) => (
                         <li key={i} className="text-[10px] md:text-[11px] leading-relaxed text-text-tertiary"><ParamLine text={line} /></li>
                       ))}

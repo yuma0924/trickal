@@ -180,7 +180,7 @@ export default async function BuildsPage() {
               <Link
                 key={char.id}
                 href={`/characters/${char.slug}`}
-                className="flex flex-col overflow-hidden rounded-[14px] border border-border-primary bg-[rgba(36,27,53,0.5)] transition-colors hover:bg-bg-card-alpha cursor-pointer"
+                className="flex flex-col overflow-hidden rounded-[14px] border border-border-primary bg-bg-card-alpha-light transition-colors hover:bg-bg-card-alpha cursor-pointer"
               >
                 {/* キャラ情報 */}
                 <div className="flex items-center gap-2.5 p-2.5">
@@ -230,7 +230,7 @@ export default async function BuildsPage() {
                 </div>
                 {/* コメント */}
                 {char.latestComment && (
-                  <div className="mx-2 mb-2 flex flex-col rounded-[10px] bg-[rgba(30,21,48,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2 min-h-[76px]">
+                  <div className="mx-2 mb-2 flex flex-col rounded-[10px] bg-bg-inset border border-border-secondary px-2.5 py-2 min-h-[76px]">
                     <p className="line-clamp-2 text-[11px] md:text-xs leading-relaxed text-text-primary">
                       {char.latestComment}
                     </p>

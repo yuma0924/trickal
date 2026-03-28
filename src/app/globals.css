@@ -118,21 +118,21 @@
 
 /* ライトテーマ */
 .light {
-  --bg-primary: #f5f0fa;
-  --bg-secondary: #ede4f5;
-  --bg-tertiary: #e2d5ee;
+  --bg-primary: #f8f5fc;
+  --bg-secondary: #f0eaf7;
+  --bg-tertiary: #e6dcf0;
   --bg-card: #ffffff;
-  --bg-card-hover: #f8f3fd;
-  --bg-input: #ebe2f3;
+  --bg-card-hover: #faf7fd;
+  --bg-input: #eee6f5;
 
-  --text-primary: #1a0e2e;
-  --text-secondary: #2d1b45;
-  --text-tertiary: #4a3668;
-  --text-muted: #6d5a87;
+  --text-primary: #170b28;
+  --text-secondary: #28163e;
+  --text-tertiary: #3e2a5a;
+  --text-muted: #5e4a78;
   --text-inverse: #f5e6f0;
 
-  --border-primary: rgba(80, 40, 120, 0.22);
-  --border-secondary: rgba(80, 40, 120, 0.12);
+  --border-primary: rgba(60, 20, 100, 0.18);
+  --border-secondary: rgba(60, 20, 100, 0.10);
 
   --accent: #c42d8a;
   --accent-hover: #a8236e;

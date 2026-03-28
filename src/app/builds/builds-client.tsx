@@ -198,7 +198,7 @@ export function BuildsClient() {
           <select
             value={mode}
             onChange={(e) => setMode(e.target.value as Mode)}
-            className="w-44 appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-bg-card-alpha px-4 py-2.5 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
+            className="w-44 appearance-none rounded-[14px] border border-border-primary bg-bg-card-alpha px-4 py-2.5 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-accent focus:outline-none"
           >
             {MODE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -252,7 +252,7 @@ export function BuildsClient() {
                 : "bg-bg-input text-text-tertiary"
             )}
             style={{
-              border: `1.2px solid ${elementFilters.size === 0 ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+              border: `1.2px solid ${elementFilters.size === 0 ? "rgba(255,99,126,0.4)" : "var(--border-primary)"}`,
             }}
           >
             全て
@@ -280,7 +280,7 @@ export function BuildsClient() {
                     : "bg-bg-input"
                 )}
                 style={{
-                  border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                  border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "var(--border-primary)"}`,
                 }}
                 title={elem}
               >
@@ -321,7 +321,7 @@ export function BuildsClient() {
           <select
             value={mode}
             onChange={(e) => setMode(e.target.value as Mode)}
-            className="appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-bg-card-alpha px-4 py-2 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
+            className="appearance-none rounded-[14px] border border-border-primary bg-bg-card-alpha px-4 py-2 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-accent focus:outline-none"
           >
             {MODE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -343,7 +343,7 @@ export function BuildsClient() {
                 : "bg-bg-input text-text-tertiary"
             )}
             style={{
-              border: `1.2px solid ${elementFilters.size === 0 ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+              border: `1.2px solid ${elementFilters.size === 0 ? "rgba(255,99,126,0.4)" : "var(--border-primary)"}`,
             }}
           >
             全て
@@ -368,7 +368,7 @@ export function BuildsClient() {
                     : "bg-bg-input"
                 )}
                 style={{
-                  border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
+                  border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "var(--border-primary)"}`,
                 }}
                 title={elem}
               >

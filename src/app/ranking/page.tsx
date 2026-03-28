@@ -212,7 +212,7 @@ export default async function RankingPage() {
               人気キャラランキング
             </h1>
           </div>
-          <span className="rounded bg-[rgba(36,27,53,0.5)] border border-border-primary px-2 py-1 text-[10px] md:text-xs text-text-muted">
+          <span className="rounded bg-bg-card-alpha-light border border-border-primary px-2 py-1 text-[10px] md:text-xs text-text-muted">
             集計：毎日0時
           </span>
         </div>
