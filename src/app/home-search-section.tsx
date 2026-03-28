@@ -79,7 +79,12 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
       result = result.filter((c) => c.rarity && rarityFilters.has(c.rarity));
     }
     const elementOrder = ["純粋", "冷静", "狂気", "活発", "憂鬱"];
+    const rarityOrder = ["★3", "★2", "★1"];
     return result.sort((a, b) => {
+      const ra = rarityOrder.indexOf(a.rarity ?? "");
+      const rb = rarityOrder.indexOf(b.rarity ?? "");
+      const rarityDiff = (ra === -1 ? 999 : ra) - (rb === -1 ? 999 : rb);
+      if (rarityDiff !== 0) return rarityDiff;
       const ai = elementOrder.indexOf(a.element ?? "");
       const bi = elementOrder.indexOf(b.element ?? "");
       return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);

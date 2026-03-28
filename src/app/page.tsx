@@ -949,7 +949,7 @@ export default async function Home() {
                   </div>
                   {/* コメントブロック */}
                   {char.latestComment && (
-                    <div className="mx-2 mb-2 flex flex-col rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2 min-h-[76px]">
+                    <div className="mx-2 mb-2 flex flex-1 flex-col rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2 min-h-[76px]">
                       <p className="line-clamp-2 text-[11px] md:text-xs leading-relaxed text-[#fafafa]">
                         {char.latestComment}
                       </p>
