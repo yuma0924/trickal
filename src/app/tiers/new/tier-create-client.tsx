@@ -246,14 +246,14 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
         onContextMenu={(e) => e.preventDefault()}
       >
         {/* 投稿フォーム */}
-        <div className="flex flex-col gap-2 rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] p-3 md:flex-row">
+        <div className="flex flex-col gap-2 md:flex-row md:max-w-md">
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="タイトル（必須）"
             maxLength={100}
-            className="min-w-0 flex-1 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+            className="min-w-0 rounded-xl border border-[rgba(249,168,212,0.25)] bg-bg-input px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none md:flex-[3]"
           />
           <input
             type="text"
@@ -261,7 +261,7 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder="投稿者名（任意）"
             maxLength={50}
-            className="rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none md:w-40 md:shrink-0"
+            className="rounded-xl border border-[rgba(249,168,212,0.25)] bg-bg-input px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none md:flex-[2]"
           />
         </div>
 

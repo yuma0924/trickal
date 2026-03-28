@@ -554,9 +554,9 @@ function BuildCard({
                 <span className="py-1 text-center text-[10px] md:text-xs font-bold text-[#a893c0]">前列</span>
               </div>
               {Array.from({ length: rowCount }).map((_, rowIdx) => {
-                if (!hasContent(rowIdx)) return null;
+                const empty = !hasContent(rowIdx);
                 return (
-                  <div key={rowIdx} className={cn("grid grid-cols-3", "border-b border-[rgba(249,168,212,0.15)] last:border-b-0")}>
+                  <div key={rowIdx} className={cn("grid grid-cols-3", "border-b border-[rgba(249,168,212,0.15)] last:border-b-0", empty && "hidden md:grid")}>
                     {[0, 1, 2].map((colIdx) => {
                       const char = slots[colIdx * rowCount + rowIdx];
                       return (
