@@ -569,7 +569,7 @@ export function TierDetailClient({
           <rect x="0" y="12.5" width="3" height="3" rx="0.5" fill="#22c55e" />
           <rect x="4" y="12.5" width="4" height="3" rx="0.5" fill="currentColor" className="text-text-muted" />
         </svg>
-        他のティア表を見る
+        みんなのティア表に戻る
       </Link>
 
       {/* 他のページもチェック */}

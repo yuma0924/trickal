@@ -939,27 +939,34 @@ export function CharacterDetailClient({
         <svg className="h-5 w-5 text-[#ffb900]" fill="currentColor" viewBox="0 0 24 24">
           <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />
         </svg>
-        キャラランキングを見る
+        人気キャラランキングに戻る
       </Link>
 
       {/* ページ下部ナビリンク */}
       <section className="!mt-10 space-y-3">
         <p className="text-xs md:text-sm font-bold text-[#c0bbc8]">他のランキングもチェック</p>
         <Link
-          href="/ranking"
-          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(255,185,0,0.15)] to-[rgba(255,99,126,0.15)] border border-[rgba(255,185,0,0.1)] px-4 py-3 transition-colors hover:from-[rgba(255,185,0,0.25)] hover:to-[rgba(255,99,126,0.25)] cursor-pointer"
+          href="/tiers"
+          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(168,85,247,0.15)] to-[rgba(236,72,153,0.15)] border border-[rgba(168,85,247,0.1)] px-4 py-3 transition-colors hover:from-[rgba(168,85,247,0.25)] hover:to-[rgba(236,72,153,0.25)] cursor-pointer"
         >
           <span
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-            style={{ backgroundImage: "linear-gradient(135deg, #ffb900, #ff637e)" }}
+            style={{ backgroundImage: "linear-gradient(135deg, #a855f7, #ec4899)" }}
           >
-            <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />
+            <svg className="h-5 w-5 text-white" viewBox="0 0 16 16" fill="none">
+              <rect x="0" y="0.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="0.5" width="12" height="3" rx="0.5" fill="white" />
+              <rect x="0" y="4.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="4.5" width="9" height="3" rx="0.5" fill="white" />
+              <rect x="0" y="8.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="8.5" width="6" height="3" rx="0.5" fill="white" />
+              <rect x="0" y="12.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+              <rect x="4" y="12.5" width="4" height="3" rx="0.5" fill="white" />
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm md:text-base font-bold text-[#fafafa]">人気キャラランキング</span>
-            <span className="text-[10px] md:text-xs text-[#9e99a7]">投票で決まる最強キャラをチェック</span>
+            <span className="block text-sm md:text-base font-bold text-[#fafafa]">みんなのティア表</span>
+            <span className="text-[10px] md:text-xs text-[#9e99a7]">キャラをランク付けして共有</span>
           </div>
           <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
