@@ -931,6 +931,17 @@ export function CharacterDetailClient({
         </section>
       )}
 
+      {/* 一覧へ戻る */}
+      <Link
+        href="/ranking"
+        className="mt-10 flex items-center justify-center gap-2 rounded-2xl border border-border-primary bg-bg-card py-3 text-sm font-medium text-text-primary transition-colors hover:bg-bg-card-hover"
+      >
+        <svg className="h-5 w-5 text-[#ffb900]" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />
+        </svg>
+        キャラランキングを見る
+      </Link>
+
       {/* ページ下部ナビリンク */}
       <section className="!mt-10 space-y-3">
         <p className="text-xs md:text-sm font-bold text-[#c0bbc8]">他のランキングもチェック</p>
