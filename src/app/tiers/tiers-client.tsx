@@ -224,8 +224,8 @@ export function TiersClient({ characters }: TiersClientProps) {
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block font-bold text-text-primary">編成ランキング</span>
-            <span className="text-xs md:text-sm text-text-muted">みんなのおすすめ編成を見てみよう</span>
+            <span className="block font-bold text-text-primary">人気編成ランキング</span>
+            <span className="text-xs md:text-sm text-text-muted">人気のパーティ編成をチェックしよう</span>
           </div>
           <svg className="h-5 w-5 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
