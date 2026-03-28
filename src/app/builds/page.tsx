@@ -256,14 +256,14 @@ export default async function BuildsPage() {
       )}
 
       {/* 他のランキングもチェック */}
-      <section className="mt-10 space-y-3">
-        <p className="text-sm md:text-base font-bold text-text-primary">他のランキングもチェック</p>
+      <section className="!mt-10 space-y-3">
+        <p className="text-xs md:text-sm font-bold text-[#c0bbc8]">他のランキングもチェック</p>
         <Link
           href="/ranking"
-          className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover cursor-pointer"
+          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(255,185,0,0.15)] to-[rgba(255,99,126,0.15)] border border-[rgba(255,185,0,0.1)] px-4 py-3 transition-colors hover:from-[rgba(255,185,0,0.25)] hover:to-[rgba(255,99,126,0.25)] cursor-pointer"
         >
           <span
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
             style={{ backgroundImage: "linear-gradient(135deg, #ffb900, #ff637e)" }}
           >
             <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -271,19 +271,19 @@ export default async function BuildsPage() {
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block font-bold text-text-primary">人気キャラランキング</span>
-            <span className="text-xs md:text-sm text-text-muted">投票で決まる最強キャラをチェック</span>
+            <span className="block text-sm md:text-base font-bold text-[#fafafa]">人気キャラランキング</span>
+            <span className="text-[10px] md:text-xs text-[#9e99a7]">投票で決まる最強キャラをチェック</span>
           </div>
-          <svg className="h-5 w-5 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </Link>
         <Link
           href="/tiers"
-          className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover cursor-pointer"
+          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(168,85,247,0.15)] to-[rgba(236,72,153,0.15)] border border-[rgba(168,85,247,0.1)] px-4 py-3 transition-colors hover:from-[rgba(168,85,247,0.25)] hover:to-[rgba(236,72,153,0.25)] cursor-pointer"
         >
           <span
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
             style={{ backgroundImage: "linear-gradient(135deg, #a855f7, #ec4899)" }}
           >
             <svg className="h-5 w-5 text-white" viewBox="0 0 16 16" fill="none">
@@ -298,10 +298,10 @@ export default async function BuildsPage() {
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block font-bold text-text-primary">みんなのティア表</span>
-            <span className="text-xs md:text-sm text-text-muted">キャラをランク付けして共有</span>
+            <span className="block text-sm md:text-base font-bold text-[#fafafa]">みんなのティア表</span>
+            <span className="text-[10px] md:text-xs text-[#9e99a7]">キャラをランク付けして共有</span>
           </div>
-          <svg className="h-5 w-5 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </Link>

@@ -189,14 +189,14 @@ export function TiersClient({ characters }: TiersClientProps) {
       )}
 
       {/* 他のランキングもチェック */}
-      <section className="mt-10 space-y-3">
-        <p className="text-sm md:text-base font-bold text-text-primary">他のランキングもチェック</p>
+      <section className="!mt-10 space-y-3">
+        <p className="text-xs md:text-sm font-bold text-[#c0bbc8]">他のランキングもチェック</p>
         <Link
           href="/ranking"
-          className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover cursor-pointer"
+          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(255,185,0,0.15)] to-[rgba(255,99,126,0.15)] border border-[rgba(255,185,0,0.1)] px-4 py-3 transition-colors hover:from-[rgba(255,185,0,0.25)] hover:to-[rgba(255,99,126,0.25)] cursor-pointer"
         >
           <span
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
             style={{ backgroundImage: "linear-gradient(135deg, #ffb900, #ff637e)" }}
           >
             <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -204,30 +204,30 @@ export function TiersClient({ characters }: TiersClientProps) {
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block font-bold text-text-primary">人気キャラランキング</span>
-            <span className="text-xs md:text-sm text-text-muted">投票で決まる最強キャラをチェック</span>
+            <span className="block text-sm md:text-base font-bold text-[#fafafa]">人気キャラランキング</span>
+            <span className="text-[10px] md:text-xs text-[#9e99a7]">投票で決まる最強キャラをチェック</span>
           </div>
-          <svg className="h-5 w-5 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </Link>
         <Link
           href="/builds"
-          className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover cursor-pointer"
+          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(59,130,246,0.15)] to-[rgba(6,182,212,0.15)] border border-[rgba(59,130,246,0.1)] px-4 py-3 transition-colors hover:from-[rgba(59,130,246,0.25)] hover:to-[rgba(6,182,212,0.25)] cursor-pointer"
         >
           <span
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
             style={{ backgroundImage: "linear-gradient(135deg, #3b82f6, #06b6d4)" }}
           >
-            <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+            <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block font-bold text-text-primary">人気編成ランキング</span>
-            <span className="text-xs md:text-sm text-text-muted">人気のパーティ編成をチェックしよう</span>
+            <span className="block text-sm md:text-base font-bold text-[#fafafa]">人気編成ランキング</span>
+            <span className="text-[10px] md:text-xs text-[#9e99a7]">人気のパーティ編成をチェックしよう</span>
           </div>
-          <svg className="h-5 w-5 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </Link>

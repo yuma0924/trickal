@@ -936,11 +936,11 @@ export function CharacterDetailClient({
         <p className="text-xs md:text-sm font-bold text-[#c0bbc8]">他のランキングもチェック</p>
         <Link
           href="/ranking"
-          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(255,185,0,0.15)] to-[rgba(255,137,4,0.15)] border border-[rgba(249,168,212,0.1)] px-4 py-3 transition-colors hover:from-[rgba(255,185,0,0.25)] hover:to-[rgba(255,137,4,0.25)] cursor-pointer"
+          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(255,185,0,0.15)] to-[rgba(255,99,126,0.15)] border border-[rgba(255,185,0,0.1)] px-4 py-3 transition-colors hover:from-[rgba(255,185,0,0.25)] hover:to-[rgba(255,99,126,0.25)] cursor-pointer"
         >
           <span
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-            style={{ backgroundImage: "linear-gradient(135deg, #ffb900, #ff8904)" }}
+            style={{ backgroundImage: "linear-gradient(135deg, #ffb900, #ff637e)" }}
           >
             <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />

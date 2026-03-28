@@ -573,43 +573,49 @@ export function TierDetailClient({
       </Link>
 
       {/* 他のページもチェック */}
-      <div className="mt-10 space-y-3">
-        <p className="pl-1 text-sm font-bold text-text-primary">他のページもチェック</p>
+      <section className="!mt-10 space-y-3">
+        <p className="text-xs md:text-sm font-bold text-[#c0bbc8]">他のページもチェック</p>
         <Link
           href="/ranking"
-          className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover"
+          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(255,185,0,0.15)] to-[rgba(255,99,126,0.15)] border border-[rgba(255,185,0,0.1)] px-4 py-3 transition-colors hover:from-[rgba(255,185,0,0.25)] hover:to-[rgba(255,99,126,0.25)] cursor-pointer"
         >
           <span
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
             style={{ backgroundImage: "linear-gradient(135deg, #ffb900, #ff637e)" }}
           >
             <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />
             </svg>
           </span>
-          <div>
-            <span className="block font-bold text-text-primary">人気キャラランキング</span>
-            <span className="text-xs text-text-tertiary">投票で決まる最強キャラをチェック</span>
+          <div className="flex-1">
+            <span className="block text-sm md:text-base font-bold text-[#fafafa]">人気キャラランキング</span>
+            <span className="text-[10px] md:text-xs text-[#9e99a7]">投票で決まる最強キャラをチェック</span>
           </div>
+          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
         </Link>
         <Link
           href="/builds"
-          className="flex items-center gap-3 rounded-2xl border border-border-primary bg-bg-card p-4 transition-colors hover:bg-bg-card-hover"
+          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(59,130,246,0.15)] to-[rgba(6,182,212,0.15)] border border-[rgba(59,130,246,0.1)] px-4 py-3 transition-colors hover:from-[rgba(59,130,246,0.25)] hover:to-[rgba(6,182,212,0.25)] cursor-pointer"
         >
           <span
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
             style={{ backgroundImage: "linear-gradient(135deg, #3b82f6, #06b6d4)" }}
           >
             <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
             </svg>
           </span>
-          <div>
-            <span className="block font-bold text-text-primary">人気編成ランキング</span>
-            <span className="text-xs text-text-tertiary">人気のパーティ編成をチェックしよう</span>
+          <div className="flex-1">
+            <span className="block text-sm md:text-base font-bold text-[#fafafa]">人気編成ランキング</span>
+            <span className="text-[10px] md:text-xs text-[#9e99a7]">人気のパーティ編成をチェックしよう</span>
           </div>
+          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
         </Link>
-      </div>
+      </section>
 
       {/* 通報モーダル */}
       {reportTarget && (
