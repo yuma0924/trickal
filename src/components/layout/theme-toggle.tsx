@@ -45,15 +45,13 @@ export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
   const cycle = () => {
-    if (theme === "dark") setTheme("light");
-    else if (theme === "light") setTheme("auto");
-    else setTheme("dark");
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   return (
     <button
       onClick={cycle}
-      className="flex h-9 w-9 items-center justify-center rounded-[14px] border border-border-primary bg-bg-tertiary text-text-tertiary transition-all duration-200 hover:text-text-primary [&_svg]:transition-transform [&_svg]:duration-300 active:[&_svg]:rotate-180"
+      className="flex h-9 w-9 items-center justify-center rounded-[14px] border border-border-primary bg-bg-tertiary text-text-tertiary transition-all duration-200 hover:text-text-primary"
       aria-label={`テーマ切替（現在: ${themeLabel[theme]}）`}
       title={themeLabel[theme]}
     >
