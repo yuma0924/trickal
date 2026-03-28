@@ -754,7 +754,7 @@ export default async function Home() {
                       {tier.title || "無題のティア"}
                     </span>
                     {tier.displayName && (
-                      <span className="shrink-0 text-[10px] text-[#8b7aab]">
+                      <span className="shrink-0 text-[10px] md:text-xs text-[#8b7aab]">
                         by {tier.displayName}
                       </span>
                     )}
@@ -765,14 +765,14 @@ export default async function Home() {
                     <div className="overflow-hidden rounded-lg border border-[rgba(249,168,212,0.15)]">
                       {tierLabels.map((label) => {
                         const charIds = tier.data[label] ?? [];
-                        if (charIds.length === 0 && label !== "S") return null;
+                        const isEmpty = charIds.length === 0 && label !== "S";
                         const colors: Record<string, string> = {
                           S: "#ef4444", A: "#f97316", B: "#eab308", C: "#22c55e",
                         };
                         return (
                           <div
                             key={label}
-                            className="flex border-b border-[rgba(249,168,212,0.15)] last:border-b-0"
+                            className={`flex border-b border-[rgba(249,168,212,0.15)] last:border-b-0${isEmpty ? " hidden md:flex" : ""}`}
                           >
                             <div
                               className="flex w-8 shrink-0 items-center justify-center text-xs font-bold text-white"
@@ -813,10 +813,10 @@ export default async function Home() {
                     </div>
                     <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 rounded-b-lg bg-gradient-to-t from-[rgba(36,27,53,0.95)] to-transparent" />
                   </div>
-                  <p className="mb-1 text-center text-[10px] text-[#8b7aab]">このティア表を見る ▼</p>
+                  <p className="mb-1 text-center text-[10px] md:text-xs text-[#8b7aab]">このティア表を見る ▼</p>
 
                   {/* フッター */}
-                  <div className="flex items-center justify-between text-[10px] text-[#8b7aab]">
+                  <div className="flex items-center justify-between text-[10px] md:text-xs text-[#8b7aab]">
                     <span>{Object.values(tier.data).flat().length}キャラ配置</span>
                     <span className="inline-flex items-center gap-0.5 text-thumbs-up">
                       <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor">

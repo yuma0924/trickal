@@ -177,9 +177,9 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                     <span className="py-1 text-center text-[10px] font-bold text-[#a893c0]">前列</span>
                   </div>
                   {Array.from({ length: rowCount }).map((_, rowIdx) => {
-                    if (!hasContent(rowIdx)) return null;
+                    const empty = !hasContent(rowIdx);
                     return (
-                      <div key={rowIdx} className={cn("grid grid-cols-3", "border-b border-[rgba(249,168,212,0.15)] last:border-b-0")}>
+                      <div key={rowIdx} className={cn("grid grid-cols-3", "border-b border-[rgba(249,168,212,0.15)] last:border-b-0", empty && "hidden md:grid")}>
                         {[0, 1, 2].map((colIdx) => {
                           const mId = slots[colIdx * rowCount + rowIdx];
                           const char = mId ? charMap[mId] : null;
@@ -200,7 +200,10 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                                   <span className="max-w-20 truncate text-center text-[10px] font-bold text-[#a893c0]">{char.name}</span>
                                 </>
                               ) : (
-                                <div className="h-12 w-12" />
+                                <>
+                                  <div className="h-12 w-12" />
+                                  <span className="text-[10px]">&nbsp;</span>
+                                </>
                               )}
                             </div>
                           );

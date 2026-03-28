@@ -78,7 +78,12 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
     if (rarityFilters.size > 0) {
       result = result.filter((c) => c.rarity && rarityFilters.has(c.rarity));
     }
-    return result;
+    const elementOrder = ["純粋", "冷静", "狂気", "活発", "憂鬱"];
+    return result.sort((a, b) => {
+      const ai = elementOrder.indexOf(a.element ?? "");
+      const bi = elementOrder.indexOf(b.element ?? "");
+      return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+    });
   }, [characters, searchQuery, elementFilters, typeFilters, positionFilters, raceFilters, rarityFilters]);
 
   const hasAnyFilter = searchQuery.trim().length > 0 || elementFilters.size > 0 || typeFilters.size > 0 || positionFilters.size > 0 || raceFilters.size > 0 || rarityFilters.size > 0;
@@ -296,7 +301,7 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
               該当するキャラクターが見つかりません
             </p>
           ) : (
-            <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
+            <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
               {filtered.map((char) => (
                 <CharacterCard
                   key={char.id}
