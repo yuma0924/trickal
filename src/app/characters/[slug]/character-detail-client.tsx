@@ -447,8 +447,8 @@ export function CharacterDetailClient({
                 className={cn(
                   "flex cursor-pointer items-start gap-3 rounded-[12px] border px-2 py-2 transition-colors",
                   relicDetailOpen
-                    ? "border-[rgba(249,168,212,0.25)] bg-[rgba(36,27,53,0.7)]"
-                    : "border-border-primary bg-bg-card-alpha-lighter hover:border-[rgba(249,168,212,0.2)] hover:bg-[rgba(36,27,53,0.6)]"
+                    ? "border-[rgba(249,168,212,0.25)] bg-bg-card-alpha"
+                    : "border-border-primary bg-bg-card-alpha-lighter hover:border-border-primary hover:bg-bg-card-alpha-light"
                 )}
                 onClick={() => setRelicDetailOpen(!relicDetailOpen)}
               >
@@ -468,7 +468,7 @@ export function CharacterDetailClient({
               </button>
               {relicDetailOpen && (
                 <div
-                  className="absolute left-0 top-full z-10 mt-1 rounded-[12px] border border-[rgba(249,168,212,0.2)] bg-[#1a1425] px-4 py-3 shadow-xl"
+                  className="absolute left-0 top-full z-10 mt-1 rounded-[12px] border border-border-primary bg-bg-input px-4 py-3 shadow-xl"
                   style={{ width: relicBtnRef.current?.offsetWidth }}
                 >
                   {character.relic.params && (
@@ -520,7 +520,7 @@ export function CharacterDetailClient({
                       {i === 0 && (
                         <Image src="/icons/good.png" alt="" width={16} height={16} className="absolute -left-1 -top-1" />
                       )}
-                      <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 hidden -translate-x-1/2 whitespace-nowrap rounded-md bg-[#1a1425] px-2 py-1 text-[11px] text-text-tertiary shadow-lg group-hover:block">
+                      <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 hidden -translate-x-1/2 whitespace-nowrap rounded-md bg-bg-input px-2 py-1 text-[11px] text-text-tertiary shadow-lg group-hover:block">
                         {reward.name}
                       </div>
                     </div>
@@ -539,7 +539,7 @@ export function CharacterDetailClient({
             className={cn(
               "flex w-full cursor-pointer items-center gap-3 rounded-[10px] border px-2 py-1.5 transition-colors",
               relicDetailOpen
-                ? "border-[rgba(249,168,212,0.25)] bg-[rgba(36,27,53,0.7)]"
+                ? "border-[rgba(249,168,212,0.25)] bg-bg-card-alpha"
                 : "border-border-primary bg-bg-card-alpha-light"
             )}
             onClick={() => setRelicDetailOpen(!relicDetailOpen)}
@@ -559,7 +559,7 @@ export function CharacterDetailClient({
             </svg>
           </button>
           {relicDetailOpen && (
-            <div className="absolute left-0 right-0 top-full z-10 mt-1 rounded-[10px] border border-[rgba(249,168,212,0.2)] bg-[#1a1425] px-3 py-2.5 shadow-xl">
+            <div className="absolute left-0 right-0 top-full z-10 mt-1 rounded-[10px] border border-border-primary bg-bg-input px-3 py-2.5 shadow-xl">
               {character.relic.params && (
                 <ul className="space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
                   {character.relic.params.split("\n").filter(Boolean).map((line, i) => (
@@ -676,8 +676,8 @@ export function CharacterDetailClient({
                 const skillData = skills?.find((s) => s.category === cat.key) as Record<string, unknown> | undefined;
                 if (!skillData) return (
                   <div key={cat.key} className="flex flex-col overflow-hidden rounded-[10px] border border-border-primary">
-                    <div className="flex items-center gap-2 bg-[rgba(36,27,53,0.7)] px-3 py-2">
-                      <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">{cat.label}</span>
+                    <div className="flex items-center gap-2 bg-bg-card-alpha px-3 py-2">
+                      <span className="shrink-0 rounded border border-border-primary px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">{cat.label}</span>
                       <span className="text-xs text-text-muted">—</span>
                     </div>
                     <div className="flex-1 bg-[rgba(20,15,35,0.6)]" />
@@ -685,8 +685,8 @@ export function CharacterDetailClient({
                 );
                 return (
                   <div key={cat.key} className="flex flex-col overflow-hidden rounded-[10px] border border-border-primary">
-                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 bg-[rgba(36,27,53,0.7)] px-3 py-2">
-                      <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">{cat.label}</span>
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 bg-bg-card-alpha px-3 py-2">
+                      <span className="shrink-0 rounded border border-border-primary px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">{cat.label}</span>
                       {cat.hasName && typeof skillData.name === "string" && (
                         <span className="text-sm font-bold text-white">{skillData.name}</span>
                       )}
@@ -729,8 +729,8 @@ export function CharacterDetailClient({
                 if (!basicAttack && !enhancedAttack) {
                   return (
                     <div className="flex flex-col overflow-hidden rounded-[10px] border border-border-primary">
-                      <div className="flex items-center gap-2 bg-[rgba(36,27,53,0.7)] px-3 py-2">
-                        <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">普通攻撃</span>
+                      <div className="flex items-center gap-2 bg-bg-card-alpha px-3 py-2">
+                        <span className="shrink-0 rounded border border-border-primary px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">普通攻撃</span>
                         <span className="text-xs text-text-muted">—</span>
                       </div>
                       <div className="flex-1 bg-[rgba(20,15,35,0.6)]" />
@@ -755,8 +755,8 @@ export function CharacterDetailClient({
                 );
                 return (
                   <div className="flex flex-col overflow-hidden rounded-[10px] border border-border-primary">
-                    <div className="flex items-center bg-[rgba(36,27,53,0.7)] px-3 py-2">
-                      <span className="rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">普通攻撃</span>
+                    <div className="flex items-center bg-bg-card-alpha px-3 py-2">
+                      <span className="rounded border border-border-primary px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">普通攻撃</span>
                     </div>
                     {/* 基本・強化を独立カラムで横並び、各カラム内で説明→パラメータの順 */}
                     <div className="flex-1 bg-[rgba(20,15,35,0.6)]">
@@ -798,7 +798,7 @@ export function CharacterDetailClient({
           </div>
           {/* グラデーションオーバーレイ（閉じてる時のみ） */}
           {!skillsOpen && (
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden bg-gradient-to-t from-[#0d0a14] to-transparent md:block md:h-16" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden bg-gradient-to-t from-bg-card-alpha-heavy to-transparent md:block md:h-16" />
           )}
         </div>
         <button

@@ -141,7 +141,7 @@ export function RankingClient({
                 </span>
               </Link>
             )}
-            <div className="hidden lg:flex items-center gap-2 rounded-2xl border border-border-primary bg-[rgba(42,33,62,0.5)] px-4 py-3">
+            <div className="hidden lg:flex items-center gap-2 rounded-2xl border border-border-primary bg-bg-inset px-4 py-3">
               <svg className="h-4 w-4 shrink-0 text-[#f9a8d4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
               </svg>
@@ -251,7 +251,7 @@ export function RankingClient({
               <Link
                 key={char.id}
                 href={`/characters/${char.slug}`}
-                className="flex flex-col overflow-hidden rounded-[14px] border border-border-primary bg-bg-card-alpha-light transition-colors hover:bg-[rgba(36,27,53,0.7)] cursor-pointer"
+                className="flex flex-col overflow-hidden rounded-[14px] border border-border-primary bg-bg-card-alpha-light transition-colors hover:bg-bg-card-alpha cursor-pointer"
               >
                 <div className="flex items-center gap-2.5 p-2.5">
                   <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg">

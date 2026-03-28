@@ -381,7 +381,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
               setFormMode(newMode);
               onModeChange?.(newMode);
             }}
-            className="w-full appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-bg-card-alpha px-4 py-2.5 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
+            className="w-full appearance-none rounded-[14px] border border-border-primary bg-bg-card-alpha px-4 py-2.5 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
           >
             {MODE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -408,7 +408,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                   setFormMode(newMode);
                   onModeChange?.(newMode);
                 }}
-                className="appearance-none rounded-[12px] border border-[rgba(249,168,212,0.2)] bg-bg-card-alpha px-4 py-2 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
+                className="appearance-none rounded-[12px] border border-border-primary bg-bg-card-alpha px-4 py-2 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
               >
                 {MODE_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -556,7 +556,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                 <button
                   type="button"
                   onClick={handleClearAll}
-                  className="rounded-lg border border-border-primary bg-[rgba(42,33,62,0.5)] px-2.5 py-1 text-[11px] font-bold text-text-muted transition-colors hover:border-[rgba(255,99,126,0.4)] hover:text-[#fda4af] cursor-pointer"
+                  className="rounded-lg border border-border-primary bg-bg-inset px-2.5 py-1 text-[11px] font-bold text-text-muted transition-colors hover:border-[rgba(255,99,126,0.4)] hover:text-[#fda4af] cursor-pointer"
                 >
                   全解除
                 </button>
@@ -569,7 +569,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
         <div className="md:flex md:gap-4">
         <div className="md:flex-1">
         {/* キャラグリッド */}
-        <div className="max-h-52 overflow-y-auto rounded-xl border border-border-primary bg-[rgba(42,33,62,0.5)] p-2 md:max-h-80">
+        <div className="max-h-52 overflow-y-auto rounded-xl border border-border-primary bg-bg-inset p-2 md:max-h-80">
           {filteredCharacters.length === 0 ? (
             <p className="py-4 text-center text-xs text-text-muted">
               キャラクターが見つかりません
@@ -638,7 +638,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
           <button
             type="button"
             onClick={handleClearAll}
-            className="rounded-lg border border-border-primary bg-[rgba(42,33,62,0.5)] px-2.5 py-1 text-[11px] font-bold text-text-muted transition-colors hover:border-[rgba(255,99,126,0.4)] hover:text-[#fda4af] cursor-pointer"
+            className="rounded-lg border border-border-primary bg-bg-inset px-2.5 py-1 text-[11px] font-bold text-text-muted transition-colors hover:border-[rgba(255,99,126,0.4)] hover:text-[#fda4af] cursor-pointer"
           >
             全解除
           </button>

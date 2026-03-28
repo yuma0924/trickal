@@ -30,7 +30,7 @@ export function Toast({ message, visible }: ToastState) {
 
   return (
     <div
-      className={`fixed bottom-24 left-1/2 z-[100] -translate-x-1/2 rounded-full bg-[rgba(36,27,53,0.95)] border border-[rgba(249,168,212,0.2)] px-5 py-2.5 shadow-lg backdrop-blur-sm transition-all duration-300 ${
+      className={`fixed bottom-24 left-1/2 z-[100] -translate-x-1/2 rounded-full bg-[rgba(36,27,53,0.95)] border border-border-primary px-5 py-2.5 shadow-lg backdrop-blur-sm transition-all duration-300 ${
         visible
           ? "translate-y-0 opacity-100"
           : "translate-y-2 opacity-0 pointer-events-none"
@@ -40,7 +40,7 @@ export function Toast({ message, visible }: ToastState) {
         <svg className="h-4 w-4 text-[#4ade80]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
         </svg>
-        <span className="text-sm font-medium text-[#fafafa]">{message}</span>
+        <span className="text-sm font-medium text-text-primary">{message}</span>
       </div>
     </div>
   );

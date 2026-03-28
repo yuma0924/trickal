@@ -900,7 +900,7 @@ export default async function Home() {
                 <Link
                   key={char.id}
                   href={`/characters/${char.slug}`}
-                  className="flex flex-col overflow-hidden rounded-[14px] border border-border-primary bg-bg-card-alpha-light transition-colors hover:bg-[rgba(36,27,53,0.7)] cursor-pointer"
+                  className="flex flex-col overflow-hidden rounded-[14px] border border-border-primary bg-bg-card-alpha-light transition-colors hover:bg-bg-card-alpha cursor-pointer"
                 >
                   <div className="flex items-center gap-2.5 p-2.5">
                     {/* キャラアイコン */}
