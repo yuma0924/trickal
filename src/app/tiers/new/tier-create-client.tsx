@@ -356,7 +356,7 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
             <CharacterIcon
               name={activeChar.name}
               imageUrl={activeChar.image_url}
-              size="sm"
+              size="md"
               className="h-14 w-14"
             />
           </div>
@@ -409,6 +409,7 @@ function UnassignedPanel({
                 imageUrl={char.image_url}
                 isDraggable
                 showName={false}
+                size="md"
                 iconClassName="h-14 w-14"
               />
             );

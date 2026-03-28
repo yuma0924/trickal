@@ -36,8 +36,8 @@ export function CharacterCard({
           <Image
             src={imageUrl}
             alt={name}
-            width={82}
-            height={82}
+            width={164}
+            height={164}
             className="aspect-square w-full object-cover"
             loading="lazy"
           />

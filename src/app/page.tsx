@@ -790,8 +790,8 @@ export default async function Home() {
                                       <Image
                                         src={char.imageUrl}
                                         alt={char.name}
-                                        width={32}
-                                        height={32}
+                                        width={64}
+                                        height={64}
                                         className="pointer-events-none h-full w-full object-cover"
                                         loading="lazy"
                                       />

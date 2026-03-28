@@ -7,6 +7,7 @@ type CharacterInfo = {
   name: string;
   slug: string;
   element: string | null;
+  rarity: string | null;
   image_url: string | null;
 };
 
@@ -20,11 +21,20 @@ export default async function TierCreatePage() {
 
   const { data: rawChars } = await supabase
     .from("characters")
-    .select("id, name, slug, element, image_url")
-    .eq("is_hidden", false)
-    .order("name");
+    .select("id, name, slug, element, rarity, image_url")
+    .eq("is_hidden", false);
 
-  const characters = (rawChars as CharacterInfo[] | null) ?? [];
+  const elementOrder = ["純粋", "冷静", "狂気", "活発", "憂鬱"];
+  const rarityOrder = ["★3", "★2", "★1"];
+  const characters = ((rawChars as CharacterInfo[] | null) ?? []).sort((a, b) => {
+    const ea = elementOrder.indexOf(a.element ?? "");
+    const eb = elementOrder.indexOf(b.element ?? "");
+    const elemDiff = (ea === -1 ? 999 : ea) - (eb === -1 ? 999 : eb);
+    if (elemDiff !== 0) return elemDiff;
+    const ra = rarityOrder.indexOf(a.rarity ?? "");
+    const rb = rarityOrder.indexOf(b.rarity ?? "");
+    return (ra === -1 ? 999 : ra) - (rb === -1 ? 999 : rb);
+  });
 
   return (
     <div className="-mx-4 space-y-4 md:mx-0">

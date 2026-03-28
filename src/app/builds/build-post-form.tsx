@@ -583,7 +583,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                     <CharacterIcon
                       name={char.name}
                       imageUrl={char.image_url}
-                      size="sm"
+                      size="md"
                       className="!h-14 !w-14"
                     />
                     <span className="max-w-14 truncate text-center text-[8px] font-bold text-[#a893c0]">
@@ -685,7 +685,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                         <CharacterIcon
                           name={char.name}
                           imageUrl={char.image_url}
-                          size="sm"
+                          size="md"
                           className="!h-14 !w-14"
                         />
                       </>

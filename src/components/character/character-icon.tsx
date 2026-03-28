@@ -12,9 +12,9 @@ interface CharacterIconProps {
 }
 
 const sizeMap: Record<IconSize, { container: string; image: number }> = {
-  sm: { container: "h-12 w-12", image: 48 },
-  md: { container: "h-16 w-16", image: 64 },
-  lg: { container: "h-24 w-24", image: 96 },
+  sm: { container: "h-12 w-12", image: 96 },
+  md: { container: "h-16 w-16", image: 128 },
+  lg: { container: "h-24 w-24", image: 192 },
 };
 
 export function CharacterIcon({

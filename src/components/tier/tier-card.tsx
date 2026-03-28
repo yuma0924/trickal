@@ -54,7 +54,7 @@ export function TierCard({
   onToggleLike,
 }: TierCardProps) {
   return (
-    <div className="rounded-2xl border border-border-primary bg-bg-card overflow-hidden transition-colors hover:bg-bg-card-hover">
+    <div className="rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] overflow-hidden transition-colors hover:from-[rgba(36,27,53,0.9)] hover:to-[rgba(36,27,53,0.6)]">
       <Link href={`/tiers/${id}`} className="block">
         {/* ヘッダー */}
         <div className="px-3 pt-3 pb-2">
@@ -76,11 +76,11 @@ export function TierCard({
           <div className="overflow-hidden rounded-lg border border-border-primary">
             {PREVIEW_LABELS.map((label) => {
               const charIds = data[label] ?? [];
-              if (charIds.length === 0 && label !== "S") return null;
+              const isEmpty = charIds.length === 0 && label !== "S";
               return (
                 <div
                   key={label}
-                  className="flex border-b border-border-primary last:border-b-0"
+                  className={`flex border-b border-border-primary last:border-b-0${isEmpty ? " hidden md:flex" : ""}`}
                 >
                   <div
                     className="flex w-8 shrink-0 items-center justify-center text-xs font-bold text-white"
@@ -113,7 +113,7 @@ export function TierCard({
             })}
           </div>
           {/* グラデーションフェード */}
-          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 rounded-b-lg bg-gradient-to-t from-bg-card to-transparent" />
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 rounded-b-lg bg-gradient-to-t from-[rgba(36,27,53,0.95)] to-transparent" />
         </div>
       </Link>
 
