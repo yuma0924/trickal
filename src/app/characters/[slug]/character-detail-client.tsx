@@ -76,7 +76,7 @@ function InfoChip({ label, labelIcon, badgeIcon, name, imageUrl, description, pa
       <div className="mt-1.5 flex items-center gap-2.5">
         {imageUrl && (
           <div className="relative shrink-0">
-            <Image src={imageUrl} alt={name} width={48} height={48} className="rounded-md" />
+            <Image src={imageUrl} alt={name} width={96} height={96} className="h-12 w-12 rounded-md" />
             {badgeIcon && (
               <Image src={badgeIcon} alt="" width={16} height={16} className="absolute -left-1 -top-1" />
             )}
@@ -453,7 +453,7 @@ export function CharacterDetailClient({
                 onClick={() => setRelicDetailOpen(!relicDetailOpen)}
               >
                 {character.relic.imageUrl && (
-                  <Image src={character.relic.imageUrl} alt={character.relic.name} width={68} height={68} className="shrink-0 rounded-lg" />
+                  <Image src={character.relic.imageUrl} alt={character.relic.name} width={136} height={136} className="h-[68px] w-[68px] shrink-0 rounded-lg" />
                 )}
                 <div className="min-w-0 text-left">
                   <p className="text-sm text-[#c0bbc8]">愛用カード</p>
@@ -495,7 +495,7 @@ export function CharacterDetailClient({
             {character.favoriteItem && (
               <div className="flex items-start gap-3 rounded-[12px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.4)] px-3 py-2.5">
                 {character.favoriteItem.imageUrl && (
-                  <Image src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={56} height={56} className="shrink-0 rounded-lg" />
+                  <Image src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={112} height={112} className="h-14 w-14 shrink-0 rounded-lg" />
                 )}
                 <div className="min-w-0">
                   <p className="flex items-center gap-1 text-xs text-[#c0bbc8]">
@@ -513,7 +513,7 @@ export function CharacterDetailClient({
                   {character.partTimeRewards.map((reward, i) => (
                     <div key={i} className="group relative shrink-0">
                       {reward.imageUrl ? (
-                        <Image src={reward.imageUrl} alt={reward.name} width={52} height={52} className="rounded-md" />
+                        <Image src={reward.imageUrl} alt={reward.name} width={104} height={104} className="h-[52px] w-[52px] rounded-md" />
                       ) : (
                         <div className="flex h-[52px] w-[52px] items-center justify-center rounded-md bg-[rgba(249,168,212,0.1)] text-[10px] text-[#9e99a7]">?</div>
                       )}
@@ -545,7 +545,7 @@ export function CharacterDetailClient({
             onClick={() => setRelicDetailOpen(!relicDetailOpen)}
           >
             {character.relic.imageUrl && (
-              <Image src={character.relic.imageUrl} alt={character.relic.name} width={52} height={52} className="shrink-0 rounded-md" />
+              <Image src={character.relic.imageUrl} alt={character.relic.name} width={104} height={104} className="h-[52px] w-[52px] shrink-0 rounded-md" />
             )}
             <div className="min-w-0 text-left flex-1">
               <p className="text-[10px] text-[#c0bbc8]">愛用カード</p>
@@ -605,7 +605,7 @@ export function CharacterDetailClient({
                 </p>
                 <div className="mt-1 flex items-center gap-2">
                   {character.favoriteItem.imageUrl && (
-                    <Image src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={36} height={36} className="shrink-0 rounded-md" />
+                    <Image src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={72} height={72} className="h-9 w-9 shrink-0 rounded-md" />
                   )}
                   <p className="text-xs font-bold leading-snug text-[#fafafa]">{character.favoriteItem.name}</p>
                 </div>
@@ -618,7 +618,7 @@ export function CharacterDetailClient({
                   {character.partTimeRewards.map((reward, i) => (
                     <div key={i} className="relative shrink-0">
                       {reward.imageUrl ? (
-                        <Image src={reward.imageUrl} alt={reward.name} width={36} height={36} className="rounded" />
+                        <Image src={reward.imageUrl} alt={reward.name} width={72} height={72} className="h-9 w-9 rounded" />
                       ) : (
                         <div className="flex h-9 w-9 items-center justify-center rounded bg-[rgba(249,168,212,0.1)] text-[10px] text-[#9e99a7]">?</div>
                       )}
