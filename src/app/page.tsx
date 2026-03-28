@@ -301,46 +301,39 @@ export default async function Home() {
   const topChar = rankedCharacters[0] ?? null;
 
   // --- 第2段: 話題のキャラクター ---
-  // 直近24時間 → 7日間 → 30日間とフォールバック
-  let recentComments: { character_id: string; user_hash: string; body: string | null; display_name: string | null; thumbs_up_count: number | null }[] | null = null;
-  let trendingPeriodLabel = "直近24時間";
+  // 全コメントを取得し、直近7日間のコメント数 → 全期間コメント数でソート
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+  const { data: allComments } = await supabase
+    .from("comments")
+    .select("character_id, user_hash, body, display_name, thumbs_up_count, created_at")
+    .eq("is_deleted", false)
+    .order("created_at", { ascending: false });
 
-  for (const { hours, label } of [
-    { hours: 24, label: "直近24時間" },
-    { hours: 7 * 24, label: "直近7日間" },
-    { hours: 30 * 24, label: "直近30日間" },
-  ]) {
-    const since = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
-    const { data } = await supabase
-      .from("comments")
-      .select("character_id, user_hash, body, display_name, thumbs_up_count")
-      .eq("is_deleted", false)
-      .gte("created_at", since);
-    if (data && data.length > 0) {
-      recentComments = data;
-      trendingPeriodLabel = label;
-      break;
-    }
-  }
-
-  const trendingMap = new Map<string, number>();
-  const userCharCountMap = new Map<string, number>();
+  const recentCountMap = new Map<string, number>();
+  const totalCountMap = new Map<string, number>();
   const trendingCommentMap = new Map<
     string,
     { body: string; author: string; thumbsUp: number }
   >();
 
-  if (recentComments) {
-    for (const rc of recentComments) {
+  if (allComments) {
+    const userCharCountMap = new Map<string, number>();
+    for (const rc of allComments) {
       const key = `${rc.character_id}:${rc.user_hash}`;
       const currentCount = userCharCountMap.get(key) ?? 0;
       userCharCountMap.set(key, currentCount + 1);
 
       if (currentCount < 3) {
-        trendingMap.set(
+        totalCountMap.set(
           rc.character_id,
-          (trendingMap.get(rc.character_id) ?? 0) + 1
+          (totalCountMap.get(rc.character_id) ?? 0) + 1
         );
+        if (rc.created_at >= sevenDaysAgo) {
+          recentCountMap.set(
+            rc.character_id,
+            (recentCountMap.get(rc.character_id) ?? 0) + 1
+          );
+        }
       }
 
       if (!trendingCommentMap.has(rc.character_id) && rc.body) {
@@ -353,8 +346,13 @@ export default async function Home() {
     }
   }
 
-  const trendingEntries = Array.from(trendingMap.entries())
-    .sort((a, b) => b[1] - a[1])
+  const trendingEntries = Array.from(totalCountMap.entries())
+    .sort((a, b) => {
+      const recentA = recentCountMap.get(a[0]) ?? 0;
+      const recentB = recentCountMap.get(b[0]) ?? 0;
+      if (recentA !== recentB) return recentB - recentA;
+      return b[1] - a[1];
+    })
     .slice(0, 6);
 
   // ランキングマップ（話題キャラの評価表示用）
@@ -369,7 +367,7 @@ export default async function Home() {
   }
 
   const trendingCharacters: TrendingChar[] = trendingEntries
-    .map(([id, count]) => {
+    .map(([id, totalCount]) => {
       const char = charMap.get(id);
       if (!char) return null;
       const comment = trendingCommentMap.get(id);
@@ -380,7 +378,7 @@ export default async function Home() {
         name: char.name,
         element: char.element as Element | null,
         imageUrl: char.imageUrl,
-        commentCount: count,
+        commentCount: totalCount,
         avgRating: rr?.avgRating ?? null,
         validVotesCount: rr?.validVotesCount ?? 0,
         latestComment: comment?.body ?? null,
