@@ -705,7 +705,7 @@ export default async function Home() {
           </>
         )}
 
-        <div className="mt-4">
+        <div className="mt-6">
           <SectionFooterButton
             href="/ranking"
             label="キャラランキングをすべて見る"
@@ -844,12 +844,14 @@ export default async function Home() {
           </div>
         )}
 
+        <div className="mt-6">
         <SectionFooterButton
           href="/tiers"
           label="みんなのティア表を見る"
           gradientFrom="#a855f7"
           gradientTo="#ec4899"
         />
+        </div>
       </section>
 
       {/* ====== 第2段: キャラクターを探す ====== */}
@@ -989,12 +991,14 @@ export default async function Home() {
 
         <HomeBuildsSection builds={buildsData} charMap={charMapPlain} />
 
+        <div className="mt-6">
         <SectionFooterButton
           href="/builds"
           label="人気編成ランキングをすべて見る"
           gradientFrom="#3b82f6"
           gradientTo="#06b6d4"
         />
+        </div>
       </section>
     </div>
   );
