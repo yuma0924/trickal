@@ -120,7 +120,7 @@
 .light {
   --bg-primary: #f8f5fc;
   --bg-secondary: #f0eaf7;
-  --bg-tertiary: #e6dcf0;
+  --bg-tertiary: #f0eaf5;
   --bg-card: #ffffff;
   --bg-card-hover: #faf7fd;
   --bg-input: #eee6f5;
@@ -153,7 +153,7 @@
   --bg-card-alpha-light: rgba(255, 255, 255, 0.85);
   --bg-card-alpha-lighter: rgba(255, 255, 255, 0.75);
   --bg-card-alpha-heavy: rgba(255, 255, 255, 0.98);
-  --bg-inset: #e8ddf2;
+  --bg-inset: #f0eaf5;
 
   --glow-accent: rgba(196, 45, 138, 0.08);
   --glow-gold: rgba(161, 98, 7, 0.1);

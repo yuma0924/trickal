@@ -676,28 +676,28 @@ export function CharacterDetailClient({
                 const skillData = skills?.find((s) => s.category === cat.key) as Record<string, unknown> | undefined;
                 if (!skillData) return (
                   <div key={cat.key} className="flex flex-col overflow-hidden rounded-[10px] border border-border-primary">
-                    <div className="flex items-center gap-2 bg-bg-card-alpha px-3 py-2">
+                    <div className="flex items-center gap-2 bg-bg-inset px-3 py-2">
                       <span className="shrink-0 rounded border border-border-primary px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">{cat.label}</span>
                       <span className="text-xs text-text-muted">—</span>
                     </div>
-                    <div className="flex-1 bg-[rgba(20,15,35,0.6)]" />
+                    <div className="flex-1 bg-bg-card" />
                   </div>
                 );
                 return (
                   <div key={cat.key} className="flex flex-col overflow-hidden rounded-[10px] border border-border-primary">
-                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 bg-bg-card-alpha px-3 py-2">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 bg-bg-inset px-3 py-2">
                       <span className="shrink-0 rounded border border-border-primary px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">{cat.label}</span>
                       {cat.hasName && typeof skillData.name === "string" && (
-                        <span className="text-sm font-bold text-white">{skillData.name}</span>
+                        <span className="text-sm font-bold text-text-primary">{skillData.name}</span>
                       )}
                       {cat.hasCooltime && typeof skillData.cooltime === "number" && (
-                        <span className="rounded bg-[rgba(249,168,212,0.12)] px-1.5 py-0.5 text-[10px] font-medium text-text-tertiary">
+                        <span className="rounded bg-accent/10 px-1.5 py-0.5 text-[10px] font-medium text-text-tertiary">
                           CT {skillData.cooltime}秒
                         </span>
                       )}
                     </div>
                     {/* 説明文エリア */}
-                    <div className="bg-[rgba(20,15,35,0.6)] px-3 py-2.5">
+                    <div className="bg-bg-card px-3 py-2.5">
                       {typeof skillData.description === "string" && (
                         <p className="whitespace-pre-line text-xs md:text-sm leading-relaxed text-text-tertiary">
                           <StyledText text={skillData.description as string} />
@@ -705,7 +705,7 @@ export function CharacterDetailClient({
                       )}
                     </div>
                     {/* パラメータエリア */}
-                    <div className="border-t border-border-secondary bg-[rgba(20,15,35,0.6)] px-3 py-2">
+                    <div className="border-t border-border-secondary bg-bg-card px-3 py-2">
                       {typeof skillData.params === "string" && skillData.params !== "" ? (
                         <ul className="space-y-0.5 border-l-2 border-border-primary pl-2.5">
                           {(skillData.params as string).split("\n").filter(Boolean).map((line, i) => (
@@ -717,7 +717,7 @@ export function CharacterDetailClient({
                       )}
                     </div>
                     {/* 余白（パラメータが少ない方を下に伸ばす） */}
-                    <div className="flex-1 bg-[rgba(20,15,35,0.6)]" />
+                    <div className="flex-1 bg-bg-card" />
                   </div>
                 );
               })}
@@ -729,11 +729,11 @@ export function CharacterDetailClient({
                 if (!basicAttack && !enhancedAttack) {
                   return (
                     <div className="flex flex-col overflow-hidden rounded-[10px] border border-border-primary">
-                      <div className="flex items-center gap-2 bg-bg-card-alpha px-3 py-2">
+                      <div className="flex items-center gap-2 bg-bg-inset px-3 py-2">
                         <span className="shrink-0 rounded border border-border-primary px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">普通攻撃</span>
                         <span className="text-xs text-text-muted">—</span>
                       </div>
-                      <div className="flex-1 bg-[rgba(20,15,35,0.6)]" />
+                      <div className="flex-1 bg-bg-card" />
                     </div>
                   );
                 }
@@ -755,11 +755,11 @@ export function CharacterDetailClient({
                 );
                 return (
                   <div className="flex flex-col overflow-hidden rounded-[10px] border border-border-primary">
-                    <div className="flex items-center bg-bg-card-alpha px-3 py-2">
+                    <div className="flex items-center bg-bg-inset px-3 py-2">
                       <span className="rounded border border-border-primary px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">普通攻撃</span>
                     </div>
                     {/* 基本・強化を独立カラムで横並び、各カラム内で説明→パラメータの順 */}
-                    <div className="flex-1 bg-[rgba(20,15,35,0.6)]">
+                    <div className="flex-1 bg-bg-card">
                       <div className="flex flex-col md:flex-row">
                         {basicAttack && (
                           <div className="flex flex-1 flex-col md:border-r md:border-border-primary">
@@ -776,7 +776,7 @@ export function CharacterDetailClient({
                           </div>
                         )}
                         {enhancedAttack && (
-                          <div className="flex flex-1 flex-col border-t border-[rgba(249,168,212,0.08)] md:border-t-0">
+                          <div className="flex flex-1 flex-col border-t border-border-secondary md:border-t-0">
                             <div className="px-3 pt-1 pb-2.5">
                               <div className="mb-1.5">
                                 <span className="rounded border border-border-primary px-1.5 py-0.5 text-[10px] font-bold text-text-primary/70">強化</span>
