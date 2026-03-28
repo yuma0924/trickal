@@ -15,6 +15,7 @@ type CharacterInfo = {
   name: string;
   slug: string;
   element: string | null;
+  rarity: string | null;
   position: string | null;
   image_url: string | null;
   is_hidden: boolean;
@@ -104,21 +105,33 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
         const supabase = createBrowserClient();
         const { data } = await supabase
           .from("characters")
-          .select("id, name, slug, element, position, image_url, is_hidden")
+          .select("id, name, slug, element, rarity, position, image_url, is_hidden")
           .eq("is_hidden", false)
           .order("name");
         if (data) {
-          setAllCharacters(
-            data.map((c) => ({
+          const elementOrder = ["純粋", "冷静", "狂気", "活発", "憂鬱"];
+          const rarityOrder = ["★3", "★2", "★1"];
+          const sorted = data
+            .map((c) => ({
               id: c.id,
               name: c.name,
               slug: c.slug,
               element: c.element,
+              rarity: c.rarity,
               position: c.position,
               image_url: c.image_url,
               is_hidden: c.is_hidden,
             }))
-          );
+            .sort((a, b) => {
+              const ea = elementOrder.indexOf(a.element ?? "");
+              const eb = elementOrder.indexOf(b.element ?? "");
+              const elemDiff = (ea === -1 ? 999 : ea) - (eb === -1 ? 999 : eb);
+              if (elemDiff !== 0) return elemDiff;
+              const ra = rarityOrder.indexOf(a.rarity ?? "");
+              const rb = rarityOrder.indexOf(b.rarity ?? "");
+              return (ra === -1 ? 999 : ra) - (rb === -1 ? 999 : rb);
+            });
+          setAllCharacters(sorted);
         }
         setCharsLoaded(true);
       } catch {

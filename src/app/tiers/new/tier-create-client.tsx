@@ -246,7 +246,7 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
         onContextMenu={(e) => e.preventDefault()}
       >
         {/* 投稿フォーム */}
-        <div className="flex flex-col gap-2 rounded-2xl border border-border-primary bg-bg-card p-3 md:flex-row">
+        <div className="flex flex-col gap-2 rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] p-3 md:flex-row">
           <input
             type="text"
             value={title}
@@ -266,7 +266,7 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
         </div>
 
         {/* ティア行 */}
-        <div className="overflow-hidden rounded-2xl border border-border-primary bg-bg-card">
+        <div className="overflow-hidden rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)]">
           {TIER_LABELS.map((label) => (
             <TierRow
               key={label}
@@ -333,7 +333,7 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
         {/* ティア一覧へ戻る */}
         <Link
           href="/tiers"
-          className="mt-10 flex items-center justify-center gap-2 rounded-2xl border border-border-primary bg-bg-card py-3 text-sm font-medium text-text-primary transition-colors hover:bg-bg-card-hover"
+          className="mt-10 flex items-center justify-center gap-2 rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] py-3 text-sm font-medium text-text-primary transition-colors hover:from-[rgba(36,27,53,0.9)] hover:to-[rgba(36,27,53,0.6)]"
         >
           <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
             <rect x="0" y="0.5" width="3" height="3" rx="0.5" fill="#ef4444" />
@@ -345,7 +345,7 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
             <rect x="0" y="12.5" width="3" height="3" rx="0.5" fill="#22c55e" />
             <rect x="4" y="12.5" width="4" height="3" rx="0.5" fill="currentColor" className="text-text-muted" />
           </svg>
-          他のティア表を見る
+          みんなのティア表に戻る
         </Link>
       </div>
 
@@ -387,7 +387,7 @@ function UnassignedPanel({
 
   return (
     <div
-      className="rounded-2xl border border-border-primary bg-bg-card"
+      className="rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)]"
       style={{
         backgroundColor: isOver ? "rgba(251, 100, 182, 0.05)" : undefined,
       }}
