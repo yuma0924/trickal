@@ -492,7 +492,7 @@ export default async function Home() {
             <div className="mt-2 flex items-baseline pl-4 lg:justify-between">
               <div className="text-base lg:text-lg">
                 <span className="text-text-tertiary">現在の総合1位は</span>
-                <span className="ml-1 text-lg font-bold text-[#fafafa] lg:text-xl">{topChar.name}</span>
+                <span className="ml-1 text-lg font-bold text-text-primary lg:text-xl">{topChar.name}</span>
                 <span className="ml-1 inline-flex -translate-y-[2px] items-center gap-0.5 align-middle text-base lg:text-lg">
                   <svg className="h-4 w-4 text-[#fcd34d] lg:h-5 lg:w-5" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -565,7 +565,7 @@ export default async function Home() {
                   <Link
                     key={char.id}
                     href={`/characters/${char.slug}`}
-                    className="block overflow-clip rounded-[16px] bg-[rgba(36,27,53,0.95)] transition-colors hover:brightness-110 cursor-pointer"
+                    className="block overflow-clip rounded-[16px] bg-bg-card-alpha-heavy transition-colors hover:brightness-110 cursor-pointer"
                     style={{
                       border: `1.5px solid ${cfg.borderColor}`,
                     }}
@@ -598,7 +598,7 @@ export default async function Home() {
                               className="h-full w-full object-cover"
                             />
                           ) : (
-                            <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-lg text-[#8b7aab]">
+                            <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-lg text-text-muted">
                               {char.name.charAt(0)}
                             </div>
                           )}
@@ -607,7 +607,7 @@ export default async function Home() {
                         {/* 名前・ロール・評価 */}
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1.5">
-                            <p className="truncate text-base font-bold text-[#fafafa] lg:text-lg">
+                            <p className="truncate text-base font-bold text-text-primary lg:text-lg">
                               {char.name}
                             </p>
                             {char.element && ELEMENT_ICON_MAP[char.element] && (
@@ -616,32 +616,32 @@ export default async function Home() {
                           </div>
                           <div className="mt-1 flex flex-wrap items-center gap-1 lg:mt-1.5">
                             {char.role && ROLE_ICON_MAP[char.role] && (
-                              <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] md:text-xs text-[#a893c0]">
+                              <span className="flex items-center gap-0.5 rounded-[4px] bg-bg-tertiary px-1.5 py-0.5 text-[11px] md:text-xs text-text-tertiary">
                                 <Image src={ROLE_ICON_MAP[char.role]} alt={char.role} width={13} height={13} />
                                 {char.role}
                               </span>
                             )}
                             {char.position && POSITION_ICON_MAP[char.position] && (
-                              <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] md:text-xs text-[#a893c0]">
+                              <span className="flex items-center gap-0.5 rounded-[4px] bg-bg-tertiary px-1.5 py-0.5 text-[11px] md:text-xs text-text-tertiary">
                                 <Image src={POSITION_ICON_MAP[char.position]} alt={char.position} width={13} height={13} />
                                 {char.position}
                               </span>
                             )}
                             {char.attackType && ATTACK_TYPE_ICON_MAP[char.attackType] && (
-                              <span className="flex items-center gap-0.5 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] md:text-xs text-[#a893c0]">
+                              <span className="flex items-center gap-0.5 rounded-[4px] bg-bg-tertiary px-1.5 py-0.5 text-[11px] md:text-xs text-text-tertiary">
                                 <Image src={ATTACK_TYPE_ICON_MAP[char.attackType]} alt={char.attackType} width={13} height={13} />
                                 {char.attackType}
                               </span>
                             )}
                             {char.race && (
-                              <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[11px] md:text-xs text-[#a893c0]">
+                              <span className="rounded-[4px] bg-bg-tertiary px-1.5 py-0.5 text-[11px] md:text-xs text-text-tertiary">
                                 {char.race}
                               </span>
                             )}
                           </div>
                           <div className="mt-1.5 flex flex-wrap items-center gap-1 lg:mt-2">
                             {/* 評価ピル */}
-                            <span className="inline-flex items-center gap-1 rounded-full bg-[#2a1f3d] py-0.5 pl-1.5 pr-2 lg:py-1 lg:pl-2 lg:pr-2.5">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-bg-tertiary py-0.5 pl-1.5 pr-2 lg:py-1 lg:pl-2 lg:pr-2.5">
                               <span className="lg:hidden">
                                 <StarRatingDisplay rating={char.avgRating} size="sm" showValue />
                               </span>
@@ -662,13 +662,13 @@ export default async function Home() {
                             </svg>
                             注目コメント
                           </p>
-                          <div className="rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(42,33,62,0.8)] px-3 py-3 min-h-[72px] flex flex-col lg:min-h-[88px]">
-                            <p className="line-clamp-2 whitespace-pre-wrap text-xs md:text-sm leading-relaxed text-[#fafafa] lg:line-clamp-4">
+                          <div className="rounded-[10px] border border-border-primary bg-bg-inset px-3 py-3 min-h-[72px] flex flex-col lg:min-h-[88px]">
+                            <p className="line-clamp-2 whitespace-pre-wrap text-xs md:text-sm leading-relaxed text-text-primary lg:line-clamp-4">
                               {char.featuredComment}
                             </p>
                             <div className="mt-auto flex items-center justify-between pt-1">
                               {char.featuredCommentAuthor && (
-                                <span className="text-[10px] md:text-xs text-[#8b7aab]">
+                                <span className="text-[10px] md:text-xs text-text-muted">
                                   — {char.featuredCommentAuthor}
                                 </span>
                               )}
@@ -746,15 +746,15 @@ export default async function Home() {
                 <Link
                   key={tier.id}
                   href={`/tiers/${tier.id}`}
-                  className="block rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] p-4 transition-colors hover:from-[rgba(36,27,53,0.9)] hover:to-[rgba(36,27,53,0.6)] cursor-pointer"
+                  className="block rounded-2xl border border-border-primary bg-gradient-to-b from-bg-card-alpha to-bg-card-alpha-lighter p-4 transition-colors hover:from-bg-card-alpha hover:to-bg-card-alpha-light cursor-pointer"
                 >
                   {/* タイトル + 投稿者 */}
                   <div className="mb-2 flex items-center justify-between gap-2">
-                    <span className="min-w-0 truncate text-sm font-bold text-[#fafafa]">
+                    <span className="min-w-0 truncate text-sm font-bold text-text-primary">
                       {tier.title || "無題のティア"}
                     </span>
                     {tier.displayName && (
-                      <span className="shrink-0 text-[10px] md:text-xs text-[#8b7aab]">
+                      <span className="shrink-0 text-[10px] md:text-xs text-text-muted">
                         by {tier.displayName}
                       </span>
                     )}
@@ -762,7 +762,7 @@ export default async function Home() {
 
                   {/* ティアプレビュー（S〜C） */}
                   <div className="relative mb-2">
-                    <div className="overflow-hidden rounded-lg border border-[rgba(249,168,212,0.15)]">
+                    <div className="overflow-hidden rounded-lg border border-border-primary">
                       {tierLabels.map((label) => {
                         const charIds = tier.data[label] ?? [];
                         const isEmpty = charIds.length === 0 && label !== "S";
@@ -772,7 +772,7 @@ export default async function Home() {
                         return (
                           <div
                             key={label}
-                            className={`flex border-b border-[rgba(249,168,212,0.15)] last:border-b-0${isEmpty ? " hidden md:flex" : ""}`}
+                            className={`flex border-b border-border-primary last:border-b-0${isEmpty ? " hidden md:flex" : ""}`}
                           >
                             <div
                               className="flex w-8 shrink-0 items-center justify-center text-xs font-bold text-white"
@@ -796,7 +796,7 @@ export default async function Home() {
                                         loading="lazy"
                                       />
                                     ) : (
-                                      <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-[10px] text-[#8b7aab]">
+                                      <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-[10px] text-text-muted">
                                         {char.name.charAt(0)}
                                       </div>
                                     )}
@@ -804,19 +804,19 @@ export default async function Home() {
                                 );
                               })}
                               {charIds.length > 8 && (
-                                <span className="text-[10px] text-[#8b7aab]">+{charIds.length - 8}</span>
+                                <span className="text-[10px] text-text-muted">+{charIds.length - 8}</span>
                               )}
                             </div>
                           </div>
                         );
                       })}
                     </div>
-                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 rounded-b-lg bg-gradient-to-t from-[rgba(36,27,53,0.95)] to-transparent" />
+                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 rounded-b-lg bg-gradient-to-t from-bg-card-alpha-heavy to-transparent" />
                   </div>
-                  <p className="mb-1 text-center text-[10px] md:text-xs text-[#8b7aab]">このティア表を見る ▼</p>
+                  <p className="mb-1 text-center text-[10px] md:text-xs text-text-muted">このティア表を見る ▼</p>
 
                   {/* フッター */}
-                  <div className="flex items-center justify-between text-[10px] md:text-xs text-[#8b7aab]">
+                  <div className="flex items-center justify-between text-[10px] md:text-xs text-text-muted">
                     <span>{Object.values(tier.data).flat().length}キャラ配置</span>
                     <span className="inline-flex items-center gap-0.5 text-thumbs-up">
                       <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor">
@@ -830,7 +830,7 @@ export default async function Home() {
             })}
           </div>
         ) : (
-          <div className="rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] py-8 text-center">
+          <div className="rounded-2xl border border-border-primary bg-gradient-to-b from-bg-card-alpha to-bg-card-alpha-lighter py-8 text-center">
             <p className="text-sm text-text-muted">まだティアが投稿されていません</p>
             <Link
               href="/tiers/new"
@@ -885,13 +885,13 @@ export default async function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                   </svg>
                 </span>
-                <h2 className="text-base md:text-lg font-bold text-[#fafafa]">
+                <h2 className="text-base md:text-lg font-bold text-text-primary">
                   話題のキャラクター
                 </h2>
               </div>
-              <span className="text-xs md:text-sm text-[#8b7aab]">最近の注目</span>
+              <span className="text-xs md:text-sm text-text-muted">最近の注目</span>
             </div>
-            <p className="text-xs md:text-sm text-[#a893c0]">今注目されているキャラクターをチェック！</p>
+            <p className="text-xs md:text-sm text-text-tertiary">今注目されているキャラクターをチェック！</p>
           </div>
           <div className="-mx-4 grid grid-cols-2 md:grid-cols-3 gap-2 px-2">
             {trendingCharacters.map((char) => {
@@ -900,7 +900,7 @@ export default async function Home() {
                 <Link
                   key={char.id}
                   href={`/characters/${char.slug}`}
-                  className="flex flex-col overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] transition-colors hover:bg-[rgba(36,27,53,0.7)] cursor-pointer"
+                  className="flex flex-col overflow-hidden rounded-[14px] border border-border-primary bg-bg-card-alpha-light transition-colors hover:bg-[rgba(36,27,53,0.7)] cursor-pointer"
                 >
                   <div className="flex items-center gap-2.5 p-2.5">
                     {/* キャラアイコン */}
@@ -915,7 +915,7 @@ export default async function Home() {
                           loading="lazy"
                         />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-sm text-[#8b7aab]">
+                        <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-sm text-text-muted">
                           {char.name.charAt(0)}
                         </div>
                       )}
@@ -923,7 +923,7 @@ export default async function Home() {
                     {/* 情報 */}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1">
-                        <p className="truncate text-sm md:text-base font-bold text-[#fafafa]">
+                        <p className="truncate text-sm md:text-base font-bold text-text-primary">
                           {char.name}
                         </p>
                         {char.element && ELEMENT_ICON_MAP[char.element] && (
@@ -936,7 +936,7 @@ export default async function Home() {
                             ★{char.avgRating.toFixed(1)}
                           </span>
                         ) : (
-                          <span className="text-xs md:text-sm text-[#8b7aab]">
+                          <span className="text-xs md:text-sm text-text-muted">
                             未評価
                           </span>
                         )}
@@ -951,13 +951,13 @@ export default async function Home() {
                   </div>
                   {/* コメントブロック */}
                   {char.latestComment && (
-                    <div className="mx-2 mb-2 flex flex-1 flex-col rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2 min-h-[76px]">
-                      <p className="line-clamp-2 text-[11px] md:text-xs leading-relaxed text-[#fafafa]">
+                    <div className="mx-2 mb-2 flex flex-1 flex-col rounded-[10px] bg-bg-inset border border-border-secondary px-2.5 py-2 min-h-[76px]">
+                      <p className="line-clamp-2 text-[11px] md:text-xs leading-relaxed text-text-primary">
                         {char.latestComment}
                       </p>
                       <div className="mt-auto flex items-center justify-between pt-1">
                         {char.latestCommentAuthor && (
-                          <span className="text-[10px] md:text-xs text-[#8b7aab]">
+                          <span className="text-[10px] md:text-xs text-text-muted">
                             — {char.latestCommentAuthor}
                           </span>
                         )}

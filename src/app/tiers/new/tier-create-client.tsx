@@ -266,7 +266,7 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
         </div>
 
         {/* ティア行 */}
-        <div className="overflow-hidden rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)]">
+        <div className="overflow-hidden rounded-2xl border border-border-primary bg-gradient-to-b from-bg-card-alpha to-bg-card-alpha-lighter">
           {TIER_LABELS.map((label) => (
             <TierRow
               key={label}
@@ -315,10 +315,10 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
         {!submitting && (!title.trim() || tierState.unassigned.length === characters.length) && (
           <div className="space-y-0.5 px-4">
             {!title.trim() && (
-              <p className="text-xs text-[#8b7aab]">※ タイトルを入力してください</p>
+              <p className="text-xs text-text-muted">※ タイトルを入力してください</p>
             )}
             {tierState.unassigned.length === characters.length && (
-              <p className="text-xs text-[#8b7aab]">※ キャラクターを1体以上配置してください</p>
+              <p className="text-xs text-text-muted">※ キャラクターを1体以上配置してください</p>
             )}
           </div>
         )}
@@ -333,7 +333,7 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
         {/* ティア一覧へ戻る */}
         <Link
           href="/tiers"
-          className="mt-10 flex items-center justify-center gap-2 rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] py-3 text-sm font-medium text-text-primary transition-colors hover:from-[rgba(36,27,53,0.9)] hover:to-[rgba(36,27,53,0.6)]"
+          className="mt-10 flex items-center justify-center gap-2 rounded-2xl border border-border-primary bg-gradient-to-b from-bg-card-alpha to-bg-card-alpha-lighter py-3 text-sm font-medium text-text-primary transition-colors hover:from-bg-card-alpha hover:to-bg-card-alpha-light"
         >
           <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
             <rect x="0" y="0.5" width="3" height="3" rx="0.5" fill="#ef4444" />
@@ -387,7 +387,7 @@ function UnassignedPanel({
 
   return (
     <div
-      className="rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)]"
+      className="rounded-2xl border border-border-primary bg-gradient-to-b from-bg-card-alpha to-bg-card-alpha-lighter"
       style={{
         backgroundColor: isOver ? "rgba(251, 100, 182, 0.05)" : undefined,
       }}
@@ -437,7 +437,7 @@ function UnassignedPanel({
                   "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer",
                   active
                     ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-                    : "bg-[#1a1225]"
+                    : "bg-bg-input"
                 )}
                 style={{
                   border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,

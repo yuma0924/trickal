@@ -79,7 +79,7 @@ export function RankingClient({
             "shrink-0 rounded-[10px] px-2.5 py-1.5 text-[11px] font-bold transition-colors cursor-pointer lg:px-3.5 lg:py-2 lg:text-sm",
             elementFilter === "all"
               ? "bg-[rgba(255,99,126,0.15)] text-[#fda4af] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-              : "bg-[#1a1225] text-[#a893c0]"
+              : "bg-bg-input text-text-tertiary"
           )}
           style={{
             border: `1.2px solid ${elementFilter === "all" ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
@@ -97,7 +97,7 @@ export function RankingClient({
                 "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer lg:p-2",
                 active
                   ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-                  : "bg-[#1a1225]"
+                  : "bg-bg-input"
               )}
               style={{
                 border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
@@ -125,10 +125,10 @@ export function RankingClient({
                 href={`/characters/${currentTop.slug}`}
                 className="inline-flex items-center rounded-2xl border border-[rgba(255,191,36,0.3)] bg-gradient-to-r from-[rgba(255,191,36,0.1)] to-[rgba(255,143,0,0.05)] px-5 py-3 transition-colors hover:from-[rgba(255,191,36,0.15)] cursor-pointer lg:pl-5 lg:pr-12"
               >
-                <span className="text-base text-[#fafafa]">
+                <span className="text-base text-text-primary">
                   現在の{elementFilter === "all" ? "総合" : elementFilter}1位は
                 </span>
-                <span className="ml-1.5 text-lg font-bold text-[#fafafa] lg:text-xl">
+                <span className="ml-1.5 text-lg font-bold text-text-primary lg:text-xl">
                   {currentTop.name}
                 </span>
                 {currentTop.avgRating !== null && (
@@ -136,12 +136,12 @@ export function RankingClient({
                     ★{currentTop.avgRating.toFixed(1)}
                   </span>
                 )}
-                <span className="ml-1.5 text-base text-[#fafafa]">
+                <span className="ml-1.5 text-base text-text-primary">
                   です
                 </span>
               </Link>
             )}
-            <div className="hidden lg:flex items-center gap-2 rounded-2xl border border-[rgba(249,168,212,0.15)] bg-[rgba(42,33,62,0.5)] px-4 py-3">
+            <div className="hidden lg:flex items-center gap-2 rounded-2xl border border-border-primary bg-[rgba(42,33,62,0.5)] px-4 py-3">
               <svg className="h-4 w-4 shrink-0 text-[#f9a8d4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
               </svg>
@@ -238,20 +238,20 @@ export function RankingClient({
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                   </svg>
                 </span>
-                <h2 className="text-base md:text-lg font-bold text-[#fafafa]">
+                <h2 className="text-base md:text-lg font-bold text-text-primary">
                   話題のキャラクター
                 </h2>
               </div>
-              <span className="text-xs md:text-sm text-[#8b7aab]">最近の注目</span>
+              <span className="text-xs md:text-sm text-text-muted">最近の注目</span>
             </div>
-            <p className="text-xs md:text-sm text-[#a893c0]">今注目されているキャラクターをチェック！</p>
+            <p className="text-xs md:text-sm text-text-tertiary">今注目されているキャラクターをチェック！</p>
           </div>
           <div className="-mx-4 grid grid-cols-2 md:grid-cols-3 gap-2 px-2">
             {trendingCharacters.map((char) => (
               <Link
                 key={char.id}
                 href={`/characters/${char.slug}`}
-                className="flex flex-col overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] transition-colors hover:bg-[rgba(36,27,53,0.7)] cursor-pointer"
+                className="flex flex-col overflow-hidden rounded-[14px] border border-border-primary bg-bg-card-alpha-light transition-colors hover:bg-[rgba(36,27,53,0.7)] cursor-pointer"
               >
                 <div className="flex items-center gap-2.5 p-2.5">
                   <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg">
@@ -265,14 +265,14 @@ export function RankingClient({
                         loading="lazy"
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-sm text-[#8b7aab]">
+                      <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-sm text-text-muted">
                         {char.name.charAt(0)}
                       </div>
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1">
-                      <p className="truncate text-sm md:text-base font-bold text-[#fafafa]">
+                      <p className="truncate text-sm md:text-base font-bold text-text-primary">
                         {char.name}
                       </p>
                       {char.element && ELEMENT_ICON_MAP[char.element] && (
@@ -285,7 +285,7 @@ export function RankingClient({
                           ★{char.avgRating.toFixed(1)}
                         </span>
                       ) : (
-                        <span className="text-xs md:text-sm text-[#8b7aab]">
+                        <span className="text-xs md:text-sm text-text-muted">
                           未評価
                         </span>
                       )}
@@ -299,13 +299,13 @@ export function RankingClient({
                   </div>
                 </div>
                 {char.latestComment && (
-                  <div className="mx-2 mb-2 flex flex-1 flex-col rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2 min-h-[76px]">
-                    <p className="line-clamp-2 text-[11px] md:text-xs leading-relaxed text-[#fafafa]">
+                  <div className="mx-2 mb-2 flex flex-1 flex-col rounded-[10px] bg-bg-inset border border-border-secondary px-2.5 py-2 min-h-[76px]">
+                    <p className="line-clamp-2 text-[11px] md:text-xs leading-relaxed text-text-primary">
                       {char.latestComment}
                     </p>
                     <div className="mt-auto flex items-center justify-between pt-1">
                       {char.latestCommentAuthor && (
-                        <span className="text-[10px] md:text-xs text-[#8b7aab]">
+                        <span className="text-[10px] md:text-xs text-text-muted">
                           — {char.latestCommentAuthor}
                         </span>
                       )}
@@ -326,7 +326,7 @@ export function RankingClient({
 
       {/* 他のランキングもチェック */}
       <section className="!mt-10 space-y-3">
-        <p className="text-xs md:text-sm font-bold text-[#c0bbc8]">他のランキングもチェック</p>
+        <p className="text-xs md:text-sm font-bold text-text-tertiary">他のランキングもチェック</p>
         <Link
           href="/builds"
           className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(59,130,246,0.15)] to-[rgba(6,182,212,0.15)] border border-[rgba(59,130,246,0.1)] px-4 py-3 transition-colors hover:from-[rgba(59,130,246,0.25)] hover:to-[rgba(6,182,212,0.25)] cursor-pointer"
@@ -340,10 +340,10 @@ export function RankingClient({
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm md:text-base font-bold text-[#fafafa]">人気編成ランキング</span>
-            <span className="text-[10px] md:text-xs text-[#9e99a7]">人気のパーティ編成をチェックしよう</span>
+            <span className="block text-sm md:text-base font-bold text-text-primary">人気編成ランキング</span>
+            <span className="text-[10px] md:text-xs text-text-muted">人気のパーティ編成をチェックしよう</span>
           </div>
-          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </Link>
@@ -367,10 +367,10 @@ export function RankingClient({
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm md:text-base font-bold text-[#fafafa]">みんなのティア表</span>
-            <span className="text-[10px] md:text-xs text-[#9e99a7]">キャラをランク付けして共有</span>
+            <span className="block text-sm md:text-base font-bold text-text-primary">みんなのティア表</span>
+            <span className="text-[10px] md:text-xs text-text-muted">キャラをランク付けして共有</span>
           </div>
-          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </Link>

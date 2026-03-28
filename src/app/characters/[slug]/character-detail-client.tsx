@@ -68,8 +68,8 @@ function InfoChip({ label, labelIcon, badgeIcon, name, imageUrl, description, pa
   if (!name) return null;
   const paramLines = params?.split("\n").filter(Boolean) ?? [];
   return (
-    <div className="w-52 rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-3 py-2.5">
-      <p className="flex items-center gap-1 text-xs text-[#c0bbc8]">
+    <div className="w-52 rounded-[10px] border border-border-primary bg-bg-card-alpha-light px-3 py-2.5">
+      <p className="flex items-center gap-1 text-xs text-text-tertiary">
         {labelIcon && <Image src={labelIcon} alt="" width={16} height={16} className="shrink-0" />}
         {label}
       </p>
@@ -82,19 +82,19 @@ function InfoChip({ label, labelIcon, badgeIcon, name, imageUrl, description, pa
             )}
           </div>
         )}
-        <p className="text-base font-bold leading-snug text-[#fafafa]">{name}</p>
+        <p className="text-base font-bold leading-snug text-text-primary">{name}</p>
       </div>
       {paramLines.length > 0 && (
         <ul className="mt-2 space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2">
           {paramLines.map((line, i) => (
-            <li key={i} className="text-xs leading-relaxed text-[#d4d0de]">
+            <li key={i} className="text-xs leading-relaxed text-text-tertiary">
               <ParamLine text={line} />
             </li>
           ))}
         </ul>
       )}
       {description && (
-        <p className="mt-2 text-xs leading-relaxed text-[#c0bbc8]">{description}</p>
+        <p className="mt-2 text-xs leading-relaxed text-text-tertiary">{description}</p>
       )}
     </div>
   );
@@ -386,7 +386,7 @@ export function CharacterDetailClient({
         {/* キャラ情報 */}
         <div className="min-w-0 flex-1 md:flex-initial">
           <div className="flex items-center gap-1.5">
-            <h1 className="text-xl md:text-3xl font-bold text-[#fafafa]">
+            <h1 className="text-xl md:text-3xl font-bold text-text-primary">
               {character.name}
             </h1>
             {character.element && ELEMENT_ICON_MAP[character.element] && (
@@ -397,30 +397,30 @@ export function CharacterDetailClient({
           {/* タグ行 */}
           <div className="mt-1.5 md:mt-3 flex flex-wrap items-center gap-1 md:gap-2">
             {character.role && ROLE_ICON_MAP[character.role] && (
-              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base text-[#c0bbc8]">
+              <span className="flex items-center gap-1 rounded-[4px] bg-bg-tertiary px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base text-text-tertiary">
                 <Image src={ROLE_ICON_MAP[character.role]} alt={character.role} width={15} height={15} className="md:h-5 md:w-5" />
                 {character.role}
               </span>
             )}
             {character.position && POSITION_ICON_MAP[character.position] && (
-              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base text-[#c0bbc8]">
+              <span className="flex items-center gap-1 rounded-[4px] bg-bg-tertiary px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base text-text-tertiary">
                 <Image src={POSITION_ICON_MAP[character.position]} alt={character.position} width={15} height={15} className="md:h-5 md:w-5" />
                 {character.position}
               </span>
             )}
             {character.attackType && ATTACK_TYPE_ICON_MAP[character.attackType] && (
-              <span className="flex items-center gap-1 rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base text-[#c0bbc8]">
+              <span className="flex items-center gap-1 rounded-[4px] bg-bg-tertiary px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base text-text-tertiary">
                 <Image src={ATTACK_TYPE_ICON_MAP[character.attackType]} alt={character.attackType} width={15} height={15} className="md:h-5 md:w-5" />
                 {character.attackType}
               </span>
             )}
             {character.race && (
-              <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base text-[#c0bbc8]">
+              <span className="rounded-[4px] bg-bg-tertiary px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base text-text-tertiary">
                 {character.race}
               </span>
             )}
             {character.isProvisional && (
-              <span className="rounded-[4px] bg-[#2a1f3d] px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base font-bold text-[#facc15]">
+              <span className="rounded-[4px] bg-bg-tertiary px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base font-bold text-[#facc15]">
                 暫定
               </span>
             )}
@@ -432,7 +432,7 @@ export function CharacterDetailClient({
               <StarRatingDisplay rating={character.avgRating} size="lg" />
             </div>
           ) : (
-            <p className="mt-1.5 text-xs md:text-base text-[#c0bbc8]">
+            <p className="mt-1.5 text-xs md:text-base text-text-tertiary">
               {character.validVotesCount > 0
                 ? `${character.validVotesCount}票（順位対象外）`
                 : "まだ投票がありません"}
@@ -448,7 +448,7 @@ export function CharacterDetailClient({
                   "flex cursor-pointer items-start gap-3 rounded-[12px] border px-2 py-2 transition-colors",
                   relicDetailOpen
                     ? "border-[rgba(249,168,212,0.25)] bg-[rgba(36,27,53,0.7)]"
-                    : "border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.4)] hover:border-[rgba(249,168,212,0.2)] hover:bg-[rgba(36,27,53,0.6)]"
+                    : "border-border-primary bg-bg-card-alpha-lighter hover:border-[rgba(249,168,212,0.2)] hover:bg-[rgba(36,27,53,0.6)]"
                 )}
                 onClick={() => setRelicDetailOpen(!relicDetailOpen)}
               >
@@ -456,11 +456,11 @@ export function CharacterDetailClient({
                   <Image src={character.relic.imageUrl} alt={character.relic.name} width={136} height={136} className="h-[68px] w-[68px] shrink-0 rounded-lg" />
                 )}
                 <div className="min-w-0 text-left">
-                  <p className="text-sm text-[#c0bbc8]">愛用カード</p>
-                  <p className="mt-0.5 text-base font-bold leading-snug text-[#fafafa]">{character.relic.name}</p>
+                  <p className="text-sm text-text-tertiary">愛用カード</p>
+                  <p className="mt-0.5 text-base font-bold leading-snug text-text-primary">{character.relic.name}</p>
                 </div>
                 <svg
-                  className={`h-4 w-4 shrink-0 text-[#9e99a7] transition-transform ${relicDetailOpen ? "rotate-180" : ""}`}
+                  className={`h-4 w-4 shrink-0 text-text-muted transition-transform ${relicDetailOpen ? "rotate-180" : ""}`}
                   fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -474,14 +474,14 @@ export function CharacterDetailClient({
                   {character.relic.params && (
                     <ul className="space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
                       {character.relic.params.split("\n").filter(Boolean).map((line, i) => (
-                        <li key={i} className="text-sm leading-relaxed text-[#d4d0de]">
+                        <li key={i} className="text-sm leading-relaxed text-text-tertiary">
                           <ParamLine text={line} />
                         </li>
                       ))}
                     </ul>
                   )}
                   {character.relic.description && (
-                    <p className={`text-sm leading-relaxed text-[#c0bbc8] ${character.relic.params ? "mt-2.5" : ""}`}>{character.relic.description}</p>
+                    <p className={`text-sm leading-relaxed text-text-tertiary ${character.relic.params ? "mt-2.5" : ""}`}>{character.relic.description}</p>
                   )}
                 </div>
               )}
@@ -493,34 +493,34 @@ export function CharacterDetailClient({
         {(character.favoriteItem || character.partTimeRewards.length > 0) && (
           <div className="hidden flex-1 flex-col gap-3 pt-[3rem] md:flex">
             {character.favoriteItem && (
-              <div className="flex items-start gap-3 rounded-[12px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.4)] px-3 py-2.5">
+              <div className="flex items-start gap-3 rounded-[12px] border border-border-primary bg-bg-card-alpha-lighter px-3 py-2.5">
                 {character.favoriteItem.imageUrl && (
                   <Image src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={112} height={112} className="h-14 w-14 shrink-0 rounded-lg" />
                 )}
                 <div className="min-w-0">
-                  <p className="flex items-center gap-1 text-xs text-[#c0bbc8]">
+                  <p className="flex items-center gap-1 text-xs text-text-tertiary">
                     <Image src="/icons/favorite.png" alt="" width={20} height={20} className="shrink-0" />
                     大好物
                   </p>
-                  <p className="mt-0.5 text-base font-bold leading-snug text-[#fafafa]">{character.favoriteItem.name}</p>
+                  <p className="mt-0.5 text-base font-bold leading-snug text-text-primary">{character.favoriteItem.name}</p>
                 </div>
               </div>
             )}
             {character.partTimeRewards.length > 0 && (
-              <div className="rounded-[12px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.4)] px-2 py-2.5">
-                <p className="px-0.5 text-xs text-[#c0bbc8]">アルバイト報酬</p>
+              <div className="rounded-[12px] border border-border-primary bg-bg-card-alpha-lighter px-2 py-2.5">
+                <p className="px-0.5 text-xs text-text-tertiary">アルバイト報酬</p>
                 <div className="mt-1.5 flex flex-wrap items-center gap-1">
                   {character.partTimeRewards.map((reward, i) => (
                     <div key={i} className="group relative shrink-0">
                       {reward.imageUrl ? (
                         <Image src={reward.imageUrl} alt={reward.name} width={104} height={104} className="h-[52px] w-[52px] rounded-md" />
                       ) : (
-                        <div className="flex h-[52px] w-[52px] items-center justify-center rounded-md bg-[rgba(249,168,212,0.1)] text-[10px] text-[#9e99a7]">?</div>
+                        <div className="flex h-[52px] w-[52px] items-center justify-center rounded-md bg-[rgba(249,168,212,0.1)] text-[10px] text-text-muted">?</div>
                       )}
                       {i === 0 && (
                         <Image src="/icons/good.png" alt="" width={16} height={16} className="absolute -left-1 -top-1" />
                       )}
-                      <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 hidden -translate-x-1/2 whitespace-nowrap rounded-md bg-[#1a1425] px-2 py-1 text-[11px] text-[#d4d0de] shadow-lg group-hover:block">
+                      <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 hidden -translate-x-1/2 whitespace-nowrap rounded-md bg-[#1a1425] px-2 py-1 text-[11px] text-text-tertiary shadow-lg group-hover:block">
                         {reward.name}
                       </div>
                     </div>
@@ -534,13 +534,13 @@ export function CharacterDetailClient({
 
       {/* モバイル版 愛用カード（スキルの上・タップで展開） */}
       {character.relic && (
-        <div ref={relicMobileRef} className="relative md:hidden border-t border-[rgba(249,168,212,0.1)] pt-3">
+        <div ref={relicMobileRef} className="relative md:hidden border-t border-border-primary pt-3">
           <button
             className={cn(
               "flex w-full cursor-pointer items-center gap-3 rounded-[10px] border px-2 py-1.5 transition-colors",
               relicDetailOpen
                 ? "border-[rgba(249,168,212,0.25)] bg-[rgba(36,27,53,0.7)]"
-                : "border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)]"
+                : "border-border-primary bg-bg-card-alpha-light"
             )}
             onClick={() => setRelicDetailOpen(!relicDetailOpen)}
           >
@@ -548,11 +548,11 @@ export function CharacterDetailClient({
               <Image src={character.relic.imageUrl} alt={character.relic.name} width={104} height={104} className="h-[52px] w-[52px] shrink-0 rounded-md" />
             )}
             <div className="min-w-0 text-left flex-1">
-              <p className="text-[10px] text-[#c0bbc8]">愛用カード</p>
-              <p className="text-sm font-bold text-[#fafafa]">{character.relic.name}</p>
+              <p className="text-[10px] text-text-tertiary">愛用カード</p>
+              <p className="text-sm font-bold text-text-primary">{character.relic.name}</p>
             </div>
             <svg
-              className={`h-3.5 w-3.5 shrink-0 text-[#9e99a7] transition-transform ${relicDetailOpen ? "rotate-180" : ""}`}
+              className={`h-3.5 w-3.5 shrink-0 text-text-muted transition-transform ${relicDetailOpen ? "rotate-180" : ""}`}
               fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -563,14 +563,14 @@ export function CharacterDetailClient({
               {character.relic.params && (
                 <ul className="space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
                   {character.relic.params.split("\n").filter(Boolean).map((line, i) => (
-                    <li key={i} className="text-xs leading-relaxed text-[#d4d0de]">
+                    <li key={i} className="text-xs leading-relaxed text-text-tertiary">
                       <ParamLine text={line} />
                     </li>
                   ))}
                 </ul>
               )}
               {character.relic.description && (
-                <p className={`text-xs leading-relaxed text-[#c0bbc8] ${character.relic.params ? "mt-2" : ""}`}>{character.relic.description}</p>
+                <p className={`text-xs leading-relaxed text-text-tertiary ${character.relic.params ? "mt-2" : ""}`}>{character.relic.description}</p>
               )}
             </div>
           )}
@@ -579,9 +579,9 @@ export function CharacterDetailClient({
 
       {/* モバイル版 大好物・アルバイト報酬（折りたたみ） */}
       {(character.favoriteItem || character.partTimeRewards.length > 0) && (
-        <div className="md:hidden border-t border-[rgba(249,168,212,0.1)] pt-3">
+        <div className="md:hidden border-t border-border-primary pt-3">
           <button
-            className="flex w-full cursor-pointer items-center justify-between pr-2 py-1 text-xs font-medium text-[#c0bbc8] transition-colors hover:text-[#d4d0de]"
+            className="flex w-full cursor-pointer items-center justify-between pr-2 py-1 text-xs font-medium text-text-tertiary transition-colors hover:text-text-tertiary"
             onClick={() => setItemsOpen(!itemsOpen)}
           >
             <span className="flex items-center gap-1">
@@ -598,8 +598,8 @@ export function CharacterDetailClient({
           {itemsOpen && (
           <div className="mt-2 flex items-stretch gap-2">
             {character.favoriteItem && (
-              <div className="flex flex-1 flex-col justify-center rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-2.5 py-2">
-                <p className="flex items-center gap-1 text-[10px] text-[#9e99a7]">
+              <div className="flex flex-1 flex-col justify-center rounded-[10px] border border-border-primary bg-bg-card-alpha-light px-2.5 py-2">
+                <p className="flex items-center gap-1 text-[10px] text-text-muted">
                   <Image src="/icons/favorite.png" alt="" width={16} height={16} className="shrink-0" />
                   大好物
                 </p>
@@ -607,20 +607,20 @@ export function CharacterDetailClient({
                   {character.favoriteItem.imageUrl && (
                     <Image src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={72} height={72} className="h-9 w-9 shrink-0 rounded-md" />
                   )}
-                  <p className="text-xs font-bold leading-snug text-[#fafafa]">{character.favoriteItem.name}</p>
+                  <p className="text-xs font-bold leading-snug text-text-primary">{character.favoriteItem.name}</p>
                 </div>
               </div>
             )}
             {character.partTimeRewards.length > 0 && (
-              <div className="flex flex-1 flex-col justify-center rounded-[10px] border border-[rgba(249,168,212,0.1)] bg-[rgba(36,27,53,0.5)] px-2.5 py-2">
-                <p className="text-[10px] text-[#9e99a7]">アルバイト報酬</p>
+              <div className="flex flex-1 flex-col justify-center rounded-[10px] border border-border-primary bg-bg-card-alpha-light px-2.5 py-2">
+                <p className="text-[10px] text-text-muted">アルバイト報酬</p>
                 <div className="mt-1 flex items-center gap-1">
                   {character.partTimeRewards.map((reward, i) => (
                     <div key={i} className="relative shrink-0">
                       {reward.imageUrl ? (
                         <Image src={reward.imageUrl} alt={reward.name} width={72} height={72} className="h-9 w-9 rounded" />
                       ) : (
-                        <div className="flex h-9 w-9 items-center justify-center rounded bg-[rgba(249,168,212,0.1)] text-[10px] text-[#9e99a7]">?</div>
+                        <div className="flex h-9 w-9 items-center justify-center rounded bg-[rgba(249,168,212,0.1)] text-[10px] text-text-muted">?</div>
                       )}
                       {i === 0 && (
                         <Image src="/icons/good.png" alt="" width={12} height={12} className="absolute -left-0.5 -top-0.5" />
@@ -636,20 +636,20 @@ export function CharacterDetailClient({
       )}
 
       {/* スキル (チラ見せ + 展開) */}
-      <section className="border-t border-[rgba(249,168,212,0.1)] pt-3">
+      <section className="border-t border-border-primary pt-3">
         {/* モバイル: 見出しタップで展開 */}
         <button
           className="flex w-full cursor-pointer items-center justify-between pr-2 mb-3 md:hidden"
           onClick={() => setSkillsOpen(!skillsOpen)}
         >
           <span className="flex items-center gap-2">
-            <svg className="h-4 w-4 text-[#c0bbc8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="h-4 w-4 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
-            <span className="text-sm font-bold text-[#fafafa]">スキル</span>
+            <span className="text-sm font-bold text-text-primary">スキル</span>
           </span>
           <svg
-            className={`h-3.5 w-3.5 text-[#9e99a7] transition-transform ${skillsOpen ? "rotate-180" : ""}`}
+            className={`h-3.5 w-3.5 text-text-muted transition-transform ${skillsOpen ? "rotate-180" : ""}`}
             fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -657,10 +657,10 @@ export function CharacterDetailClient({
         </button>
         {/* PC: 見出しのみ（展開ボタンは下） */}
         <div className="hidden items-center gap-2 mb-3 md:flex">
-          <svg className="h-5 w-5 text-[#c0bbc8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-5 w-5 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
           </svg>
-          <span className="text-base font-bold text-[#fafafa]">スキル</span>
+          <span className="text-base font-bold text-text-primary">スキル</span>
         </div>
         <div className="relative">
           <div
@@ -675,23 +675,23 @@ export function CharacterDetailClient({
               {SKILL_CATEGORIES.map((cat) => {
                 const skillData = skills?.find((s) => s.category === cat.key) as Record<string, unknown> | undefined;
                 if (!skillData) return (
-                  <div key={cat.key} className="flex flex-col overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
+                  <div key={cat.key} className="flex flex-col overflow-hidden rounded-[10px] border border-border-primary">
                     <div className="flex items-center gap-2 bg-[rgba(36,27,53,0.7)] px-3 py-2">
-                      <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-[#d4d0de]">{cat.label}</span>
-                      <span className="text-xs text-[#9e99a7]">—</span>
+                      <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">{cat.label}</span>
+                      <span className="text-xs text-text-muted">—</span>
                     </div>
                     <div className="flex-1 bg-[rgba(20,15,35,0.6)]" />
                   </div>
                 );
                 return (
-                  <div key={cat.key} className="flex flex-col overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
+                  <div key={cat.key} className="flex flex-col overflow-hidden rounded-[10px] border border-border-primary">
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 bg-[rgba(36,27,53,0.7)] px-3 py-2">
-                      <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-[#d4d0de]">{cat.label}</span>
+                      <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">{cat.label}</span>
                       {cat.hasName && typeof skillData.name === "string" && (
                         <span className="text-sm font-bold text-white">{skillData.name}</span>
                       )}
                       {cat.hasCooltime && typeof skillData.cooltime === "number" && (
-                        <span className="rounded bg-[rgba(249,168,212,0.12)] px-1.5 py-0.5 text-[10px] font-medium text-[#d4d0de]">
+                        <span className="rounded bg-[rgba(249,168,212,0.12)] px-1.5 py-0.5 text-[10px] font-medium text-text-tertiary">
                           CT {skillData.cooltime}秒
                         </span>
                       )}
@@ -699,21 +699,21 @@ export function CharacterDetailClient({
                     {/* 説明文エリア */}
                     <div className="bg-[rgba(20,15,35,0.6)] px-3 py-2.5">
                       {typeof skillData.description === "string" && (
-                        <p className="whitespace-pre-line text-xs md:text-sm leading-relaxed text-[#d4d0de]">
+                        <p className="whitespace-pre-line text-xs md:text-sm leading-relaxed text-text-tertiary">
                           <StyledText text={skillData.description as string} />
                         </p>
                       )}
                     </div>
                     {/* パラメータエリア */}
-                    <div className="border-t border-[rgba(249,168,212,0.06)] bg-[rgba(20,15,35,0.6)] px-3 py-2">
+                    <div className="border-t border-border-secondary bg-[rgba(20,15,35,0.6)] px-3 py-2">
                       {typeof skillData.params === "string" && skillData.params !== "" ? (
                         <ul className="space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
                           {(skillData.params as string).split("\n").filter(Boolean).map((line, i) => (
-                            <li key={i} className="text-[11px] md:text-xs leading-relaxed text-[#d4d0de]"><ParamLine text={line} /></li>
+                            <li key={i} className="text-[11px] md:text-xs leading-relaxed text-text-tertiary"><ParamLine text={line} /></li>
                           ))}
                         </ul>
                       ) : (
-                        <span className="text-xs text-[#9e99a7]">—</span>
+                        <span className="text-xs text-text-muted">—</span>
                       )}
                     </div>
                     {/* 余白（パラメータが少ない方を下に伸ばす） */}
@@ -728,10 +728,10 @@ export function CharacterDetailClient({
                 const enhancedAttack = skills?.find((s) => s.category === "normal_attack_enhanced") as Record<string, unknown> | undefined;
                 if (!basicAttack && !enhancedAttack) {
                   return (
-                    <div className="flex flex-col overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
+                    <div className="flex flex-col overflow-hidden rounded-[10px] border border-border-primary">
                       <div className="flex items-center gap-2 bg-[rgba(36,27,53,0.7)] px-3 py-2">
-                        <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-[#d4d0de]">普通攻撃</span>
-                        <span className="text-xs text-[#9e99a7]">—</span>
+                        <span className="shrink-0 rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">普通攻撃</span>
+                        <span className="text-xs text-text-muted">—</span>
                       </div>
                       <div className="flex-1 bg-[rgba(20,15,35,0.6)]" />
                     </div>
@@ -739,7 +739,7 @@ export function CharacterDetailClient({
                 }
                 const renderAttackDesc = (data: Record<string, unknown>) => (
                   typeof data.description === "string" ? (
-                    <p className="whitespace-pre-line text-xs leading-relaxed text-[#d4d0de]">
+                    <p className="whitespace-pre-line text-xs leading-relaxed text-text-tertiary">
                       <StyledText text={data.description as string} />
                     </p>
                   ) : null
@@ -748,28 +748,28 @@ export function CharacterDetailClient({
                   typeof data.params === "string" && data.params !== "" ? (
                     <ul className="space-y-0.5 border-l-2 border-[rgba(249,168,212,0.25)] pl-2.5">
                       {(data.params as string).split("\n").filter(Boolean).map((line, i) => (
-                        <li key={i} className="text-[10px] md:text-[11px] leading-relaxed text-[#d4d0de]"><ParamLine text={line} /></li>
+                        <li key={i} className="text-[10px] md:text-[11px] leading-relaxed text-text-tertiary"><ParamLine text={line} /></li>
                       ))}
                     </ul>
-                  ) : <span className="text-xs text-[#9e99a7]">—</span>
+                  ) : <span className="text-xs text-text-muted">—</span>
                 );
                 return (
-                  <div className="flex flex-col overflow-hidden rounded-[10px] border border-[rgba(249,168,212,0.1)]">
+                  <div className="flex flex-col overflow-hidden rounded-[10px] border border-border-primary">
                     <div className="flex items-center bg-[rgba(36,27,53,0.7)] px-3 py-2">
-                      <span className="rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-[#d4d0de]">普通攻撃</span>
+                      <span className="rounded border border-[rgba(249,168,212,0.2)] px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">普通攻撃</span>
                     </div>
                     {/* 基本・強化を独立カラムで横並び、各カラム内で説明→パラメータの順 */}
                     <div className="flex-1 bg-[rgba(20,15,35,0.6)]">
                       <div className="flex flex-col md:flex-row">
                         {basicAttack && (
-                          <div className="flex flex-1 flex-col md:border-r md:border-[rgba(249,168,212,0.1)]">
+                          <div className="flex flex-1 flex-col md:border-r md:border-border-primary">
                             <div className="px-3 pt-1 pb-2.5">
                               <div className="mb-1.5">
-                                <span className="rounded border border-[rgba(249,168,212,0.15)] px-1.5 py-0.5 text-[10px] font-bold text-[#fafafa]/70">基本</span>
+                                <span className="rounded border border-border-primary px-1.5 py-0.5 text-[10px] font-bold text-text-primary/70">基本</span>
                               </div>
                               {renderAttackDesc(basicAttack)}
                             </div>
-                            <div className="border-t border-[rgba(249,168,212,0.06)] px-3 py-2">
+                            <div className="border-t border-border-secondary px-3 py-2">
                               {renderAttackParams(basicAttack)}
                             </div>
                             <div className="flex-1" />
@@ -779,11 +779,11 @@ export function CharacterDetailClient({
                           <div className="flex flex-1 flex-col border-t border-[rgba(249,168,212,0.08)] md:border-t-0">
                             <div className="px-3 pt-1 pb-2.5">
                               <div className="mb-1.5">
-                                <span className="rounded border border-[rgba(249,168,212,0.15)] px-1.5 py-0.5 text-[10px] font-bold text-[#fafafa]/70">強化</span>
+                                <span className="rounded border border-border-primary px-1.5 py-0.5 text-[10px] font-bold text-text-primary/70">強化</span>
                               </div>
                               {renderAttackDesc(enhancedAttack)}
                             </div>
-                            <div className="border-t border-[rgba(249,168,212,0.06)] px-3 py-2">
+                            <div className="border-t border-border-secondary px-3 py-2">
                               {renderAttackParams(enhancedAttack)}
                             </div>
                             <div className="flex-1" />
@@ -802,7 +802,7 @@ export function CharacterDetailClient({
           )}
         </div>
         <button
-          className="mt-2 hidden w-full cursor-pointer items-center justify-center gap-1 py-1.5 text-xs font-medium text-[#9e99a7] transition-colors hover:text-[#d4d0de] md:flex"
+          className="mt-2 hidden w-full cursor-pointer items-center justify-center gap-1 py-1.5 text-xs font-medium text-text-muted transition-colors hover:text-text-tertiary md:flex"
           onClick={() => setSkillsOpen(!skillsOpen)}
         >
           {skillsOpen ? "スキルを閉じる" : "スキルをすべて表示"}
@@ -824,10 +824,10 @@ export function CharacterDetailClient({
                 <svg className="h-5 w-5 shrink-0 text-[#fcd34d]" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />
                 </svg>
-                <span className="text-sm md:text-lg font-bold text-[#fafafa]">
+                <span className="text-sm md:text-lg font-bold text-text-primary">
                   {character.name}を評価する
                 </span>
-                <span className="hidden text-base text-[#c0bbc8] md:inline md:ml-3"><span className="text-[#fcd34d]">★</span>評価とコメントを投稿できます</span>
+                <span className="hidden text-base text-text-tertiary md:inline md:ml-3"><span className="text-[#fcd34d]">★</span>評価とコメントを投稿できます</span>
               </div>
               <button
                 onClick={() => setFormOpen(true)}
@@ -854,10 +854,10 @@ export function CharacterDetailClient({
       <section className="md:-mt-1">
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <svg className="h-4 w-4 md:h-5 md:w-5 text-[#c0bbc8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="h-4 w-4 md:h-5 md:w-5 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
-            <span className="text-sm md:text-base font-bold text-[#fafafa]">
+            <span className="text-sm md:text-base font-bold text-text-primary">
               コメント ({totalCount})
             </span>
           </div>
@@ -868,7 +868,7 @@ export function CharacterDetailClient({
                 "rounded-full border px-2.5 py-1 text-xs md:text-sm md:px-3 md:py-1.5 font-medium transition-colors",
                 sortTab === "newest"
                   ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
-                  : "border-[rgba(139,122,171,0.3)] text-[#9e99a7] hover:text-[#d4d0de]"
+                  : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-text-tertiary"
               )}
             >
               新着順
@@ -879,7 +879,7 @@ export function CharacterDetailClient({
                 "flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs md:text-sm md:px-3 md:py-1.5 font-medium transition-colors",
                 sortTab === "thumbs_up"
                   ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
-                  : "border-[rgba(139,122,171,0.3)] text-[#9e99a7] hover:text-[#d4d0de]"
+                  : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-text-tertiary"
               )}
             >
               <svg className="h-3 w-3 text-[#fb64b6]" viewBox="0 0 24 24" fill="currentColor">
@@ -909,12 +909,12 @@ export function CharacterDetailClient({
         <section className="!mt-10 space-y-3">
           <div>
             <div className="flex items-center gap-2">
-              <svg className="h-4 w-4 md:h-5 md:w-5 text-[#c0bbc8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="h-4 w-4 md:h-5 md:w-5 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              <span className="text-sm md:text-base font-bold text-[#fafafa]">次に見る</span>
+              <span className="text-sm md:text-base font-bold text-text-primary">次に見る</span>
             </div>
-            <p className="mt-0.5 text-xs md:text-sm text-[#9e99a7]">同じ性格・レアリティのキャラ</p>
+            <p className="mt-0.5 text-xs md:text-sm text-text-muted">同じ性格・レアリティのキャラ</p>
           </div>
           <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
             {relatedCharacters.map((c) => (
@@ -944,7 +944,7 @@ export function CharacterDetailClient({
 
       {/* ページ下部ナビリンク */}
       <section className="!mt-10 space-y-3">
-        <p className="text-xs md:text-sm font-bold text-[#c0bbc8]">他のランキングもチェック</p>
+        <p className="text-xs md:text-sm font-bold text-text-tertiary">他のランキングもチェック</p>
         <Link
           href="/tiers"
           className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(168,85,247,0.15)] to-[rgba(236,72,153,0.15)] border border-[rgba(168,85,247,0.1)] px-4 py-3 transition-colors hover:from-[rgba(168,85,247,0.25)] hover:to-[rgba(236,72,153,0.25)] cursor-pointer"
@@ -965,10 +965,10 @@ export function CharacterDetailClient({
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm md:text-base font-bold text-[#fafafa]">みんなのティア表</span>
-            <span className="text-[10px] md:text-xs text-[#9e99a7]">キャラをランク付けして共有</span>
+            <span className="block text-sm md:text-base font-bold text-text-primary">みんなのティア表</span>
+            <span className="text-[10px] md:text-xs text-text-muted">キャラをランク付けして共有</span>
           </div>
-          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </Link>
@@ -985,10 +985,10 @@ export function CharacterDetailClient({
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm md:text-base font-bold text-[#fafafa]">人気編成ランキング</span>
-            <span className="text-[10px] md:text-xs text-[#9e99a7]">人気のパーティ編成をチェックしよう</span>
+            <span className="block text-sm md:text-base font-bold text-text-primary">人気編成ランキング</span>
+            <span className="text-[10px] md:text-xs text-text-muted">人気のパーティ編成をチェックしよう</span>
           </div>
-          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </Link>

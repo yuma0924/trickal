@@ -54,7 +54,7 @@ export function TierCard({
   onToggleLike,
 }: TierCardProps) {
   return (
-    <div className="rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] overflow-hidden transition-colors hover:from-[rgba(36,27,53,0.9)] hover:to-[rgba(36,27,53,0.6)]">
+    <div className="rounded-2xl border border-border-primary bg-gradient-to-b from-bg-card-alpha to-bg-card-alpha-lighter overflow-hidden transition-colors hover:from-bg-card-alpha hover:to-bg-card-alpha-light">
       <Link href={`/tiers/${id}`} className="block">
         {/* ヘッダー */}
         <div className="px-3 pt-3 pb-2">
@@ -113,7 +113,7 @@ export function TierCard({
             })}
           </div>
           {/* グラデーションフェード */}
-          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 rounded-b-lg bg-gradient-to-t from-[rgba(36,27,53,0.95)] to-transparent" />
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 rounded-b-lg bg-gradient-to-t from-bg-card-alpha-heavy to-transparent" />
         </div>
       </Link>
 

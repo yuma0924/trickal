@@ -76,7 +76,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
           <select
             value={modeFilter}
             onChange={(e) => setModeFilter(e.target.value as Mode)}
-            className="appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-[rgba(36,27,53,0.8)] px-4 py-2.5 pr-9 text-sm font-bold text-[#fafafa] cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none lg:w-48"
+            className="appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-bg-card-alpha px-4 py-2.5 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none lg:w-48"
           >
             {MODE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -84,7 +84,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
               </option>
             ))}
           </select>
-          <svg className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
         </div>
@@ -101,7 +101,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                   "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer",
                   active
                     ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-                    : "bg-[#1a1225]"
+                    : "bg-bg-input"
                 )}
                 style={{
                   border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
@@ -123,7 +123,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
 
       {/* 編成リスト */}
       {filtered.length === 0 ? (
-        <p className="py-8 text-center text-sm text-[#8b7aab]">
+        <p className="py-8 text-center text-sm text-text-muted">
           該当する編成がありません
         </p>
       ) : (
@@ -141,11 +141,11 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
               <Link
                 key={build.id}
                 href={`/builds/${build.id}`}
-                className="block rounded-2xl border border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)] p-4 transition-colors hover:from-[rgba(36,27,53,0.9)] hover:to-[rgba(36,27,53,0.6)] cursor-pointer"
+                className="block rounded-2xl border border-border-primary bg-gradient-to-b from-bg-card-alpha to-bg-card-alpha-lighter p-4 transition-colors hover:from-bg-card-alpha hover:to-bg-card-alpha-light cursor-pointer"
               >
                 {/* タイトル + 属性アイコン + モード */}
                 <div className="mb-3 flex items-center justify-between gap-2">
-                  <span className="min-w-0 truncate text-sm font-bold text-[#fafafa]">
+                  <span className="min-w-0 truncate text-sm font-bold text-text-primary">
                     {build.title || (build.mode ? (MODE_LABEL_MAP[build.mode] ?? build.mode) : "")}
                   </span>
                   <div className="flex shrink-0 items-center gap-1.5">
@@ -162,7 +162,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                       ) : null
                     ))}
                     {build.mode && (
-                      <span className="rounded-md bg-[rgba(36,27,53,0.5)] px-2 py-0.5 text-[10px] font-bold text-[#8b7aab]">
+                      <span className="rounded-md bg-bg-card-alpha-light px-2 py-0.5 text-[10px] font-bold text-text-muted">
                         {MODE_LABEL_MAP[build.mode] ?? build.mode}
                       </span>
                     )}
@@ -170,23 +170,23 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                 </div>
 
                 {/* キャラ編成グリッド */}
-                <div className="mb-2 overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.15)]">
-                  <div className="grid grid-cols-3 bg-[rgba(42,33,62,0.8)]">
-                    <span className="border-r border-[rgba(249,168,212,0.15)] py-1 text-center text-[10px] font-bold text-[#a893c0]">後列</span>
-                    <span className="border-r border-[rgba(249,168,212,0.15)] py-1 text-center text-[10px] font-bold text-[#a893c0]">中列</span>
-                    <span className="py-1 text-center text-[10px] font-bold text-[#a893c0]">前列</span>
+                <div className="mb-2 overflow-hidden rounded-[14px] border border-border-primary">
+                  <div className="grid grid-cols-3 bg-bg-inset">
+                    <span className="border-r border-border-primary py-1 text-center text-[10px] font-bold text-text-tertiary">後列</span>
+                    <span className="border-r border-border-primary py-1 text-center text-[10px] font-bold text-text-tertiary">中列</span>
+                    <span className="py-1 text-center text-[10px] font-bold text-text-tertiary">前列</span>
                   </div>
                   {Array.from({ length: rowCount }).map((_, rowIdx) => {
                     const empty = !hasContent(rowIdx);
                     return (
-                      <div key={rowIdx} className={cn("grid grid-cols-3", "border-b border-[rgba(249,168,212,0.15)] last:border-b-0", empty && "hidden md:grid")}>
+                      <div key={rowIdx} className={cn("grid grid-cols-3", "border-b border-border-primary last:border-b-0", empty && "hidden md:grid")}>
                         {[0, 1, 2].map((colIdx) => {
                           const mId = slots[colIdx * rowCount + rowIdx];
                           const char = mId ? charMap[mId] : null;
                           return (
                             <div key={colIdx} className={cn(
                               "flex flex-col items-center gap-0.5 pt-2 pb-1.5",
-                              colIdx < 2 && "border-r border-[rgba(249,168,212,0.15)]"
+                              colIdx < 2 && "border-r border-border-primary"
                             )}>
                               {char ? (
                                 <>
@@ -194,10 +194,10 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                                     {char.imageUrl ? (
                                       <Image src={char.imageUrl} alt={char.name} width={96} height={96} className="h-full w-full object-cover" loading="lazy" />
                                     ) : (
-                                      <div className="flex h-full w-full items-center justify-center bg-[#2a1f3d] text-xs text-[#8b7aab]">{char.name.charAt(0)}</div>
+                                      <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-xs text-text-muted">{char.name.charAt(0)}</div>
                                     )}
                                   </div>
-                                  <span className="max-w-20 truncate text-center text-[10px] font-bold text-[#a893c0]">{char.name}</span>
+                                  <span className="max-w-20 truncate text-center text-[10px] font-bold text-text-tertiary">{char.name}</span>
                                 </>
                               ) : (
                                 <>
@@ -215,13 +215,13 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
 
                 {/* コメント */}
                 {build.comment && (
-                  <div className="mx-0.5 mb-1 flex flex-col rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.05)] px-2.5 py-2 min-h-[76px]">
-                    <p className="line-clamp-2 text-[11px] leading-relaxed text-[#fafafa]">
+                  <div className="mx-0.5 mb-1 flex flex-col rounded-[10px] bg-bg-inset border border-border-secondary px-2.5 py-2 min-h-[76px]">
+                    <p className="line-clamp-2 text-[11px] leading-relaxed text-text-primary">
                       {build.comment}
                     </p>
                     <div className="mt-auto flex items-center justify-between pt-1">
                       {build.displayName && (
-                        <span className="text-[10px] text-[#8b7aab]">
+                        <span className="text-[10px] text-text-muted">
                           — {build.displayName}
                         </span>
                       )}

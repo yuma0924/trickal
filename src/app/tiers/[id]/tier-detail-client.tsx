@@ -384,14 +384,14 @@ export function TierDetailClient({
             <div className="flex items-center justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2">
-                  <svg className="h-4 w-4 text-[#fafafa]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="h-4 w-4 text-text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
-                  <span className="text-sm font-bold text-[#fafafa]">
+                  <span className="text-sm font-bold text-text-primary">
                     コメントする
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-[#8b7aab]">感想や意見を共有しよう</p>
+                <p className="mt-1 text-xs text-text-muted">感想や意見を共有しよう</p>
               </div>
               <button
                 onClick={() => setCommentFormOpen(true)}
@@ -407,7 +407,7 @@ export function TierDetailClient({
         ) : (
           <div className="rounded-2xl border border-border-primary bg-bg-card p-4">
             <div className="mb-3 flex items-center justify-between">
-              <span className="text-sm font-bold text-[#fafafa]">コメントを投稿</span>
+              <span className="text-sm font-bold text-text-primary">コメントを投稿</span>
               <button
                 onClick={() => setCommentFormOpen(false)}
                 className="flex h-7 w-7 items-center justify-center rounded-full text-text-muted hover:bg-bg-tertiary hover:text-text-primary cursor-pointer"
@@ -454,10 +454,10 @@ export function TierDetailClient({
       <section>
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <svg className="h-4 w-4 md:h-5 md:w-5 text-[#c0bbc8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="h-4 w-4 md:h-5 md:w-5 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
-            <span className="text-sm md:text-base font-bold text-[#fafafa]">
+            <span className="text-sm md:text-base font-bold text-text-primary">
               コメント ({comments.length})
             </span>
           </div>
@@ -470,7 +470,7 @@ export function TierDetailClient({
                   "flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs md:text-sm md:px-3 md:py-1.5 font-medium transition-colors cursor-pointer",
                   sort === tab.value
                     ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
-                    : "border-[rgba(139,122,171,0.3)] text-[#8b7aab] hover:text-[#c4b5d4]"
+                    : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-[#c4b5d4]"
                 )}
               >
                 {tab.value === "thumbs_up" && (
@@ -574,7 +574,7 @@ export function TierDetailClient({
 
       {/* 他のページもチェック */}
       <section className="!mt-10 space-y-3">
-        <p className="text-xs md:text-sm font-bold text-[#c0bbc8]">他のページもチェック</p>
+        <p className="text-xs md:text-sm font-bold text-text-tertiary">他のページもチェック</p>
         <Link
           href="/ranking"
           className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(255,185,0,0.15)] to-[rgba(255,99,126,0.15)] border border-[rgba(255,185,0,0.1)] px-4 py-3 transition-colors hover:from-[rgba(255,185,0,0.25)] hover:to-[rgba(255,99,126,0.25)] cursor-pointer"
@@ -588,10 +588,10 @@ export function TierDetailClient({
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm md:text-base font-bold text-[#fafafa]">人気キャラランキング</span>
-            <span className="text-[10px] md:text-xs text-[#9e99a7]">投票で決まる最強キャラをチェック</span>
+            <span className="block text-sm md:text-base font-bold text-text-primary">人気キャラランキング</span>
+            <span className="text-[10px] md:text-xs text-text-muted">投票で決まる最強キャラをチェック</span>
           </div>
-          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </Link>
@@ -608,10 +608,10 @@ export function TierDetailClient({
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm md:text-base font-bold text-[#fafafa]">人気編成ランキング</span>
-            <span className="text-[10px] md:text-xs text-[#9e99a7]">人気のパーティ編成をチェックしよう</span>
+            <span className="block text-sm md:text-base font-bold text-text-primary">人気編成ランキング</span>
+            <span className="text-[10px] md:text-xs text-text-muted">人気のパーティ編成をチェックしよう</span>
           </div>
-          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </Link>

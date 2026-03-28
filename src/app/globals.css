@@ -34,6 +34,11 @@
   --color-bg-card: var(--bg-card);
   --color-bg-card-hover: var(--bg-card-hover);
   --color-bg-input: var(--bg-input);
+  --color-bg-card-alpha: var(--bg-card-alpha);
+  --color-bg-card-alpha-light: var(--bg-card-alpha-light);
+  --color-bg-card-alpha-lighter: var(--bg-card-alpha-lighter);
+  --color-bg-card-alpha-heavy: var(--bg-card-alpha-heavy);
+  --color-bg-inset: var(--bg-inset);
 
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
@@ -91,6 +96,12 @@
   --thumbs-up: #f9a8d4;
   --thumbs-down: #60a5fa;
 
+  --bg-card-alpha: rgba(36, 27, 53, 0.8);
+  --bg-card-alpha-light: rgba(36, 27, 53, 0.5);
+  --bg-card-alpha-lighter: rgba(36, 27, 53, 0.4);
+  --bg-card-alpha-heavy: rgba(36, 27, 53, 0.95);
+  --bg-inset: rgba(42, 33, 62, 0.8);
+
   --glow-accent: rgba(251, 100, 182, 0.15);
   --glow-gold: rgba(251, 191, 36, 0.2);
 }
@@ -122,6 +133,12 @@
   --thumbs-up: #f9a8d4;
   --thumbs-down: #60a5fa;
 
+  --bg-card-alpha: rgba(255, 255, 255, 0.8);
+  --bg-card-alpha-light: rgba(255, 255, 255, 0.5);
+  --bg-card-alpha-lighter: rgba(255, 255, 255, 0.4);
+  --bg-card-alpha-heavy: rgba(255, 255, 255, 0.95);
+  --bg-inset: rgba(243, 232, 245, 0.8);
+
   --glow-accent: rgba(232, 77, 160, 0.1);
   --glow-gold: rgba(245, 158, 11, 0.15);
 }
@@ -152,6 +169,12 @@
   --star: #fbbf24;
   --thumbs-up: #f9a8d4;
   --thumbs-down: #60a5fa;
+
+  --bg-card-alpha: rgba(36, 27, 53, 0.8);
+  --bg-card-alpha-light: rgba(36, 27, 53, 0.5);
+  --bg-card-alpha-lighter: rgba(36, 27, 53, 0.4);
+  --bg-card-alpha-heavy: rgba(36, 27, 53, 0.95);
+  --bg-inset: rgba(42, 33, 62, 0.8);
 
   --glow-accent: rgba(251, 100, 182, 0.15);
   --glow-gold: rgba(251, 191, 36, 0.2);

@@ -116,7 +116,7 @@ export function TiersClient({ characters }: TiersClientProps) {
                 "rounded-full border px-2.5 py-1 text-xs md:text-sm font-medium transition-colors cursor-pointer",
                 sort === tab.value
                   ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
-                  : "border-[rgba(139,122,171,0.3)] text-[#8b7aab] hover:text-[#c4b5d4]"
+                  : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-[#c4b5d4]"
               )}
             >
               {tab.label}
@@ -190,7 +190,7 @@ export function TiersClient({ characters }: TiersClientProps) {
 
       {/* 他のランキングもチェック */}
       <section className="!mt-10 space-y-3">
-        <p className="text-xs md:text-sm font-bold text-[#c0bbc8]">他のランキングもチェック</p>
+        <p className="text-xs md:text-sm font-bold text-text-tertiary">他のランキングもチェック</p>
         <Link
           href="/ranking"
           className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(255,185,0,0.15)] to-[rgba(255,99,126,0.15)] border border-[rgba(255,185,0,0.1)] px-4 py-3 transition-colors hover:from-[rgba(255,185,0,0.25)] hover:to-[rgba(255,99,126,0.25)] cursor-pointer"
@@ -204,10 +204,10 @@ export function TiersClient({ characters }: TiersClientProps) {
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm md:text-base font-bold text-[#fafafa]">人気キャラランキング</span>
-            <span className="text-[10px] md:text-xs text-[#9e99a7]">投票で決まる最強キャラをチェック</span>
+            <span className="block text-sm md:text-base font-bold text-text-primary">人気キャラランキング</span>
+            <span className="text-[10px] md:text-xs text-text-muted">投票で決まる最強キャラをチェック</span>
           </div>
-          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </Link>
@@ -224,10 +224,10 @@ export function TiersClient({ characters }: TiersClientProps) {
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm md:text-base font-bold text-[#fafafa]">人気編成ランキング</span>
-            <span className="text-[10px] md:text-xs text-[#9e99a7]">人気のパーティ編成をチェックしよう</span>
+            <span className="block text-sm md:text-base font-bold text-text-primary">人気編成ランキング</span>
+            <span className="text-[10px] md:text-xs text-text-muted">人気のパーティ編成をチェックしよう</span>
           </div>
-          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </Link>

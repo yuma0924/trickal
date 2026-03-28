@@ -27,7 +27,7 @@ export function CharacterCard({
     <Link
       href={`/characters/${slug}`}
       className={cn(
-        "flex flex-col overflow-clip bg-[#241b35] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1)] transition-all hover:scale-[1.02] hover:brightness-110 cursor-pointer",
+        "flex flex-col overflow-clip bg-bg-card shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1)] transition-all hover:scale-[1.02] hover:brightness-110 cursor-pointer",
         className
       )}
     >
@@ -42,7 +42,7 @@ export function CharacterCard({
             loading="lazy"
           />
         ) : (
-          <div className="flex aspect-square w-full items-center justify-center bg-[#2a1f3d] text-sm text-[#8b7aab]">
+          <div className="flex aspect-square w-full items-center justify-center bg-bg-tertiary text-sm text-text-muted">
             {name.charAt(0)}
           </div>
         )}
@@ -81,7 +81,7 @@ export function CharacterCard({
               border: "1.2px solid rgba(249,168,212,0.1)",
             }}
           >
-            <span className="text-[10px] md:text-xs font-bold text-[#a893c0]">{rank}</span>
+            <span className="text-[10px] md:text-xs font-bold text-text-tertiary">{rank}</span>
           </div>
         )}
         {/* ★評価オーバーレイ (左下) */}
@@ -102,8 +102,8 @@ export function CharacterCard({
           </div>
         )}
       </div>
-      <div className="bg-[rgba(36,27,53,0.95)] px-1 py-1.5">
-        <p className="truncate text-center text-[11px] md:text-xs font-bold leading-tight text-[#fafafa]">
+      <div className="bg-bg-card-alpha-heavy px-1 py-1.5">
+        <p className="truncate text-center text-[11px] md:text-xs font-bold leading-tight text-text-primary">
           {name}
         </p>
       </div>

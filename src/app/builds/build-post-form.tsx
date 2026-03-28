@@ -381,7 +381,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
               setFormMode(newMode);
               onModeChange?.(newMode);
             }}
-            className="w-full appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-[rgba(36,27,53,0.8)] px-4 py-2.5 pr-9 text-sm font-bold text-[#fafafa] cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
+            className="w-full appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-bg-card-alpha px-4 py-2.5 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
           >
             {MODE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -389,7 +389,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
               </option>
             ))}
           </select>
-          <svg className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
         </div>
@@ -408,7 +408,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                   setFormMode(newMode);
                   onModeChange?.(newMode);
                 }}
-                className="appearance-none rounded-[12px] border border-[rgba(249,168,212,0.2)] bg-[rgba(36,27,53,0.8)] px-4 py-2 pr-9 text-sm font-bold text-[#fafafa] cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
+                className="appearance-none rounded-[12px] border border-[rgba(249,168,212,0.2)] bg-bg-card-alpha px-4 py-2 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
               >
                 {MODE_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -416,7 +416,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                   </option>
                 ))}
               </select>
-              <svg className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
             </div>
@@ -435,7 +435,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                       "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer",
                       active
                         ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-                        : "bg-[#1a1225]"
+                        : "bg-bg-input"
                     )}
                     style={{
                       border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
@@ -473,7 +473,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                       "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer",
                       active
                         ? "bg-[rgba(56,189,248,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-                        : "bg-[#1a1225]"
+                        : "bg-bg-input"
                     )}
                     style={{
                       border: `1.2px solid ${active ? "rgba(56,189,248,0.4)" : "rgba(249,168,212,0.1)"}`,
@@ -525,17 +525,17 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                 />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1">
-                    <p className="truncate text-sm font-bold text-[#fafafa]">{selectedChar.name}</p>
+                    <p className="truncate text-sm font-bold text-text-primary">{selectedChar.name}</p>
                     {selectedChar.position && POSITION_ICON_MAP[selectedChar.position] && (
                       <Image src={POSITION_ICON_MAP[selectedChar.position]} alt={selectedChar.position} width={16} height={16} className="shrink-0" />
                     )}
                   </div>
-                  <p className="text-xs text-[#8b7aab]">右のスロットをタップして配置</p>
+                  <p className="text-xs text-text-muted">右のスロットをタップして配置</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setSelectedChar(null)}
-                  className="shrink-0 text-xs text-[#8b7aab] hover:text-[#fafafa] cursor-pointer"
+                  className="shrink-0 text-xs text-text-muted hover:text-text-primary cursor-pointer"
                 >
                   キャンセル
                 </button>
@@ -556,7 +556,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                 <button
                   type="button"
                   onClick={handleClearAll}
-                  className="rounded-lg border border-[rgba(249,168,212,0.15)] bg-[rgba(42,33,62,0.5)] px-2.5 py-1 text-[11px] font-bold text-[#8b7aab] transition-colors hover:border-[rgba(255,99,126,0.4)] hover:text-[#fda4af] cursor-pointer"
+                  className="rounded-lg border border-border-primary bg-[rgba(42,33,62,0.5)] px-2.5 py-1 text-[11px] font-bold text-text-muted transition-colors hover:border-[rgba(255,99,126,0.4)] hover:text-[#fda4af] cursor-pointer"
                 >
                   全解除
                 </button>
@@ -569,7 +569,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
         <div className="md:flex md:gap-4">
         <div className="md:flex-1">
         {/* キャラグリッド */}
-        <div className="max-h-52 overflow-y-auto rounded-xl border border-[rgba(249,168,212,0.1)] bg-[rgba(42,33,62,0.5)] p-2 md:max-h-80">
+        <div className="max-h-52 overflow-y-auto rounded-xl border border-border-primary bg-[rgba(42,33,62,0.5)] p-2 md:max-h-80">
           {filteredCharacters.length === 0 ? (
             <p className="py-4 text-center text-xs text-text-muted">
               キャラクターが見つかりません
@@ -599,7 +599,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                       size="md"
                       className="!h-14 !w-14"
                     />
-                    <span className="max-w-14 truncate text-center text-[8px] font-bold text-[#a893c0]">
+                    <span className="max-w-14 truncate text-center text-[8px] font-bold text-text-tertiary">
                       {char.name}
                     </span>
                     {/* チェックマーク */}
@@ -638,7 +638,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
           <button
             type="button"
             onClick={handleClearAll}
-            className="rounded-lg border border-[rgba(249,168,212,0.15)] bg-[rgba(42,33,62,0.5)] px-2.5 py-1 text-[11px] font-bold text-[#8b7aab] transition-colors hover:border-[rgba(255,99,126,0.4)] hover:text-[#fda4af] cursor-pointer"
+            className="rounded-lg border border-border-primary bg-[rgba(42,33,62,0.5)] px-2.5 py-1 text-[11px] font-bold text-text-muted transition-colors hover:border-[rgba(255,99,126,0.4)] hover:text-[#fda4af] cursor-pointer"
           >
             全解除
           </button>
@@ -648,15 +648,15 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
 
         {/* 配置グリッド（PC: 右カラム） */}
         <div className="mt-2 md:mt-0 md:w-64 md:shrink-0">
-        <div className="overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.1)]">
+        <div className="overflow-hidden rounded-[14px] border border-border-primary">
           {/* 列ヘッダー */}
-          <div className="grid grid-cols-3 bg-[rgba(42,33,62,0.8)]">
+          <div className="grid grid-cols-3 bg-bg-inset">
             {POSITION_LABELS.map((label, i) => (
               <span
                 key={label}
                 className={cn(
-                  "py-1.5 text-center text-[9px] font-bold text-[#a893c0]",
-                  i < 2 && "border-r border-[rgba(249,168,212,0.05)]"
+                  "py-1.5 text-center text-[9px] font-bold text-text-tertiary",
+                  i < 2 && "border-r border-border-secondary"
                 )}
               >
                 {label}
@@ -670,7 +670,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
               className={cn(
                 "grid grid-cols-3",
                 rowIdx < rowCount - 1 &&
-                  "border-b border-[rgba(249,168,212,0.05)]"
+                  "border-b border-border-secondary"
               )}
             >
               {POSITION_LABELS.map((_, colIdx) => {
@@ -686,7 +686,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                     className={cn(
                       "flex flex-col items-center gap-0.5 py-1.5 transition-all cursor-pointer",
                       colIdx < 2 &&
-                        "border-r border-[rgba(249,168,212,0.05)]",
+                        "border-r border-border-secondary",
                       selectedSlot === slotIndex && "bg-[rgba(56,189,248,0.15)]",
                       placeable && selectedSlot !== slotIndex && "bg-[rgba(56,189,248,0.08)]",
                       !placeable && isMatchingColumn(slotIndex) && char && "bg-[rgba(56,189,248,0.06)]",
@@ -708,11 +708,11 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                           "flex h-14 w-14 items-center justify-center rounded-lg border-2 border-dashed",
                           placeable
                             ? "border-[rgba(56,189,248,0.5)] bg-[rgba(56,189,248,0.05)]"
-                            : "border-[rgba(249,168,212,0.15)]"
+                            : "border-border-primary"
                         )}
                       >
                         <svg
-                          className="h-4 w-4 text-[#8b7aab]/40"
+                          className="h-4 w-4 text-text-muted/40"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"

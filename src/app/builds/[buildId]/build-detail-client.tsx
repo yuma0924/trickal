@@ -340,14 +340,14 @@ export function BuildDetailClient({
       <div className={cn(
         "relative rounded-2xl border p-4 md:max-w-xl",
         isTopRank
-          ? "border-[rgba(252,211,77,0.5)] bg-[rgba(36,27,53,0.8)]"
+          ? "border-[rgba(252,211,77,0.5)] bg-bg-card-alpha"
           : isSecondRank
-            ? "border-[rgba(192,192,210,0.5)] bg-[rgba(36,27,53,0.8)]"
-            : "border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)]",
+            ? "border-[rgba(192,192,210,0.5)] bg-bg-card-alpha"
+            : "border-border-primary bg-gradient-to-b from-bg-card-alpha to-bg-card-alpha-lighter",
         karmaClass
       )}>
         {(isTopRank || isSecondRank) && (
-          <div className="absolute -top-3 left-3 flex items-center gap-1 rounded-full bg-[#1a1225] px-2 py-0.5 md:gap-1.5 md:px-2.5 md:py-1">
+          <div className="absolute -top-3 left-3 flex items-center gap-1 rounded-full bg-bg-input px-2 py-0.5 md:gap-1.5 md:px-2.5 md:py-1">
             <svg className={cn("h-3.5 w-3.5 md:h-4 md:w-4", isTopRank ? "text-[#fcd34d]" : "text-[#c0c0d2]")} viewBox="0 0 24 24" fill="currentColor">
               <path d="M2 20h2c.55 0 1-.45 1-1v-9c0-.55-.45-1-1-1H2v11zm19.83-7.12c.11-.25.17-.52.17-.8V11c0-1.1-.9-2-2-2h-5.5l.92-4.65c.05-.22.02-.46-.08-.66-.23-.45-.52-.86-.88-1.22L14 2 7.59 8.41C7.21 8.79 7 9.3 7 9.83v7.84C7 18.95 8.05 20 9.34 20h8.11c.7 0 1.36-.37 1.72-.97l2.66-6.15z" />
             </svg>
@@ -356,7 +356,7 @@ export function BuildDetailClient({
         )}
         {/* タイトル + 属性アイコン + モード + 通報 */}
         <div className="mb-3 flex items-center justify-between gap-2">
-          <h1 className="min-w-0 truncate text-sm font-bold text-[#fafafa]">
+          <h1 className="min-w-0 truncate text-sm font-bold text-text-primary">
             {build.title || MODE_LABEL_MAP[build.mode]}
           </h1>
           <div className="flex shrink-0 items-center gap-1.5">
@@ -375,12 +375,12 @@ export function BuildDetailClient({
                   />
                 ) : null
               ))}
-            <span className="rounded-md bg-[rgba(36,27,53,0.5)] px-2 py-0.5 text-[10px] font-bold text-[#8b7aab]">
+            <span className="rounded-md bg-bg-card-alpha-light px-2 py-0.5 text-[10px] font-bold text-text-muted">
               {MODE_LABEL_MAP[build.mode]}
             </span>
             <button
               onClick={() => setReportTarget({ type: "build", id: build.id })}
-              className="text-[10px] text-[#8b7aab]/50 hover:text-thumbs-down cursor-pointer"
+              className="text-[10px] text-text-muted/50 hover:text-thumbs-down cursor-pointer"
             >
               通報
             </button>
@@ -399,22 +399,22 @@ export function BuildDetailClient({
             [0, 1, 2].some((colIdx) => slots[colIdx * rowCount + rowIdx] !== null);
 
           return (
-            <div className="mb-2 overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.15)]">
-              <div className="grid grid-cols-3 bg-[rgba(42,33,62,0.8)]">
-                <span className="border-r border-[rgba(249,168,212,0.15)] py-1 text-center text-[10px] font-bold text-[#a893c0]">後列</span>
-                <span className="border-r border-[rgba(249,168,212,0.15)] py-1 text-center text-[10px] font-bold text-[#a893c0]">中列</span>
-                <span className="py-1 text-center text-[10px] font-bold text-[#a893c0]">前列</span>
+            <div className="mb-2 overflow-hidden rounded-[14px] border border-border-primary">
+              <div className="grid grid-cols-3 bg-bg-inset">
+                <span className="border-r border-border-primary py-1 text-center text-[10px] font-bold text-text-tertiary">後列</span>
+                <span className="border-r border-border-primary py-1 text-center text-[10px] font-bold text-text-tertiary">中列</span>
+                <span className="py-1 text-center text-[10px] font-bold text-text-tertiary">前列</span>
               </div>
               {Array.from({ length: rowCount }).map((_, rowIdx) => {
                 if (!hasContent(rowIdx)) return null;
                 return (
-                  <div key={rowIdx} className={cn("grid grid-cols-3", "border-b border-[rgba(249,168,212,0.15)] last:border-b-0")}>
+                  <div key={rowIdx} className={cn("grid grid-cols-3", "border-b border-border-primary last:border-b-0")}>
                     {[0, 1, 2].map((colIdx) => {
                       const char = slots[colIdx * rowCount + rowIdx];
                       return (
                         <div key={colIdx} className={cn(
                           "flex flex-col items-center gap-0.5 pt-2 pb-1.5",
-                          colIdx < 2 && "border-r border-[rgba(249,168,212,0.15)]"
+                          colIdx < 2 && "border-r border-border-primary"
                         )}>
                           {char ? (
                             <Link href={char.slug ? `/characters/${char.slug}` : "#"} className="flex flex-col items-center gap-0.5">
@@ -424,7 +424,7 @@ export function BuildDetailClient({
                                 isHidden={char.is_hidden}
                                 size="md"
                               />
-                              <span className="max-w-20 truncate text-center text-[10px] font-bold text-[#a893c0]">
+                              <span className="max-w-20 truncate text-center text-[10px] font-bold text-text-tertiary">
                                 {char.name}
                               </span>
                             </Link>
@@ -442,20 +442,20 @@ export function BuildDetailClient({
         })()}
 
         {/* コメント */}
-        <div className="mx-0.5 flex flex-col rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.15)] px-2.5 py-2 min-h-[76px]">
-          <p className="whitespace-pre-wrap text-[11px] md:text-xs text-[#fafafa] leading-relaxed">
+        <div className="mx-0.5 flex flex-col rounded-[10px] bg-bg-inset border border-border-primary px-2.5 py-2 min-h-[76px]">
+          <p className="whitespace-pre-wrap text-[11px] md:text-xs text-text-primary leading-relaxed">
             {build.comment}
           </p>
           <div className="mt-auto pt-1">
             {build.display_name && (
-              <span className="text-[10px] md:text-xs text-[#8b7aab]">— {build.display_name}</span>
+              <span className="text-[10px] md:text-xs text-text-muted">— {build.display_name}</span>
             )}
           </div>
         </div>
 
         {/* フッター: 日時 + リアクション */}
         <div className="mt-2 flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs md:text-sm text-[#8b7aab]">
+          <div className="flex items-center gap-1.5 text-xs md:text-sm text-text-muted">
             <span>{formatDate(build.updated_at)}</span>
           </div>
           <ThumbsUpDown
@@ -474,14 +474,14 @@ export function BuildDetailClient({
             <div className="flex items-center justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2">
-                  <svg className="h-4 w-4 text-[#fafafa]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="h-4 w-4 text-text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
-                  <span className="text-sm font-bold text-[#fafafa]">
+                  <span className="text-sm font-bold text-text-primary">
                     この編成にコメントする
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-[#8b7aab]">感想や改善点を共有しよう</p>
+                <p className="mt-1 text-xs text-text-muted">感想や改善点を共有しよう</p>
               </div>
               <button
                 onClick={() => setCommentFormOpen(true)}
@@ -497,7 +497,7 @@ export function BuildDetailClient({
         ) : (
           <div className="rounded-2xl border border-border-primary bg-bg-card p-4">
             <div className="mb-3 flex items-center justify-between">
-              <span className="text-sm font-bold text-[#fafafa]">コメントを投稿</span>
+              <span className="text-sm font-bold text-text-primary">コメントを投稿</span>
               <button
                 onClick={() => setCommentFormOpen(false)}
                 className="flex h-7 w-7 items-center justify-center rounded-full text-text-muted hover:bg-bg-tertiary hover:text-text-primary cursor-pointer"
@@ -544,10 +544,10 @@ export function BuildDetailClient({
       <section>
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <svg className="h-4 w-4 md:h-5 md:w-5 text-[#c0bbc8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="h-4 w-4 md:h-5 md:w-5 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
-            <span className="text-sm md:text-base font-bold text-[#fafafa]">
+            <span className="text-sm md:text-base font-bold text-text-primary">
               コメント ({comments.length})
             </span>
           </div>
@@ -560,7 +560,7 @@ export function BuildDetailClient({
                   "flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs md:text-sm md:px-3 md:py-1.5 font-medium transition-colors cursor-pointer",
                   sort === tab.value
                     ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
-                    : "border-[rgba(139,122,171,0.3)] text-[#8b7aab] hover:text-[#c4b5d4]"
+                    : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-[#c4b5d4]"
                 )}
               >
                 {tab.value === "thumbs_up" && (
@@ -660,7 +660,7 @@ export function BuildDetailClient({
               >
                 {/* タイトル + 性格アイコン + モード */}
                 <div className="mb-2 flex items-center justify-between gap-2">
-                  <span className="min-w-0 truncate text-sm font-bold text-[#fafafa]">
+                  <span className="min-w-0 truncate text-sm font-bold text-text-primary">
                     {sb.title || MODE_LABEL_MAP[sb.mode]}
                   </span>
                   <div className="flex shrink-0 items-center gap-1.5">
@@ -679,7 +679,7 @@ export function BuildDetailClient({
                           />
                         ) : null
                       ))}
-                    <span className="rounded-md bg-[rgba(36,27,53,0.5)] px-2 py-0.5 text-[10px] font-bold text-[#8b7aab]">
+                    <span className="rounded-md bg-bg-card-alpha-light px-2 py-0.5 text-[10px] font-bold text-text-muted">
                       {MODE_LABEL_MAP[sb.mode]}
                     </span>
                   </div>
@@ -697,7 +697,7 @@ export function BuildDetailClient({
                   ))}
                 </div>
                 {/* 日時 + いいね数 */}
-                <div className="mt-1 flex items-center justify-between text-xs text-[#8b7aab]">
+                <div className="mt-1 flex items-center justify-between text-xs text-text-muted">
                   <span>{formatDate(sb.updated_at)}</span>
                   <span className="flex items-center gap-0.5 text-thumbs-up">
                     <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor">
@@ -725,7 +725,7 @@ export function BuildDetailClient({
 
       {/* ページ下部ナビリンク */}
       <section className="!mt-10 space-y-3">
-        <p className="text-xs md:text-sm font-bold text-[#c0bbc8]">他のランキングもチェック</p>
+        <p className="text-xs md:text-sm font-bold text-text-tertiary">他のランキングもチェック</p>
         <Link
           href="/ranking"
           className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(255,185,0,0.15)] to-[rgba(255,99,126,0.15)] border border-[rgba(255,185,0,0.1)] px-4 py-3 transition-colors hover:from-[rgba(255,185,0,0.25)] hover:to-[rgba(255,99,126,0.25)] cursor-pointer"
@@ -739,10 +739,10 @@ export function BuildDetailClient({
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm md:text-base font-bold text-[#fafafa]">人気キャラランキング</span>
-            <span className="text-[10px] md:text-xs text-[#9e99a7]">投票で決まる最強キャラをチェック</span>
+            <span className="block text-sm md:text-base font-bold text-text-primary">人気キャラランキング</span>
+            <span className="text-[10px] md:text-xs text-text-muted">投票で決まる最強キャラをチェック</span>
           </div>
-          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </Link>
@@ -766,10 +766,10 @@ export function BuildDetailClient({
             </svg>
           </span>
           <div className="flex-1">
-            <span className="block text-sm md:text-base font-bold text-[#fafafa]">みんなのティア表</span>
-            <span className="text-[10px] md:text-xs text-[#9e99a7]">キャラをランク付けして共有</span>
+            <span className="block text-sm md:text-base font-bold text-text-primary">みんなのティア表</span>
+            <span className="text-[10px] md:text-xs text-text-muted">キャラをランク付けして共有</span>
           </div>
-          <svg className="h-4 w-4 shrink-0 text-[#9e99a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </Link>

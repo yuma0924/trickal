@@ -198,7 +198,7 @@ export function BuildsClient() {
           <select
             value={mode}
             onChange={(e) => setMode(e.target.value as Mode)}
-            className="w-44 appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-[rgba(36,27,53,0.8)] px-4 py-2.5 pr-9 text-sm font-bold text-[#fafafa] cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
+            className="w-44 appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-bg-card-alpha px-4 py-2.5 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
           >
             {MODE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -206,7 +206,7 @@ export function BuildsClient() {
               </option>
             ))}
           </select>
-          <svg className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
         </div>
@@ -248,8 +248,8 @@ export function BuildsClient() {
             className={cn(
               "shrink-0 rounded-[10px] px-2.5 py-1.5 text-[11px] font-bold transition-colors cursor-pointer",
               elementFilters.size === 0
-                ? "bg-[rgba(255,99,126,0.15)] text-[#fafafa] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-                : "bg-[#1a1225] text-[#a893c0]"
+                ? "bg-[rgba(255,99,126,0.15)] text-text-primary shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+                : "bg-bg-input text-text-tertiary"
             )}
             style={{
               border: `1.2px solid ${elementFilters.size === 0 ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
@@ -277,7 +277,7 @@ export function BuildsClient() {
                   "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer",
                   active
                     ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-                    : "bg-[#1a1225]"
+                    : "bg-bg-input"
                 )}
                 style={{
                   border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
@@ -305,7 +305,7 @@ export function BuildsClient() {
                   "rounded-full border px-2.5 py-1 text-xs md:text-sm font-medium transition-colors cursor-pointer",
                   sortKey === opt.value
                     ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
-                    : "border-[rgba(139,122,171,0.3)] text-[#8b7aab] hover:text-[#c4b5d4]"
+                    : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-[#c4b5d4]"
                 )}
               >
                 {opt.label}
@@ -321,7 +321,7 @@ export function BuildsClient() {
           <select
             value={mode}
             onChange={(e) => setMode(e.target.value as Mode)}
-            className="appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-[rgba(36,27,53,0.8)] px-4 py-2 pr-9 text-sm font-bold text-[#fafafa] cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
+            className="appearance-none rounded-[14px] border border-[rgba(249,168,212,0.2)] bg-bg-card-alpha px-4 py-2 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-[rgba(244,114,182,0.4)] focus:outline-none"
           >
             {MODE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -329,7 +329,7 @@ export function BuildsClient() {
               </option>
             ))}
           </select>
-          <svg className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#a893c0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
         </div>
@@ -339,8 +339,8 @@ export function BuildsClient() {
             className={cn(
               "shrink-0 rounded-[10px] px-2.5 py-1.5 text-xs font-bold transition-colors cursor-pointer",
               elementFilters.size === 0
-                ? "bg-[rgba(255,99,126,0.15)] text-[#fafafa] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-                : "bg-[#1a1225] text-[#a893c0]"
+                ? "bg-[rgba(255,99,126,0.15)] text-text-primary shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
+                : "bg-bg-input text-text-tertiary"
             )}
             style={{
               border: `1.2px solid ${elementFilters.size === 0 ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
@@ -365,7 +365,7 @@ export function BuildsClient() {
                   "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer",
                   active
                     ? "bg-[rgba(255,99,126,0.15)] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-                    : "bg-[#1a1225]"
+                    : "bg-bg-input"
                 )}
                 style={{
                   border: `1.2px solid ${active ? "rgba(255,99,126,0.4)" : "rgba(249,168,212,0.1)"}`,
@@ -394,7 +394,7 @@ export function BuildsClient() {
                     "rounded-full border px-3 py-1.5 text-sm font-medium transition-colors cursor-pointer",
                     sortKey === opt.value
                       ? "border-[rgba(251,100,182,0.4)] bg-[rgba(251,100,182,0.12)] text-[#fb64b6]"
-                      : "border-[rgba(139,122,171,0.3)] text-[#8b7aab] hover:text-[#c4b5d4]"
+                      : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-[#c4b5d4]"
                   )}
                 >
                   {opt.label}
@@ -485,15 +485,15 @@ function BuildCard({
       className={cn(
         "relative flex flex-col rounded-2xl border p-4",
         isTop
-          ? "border-[rgba(252,211,77,0.5)] bg-[rgba(36,27,53,0.8)]"
+          ? "border-[rgba(252,211,77,0.5)] bg-bg-card-alpha"
           : isSecond
-            ? "border-[rgba(192,192,210,0.5)] bg-[rgba(36,27,53,0.8)]"
-            : "border-[rgba(249,168,212,0.1)] bg-gradient-to-b from-[rgba(36,27,53,0.8)] to-[rgba(36,27,53,0.4)]",
+            ? "border-[rgba(192,192,210,0.5)] bg-bg-card-alpha"
+            : "border-border-primary bg-gradient-to-b from-bg-card-alpha to-bg-card-alpha-lighter",
         karmaClass
       )}
     >
       {(isTop || isSecond) && (
-        <div className="absolute -top-3 left-3 flex items-center gap-1 rounded-full bg-[#1a1225] px-2 py-0.5 md:gap-1.5 md:px-2.5 md:py-1">
+        <div className="absolute -top-3 left-3 flex items-center gap-1 rounded-full bg-bg-input px-2 py-0.5 md:gap-1.5 md:px-2.5 md:py-1">
           <svg className={cn("h-3.5 w-3.5 md:h-4 md:w-4", isTop ? "text-[#fcd34d]" : "text-[#c0c0d2]")} viewBox="0 0 24 24" fill="currentColor">
             <path d="M2 20h2c.55 0 1-.45 1-1v-9c0-.55-.45-1-1-1H2v11zm19.83-7.12c.11-.25.17-.52.17-.8V11c0-1.1-.9-2-2-2h-5.5l.92-4.65c.05-.22.02-.46-.08-.66-.23-.45-.52-.86-.88-1.22L14 2 7.59 8.41C7.21 8.79 7 9.3 7 9.83v7.84C7 18.95 8.05 20 9.34 20h8.11c.7 0 1.36-.37 1.72-.97l2.66-6.15z" />
           </svg>
@@ -506,7 +506,7 @@ function BuildCard({
       >
         {/* タイトル + 属性アイコン + モード */}
         <div className="mb-3 flex items-center justify-between gap-2">
-          <span className="min-w-0 truncate text-sm md:text-base font-bold text-[#fafafa]">
+          <span className="min-w-0 truncate text-sm md:text-base font-bold text-text-primary">
             {build.title || MODE_LABEL_MAP[build.mode]}
           </span>
           <div className="flex shrink-0 items-center gap-1.5">
@@ -525,7 +525,7 @@ function BuildCard({
                   />
                 ) : null
               ))}
-            <span className="rounded-md bg-[rgba(36,27,53,0.5)] px-2 py-0.5 text-[10px] md:text-xs font-bold text-[#8b7aab]">
+            <span className="rounded-md bg-bg-card-alpha-light px-2 py-0.5 text-[10px] md:text-xs font-bold text-text-muted">
               {MODE_LABEL_MAP[build.mode]}
             </span>
           </div>
@@ -547,22 +547,22 @@ function BuildCard({
           const visibleRows = Array.from({ length: rowCount }).filter((_, i) => hasContent(i));
 
           return (
-            <div className="mb-2 overflow-hidden rounded-[14px] border border-[rgba(249,168,212,0.15)]">
-              <div className="grid grid-cols-3 bg-[rgba(42,33,62,0.8)]">
-                <span className="border-r border-[rgba(249,168,212,0.15)] py-1 text-center text-[10px] md:text-xs font-bold text-[#a893c0]">後列</span>
-                <span className="border-r border-[rgba(249,168,212,0.15)] py-1 text-center text-[10px] md:text-xs font-bold text-[#a893c0]">中列</span>
-                <span className="py-1 text-center text-[10px] md:text-xs font-bold text-[#a893c0]">前列</span>
+            <div className="mb-2 overflow-hidden rounded-[14px] border border-border-primary">
+              <div className="grid grid-cols-3 bg-bg-inset">
+                <span className="border-r border-border-primary py-1 text-center text-[10px] md:text-xs font-bold text-text-tertiary">後列</span>
+                <span className="border-r border-border-primary py-1 text-center text-[10px] md:text-xs font-bold text-text-tertiary">中列</span>
+                <span className="py-1 text-center text-[10px] md:text-xs font-bold text-text-tertiary">前列</span>
               </div>
               {Array.from({ length: rowCount }).map((_, rowIdx) => {
                 const empty = !hasContent(rowIdx);
                 return (
-                  <div key={rowIdx} className={cn("grid grid-cols-3", "border-b border-[rgba(249,168,212,0.15)] last:border-b-0", empty && "hidden md:grid")}>
+                  <div key={rowIdx} className={cn("grid grid-cols-3", "border-b border-border-primary last:border-b-0", empty && "hidden md:grid")}>
                     {[0, 1, 2].map((colIdx) => {
                       const char = slots[colIdx * rowCount + rowIdx];
                       return (
                         <div key={colIdx} className={cn(
                           "flex flex-col items-center gap-0.5 pt-2 pb-1.5",
-                          colIdx < 2 && "border-r border-[rgba(249,168,212,0.15)]"
+                          colIdx < 2 && "border-r border-border-primary"
                         )}>
                           {char ? (
                             <>
@@ -572,7 +572,7 @@ function BuildCard({
                                 isHidden={char.is_hidden}
                                 size="md"
                               />
-                              <span className="max-w-20 truncate text-center text-[10px] md:text-xs font-bold text-[#a893c0]">
+                              <span className="max-w-20 truncate text-center text-[10px] md:text-xs font-bold text-text-tertiary">
                                 {char.name}
                               </span>
                             </>
@@ -593,14 +593,14 @@ function BuildCard({
         })()}
 
         {/* コメント */}
-        <div className="mx-0.5 flex flex-col rounded-[10px] bg-[rgba(42,33,62,0.8)] border border-[rgba(249,168,212,0.15)] px-2.5 py-2 min-h-[76px]">
-          <p className="whitespace-pre-wrap text-[11px] md:text-xs text-[#fafafa] leading-relaxed line-clamp-3">
+        <div className="mx-0.5 flex flex-col rounded-[10px] bg-bg-inset border border-border-primary px-2.5 py-2 min-h-[76px]">
+          <p className="whitespace-pre-wrap text-[11px] md:text-xs text-text-primary leading-relaxed line-clamp-3">
             {displayComment}
           </p>
           {shouldTruncate && (
             <button
               onClick={(e) => { e.preventDefault(); setExpanded(!expanded); }}
-              className="mt-1 flex items-center gap-1 text-[10px] md:text-xs text-[#a893c0] hover:text-[#fafafa] cursor-pointer"
+              className="mt-1 flex items-center gap-1 text-[10px] md:text-xs text-text-tertiary hover:text-text-primary cursor-pointer"
             >
               <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -610,7 +610,7 @@ function BuildCard({
           )}
           <div className="mt-auto pt-1">
             {build.display_name && (
-              <span className="text-[10px] md:text-xs text-[#8b7aab]">— {build.display_name}</span>
+              <span className="text-[10px] md:text-xs text-text-muted">— {build.display_name}</span>
             )}
           </div>
         </div>
@@ -618,7 +618,7 @@ function BuildCard({
 
       {/* フッター: 日時 + コメント数 + リアクション */}
       <div className="mt-auto pt-2 flex items-center justify-between">
-        <div className="flex items-center gap-1.5 text-xs md:text-sm text-[#8b7aab]">
+        <div className="flex items-center gap-1.5 text-xs md:text-sm text-text-muted">
           <span>{formatDate(build.updated_at)}</span>
           {build.comments_count > 0 && (
             <>
