@@ -956,11 +956,11 @@ export function CharacterDetailClient({
         </Link>
         <Link
           href="/builds"
-          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(251,100,182,0.15)] to-[rgba(255,99,126,0.15)] border border-[rgba(249,168,212,0.1)] px-4 py-3 transition-colors hover:from-[rgba(251,100,182,0.25)] hover:to-[rgba(255,99,126,0.25)] cursor-pointer"
+          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(59,130,246,0.15)] to-[rgba(6,182,212,0.15)] border border-[rgba(59,130,246,0.1)] px-4 py-3 transition-colors hover:from-[rgba(59,130,246,0.25)] hover:to-[rgba(6,182,212,0.25)] cursor-pointer"
         >
           <span
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-            style={{ backgroundImage: "linear-gradient(135deg, #fb64b6, #ff637e)" }}
+            style={{ backgroundImage: "linear-gradient(135deg, #3b82f6, #06b6d4)" }}
           >
             <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
