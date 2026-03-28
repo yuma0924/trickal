@@ -547,10 +547,92 @@ export interface Database {
           },
         ];
       };
+      tier_comments: {
+        Row: {
+          id: string;
+          tier_id: string;
+          user_hash: string;
+          display_name: string | null;
+          body: string;
+          is_deleted: boolean;
+          thumbs_up_count: number;
+          thumbs_down_count: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          tier_id: string;
+          user_hash: string;
+          display_name?: string | null;
+          body: string;
+          is_deleted?: boolean;
+          thumbs_up_count?: number;
+          thumbs_down_count?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          tier_id?: string;
+          user_hash?: string;
+          display_name?: string | null;
+          body?: string;
+          is_deleted?: boolean;
+          thumbs_up_count?: number;
+          thumbs_down_count?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tier_comments_tier_id_fkey";
+            columns: ["tier_id"];
+            isOneToOne: false;
+            referencedRelation: "tiers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      tier_comment_reactions: {
+        Row: {
+          id: string;
+          tier_comment_id: string;
+          user_hash: string;
+          reaction_type: "up" | "down";
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          tier_comment_id: string;
+          user_hash: string;
+          reaction_type: "up" | "down";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          tier_comment_id?: string;
+          user_hash?: string;
+          reaction_type?: "up" | "down";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tier_comment_reactions_tier_comment_id_fkey";
+            columns: ["tier_comment_id"];
+            isOneToOne: false;
+            referencedRelation: "tier_comments";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       reports: {
         Row: {
           id: string;
-          target_type: "comment" | "build" | "build_comment";
+          target_type: "comment" | "build" | "build_comment" | "tier_comment";
           target_id: string;
           user_hash: string;
           reason: string | null;
@@ -559,7 +641,7 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          target_type: "comment" | "build" | "build_comment";
+          target_type: "comment" | "build" | "build_comment" | "tier_comment";
           target_id: string;
           user_hash: string;
           reason?: string | null;
@@ -568,7 +650,7 @@ export interface Database {
         };
         Update: {
           id?: string;
-          target_type?: "comment" | "build" | "build_comment";
+          target_type?: "comment" | "build" | "build_comment" | "tier_comment";
           target_id?: string;
           user_hash?: string;
           reason?: string | null;
@@ -608,3 +690,5 @@ export type Item = Tables<"items">;
 export type Report = Tables<"reports">;
 export type Tier = Tables<"tiers">;
 export type TierReaction = Tables<"tier_reactions">;
+export type TierComment = Tables<"tier_comments">;
+export type TierCommentReaction = Tables<"tier_comment_reactions">;

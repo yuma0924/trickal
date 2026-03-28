@@ -25,8 +25,8 @@ type TierItem = {
 type SortType = "popular" | "newest";
 
 const SORT_TABS: { value: SortType; label: string }[] = [
-  { value: "popular", label: "人気順" },
   { value: "newest", label: "新着順" },
+  { value: "popular", label: "人気順" },
 ];
 
 interface TiersClientProps {
@@ -35,7 +35,7 @@ interface TiersClientProps {
 
 export function TiersClient({ characters }: TiersClientProps) {
   const [tiers, setTiers] = useState<TierItem[]>([]);
-  const [sort, setSort] = useState<SortType>("popular");
+  const [sort, setSort] = useState<SortType>("newest");
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const [nextCursor, setNextCursor] = useState<string | null>(null);

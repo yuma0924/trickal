@@ -51,10 +51,11 @@ export async function POST(request: NextRequest) {
   if (
     target_type !== "comment" &&
     target_type !== "build" &&
-    target_type !== "build_comment"
+    target_type !== "build_comment" &&
+    target_type !== "tier_comment"
   ) {
     return NextResponse.json(
-      { error: "target_type must be 'comment', 'build', or 'build_comment'" },
+      { error: "target_type must be 'comment', 'build', 'build_comment', or 'tier_comment'" },
       { status: 400 }
     );
   }

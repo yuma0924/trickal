@@ -368,7 +368,7 @@ export function RankingClient({
           </span>
           <div className="flex-1">
             <span className="block font-bold text-text-primary">みんなのティア表</span>
-            <span className="text-xs md:text-sm text-text-muted">キャラクターをランク付けして共有しよう</span>
+            <span className="text-xs md:text-sm text-text-muted">キャラをランク付けして共有</span>
           </div>
           <svg className="h-5 w-5 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
