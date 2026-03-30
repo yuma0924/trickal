@@ -84,6 +84,15 @@ export interface RelatedCharacter {
   validVotesCount: number;
 }
 
+export async function generateStaticParams() {
+  const supabase = createAdminClient();
+  const { data } = await supabase
+    .from("characters")
+    .select("slug")
+    .eq("is_hidden", false);
+  return (data ?? []).map((c) => ({ slug: c.slug }));
+}
+
 export default async function CharacterPage({ params }: Props) {
   const { slug } = await params;
   const supabase = createAdminClient();
