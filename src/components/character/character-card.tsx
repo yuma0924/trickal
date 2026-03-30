@@ -39,6 +39,7 @@ export function CharacterCard({
             width={164}
             height={164}
             className="aspect-square w-full object-cover"
+            sizes="(max-width: 768px) 25vw, 14vw"
             loading="lazy"
           />
         ) : (

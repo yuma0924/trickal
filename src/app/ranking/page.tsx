@@ -3,7 +3,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import { RankingClient } from "./ranking-client";
 import type { Element } from "@/lib/constants";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "人気キャラランキング | みんなで決めるトリッカルランキング",
@@ -50,18 +50,17 @@ export interface TrendingCharacter {
 export default async function RankingPage() {
   const supabase = await createServerClient();
 
-  // ランキングデータ + キャラ情報を取得
-  const { data: rankings } = await supabase
-    .from("character_rankings")
-    .select(
-      "character_id, avg_rating, valid_votes_count, board_comments_count, rank"
-    )
-    .order("rank", { ascending: true, nullsFirst: false });
-
-  const { data: characters } = await supabase
-    .from("characters")
-    .select("id, slug, name, element, image_url")
-    .eq("is_hidden", false);
+  // ランキングデータ + キャラ情報を並列取得
+  const [{ data: rankings }, { data: characters }] = await Promise.all([
+    supabase
+      .from("character_rankings")
+      .select("character_id, avg_rating, valid_votes_count, board_comments_count, rank")
+      .order("rank", { ascending: true, nullsFirst: false }),
+    supabase
+      .from("characters")
+      .select("id, slug, name, element, image_url")
+      .eq("is_hidden", false),
+  ]);
 
   // キャラマップ
   const charMap = new Map<

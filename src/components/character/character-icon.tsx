@@ -42,6 +42,7 @@ export function CharacterIcon({
           width={imageSize}
           height={imageSize}
           className="pointer-events-none h-full w-full object-cover"
+          sizes="(max-width: 768px) 48px, 64px"
           loading="lazy"
         />
       ) : (

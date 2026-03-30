@@ -7,6 +7,8 @@ import type { Element } from "@/lib/constants";
 import { HomeSearchSection } from "./home-search-section";
 import { HomeBuildsSection } from "./home-builds-section";
 
+export const revalidate = 600;
+
 interface RankedChar {
   id: string;
   slug: string;
@@ -172,21 +174,20 @@ function TeamIcon({ className }: { className?: string }) {
 export default async function Home() {
   const supabase = await createServerClient();
 
-  // --- 第1段: 人気キャラランキング (上位15件) ---
-  const { data: rankings } = await supabase
-    .from("character_rankings")
-    .select(
-      "character_id, avg_rating, valid_votes_count, board_comments_count, rank"
-    )
-    .not("rank", "is", null)
-    .gte("valid_votes_count", 1)
-    .order("rank", { ascending: true })
-    .limit(15);
-
-  const { data: characters } = await supabase
-    .from("characters")
-    .select("id, slug, name, element, role, position, attack_type, race, rarity, image_url")
-    .eq("is_hidden", false);
+  // --- 第1段: 人気キャラランキング (上位15件) + キャラ情報を並列取得 ---
+  const [{ data: rankings }, { data: characters }] = await Promise.all([
+    supabase
+      .from("character_rankings")
+      .select("character_id, avg_rating, valid_votes_count, board_comments_count, rank")
+      .not("rank", "is", null)
+      .gte("valid_votes_count", 1)
+      .order("rank", { ascending: true })
+      .limit(15),
+    supabase
+      .from("characters")
+      .select("id, slug, name, element, role, position, attack_type, race, rarity, image_url")
+      .eq("is_hidden", false),
+  ]);
 
   const charMap = new Map<
     string,
@@ -307,7 +308,8 @@ export default async function Home() {
     .from("comments")
     .select("character_id, user_hash, body, display_name, thumbs_up_count, created_at")
     .eq("is_deleted", false)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(500);
 
   const recentCountMap = new Map<string, number>();
   const totalCountMap = new Map<string, number>();
@@ -389,13 +391,27 @@ export default async function Home() {
     .filter((c): c is TrendingChar => c !== null);
 
   // --- みんなのティア表（人気上位2件）---
-  const { data: topTiers } = await supabase
-    .from("tiers")
-    .select("id, title, display_name, data, likes_count, created_at")
-    .eq("is_deleted", false)
-    .order("likes_count", { ascending: false })
-    .order("created_at", { ascending: false })
-    .limit(2);
+  // --- ティア・編成・検索キャラを並列取得 ---
+  const [{ data: topTiers }, { data: topBuilds }, { data: allChars }] = await Promise.all([
+    supabase
+      .from("tiers")
+      .select("id, title, display_name, data, likes_count, created_at")
+      .eq("is_deleted", false)
+      .order("likes_count", { ascending: false })
+      .order("created_at", { ascending: false })
+      .limit(2),
+    supabase
+      .from("builds")
+      .select("id, mode, members, element_label, title, display_name, comment, likes_count, dislikes_count, updated_at, build_comments(count)")
+      .eq("is_deleted", false)
+      .order("likes_count", { ascending: false })
+      .order("updated_at", { ascending: false })
+      .limit(30),
+    supabase
+      .from("characters")
+      .select("id, slug, name, element, role, rarity, race, position, image_url")
+      .eq("is_hidden", false),
+  ]);
 
   type TierPreview = {
     id: string;
@@ -414,23 +430,6 @@ export default async function Home() {
     likesCount: t.likes_count,
     createdAt: t.created_at,
   }));
-
-  // --- 第3段: 編成ランキング（フィルター用に多めに取得）---
-  const { data: topBuilds } = await supabase
-    .from("builds")
-    .select(
-      "id, mode, members, element_label, title, display_name, comment, likes_count, dislikes_count, updated_at, build_comments(count)"
-    )
-    .eq("is_deleted", false)
-    .order("likes_count", { ascending: false })
-    .order("updated_at", { ascending: false })
-    .limit(30);
-
-  // --- 第4段: キャラ検索・フィルターのデータ ---
-  const { data: allChars } = await supabase
-    .from("characters")
-    .select("id, slug, name, element, role, rarity, race, position, image_url")
-    .eq("is_hidden", false);
 
   const searchCharacters = (allChars ?? []).map((c) => ({
     id: c.id,

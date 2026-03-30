@@ -12,6 +12,8 @@ const ELEMENT_ICON_MAP: Record<string, string> = {
   憂鬱: "/icons/melancholy.png",
 };
 
+export const revalidate = 600;
+
 export const metadata: Metadata = {
   title: "人気編成ランキング | みんなで決めるトリッカルランキング",
   description:
@@ -57,15 +59,16 @@ export default async function BuildsPage() {
     }
   }
 
-  // ランキング情報取得（話題キャラの評価表示用）
-  const { data: rankings } = await supabase
-    .from("character_rankings")
-    .select("character_id, avg_rating, valid_votes_count");
-
-  const { data: characters } = await supabase
-    .from("characters")
-    .select("id, slug, name, element, image_url")
-    .eq("is_hidden", false);
+  // ランキング + キャラ情報を並列取得
+  const [{ data: rankings }, { data: characters }] = await Promise.all([
+    supabase
+      .from("character_rankings")
+      .select("character_id, avg_rating, valid_votes_count"),
+    supabase
+      .from("characters")
+      .select("id, slug, name, element, image_url")
+      .eq("is_hidden", false),
+  ]);
 
   const charMap = new Map<
     string,
