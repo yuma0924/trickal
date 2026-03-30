@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { cache } from "react";
+import { cache, Suspense } from "react";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import { BuildDetailClient } from "./build-detail-client";
@@ -86,6 +86,15 @@ export async function generateMetadata({
     title: `${title} | 人気編成ランキング | みんなで決めるトリッカルランキング`,
     description: `トリッカルの編成「${title}」の詳細・コメント`,
   };
+}
+
+export async function generateStaticParams() {
+  const supabase = createAdminClient();
+  const { data } = await supabase
+    .from("builds")
+    .select("id")
+    .eq("is_deleted", false);
+  return (data ?? []).map((b) => ({ buildId: b.id }));
 }
 
 export default async function BuildDetailPage({
@@ -181,23 +190,25 @@ export default async function BuildDetailPage({
   }));
 
   return (
-    <BuildDetailClient
-      build={{
-        id: build.id,
-        mode: build.mode,
-        party_size: build.party_size,
-        element_label: build.element_label,
-        title: build.title,
-        display_name: build.display_name,
-        comment: build.comment,
-        likes_count: build.likes_count,
-        dislikes_count: build.dislikes_count,
-        created_at: build.created_at,
-        updated_at: build.updated_at,
-        members: build.members,
-        members_detail: membersDetail,
-      }}
-      similarBuilds={similarBuilds}
-    />
+    <Suspense>
+      <BuildDetailClient
+        build={{
+          id: build.id,
+          mode: build.mode,
+          party_size: build.party_size,
+          element_label: build.element_label,
+          title: build.title,
+          display_name: build.display_name,
+          comment: build.comment,
+          likes_count: build.likes_count,
+          dislikes_count: build.dislikes_count,
+          created_at: build.created_at,
+          updated_at: build.updated_at,
+          members: build.members,
+          members_detail: membersDetail,
+        }}
+        similarBuilds={similarBuilds}
+      />
+    </Suspense>
   );
 }
