@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { BuildDetailClient } from "./build-detail-client";
 
 
+export const revalidate = 600;
+
 type CharacterInfo = {
   id: string;
   name: string;
