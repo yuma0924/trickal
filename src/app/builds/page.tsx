@@ -31,7 +31,8 @@ export default async function BuildsPage() {
     .from("comments")
     .select("character_id, user_hash, body, display_name, thumbs_up_count")
     .eq("is_deleted", false)
-    .gte("created_at", twentyFourHoursAgo);
+    .gte("created_at", twentyFourHoursAgo)
+    .limit(200);
 
   const trendingMap = new Map<string, number>();
   const userCharCountMap = new Map<string, number>();

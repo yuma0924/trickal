@@ -111,14 +111,24 @@ export default async function BuildDetailPage({
     );
   }
 
-  // メンバーのキャラ情報
+  // メンバーのキャラ情報 + 似ている編成を並列取得
   const actualMemberIds = build.members.filter((id): id is string => id !== null);
-  const { data: rawChars } = actualMemberIds.length > 0
-    ? await supabase
-        .from("characters")
-        .select("id, name, slug, element, position, image_url, is_hidden")
-        .in("id", actualMemberIds)
-    : { data: [] };
+  const [{ data: rawChars }, { data: rawCandidates }] = await Promise.all([
+    actualMemberIds.length > 0
+      ? supabase
+          .from("characters")
+          .select("id, name, slug, element, position, image_url, is_hidden")
+          .in("id", actualMemberIds)
+      : Promise.resolve({ data: [] as CharacterInfo[] }),
+    supabase
+      .from("builds")
+      .select("*")
+      .eq("is_deleted", false)
+      .neq("id", buildId)
+      .eq("mode", build.mode)
+      .order("likes_count", { ascending: false })
+      .limit(20),
+  ]);
 
   const charMap = new Map(
     ((rawChars as CharacterInfo[] | null) ?? []).map((c) => [c.id, c])
@@ -136,16 +146,6 @@ export default async function BuildDetailPage({
         is_hidden: false,
       }
   );
-
-  // 似ている編成
-  const { data: rawCandidates } = await supabase
-    .from("builds")
-    .select("*")
-    .eq("is_deleted", false)
-    .neq("id", buildId)
-    .eq("mode", build.mode)
-    .order("likes_count", { ascending: false })
-    .limit(20);
 
   const candidates = ((rawCandidates as BuildData[] | null) ?? [])
     .map((sb) => ({
