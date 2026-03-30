@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { ScrollToTop } from "@/components/layout/scroll-to-top";
+import { NavigationProgress } from "@/components/layout/navigation-progress";
 import "./globals.css";
 
 const zenMaruGothic = Zen_Maru_Gothic({
@@ -36,6 +37,7 @@ export default function RootLayout({
       <body className={zenMaruGothic.className}>
         <ThemeProvider>
           <div className="flex min-h-dvh flex-col">
+            <NavigationProgress />
             <ScrollToTop />
             <Header />
             <div className="mx-auto w-full max-w-6xl flex-1 px-4 pt-4 pb-12 md:px-8 md:pt-6 md:pb-16 lg:grid lg:grid-cols-[1fr_240px] lg:gap-6">

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { createServerClient } from "@/lib/supabase/server";
 import { StarRatingDisplay } from "@/components/ui/star-rating";
 import { CharacterCard } from "@/components/character/character-card";
@@ -106,7 +107,7 @@ function SectionHeading({
           <h2 className="text-lg font-bold text-text-primary">{title}</h2>
         </div>
         {href && linkLabel && (
-          <a
+          <Link
             href={href}
             className="flex shrink-0 items-center gap-0.5 text-sm md:text-base text-accent-muted transition-colors hover:text-accent cursor-pointer"
           >
@@ -114,7 +115,7 @@ function SectionHeading({
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
-          </a>
+          </Link>
         )}
       </div>
       {subtitle && (
@@ -137,7 +138,7 @@ function SectionFooterButton({
   gradientTo: string;
 }) {
   return (
-    <a
+    <Link
       href={href}
       className="flex w-full items-center justify-center gap-1 rounded-2xl py-3 text-center text-sm font-bold text-white transition-opacity hover:opacity-90 cursor-pointer lg:max-w-sm lg:mx-auto"
       style={{
@@ -148,7 +149,7 @@ function SectionFooterButton({
       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
       </svg>
-    </a>
+    </Link>
   );
 }
 
@@ -556,7 +557,7 @@ export default async function Home() {
                 const cfg = rankConfig[rank];
 
                 return (
-                  <a
+                  <Link
                     key={char.id}
                     href={`/characters/${char.slug}`}
                     className="block overflow-clip rounded-[16px] bg-bg-card-alpha-heavy transition-colors hover:brightness-110 cursor-pointer"
@@ -677,7 +678,7 @@ export default async function Home() {
                         </div>
                       )}
                     </div>
-                  </a>
+                  </Link>
                 );
               })}
             </div>
@@ -737,7 +738,7 @@ export default async function Home() {
             {tiersData.map((tier) => {
               const tierLabels = ["S", "A", "B", "C"] as const;
               return (
-                <a
+                <Link
                   key={tier.id}
                   href={`/tiers/${tier.id}`}
                   className="block rounded-2xl border border-border-primary bg-gradient-to-b from-bg-card-alpha to-bg-card-alpha-lighter p-4 transition-colors hover:from-bg-card-alpha hover:to-bg-card-alpha-light cursor-pointer"
@@ -819,14 +820,14 @@ export default async function Home() {
                       {tier.likesCount}
                     </span>
                   </div>
-                </a>
+                </Link>
               );
             })}
           </div>
         ) : (
           <div className="rounded-2xl border border-border-primary bg-gradient-to-b from-bg-card-alpha to-bg-card-alpha-lighter py-8 text-center">
             <p className="text-sm text-text-muted">まだティアが投稿されていません</p>
-            <a
+            <Link
               href="/tiers/new"
               className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#a855f7] to-[#ec4899] px-5 py-2.5 text-sm font-bold text-white shadow-md transition-opacity hover:opacity-90"
             >
@@ -834,7 +835,7 @@ export default async function Home() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
               </svg>
               最初のティアを作成する
-            </a>
+            </Link>
           </div>
         )}
 
@@ -891,7 +892,7 @@ export default async function Home() {
             {trendingCharacters.map((char) => {
               const elemStyle = char.element ? ELEMENT_COLORS[char.element] : null;
               return (
-                <a
+                <Link
                   key={char.id}
                   href={`/characters/${char.slug}`}
                   className="flex flex-col overflow-hidden rounded-[14px] border border-border-primary bg-bg-card-alpha-light transition-colors hover:bg-bg-card-alpha cursor-pointer"
@@ -964,7 +965,7 @@ export default async function Home() {
                       </div>
                     </div>
                   )}
-                </a>
+                </Link>
               );
             })}
           </div>

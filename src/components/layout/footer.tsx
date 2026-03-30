@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export function Footer() {
   return (
@@ -28,12 +29,12 @@ export function Footer() {
           <p className="max-w-md text-sm leading-relaxed text-text-tertiary">
             トリッカル・もちもちほっぺ大作戦の非公式ファンサイトです。みんなの投票とコメントでキャラクターの人気ランキングやおすすめ編成を共有できます。
           </p>
-          <a
+          <Link
             href="/guidelines"
             className="text-base font-medium text-text-tertiary transition-colors hover:text-accent"
           >
             ガイドライン・利用規約
-          </a>
+          </Link>
           <div className="mt-2 w-full border-t border-border-secondary pt-4">
             <p className="text-xs md:text-sm text-text-muted">
               &copy; 2026 トリッカルランキング. All rights reserved.

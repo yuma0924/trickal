@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { CharacterCard } from "@/components/character/character-card";
 import { Button } from "@/components/ui/button";
@@ -120,7 +121,7 @@ export function RankingClient({
         <>
           <div className="-mt-3 flex items-stretch justify-between gap-4">
             {currentTop && (
-              <a
+              <Link
                 href={`/characters/${currentTop.slug}`}
                 className="inline-flex items-center rounded-2xl border border-[rgba(255,191,36,0.3)] bg-gradient-to-r from-[rgba(255,191,36,0.1)] to-[rgba(255,143,0,0.05)] px-5 py-3 transition-colors hover:from-[rgba(255,191,36,0.15)] cursor-pointer lg:pl-5 lg:pr-12"
               >
@@ -138,7 +139,7 @@ export function RankingClient({
                 <span className="ml-1.5 text-base text-text-primary">
                   です
                 </span>
-              </a>
+              </Link>
             )}
             <div className="hidden lg:flex items-center gap-2 rounded-2xl border border-border-primary bg-bg-inset px-4 py-3">
               <svg className="h-4 w-4 shrink-0 text-accent-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -247,7 +248,7 @@ export function RankingClient({
           </div>
           <div className="-mx-4 grid grid-cols-2 md:grid-cols-3 gap-2 px-2">
             {trendingCharacters.map((char) => (
-              <a
+              <Link
                 key={char.id}
                 href={`/characters/${char.slug}`}
                 className="flex flex-col overflow-hidden rounded-[14px] border border-border-primary bg-bg-card-alpha-light transition-colors hover:bg-bg-card-alpha cursor-pointer"
@@ -317,7 +318,7 @@ export function RankingClient({
                     </div>
                   </div>
                 )}
-              </a>
+              </Link>
             ))}
           </div>
         </section>
@@ -326,7 +327,7 @@ export function RankingClient({
       {/* 他のランキングもチェック */}
       <section className="!mt-10 space-y-3">
         <p className="text-xs md:text-sm font-bold text-text-tertiary">他のランキングもチェック</p>
-        <a
+        <Link
           href="/builds"
           className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(59,130,246,0.15)] to-[rgba(6,182,212,0.15)] border border-[rgba(59,130,246,0.1)] px-4 py-3 transition-colors hover:from-[rgba(59,130,246,0.25)] hover:to-[rgba(6,182,212,0.25)] cursor-pointer"
         >
@@ -345,8 +346,8 @@ export function RankingClient({
           <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
-        </a>
-        <a
+        </Link>
+        <Link
           href="/tiers"
           className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(168,85,247,0.15)] to-[rgba(236,72,153,0.15)] border border-[rgba(168,85,247,0.1)] px-4 py-3 transition-colors hover:from-[rgba(168,85,247,0.25)] hover:to-[rgba(236,72,153,0.25)] cursor-pointer"
         >
@@ -372,7 +373,7 @@ export function RankingClient({
           <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
-        </a>
+        </Link>
       </section>
     </div>
   );

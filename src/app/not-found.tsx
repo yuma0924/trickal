@@ -1,3 +1,4 @@
+import Link from "next/link";
 
 export default function NotFound() {
   return (
@@ -9,12 +10,12 @@ export default function NotFound() {
       <p className="mt-2 text-sm text-text-secondary">
         お探しのページは移動または削除された可能性があります。
       </p>
-      <a
+      <Link
         href="/"
         className="mt-6 inline-flex rounded-lg bg-accent px-6 py-2.5 text-sm font-medium text-accent-text transition-colors hover:bg-accent-hover"
       >
         ホームへ戻る
-      </a>
+      </Link>
     </div>
   );
 }

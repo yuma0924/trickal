@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { CharacterIcon } from "@/components/character/character-icon";
@@ -499,7 +500,7 @@ function BuildCard({
           <span className={cn("text-[10px] md:text-xs font-bold", isTop ? "text-star" : "text-rank-silver")}>高評価</span>
         </div>
       )}
-      <a
+      <Link
         href={`/builds/${build.id}${isTop ? "?rank=1" : isSecond ? "?rank=2" : ""}`}
         className="flex flex-1 flex-col cursor-pointer"
       >
@@ -613,7 +614,7 @@ function BuildCard({
             )}
           </div>
         </div>
-      </a>
+      </Link>
 
       {/* フッター: 日時 + コメント数 + リアクション */}
       <div className="mt-auto pt-2 flex items-center justify-between">

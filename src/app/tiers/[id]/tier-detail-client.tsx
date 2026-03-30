@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import { TIER_LABELS } from "@/lib/constants";
 import type { TierLabel } from "@/lib/constants";
 import { TierRow } from "@/components/tier/tier-row";
@@ -305,12 +306,12 @@ export function TierDetailClient({
     return (
       <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4">
         <p className="text-text-secondary">ティアを削除しました</p>
-        <a
+        <Link
           href="/tiers"
           className="text-sm text-accent hover:underline"
         >
           一覧に戻る
-        </a>
+        </Link>
       </div>
     );
   }
@@ -554,7 +555,7 @@ export function TierDetailClient({
       </section>
 
       {/* ティア一覧へ戻る */}
-      <a
+      <Link
         href="/tiers"
         className="mt-10 flex items-center justify-center gap-2 rounded-2xl border border-border-primary bg-bg-card py-3 text-sm font-medium text-text-primary transition-colors hover:bg-bg-card-hover"
       >
@@ -569,12 +570,12 @@ export function TierDetailClient({
           <rect x="4" y="12.5" width="4" height="3" rx="0.5" fill="currentColor" className="text-text-muted" />
         </svg>
         みんなのティア表に戻る
-      </a>
+      </Link>
 
       {/* 他のページもチェック */}
       <section className="!mt-10 space-y-3">
         <p className="text-xs md:text-sm font-bold text-text-tertiary">他のページもチェック</p>
-        <a
+        <Link
           href="/ranking"
           className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(255,185,0,0.15)] to-[rgba(255,99,126,0.15)] border border-[rgba(255,185,0,0.1)] px-4 py-3 transition-colors hover:from-[rgba(255,185,0,0.25)] hover:to-[rgba(255,99,126,0.25)] cursor-pointer"
         >
@@ -593,8 +594,8 @@ export function TierDetailClient({
           <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
-        </a>
-        <a
+        </Link>
+        <Link
           href="/builds"
           className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(59,130,246,0.15)] to-[rgba(6,182,212,0.15)] border border-[rgba(59,130,246,0.1)] px-4 py-3 transition-colors hover:from-[rgba(59,130,246,0.25)] hover:to-[rgba(6,182,212,0.25)] cursor-pointer"
         >
@@ -613,7 +614,7 @@ export function TierDetailClient({
           <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
-        </a>
+        </Link>
       </section>
 
       {/* 通報モーダル */}

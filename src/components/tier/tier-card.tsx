@@ -1,6 +1,7 @@
 "use client";
 
 import { TIER_LABELS, TIER_COLORS } from "@/lib/constants";
+import Link from "next/link";
 import type { TierLabel } from "@/lib/constants";
 import { CharacterIcon } from "@/components/character/character-icon";
 import { TierLikeButton } from "@/components/tier/tier-like-button";
@@ -54,7 +55,7 @@ export function TierCard({
 }: TierCardProps) {
   return (
     <div className="rounded-2xl border border-border-primary bg-gradient-to-b from-bg-card-alpha to-bg-card-alpha-lighter overflow-hidden transition-colors hover:from-bg-card-alpha hover:to-bg-card-alpha-light">
-      <a href={`/tiers/${id}`} className="block">
+      <Link href={`/tiers/${id}`} className="block">
         {/* ヘッダー */}
         <div className="px-3 pt-3 pb-2">
           <div className="flex items-center justify-between gap-2">
@@ -114,13 +115,13 @@ export function TierCard({
           {/* グラデーションフェード */}
           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 rounded-b-lg bg-gradient-to-t from-bg-card-alpha-heavy to-transparent" />
         </div>
-      </a>
+      </Link>
 
       {/* 全て表示 */}
       <div className="flex justify-center -mt-1 mb-0">
-        <a href={`/tiers/${id}`} className="text-[10px] text-text-muted hover:text-text-primary transition-colors">
+        <Link href={`/tiers/${id}`} className="text-[10px] text-text-muted hover:text-text-primary transition-colors">
           全て表示 ▼
-        </a>
+        </Link>
       </div>
 
       {/* フッター */}
