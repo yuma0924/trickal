@@ -230,10 +230,30 @@ export default async function CharacterPage({ params }: Props) {
     partTimeRewards: rewardItems.map((i) => ({ name: i.name, imageUrl: i.image_url })),
   };
 
+  // 初期コメント（投票+掲示板）を取得
+  const { data: initialComments } = await supabase
+    .from("comments")
+    .select("id, character_id, user_hash, comment_type, rating, body, display_name, is_latest_vote, is_deleted, thumbs_up_count, thumbs_down_count, created_at")
+    .eq("character_id", character.id)
+    .eq("is_deleted", false)
+    .order("created_at", { ascending: false })
+    .limit(21);
+
+  const commentsData = (initialComments ?? []).slice(0, 20);
+  const hasMoreComments = (initialComments ?? []).length > 20;
+
   return (
     <CharacterDetailClient
       character={characterDetail}
       relatedCharacters={relatedCharacters}
+      initialComments={{
+        comments: commentsData.map((c) => ({
+          ...c,
+          user_reaction: null,
+        })),
+        hasMore: hasMoreComments,
+        nextCursor: hasMoreComments ? commentsData[commentsData.length - 1]?.id ?? null : null,
+      }}
     />
   );
 }

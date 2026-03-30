@@ -162,17 +162,53 @@ const SORT_MAP: Record<SortTab, string> = {
   thumbs_up: "thumbs_up",
 };
 
+interface InitialComments {
+  comments: Array<{
+    id: string;
+    character_id: string;
+    user_hash: string;
+    comment_type: string;
+    rating: number | null;
+    body: string | null;
+    display_name: string | null;
+    is_latest_vote: boolean | null;
+    is_deleted: boolean;
+    thumbs_up_count: number;
+    thumbs_down_count: number;
+    created_at: string;
+    user_reaction: "up" | "down" | null;
+  }>;
+  hasMore: boolean;
+  nextCursor: string | null;
+}
+
 interface CharacterDetailClientProps {
   character: CharacterDetail;
   relatedCharacters: RelatedCharacter[];
+  initialComments?: InitialComments;
 }
 
 export function CharacterDetailClient({
   character,
   relatedCharacters,
+  initialComments,
 }: CharacterDetailClientProps) {
-  const [comments, setComments] = useState<CommentItem[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
+  const [comments, setComments] = useState<CommentItem[]>(() => {
+    if (!initialComments) return [];
+    return initialComments.comments.map((c) => ({
+      id: c.id,
+      commentType: c.comment_type as "vote" | "board",
+      displayName: c.display_name ?? "名無しの教主",
+      body: c.body ?? "",
+      rating: c.rating,
+      thumbsUpCount: c.thumbs_up_count,
+      thumbsDownCount: c.thumbs_down_count,
+      createdAt: c.created_at,
+      isLatestVote: c.is_latest_vote ?? false,
+      isDeleted: c.is_deleted,
+    }));
+  });
+  const [totalCount, setTotalCount] = useState(initialComments?.comments.length ?? 0);
   const [sortTab, setSortTab] = useState<SortTab>("newest");
   const [commentsLoading, setCommentsLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -261,7 +297,13 @@ export function CharacterDetailClient({
     [character.id]
   );
 
+  const initialFetchDone = useRef(!!initialComments);
   useEffect(() => {
+    if (initialFetchDone.current && sortTab === "newest") {
+      initialFetchDone.current = false;
+      return;
+    }
+    initialFetchDone.current = false;
     fetchComments(sortTab);
   }, [sortTab, fetchComments]);
 
