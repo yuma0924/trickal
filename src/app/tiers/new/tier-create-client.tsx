@@ -68,7 +68,7 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
   const [error, setError] = useState<string | null>(null);
 
   // フィルター
-  const [elementFilter, setElementFilter] = useState<string | null>(null);
+  const [elementFilter, setElementFilter] = useState<string | null>("純粋");
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -95,49 +95,8 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
     setActiveId(event.active.id as string);
   };
 
-  const handleDragOver = (event: DragOverEvent) => {
-    const { active, over } = event;
-    if (!over) return;
-
-    const activeContainer = findContainer(active.id as string);
-    if (!activeContainer) return;
-
-    // ドロップ先がコンテナ自体か、コンテナ内のアイテムか
-    let overContainer: TierLabel | "unassigned" | null = null;
-
-    // over.id がコンテナ名の場合
-    const allContainerKeys = [...TIER_LABELS, "unassigned"] as const;
-    if ((allContainerKeys as readonly string[]).includes(over.id as string)) {
-      overContainer = over.id as TierLabel | "unassigned";
-    } else {
-      // over.id がアイテムID の場合、そのアイテムのコンテナを探す
-      overContainer = findContainer(over.id as string);
-    }
-
-    if (!overContainer || activeContainer === overContainer) return;
-
-    setTierState((prev) => {
-      const activeItems = [...prev[activeContainer]];
-      const overItems = [...prev[overContainer]];
-
-      const activeIndex = activeItems.indexOf(active.id as string);
-      activeItems.splice(activeIndex, 1);
-
-      // ドロップ先アイテムの位置に挿入
-      const overId = over.id as string;
-      const overIndex = overItems.indexOf(overId);
-      if (overIndex >= 0) {
-        overItems.splice(overIndex, 0, active.id as string);
-      } else {
-        overItems.push(active.id as string);
-      }
-
-      return {
-        ...prev,
-        [activeContainer]: activeItems,
-        [overContainer]: overItems,
-      };
-    });
+  const handleDragOver = () => {
+    // ドラッグ中は移動しない（ドロップ時に確定）
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -149,9 +108,8 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
     const activeContainer = findContainer(active.id as string);
     if (!activeContainer) return;
 
-    const allContainerKeys = [...TIER_LABELS, "unassigned"] as const;
     let overContainer: TierLabel | "unassigned" | null = null;
-
+    const allContainerKeys = [...TIER_LABELS, "unassigned"] as const;
     if ((allContainerKeys as readonly string[]).includes(over.id as string)) {
       overContainer = over.id as TierLabel | "unassigned";
     } else {
@@ -160,8 +118,34 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
 
     if (!overContainer) return;
 
+    if (activeContainer !== overContainer) {
+      // 異なるコンテナへ移動
+      setTierState((prev) => {
+        const activeItems = [...prev[activeContainer]];
+        const overItems = [...prev[overContainer]];
+
+        const activeIndex = activeItems.indexOf(active.id as string);
+        activeItems.splice(activeIndex, 1);
+
+        const overId = over.id as string;
+        const overIndex = overItems.indexOf(overId);
+        if (overIndex >= 0) {
+          overItems.splice(overIndex, 0, active.id as string);
+        } else {
+          overItems.push(active.id as string);
+        }
+
+        return {
+          ...prev,
+          [activeContainer]: activeItems,
+          [overContainer]: overItems,
+        };
+      });
+      return;
+    }
+
+    // 同一コンテナ内での並べ替え
     if (activeContainer === overContainer) {
-      // 同一コンテナ内での並べ替え
       setTierState((prev) => {
         const items = [...prev[activeContainer]];
         const oldIndex = items.indexOf(active.id as string);
@@ -239,6 +223,7 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
+      autoScroll={{ threshold: { x: 0.1, y: 0.15 }, acceleration: 5 }}
     >
       <div
         className="space-y-4 select-none"
@@ -432,7 +417,7 @@ function UnassignedPanel({
             return (
               <button
                 key={el}
-                onClick={() => onElementFilterChange(active ? null : el)}
+                onClick={() => { if (!active) onElementFilterChange(el); }}
                 className={cn(
                   "flex shrink-0 items-center justify-center rounded-[10px] p-1.5 transition-colors cursor-pointer",
                   active

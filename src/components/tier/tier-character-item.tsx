@@ -77,7 +77,7 @@ function DraggableItem({
       style={style}
       {...attributes}
       {...listeners}
-      className="flex flex-col items-center gap-0.5 touch-none select-none"
+      className="flex flex-col items-center gap-0.5 select-none"
     >
       <CharacterIcon name={name} imageUrl={imageUrl} size={size} className={iconClassName} />
       {showName && (
