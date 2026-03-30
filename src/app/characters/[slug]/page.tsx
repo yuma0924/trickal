@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
-import { createServerClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { CharacterDetailClient } from "./character-detail-client";
 import type { Element } from "@/lib/constants";
 import type { Character, Item } from "@/types/database";
@@ -11,7 +11,7 @@ interface Props {
 }
 
 const getCharacter = cache(async (slug: string) => {
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data } = await supabase
     .from("characters")
     .select("id, slug, name, rarity, element, role, race, position, attack_type, stats, skills, metadata, image_url, favorite_item_id, is_provisional, is_hidden, created_at, updated_at")
@@ -84,7 +84,7 @@ export interface RelatedCharacter {
 
 export default async function CharacterPage({ params }: Props) {
   const { slug } = await params;
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
 
   const character = await getCharacter(slug);
 

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { createServerClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { StarRatingDisplay } from "@/components/ui/star-rating";
 import { CharacterCard } from "@/components/character/character-card";
 import type { Element } from "@/lib/constants";
@@ -172,7 +172,7 @@ function TeamIcon({ className }: { className?: string }) {
 
 
 export default async function Home() {
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
 
   // --- 第1段: 人気キャラランキング (上位15件) + キャラ情報を並列取得 ---
   const [{ data: rankings }, { data: characters }] = await Promise.all([

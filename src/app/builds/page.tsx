@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { createServerClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { BuildsClient } from "./builds-client";
 
 const ELEMENT_ICON_MAP: Record<string, string> = {
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BuildsPage() {
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
 
   // --- 話題のキャラクター（直近24時間）---
   const twentyFourHoursAgo = new Date(

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { cache } from "react";
-import { createServerClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import { TierDetailClient } from "./tier-detail-client";
 
@@ -25,7 +25,7 @@ type TierData = {
 };
 
 const getTier = cache(async (id: string) => {
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data } = await supabase
     .from("tiers")
     .select("*")
@@ -61,7 +61,7 @@ export default async function TierDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
 
   const tier = await getTier(id);
 

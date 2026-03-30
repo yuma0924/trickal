@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { createServerClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { RankingClient } from "./ranking-client";
 import type { Element } from "@/lib/constants";
 
@@ -48,7 +48,7 @@ export interface TrendingCharacter {
 }
 
 export default async function RankingPage() {
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
 
   // ランキングデータ + キャラ情報を並列取得
   const [{ data: rankings }, { data: characters }] = await Promise.all([

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { cache } from "react";
-import { createServerClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import { BuildDetailClient } from "./build-detail-client";
 
@@ -54,7 +54,7 @@ type SimilarBuild = {
 };
 
 const getBuild = cache(async (buildId: string) => {
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data } = await supabase
     .from("builds")
     .select("*")
@@ -92,7 +92,7 @@ export default async function BuildDetailPage({
   params: Promise<{ buildId: string }>;
 }) {
   const { buildId } = await params;
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
 
   const build = await getBuild(buildId);
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { createServerClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { TiersClient } from "./tiers-client";
 
 type CharacterInfo = {
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default async function TiersPage() {
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
 
   // キャラクター情報を全件取得（ティアカードのプレビュー用）
   const { data: rawChars } = await supabase
