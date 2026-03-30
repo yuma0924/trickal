@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { TierCard } from "@/components/tier/tier-card";
@@ -31,15 +31,20 @@ const SORT_TABS: { value: SortType; label: string }[] = [
 
 interface TiersClientProps {
   characters: Record<string, CharacterData>;
+  initialData?: {
+    tiers: TierItem[];
+    hasMore: boolean;
+    nextCursor: string | null;
+  };
 }
 
-export function TiersClient({ characters }: TiersClientProps) {
-  const [tiers, setTiers] = useState<TierItem[]>([]);
+export function TiersClient({ characters, initialData }: TiersClientProps) {
+  const [tiers, setTiers] = useState<TierItem[]>(initialData?.tiers ?? []);
   const [sort, setSort] = useState<SortType>("newest");
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(false);
-  const [nextCursor, setNextCursor] = useState<string | null>(null);
-  const [loaded, setLoaded] = useState(false);
+  const [hasMore, setHasMore] = useState(initialData?.hasMore ?? false);
+  const [nextCursor, setNextCursor] = useState<string | null>(initialData?.nextCursor ?? null);
+  const [loaded, setLoaded] = useState(!!initialData);
 
   const fetchTiers = useCallback(
     async (cursorId?: string) => {
@@ -69,13 +74,19 @@ export function TiersClient({ characters }: TiersClientProps) {
     [sort]
   );
 
+  const initialSortRef = useRef(true);
   useEffect(() => {
+    if (initialSortRef.current && initialData && sort === "newest") {
+      initialSortRef.current = false;
+      return;
+    }
+    initialSortRef.current = false;
     setTiers([]);
     setNextCursor(null);
     setHasMore(false);
     setLoaded(false);
     fetchTiers();
-  }, [fetchTiers]);
+  }, [fetchTiers, initialData, sort]);
 
   const handleToggleLike = async (tierId: string) => {
     const tier = tiers.find((t) => t.id === tierId);
