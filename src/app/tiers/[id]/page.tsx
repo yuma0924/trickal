@@ -26,6 +26,15 @@ type TierData = {
   user_hash: string;
 };
 
+export async function generateStaticParams() {
+  const supabase = createAdminClient();
+  const { data } = await supabase
+    .from("tiers")
+    .select("id")
+    .eq("is_deleted", false);
+  return (data ?? []).map((t) => ({ id: t.id }));
+}
+
 const getTier = cache(async (id: string) => {
   const supabase = createAdminClient();
   const { data } = await supabase
