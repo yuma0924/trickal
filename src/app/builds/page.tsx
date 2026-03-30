@@ -60,8 +60,8 @@ export default async function BuildsPage() {
     }
   }
 
-  // ランキング + キャラ情報を並列取得
-  const [{ data: rankings }, { data: characters }] = await Promise.all([
+  // ランキング + キャラ情報 + 初期編成データを並列取得
+  const [{ data: rankings }, { data: characters }, { data: initialBuilds }] = await Promise.all([
     supabase
       .from("character_rankings")
       .select("character_id, avg_rating, valid_votes_count"),
@@ -69,7 +69,55 @@ export default async function BuildsPage() {
       .from("characters")
       .select("id, slug, name, element, image_url")
       .eq("is_hidden", false),
+    supabase
+      .from("builds")
+      .select("id, mode, members, element_label, title, display_name, comment, likes_count, dislikes_count, updated_at, user_hash, build_comments(count)")
+      .eq("is_deleted", false)
+      .eq("mode", "general")
+      .order("likes_count", { ascending: false })
+      .order("updated_at", { ascending: false })
+      .limit(21),
   ]);
+
+  const buildCharIds = [...new Set((initialBuilds ?? []).flatMap((b) => b.members).filter(Boolean))] as string[];
+  const buildCharMap = new Map<string, { id: string; name: string; slug: string; element: string | null; position: string | null; image_url: string | null; is_hidden: boolean }>();
+  if (buildCharIds.length > 0) {
+    const { data: bChars } = await supabase
+      .from("characters")
+      .select("id, name, slug, element, position, image_url, is_hidden")
+      .in("id", buildCharIds);
+    for (const c of bChars ?? []) {
+      buildCharMap.set(c.id, c as typeof buildCharMap extends Map<string, infer V> ? V : never);
+    }
+  }
+
+  const initialBuildsData = {
+    builds: (initialBuilds ?? []).slice(0, 20).map((b) => ({
+      id: b.id,
+      mode: b.mode as "general" | "arena" | "dimension" | "world_tree",
+      party_size: b.mode === "dimension" ? 9 : 6,
+      members: b.members as string[],
+      members_detail: (b.members as (string | null)[]).filter((id): id is string => id !== null).map((id) => {
+        const c = buildCharMap.get(id);
+        return c ?? { id, name: "不明", slug: "", element: null, position: null, image_url: null, is_hidden: false };
+      }),
+      element_label: b.element_label,
+      title: b.title,
+      display_name: b.display_name,
+      comment: b.comment,
+      likes_count: b.likes_count,
+      dislikes_count: b.dislikes_count,
+      is_deleted: false,
+      created_at: b.updated_at,
+      updated_at: b.updated_at,
+      user_reaction: null as "up" | "down" | null,
+      comments_count: Array.isArray(b.build_comments) && b.build_comments.length > 0
+        ? (b.build_comments[0] as { count: number }).count
+        : 0,
+    })),
+    hasMore: (initialBuilds ?? []).length > 20,
+    nextCursor: (initialBuilds ?? []).length > 20 ? (initialBuilds ?? [])[19]?.id ?? null : null,
+  };
 
   const charMap = new Map<
     string,
@@ -155,7 +203,7 @@ export default async function BuildsPage() {
         </p>
       </div>
 
-      <BuildsClient />
+      <BuildsClient initialBuilds={initialBuildsData} />
 
       {/* 話題のキャラクター（直近24時間） */}
       {trendingCharacters.length > 0 && (

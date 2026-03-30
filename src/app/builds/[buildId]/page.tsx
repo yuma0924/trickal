@@ -88,6 +88,15 @@ export async function generateMetadata({
   };
 }
 
+export async function generateStaticParams() {
+  const supabase = createAdminClient();
+  const { data } = await supabase
+    .from("builds")
+    .select("id")
+    .eq("is_deleted", false);
+  return (data ?? []).map((b) => ({ buildId: b.id }));
+}
+
 export default async function BuildDetailPage({
   params,
 }: {

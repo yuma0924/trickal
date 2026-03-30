@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -102,15 +102,23 @@ function formatDate(dateStr: string): string {
   return date.toLocaleDateString("ja-JP");
 }
 
-export function BuildsClient() {
+interface BuildsClientProps {
+  initialBuilds?: {
+    builds: BuildItem[];
+    hasMore: boolean;
+    nextCursor: string | null;
+  };
+}
+
+export function BuildsClient({ initialBuilds }: BuildsClientProps) {
   const [mode, setMode] = useState<Mode>("general");
   const [elementFilters, setElementFilters] = useState<Set<string>>(new Set());
   const [sortKey, setSortKey] = useState<SortKey>("popular");
-  const [builds, setBuilds] = useState<BuildItem[]>([]);
+  const [builds, setBuilds] = useState<BuildItem[]>(initialBuilds?.builds ?? []);
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(false);
-  const [nextCursor, setNextCursor] = useState<string | null>(null);
-  const [initialLoaded, setInitialLoaded] = useState(false);
+  const [hasMore, setHasMore] = useState(initialBuilds?.hasMore ?? false);
+  const [nextCursor, setNextCursor] = useState<string | null>(initialBuilds?.nextCursor ?? null);
+  const [initialLoaded, setInitialLoaded] = useState(!!initialBuilds);
   const [formOpen, setFormOpen] = useState(false);
   const { toast, showToast } = useToast();
 
@@ -145,13 +153,19 @@ export function BuildsClient() {
   );
 
   // mode や filter 変更時にリセット + 再取得
+  const initialSkip = useRef(!!initialBuilds);
   useEffect(() => {
+    if (initialSkip.current && mode === "general" && elementFilters.size === 0 && sortKey === "popular") {
+      initialSkip.current = false;
+      return;
+    }
+    initialSkip.current = false;
     setBuilds([]);
     setNextCursor(null);
     setHasMore(false);
     setInitialLoaded(false);
     fetchBuilds();
-  }, [fetchBuilds]);
+  }, [fetchBuilds, initialBuilds, mode, elementFilters, sortKey]);
 
   const handleLoadMore = () => {
     if (nextCursor && !loading) {
