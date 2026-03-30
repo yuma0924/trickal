@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { CharacterCard } from "@/components/character/character-card";
 import { StarRatingDisplay } from "@/components/ui/star-rating";
@@ -932,7 +931,7 @@ export function CharacterDetailClient({
       )}
 
       {/* 一覧へ戻る */}
-      <Link
+      <a
         href="/ranking"
         className="mt-10 flex items-center justify-center gap-2 rounded-2xl border border-border-primary bg-bg-card py-3 text-sm font-medium text-text-primary transition-colors hover:bg-bg-card-hover"
       >
@@ -940,12 +939,12 @@ export function CharacterDetailClient({
           <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />
         </svg>
         人気キャラランキングに戻る
-      </Link>
+      </a>
 
       {/* ページ下部ナビリンク */}
       <section className="!mt-10 space-y-3">
         <p className="text-xs md:text-sm font-bold text-text-tertiary">他のランキングもチェック</p>
-        <Link
+        <a
           href="/tiers"
           className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(168,85,247,0.15)] to-[rgba(236,72,153,0.15)] border border-[rgba(168,85,247,0.1)] px-4 py-3 transition-colors hover:from-[rgba(168,85,247,0.25)] hover:to-[rgba(236,72,153,0.25)] cursor-pointer"
         >
@@ -971,8 +970,8 @@ export function CharacterDetailClient({
           <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
-        </Link>
-        <Link
+        </a>
+        <a
           href="/builds"
           className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(59,130,246,0.15)] to-[rgba(6,182,212,0.15)] border border-[rgba(59,130,246,0.1)] px-4 py-3 transition-colors hover:from-[rgba(59,130,246,0.25)] hover:to-[rgba(6,182,212,0.25)] cursor-pointer"
         >
@@ -991,7 +990,7 @@ export function CharacterDetailClient({
           <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
-        </Link>
+        </a>
       </section>
 
       <Toast message={toast.message} visible={toast.visible} />

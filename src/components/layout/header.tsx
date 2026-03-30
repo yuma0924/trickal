@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 
@@ -6,7 +5,7 @@ export function Header() {
   return (
     <header className="bg-bg-primary pt-[env(safe-area-inset-top)] shadow-lg shadow-black/10">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 md:px-8">
-        <Link href="/" className="group flex items-center gap-2.5">
+        <a href="/" className="group flex items-center gap-2.5">
           <Image
             src="/logo.png"
             alt="トリッカルランキング"
@@ -22,18 +21,18 @@ export function Header() {
               トリッカルランキング
             </span>
           </span>
-        </Link>
+        </a>
         <nav className="flex items-center gap-2">
           <div className="hidden md:flex items-center gap-4 mr-4">
-            <Link href="/ranking" className="text-sm md:text-base text-text-secondary hover:text-text-primary transition-colors">
+            <a href="/ranking" className="text-sm md:text-base text-text-secondary hover:text-text-primary transition-colors">
               ランキング
-            </Link>
-            <Link href="/builds" className="text-sm md:text-base text-text-secondary hover:text-text-primary transition-colors">
+            </a>
+            <a href="/builds" className="text-sm md:text-base text-text-secondary hover:text-text-primary transition-colors">
               編成
-            </Link>
-            <Link href="/tiers" className="text-sm md:text-base text-text-secondary hover:text-text-primary transition-colors">
+            </a>
+            <a href="/tiers" className="text-sm md:text-base text-text-secondary hover:text-text-primary transition-colors">
               ティア
-            </Link>
+            </a>
           </div>
           <ThemeToggle />
         </nav>

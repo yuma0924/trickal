@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -24,7 +23,7 @@ export function CharacterCard({
   const rankDisplay = rank !== null && rank !== undefined;
 
   return (
-    <Link
+    <a
       href={`/characters/${slug}`}
       className={cn(
         "flex flex-col overflow-clip bg-bg-card shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1)] transition-all hover:scale-[1.02] hover:brightness-110 cursor-pointer",
@@ -100,6 +99,6 @@ export function CharacterCard({
           {name}
         </p>
       </div>
-    </Link>
+    </a>
   );
 }

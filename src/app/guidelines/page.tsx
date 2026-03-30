@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { SITE_NAME, SITE_DOMAIN } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -228,12 +227,12 @@ export default function GuidelinesPage() {
 
       {/* ホームに戻るボタン */}
       <div className="mt-10">
-        <Link
+        <a
           href="/"
           className="block w-full rounded-2xl border border-border-primary bg-bg-tertiary py-3 text-center text-sm font-medium text-text-primary transition-colors hover:bg-bg-card-hover"
         >
           ホームに戻る
-        </Link>
+        </a>
       </div>
     </div>
   );

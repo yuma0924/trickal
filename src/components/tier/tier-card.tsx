@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { TIER_LABELS, TIER_COLORS } from "@/lib/constants";
 import type { TierLabel } from "@/lib/constants";
 import { CharacterIcon } from "@/components/character/character-icon";
@@ -55,7 +54,7 @@ export function TierCard({
 }: TierCardProps) {
   return (
     <div className="rounded-2xl border border-border-primary bg-gradient-to-b from-bg-card-alpha to-bg-card-alpha-lighter overflow-hidden transition-colors hover:from-bg-card-alpha hover:to-bg-card-alpha-light">
-      <Link href={`/tiers/${id}`} className="block">
+      <a href={`/tiers/${id}`} className="block">
         {/* ヘッダー */}
         <div className="px-3 pt-3 pb-2">
           <div className="flex items-center justify-between gap-2">
@@ -115,13 +114,13 @@ export function TierCard({
           {/* グラデーションフェード */}
           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 rounded-b-lg bg-gradient-to-t from-bg-card-alpha-heavy to-transparent" />
         </div>
-      </Link>
+      </a>
 
       {/* 全て表示 */}
       <div className="flex justify-center -mt-1 mb-0">
-        <Link href={`/tiers/${id}`} className="text-[10px] text-text-muted hover:text-text-primary transition-colors">
+        <a href={`/tiers/${id}`} className="text-[10px] text-text-muted hover:text-text-primary transition-colors">
           全て表示 ▼
-        </Link>
+        </a>
       </div>
 
       {/* フッター */}

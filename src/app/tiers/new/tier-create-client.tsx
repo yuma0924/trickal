@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   DndContext,
@@ -331,7 +330,7 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
         )}
 
         {/* ティア一覧へ戻る */}
-        <Link
+        <a
           href="/tiers"
           className="mt-10 flex items-center justify-center gap-2 rounded-2xl border border-border-primary bg-gradient-to-b from-bg-card-alpha to-bg-card-alpha-lighter py-3 text-sm font-medium text-text-primary transition-colors hover:from-bg-card-alpha hover:to-bg-card-alpha-light"
         >
@@ -346,7 +345,7 @@ export function TierCreateClient({ characters }: TierCreateClientProps) {
             <rect x="4" y="12.5" width="4" height="3" rx="0.5" fill="currentColor" className="text-text-muted" />
           </svg>
           みんなのティア表に戻る
-        </Link>
+        </a>
       </div>
 
       {/* ドラッグオーバーレイ */}

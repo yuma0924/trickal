@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
@@ -417,7 +416,7 @@ export function BuildDetailClient({
                           colIdx < 2 && "border-r border-border-primary"
                         )}>
                           {char ? (
-                            <Link href={char.slug ? `/characters/${char.slug}` : "#"} className="flex flex-col items-center gap-0.5">
+                            <a href={char.slug ? `/characters/${char.slug}` : "#"} className="flex flex-col items-center gap-0.5">
                               <CharacterIcon
                                 name={char.name}
                                 imageUrl={char.image_url}
@@ -427,7 +426,7 @@ export function BuildDetailClient({
                               <span className="max-w-20 truncate text-center text-[10px] font-bold text-text-tertiary">
                                 {char.name}
                               </span>
-                            </Link>
+                            </a>
                           ) : (
                             <div className="h-16 w-16" />
                           )}
@@ -653,7 +652,7 @@ export function BuildDetailClient({
           </div>
           <div className="space-y-2 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
             {similarBuilds.map((sb) => (
-              <Link
+              <a
                 key={sb.id}
                 href={`/builds/${sb.id}`}
                 className="block rounded-2xl border border-border-primary bg-bg-card px-4 pt-2.5 pb-3 transition-colors hover:bg-bg-card-hover cursor-pointer"
@@ -706,14 +705,14 @@ export function BuildDetailClient({
                     {sb.likes_count}
                   </span>
                 </div>
-              </Link>
+              </a>
             ))}
           </div>
         </section>
       )}
 
       {/* 一覧へ戻る */}
-      <Link
+      <a
         href="/builds"
         className="mt-10 flex items-center justify-center gap-2 rounded-2xl border border-border-primary bg-bg-card py-3 text-sm font-medium text-text-primary transition-colors hover:bg-bg-card-hover"
       >
@@ -721,12 +720,12 @@ export function BuildDetailClient({
           <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
         </svg>
         人気編成ランキングに戻る
-      </Link>
+      </a>
 
       {/* ページ下部ナビリンク */}
       <section className="!mt-10 space-y-3">
         <p className="text-xs md:text-sm font-bold text-text-tertiary">他のランキングもチェック</p>
-        <Link
+        <a
           href="/ranking"
           className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(255,185,0,0.15)] to-[rgba(255,99,126,0.15)] border border-[rgba(255,185,0,0.1)] px-4 py-3 transition-colors hover:from-[rgba(255,185,0,0.25)] hover:to-[rgba(255,99,126,0.25)] cursor-pointer"
         >
@@ -745,8 +744,8 @@ export function BuildDetailClient({
           <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
-        </Link>
-        <Link
+        </a>
+        <a
           href="/tiers"
           className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(168,85,247,0.15)] to-[rgba(236,72,153,0.15)] border border-[rgba(168,85,247,0.1)] px-4 py-3 transition-colors hover:from-[rgba(168,85,247,0.25)] hover:to-[rgba(236,72,153,0.25)] cursor-pointer"
         >
@@ -772,7 +771,7 @@ export function BuildDetailClient({
           <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
-        </Link>
+        </a>
       </section>
 
       {/* 通報モーダル */}

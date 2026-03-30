@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { TierCard } from "@/components/tier/tier-card";
 import { Button } from "@/components/ui/button";
@@ -123,7 +122,7 @@ export function TiersClient({ characters }: TiersClientProps) {
             </button>
           ))}
         </div>
-        <Link
+        <a
           href="/tiers/new"
           className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#a855f7] to-[#ec4899] px-4 py-2 text-xs font-bold text-white shadow-md transition-opacity hover:opacity-90"
         >
@@ -131,7 +130,7 @@ export function TiersClient({ characters }: TiersClientProps) {
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
           作成する
-        </Link>
+        </a>
       </div>
 
       {/* ティア一覧 */}
@@ -140,12 +139,12 @@ export function TiersClient({ characters }: TiersClientProps) {
           <p className="text-sm text-text-tertiary">
             まだティアが投稿されていません
           </p>
-          <Link
+          <a
             href="/tiers/new"
             className="mt-3 inline-block rounded-xl bg-gradient-to-r from-[#a855f7] to-[#ec4899] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-opacity hover:opacity-90"
           >
             最初のティアを作成する
-          </Link>
+          </a>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -191,7 +190,7 @@ export function TiersClient({ characters }: TiersClientProps) {
       {/* 他のランキングもチェック */}
       <section className="!mt-10 space-y-3">
         <p className="text-xs md:text-sm font-bold text-text-tertiary">他のランキングもチェック</p>
-        <Link
+        <a
           href="/ranking"
           className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(255,185,0,0.15)] to-[rgba(255,99,126,0.15)] border border-[rgba(255,185,0,0.1)] px-4 py-3 transition-colors hover:from-[rgba(255,185,0,0.25)] hover:to-[rgba(255,99,126,0.25)] cursor-pointer"
         >
@@ -210,8 +209,8 @@ export function TiersClient({ characters }: TiersClientProps) {
           <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
-        </Link>
-        <Link
+        </a>
+        <a
           href="/builds"
           className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(59,130,246,0.15)] to-[rgba(6,182,212,0.15)] border border-[rgba(59,130,246,0.1)] px-4 py-3 transition-colors hover:from-[rgba(59,130,246,0.25)] hover:to-[rgba(6,182,212,0.25)] cursor-pointer"
         >
@@ -230,7 +229,7 @@ export function TiersClient({ characters }: TiersClientProps) {
           <svg className="h-4 w-4 shrink-0 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
-        </Link>
+        </a>
       </section>
     </div>
   );

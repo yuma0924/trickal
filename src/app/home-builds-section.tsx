@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -138,7 +137,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
               [0, 1, 2].some((colIdx) => slots[colIdx * rowCount + rowIdx] !== null);
 
             return (
-              <Link
+              <a
                 key={build.id}
                 href={`/builds/${build.id}`}
                 className="block rounded-2xl border border-border-primary bg-gradient-to-b from-bg-card-alpha to-bg-card-alpha-lighter p-4 transition-colors hover:from-bg-card-alpha hover:to-bg-card-alpha-light cursor-pointer"
@@ -234,7 +233,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                     </div>
                   </div>
                 )}
-              </Link>
+              </a>
             );
           })}
         </div>
