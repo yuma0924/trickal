@@ -7,7 +7,7 @@ import { ScrollToTop } from "@/components/layout/scroll-to-top";
 import "./globals.css";
 
 const zenMaruGothic = Zen_Maru_Gothic({
-  weight: ["400", "500", "700"],
+  weight: ["400", "700"],
   subsets: ["latin"],
   display: "swap",
   variable: "--font-zen-maru-gothic",
@@ -17,6 +17,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  themeColor: "#1c1728",
 };
 
 export const metadata: Metadata = {

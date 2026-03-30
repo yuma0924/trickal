@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import { createServerClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import { BuildDetailClient } from "./build-detail-client";
@@ -52,19 +53,23 @@ type SimilarBuild = {
   updated_at: string;
 };
 
+const getBuild = cache(async (buildId: string) => {
+  const supabase = await createServerClient();
+  const { data } = await supabase
+    .from("builds")
+    .select("*")
+    .eq("id", buildId)
+    .single();
+  return data as BuildData | null;
+});
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ buildId: string }>;
 }): Promise<Metadata> {
   const { buildId } = await params;
-  const supabase = await createServerClient();
-
-  const { data: build } = await supabase
-    .from("builds")
-    .select("title, element_label, mode")
-    .eq("id", buildId)
-    .single();
+  const build = await getBuild(buildId);
 
   if (!build) {
     return {
@@ -72,9 +77,8 @@ export async function generateMetadata({
     };
   }
 
-  const buildData = build as { title: string | null; element_label: string | null; mode: string };
-  const modeLabel = MODE_LABEL_MAP[buildData.mode as Mode] ?? buildData.mode;
-  const title = buildData.title || `${buildData.element_label ?? ""}${modeLabel}`;
+  const modeLabel = MODE_LABEL_MAP[build.mode] ?? build.mode;
+  const title = build.title || `${build.element_label ?? ""}${modeLabel}`;
 
   return {
     title: `${title} | 人気編成ランキング | みんなで決めるトリッカルランキング`,
@@ -90,18 +94,11 @@ export default async function BuildDetailPage({
   const { buildId } = await params;
   const supabase = await createServerClient();
 
-  // 編成データ取得
-  const { data: rawBuild } = await supabase
-    .from("builds")
-    .select("*")
-    .eq("id", buildId)
-    .single();
+  const build = await getBuild(buildId);
 
-  if (!rawBuild) {
+  if (!build) {
     notFound();
   }
-
-  const build = rawBuild as BuildData;
 
   if (build.is_deleted) {
     return (

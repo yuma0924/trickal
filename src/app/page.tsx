@@ -391,7 +391,7 @@ export default async function Home() {
 
   // --- みんなのティア表（人気上位2件）---
   // --- ティア・編成・検索キャラを並列取得 ---
-  const [{ data: topTiers }, { data: topBuilds }, { data: allChars }] = await Promise.all([
+  const [{ data: topTiers }, { data: topBuilds }] = await Promise.all([
     supabase
       .from("tiers")
       .select("id, title, display_name, data, likes_count, created_at")
@@ -406,10 +406,6 @@ export default async function Home() {
       .order("likes_count", { ascending: false })
       .order("updated_at", { ascending: false })
       .limit(30),
-    supabase
-      .from("characters")
-      .select("id, slug, name, element, role, rarity, race, position, image_url")
-      .eq("is_hidden", false),
   ]);
 
   type TierPreview = {
@@ -430,7 +426,7 @@ export default async function Home() {
     createdAt: t.created_at,
   }));
 
-  const searchCharacters = (allChars ?? []).map((c) => ({
+  const searchCharacters = (characters ?? []).map((c) => ({
     id: c.id,
     slug: c.slug,
     name: c.name,

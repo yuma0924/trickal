@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import { createServerClient } from "@/lib/supabase/server";
 import { CharacterDetailClient } from "./character-detail-client";
 import type { Element } from "@/lib/constants";
@@ -9,15 +10,21 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+const getCharacter = cache(async (slug: string) => {
   const supabase = await createServerClient();
-  const { data: character } = await supabase
+  const { data } = await supabase
     .from("characters")
-    .select("name")
+    .select("id, slug, name, rarity, element, role, race, position, attack_type, stats, skills, metadata, image_url, favorite_item_id, is_provisional, is_hidden, created_at, updated_at")
     .eq("slug", slug)
     .eq("is_hidden", false)
+    .returns<Character[]>()
     .single();
+  return data;
+});
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const character = await getCharacter(slug);
 
   if (!character) {
     return { title: "キャラクター | みんなで決めるトリッカルランキング" };
@@ -79,14 +86,7 @@ export default async function CharacterPage({ params }: Props) {
   const { slug } = await params;
   const supabase = await createServerClient();
 
-  // キャラ情報取得
-  const { data: character } = await supabase
-    .from("characters")
-    .select("id, slug, name, rarity, element, role, race, position, attack_type, stats, skills, metadata, image_url, favorite_item_id, is_provisional, is_hidden, created_at, updated_at")
-    .eq("slug", slug)
-    .eq("is_hidden", false)
-    .returns<Character[]>()
-    .single();
+  const character = await getCharacter(slug);
 
   if (!character) {
     notFound();

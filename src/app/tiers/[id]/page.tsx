@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import { createServerClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import { TierDetailClient } from "./tier-detail-client";
@@ -23,19 +24,23 @@ type TierData = {
   user_hash: string;
 };
 
+const getTier = cache(async (id: string) => {
+  const supabase = await createServerClient();
+  const { data } = await supabase
+    .from("tiers")
+    .select("*")
+    .eq("id", id)
+    .single();
+  return data as TierData | null;
+});
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const supabase = await createServerClient();
-
-  const { data: tier } = await supabase
-    .from("tiers")
-    .select("title")
-    .eq("id", id)
-    .single();
+  const tier = await getTier(id);
 
   if (!tier) {
     return {
@@ -43,7 +48,7 @@ export async function generateMetadata({
     };
   }
 
-  const title = (tier as { title: string | null }).title || "無題のティア";
+  const title = tier.title || "無題のティア";
   return {
     title: `${title} | みんなのティア表 | みんなで決めるトリッカルランキング`,
     description: `トリッカルのティア表「${title}」を見る`,
@@ -58,17 +63,11 @@ export default async function TierDetailPage({
   const { id } = await params;
   const supabase = await createServerClient();
 
-  const { data: rawTier } = await supabase
-    .from("tiers")
-    .select("*")
-    .eq("id", id)
-    .single();
+  const tier = await getTier(id);
 
-  if (!rawTier) {
+  if (!tier) {
     notFound();
   }
-
-  const tier = rawTier as TierData;
 
   if (tier.is_deleted) {
     return (
