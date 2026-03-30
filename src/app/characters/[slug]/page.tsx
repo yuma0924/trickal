@@ -103,8 +103,8 @@ export default async function CharacterPage({ params }: Props) {
     notFound();
   }
 
-  // ランキング情報 + 好物アイテム + 報酬アイテムを並列取得
-  const [rankingResult, favoriteItemResult, rewardsResult] = await Promise.all([
+  // ランキング情報 + 好物アイテム + 報酬アイテム + 初期コメントを並列取得
+  const [rankingResult, favoriteItemResult, rewardsResult, commentsResult] = await Promise.all([
     supabase
       .from("character_rankings")
       .select("avg_rating, valid_votes_count, board_comments_count, rank")
@@ -123,6 +123,13 @@ export default async function CharacterPage({ params }: Props) {
       .select("item_id, sort_order")
       .eq("character_id", character.id)
       .order("sort_order", { ascending: true }),
+    supabase
+      .from("comments")
+      .select("id, character_id, user_hash, comment_type, rating, body, display_name, is_latest_vote, is_deleted, thumbs_up_count, thumbs_down_count, created_at")
+      .eq("character_id", character.id)
+      .eq("is_deleted", false)
+      .order("created_at", { ascending: false })
+      .limit(21),
   ]);
 
   const ranking = rankingResult.data;
@@ -230,17 +237,8 @@ export default async function CharacterPage({ params }: Props) {
     partTimeRewards: rewardItems.map((i) => ({ name: i.name, imageUrl: i.image_url })),
   };
 
-  // 初期コメント（投票+掲示板）を取得
-  const { data: initialComments } = await supabase
-    .from("comments")
-    .select("id, character_id, user_hash, comment_type, rating, body, display_name, is_latest_vote, is_deleted, thumbs_up_count, thumbs_down_count, created_at")
-    .eq("character_id", character.id)
-    .eq("is_deleted", false)
-    .order("created_at", { ascending: false })
-    .limit(21);
-
-  const commentsData = (initialComments ?? []).slice(0, 20);
-  const hasMoreComments = (initialComments ?? []).length > 20;
+  const commentsData = (commentsResult.data ?? []).slice(0, 20);
+  const hasMoreComments = (commentsResult.data ?? []).length > 20;
 
   return (
     <CharacterDetailClient
