@@ -110,15 +110,13 @@ export default async function BuildDetailPage({
     );
   }
 
-  // メンバーのキャラ情報 + 似ている編成を並列取得
+  // 全キャラ + 似ている編成を並列取得
   const actualMemberIds = build.members.filter((id): id is string => id !== null);
-  const [{ data: rawChars }, { data: rawCandidates }] = await Promise.all([
-    actualMemberIds.length > 0
-      ? supabase
-          .from("characters")
-          .select("id, name, slug, element, position, image_url, is_hidden")
-          .in("id", actualMemberIds)
-      : Promise.resolve({ data: [] as CharacterInfo[] }),
+  const [{ data: allChars }, { data: rawCandidates }] = await Promise.all([
+    supabase
+      .from("characters")
+      .select("id, name, slug, element, position, image_url, is_hidden")
+      .eq("is_hidden", false),
     supabase
       .from("builds")
       .select("*")
@@ -130,7 +128,7 @@ export default async function BuildDetailPage({
   ]);
 
   const charMap = new Map(
-    ((rawChars as CharacterInfo[] | null) ?? []).map((c) => [c.id, c])
+    ((allChars as CharacterInfo[] | null) ?? []).map((c) => [c.id, c])
   );
 
   const membersDetail = actualMemberIds.map(
@@ -158,21 +156,6 @@ export default async function BuildDetailPage({
       return b.likes_count - a.likes_count;
     })
     .slice(0, 5);
-
-  // 似ている編成のキャラ情報
-  const similarMemberIds = [
-    ...new Set(candidates.flatMap((sb) => sb.members).filter((id): id is string => id !== null)),
-  ];
-  if (similarMemberIds.length > 0) {
-    const { data: sc } = await supabase
-      .from("characters")
-      .select("id, name, slug, element, position, image_url, is_hidden")
-      .in("id", similarMemberIds);
-
-    for (const c of (sc as CharacterInfo[] | null) ?? []) {
-      if (!charMap.has(c.id)) charMap.set(c.id, c);
-    }
-  }
 
   const similarBuilds: SimilarBuild[] = candidates.map((sb) => ({
     id: sb.id,
