@@ -40,7 +40,7 @@ export function CharacterCard({
             height={164}
             className="aspect-square w-full object-cover"
             sizes="(max-width: 768px) 25vw, 14vw"
-            loading="lazy"
+            loading="eager"
           />
         ) : (
           <div className="flex aspect-square w-full items-center justify-center bg-bg-tertiary text-sm text-text-muted">

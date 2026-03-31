@@ -43,7 +43,7 @@ export function CharacterIcon({
           height={imageSize}
           className="pointer-events-none h-full w-full object-cover"
           sizes="(max-width: 768px) 48px, 64px"
-          loading="lazy"
+          loading="eager"
         />
       ) : (
         <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-xs text-text-tertiary">
