@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { StaticIcon } from "@/components/ui/static-icon";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { StarRatingDisplay } from "@/components/ui/star-rating";
 import { CharacterCard } from "@/components/character/character-card";
@@ -606,25 +607,25 @@ export default async function Home() {
                               {char.name}
                             </p>
                             {char.element && ELEMENT_ICON_MAP[char.element] && (
-                              <Image src={ELEMENT_ICON_MAP[char.element]} alt={char.element} width={16} height={16} className="shrink-0 lg:h-5 lg:w-5" />
+                              <StaticIcon src={ELEMENT_ICON_MAP[char.element]} alt={char.element} width={16} height={16} className="shrink-0 lg:h-5 lg:w-5" />
                             )}
                           </div>
                           <div className="mt-1 flex flex-wrap items-center gap-1 lg:mt-1.5">
                             {char.role && ROLE_ICON_MAP[char.role] && (
                               <span className="flex items-center gap-0.5 rounded-[4px] bg-bg-tertiary px-1.5 py-0.5 text-[11px] md:text-xs text-text-tertiary">
-                                <Image src={ROLE_ICON_MAP[char.role]} alt={char.role} width={13} height={13} />
+                                <StaticIcon src={ROLE_ICON_MAP[char.role]} alt={char.role} width={13} height={13} />
                                 {char.role}
                               </span>
                             )}
                             {char.position && POSITION_ICON_MAP[char.position] && (
                               <span className="flex items-center gap-0.5 rounded-[4px] bg-bg-tertiary px-1.5 py-0.5 text-[11px] md:text-xs text-text-tertiary">
-                                <Image src={POSITION_ICON_MAP[char.position]} alt={char.position} width={13} height={13} />
+                                <StaticIcon src={POSITION_ICON_MAP[char.position]} alt={char.position} width={13} height={13} />
                                 {char.position}
                               </span>
                             )}
                             {char.attackType && ATTACK_TYPE_ICON_MAP[char.attackType] && (
                               <span className="flex items-center gap-0.5 rounded-[4px] bg-bg-tertiary px-1.5 py-0.5 text-[11px] md:text-xs text-text-tertiary">
-                                <Image src={ATTACK_TYPE_ICON_MAP[char.attackType]} alt={char.attackType} width={13} height={13} />
+                                <StaticIcon src={ATTACK_TYPE_ICON_MAP[char.attackType]} alt={char.attackType} width={13} height={13} />
                                 {char.attackType}
                               </span>
                             )}
@@ -780,7 +781,7 @@ export default async function Home() {
                                 const char = charMap.get(charId);
                                 if (!char) return null;
                                 return (
-                                  <div key={charId} className="h-8 w-8 shrink-0 overflow-hidden rounded">
+                                  <div key={charId} className="h-8 w-8 shrink-0 overflow-hidden rounded bg-bg-tertiary">
                                     {char.imageUrl ? (
                                       <Image
                                         src={char.imageUrl}
@@ -788,7 +789,7 @@ export default async function Home() {
                                         width={64}
                                         height={64}
                                         className="pointer-events-none h-full w-full object-cover"
-                                        loading="lazy"
+                                        loading="eager"
                                       />
                                     ) : (
                                       <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-[10px] text-text-muted">
@@ -899,7 +900,7 @@ export default async function Home() {
                 >
                   <div className="flex items-center gap-2.5 p-2.5">
                     {/* キャラアイコン */}
-                    <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg">
+                    <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-bg-tertiary">
                       {char.imageUrl ? (
                         <Image
                           src={char.imageUrl}
@@ -907,7 +908,7 @@ export default async function Home() {
                           width={56}
                           height={56}
                           className="h-full w-full object-cover"
-                          loading="lazy"
+                          loading="eager"
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-sm text-text-muted">
@@ -922,7 +923,7 @@ export default async function Home() {
                           {char.name}
                         </p>
                         {char.element && ELEMENT_ICON_MAP[char.element] && (
-                          <Image src={ELEMENT_ICON_MAP[char.element]} alt={char.element} width={16} height={16} className="shrink-0" />
+                          <StaticIcon src={ELEMENT_ICON_MAP[char.element]} alt={char.element} width={16} height={16} className="shrink-0" />
                         )}
                       </div>
                       <div className="mt-1 flex items-center gap-1.5">

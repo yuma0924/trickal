@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Image from "next/image";
+import { StaticIcon } from "@/components/ui/static-icon";
 import { cn, matchesName } from "@/lib/utils";
 import { ELEMENTS } from "@/lib/constants";
 import { CharacterCard } from "@/components/character/character-card";
@@ -156,7 +156,7 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
                     }}
                     title={elem}
                   >
-                    <Image
+                    <StaticIcon
                       src={ELEMENT_ICONS[elem]}
                       alt={elem}
                       width={20}
@@ -234,7 +234,7 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
                     }}
                     title={type.value}
                   >
-                    <Image
+                    <StaticIcon
                       src={type.icon}
                       alt={type.value}
                       width={20}
@@ -262,7 +262,7 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
                     }}
                     title={pos.value}
                   >
-                    <Image
+                    <StaticIcon
                       src={pos.icon}
                       alt={pos.value}
                       width={20}

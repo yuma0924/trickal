@@ -41,7 +41,7 @@ export default function RootLayout({
             <ScrollToTop />
             <Header />
             <div className="mx-auto w-full max-w-6xl flex-1 px-4 pt-4 pb-12 md:px-8 md:pt-6 md:pb-16 lg:grid lg:grid-cols-[1fr_240px] lg:gap-6">
-              <main>
+              <main className="bg-bg-primary">
                 {children}
               </main>
               <aside className="hidden lg:block">

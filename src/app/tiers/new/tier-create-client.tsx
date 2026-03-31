@@ -16,7 +16,7 @@ import {
 } from "@dnd-kit/core";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
-import Image from "next/image";
+import { StaticIcon } from "@/components/ui/static-icon";
 import { TIER_LABELS, ELEMENTS } from "@/lib/constants";
 import type { TierLabel } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -429,7 +429,7 @@ function UnassignedPanel({
                 }}
                 title={el}
               >
-                <Image
+                <StaticIcon
                   src={ELEMENT_ICONS[el]}
                   alt={el}
                   width={20}

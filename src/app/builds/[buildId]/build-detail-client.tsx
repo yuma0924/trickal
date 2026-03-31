@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import Image from "next/image";
+import { StaticIcon } from "@/components/ui/static-icon";
 import { Button } from "@/components/ui/button";
 
 import { CharacterIcon } from "@/components/character/character-icon";
@@ -365,7 +365,7 @@ export function BuildDetailClient({
               .filter((e, i, arr) => e && arr.indexOf(e) === i)
               .map((el) => (
                 ELEMENT_ICONS[el as string] ? (
-                  <Image
+                  <StaticIcon
                     key={el}
                     src={ELEMENT_ICONS[el as string]}
                     alt={el as string}
@@ -669,7 +669,7 @@ export function BuildDetailClient({
                       .filter((e, i, arr) => e && arr.indexOf(e) === i)
                       .map((el) => (
                         ELEMENT_ICONS[el as string] ? (
-                          <Image
+                          <StaticIcon
                             key={el}
                             src={ELEMENT_ICONS[el as string]}
                             alt={el as string}

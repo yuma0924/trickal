@@ -49,9 +49,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [theme]);
 
   const setTheme = (newTheme: Theme) => {
+    const root = document.documentElement;
+    root.setAttribute("data-theme-transition", "");
     setThemeState(newTheme);
     localStorage.setItem(STORAGE_KEY, newTheme);
     applyTheme(newTheme);
+    setTimeout(() => root.removeAttribute("data-theme-transition"), 200);
   };
 
   return (

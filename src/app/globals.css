@@ -235,20 +235,13 @@ body {
   display: none;
 }
 
-/* テーマ切替トランジション */
-*,
-*::before,
-*::after {
+/* テーマ切替トランジション（切替中のみ有効化） */
+[data-theme-transition] *,
+[data-theme-transition] *::before,
+[data-theme-transition] *::after {
   transition-property: background-color, border-color;
   transition-duration: 0.15s;
   transition-timing-function: ease-out;
-}
-
-/* アニメーション中に不要なトランジションを防止 */
-[data-no-transition] *,
-[data-no-transition] *::before,
-[data-no-transition] *::after {
-  transition: none !important;
 }
 
 /* フォーカス表示 */

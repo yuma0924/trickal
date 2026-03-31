@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
-import Image from "next/image";
+import { StaticIcon } from "@/components/ui/static-icon";
 import { CharacterIcon } from "@/components/character/character-icon";
 import { Button } from "@/components/ui/button";
 import { createBrowserClient } from "@/lib/supabase/client";
@@ -442,7 +442,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                     }}
                     title={elem}
                   >
-                    <Image
+                    <StaticIcon
                       src={ELEMENT_ICONS[elem]}
                       alt={elem}
                       width={20}
@@ -480,7 +480,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                     }}
                     title={pos}
                   >
-                    <Image
+                    <StaticIcon
                       src={POSITION_ICON_MAP[pos]}
                       alt={pos}
                       width={20}
@@ -527,7 +527,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
                   <div className="flex items-center gap-1">
                     <p className="truncate text-sm font-bold text-text-primary">{selectedChar.name}</p>
                     {selectedChar.position && POSITION_ICON_MAP[selectedChar.position] && (
-                      <Image src={POSITION_ICON_MAP[selectedChar.position]} alt={selectedChar.position} width={16} height={16} className="shrink-0" />
+                      <StaticIcon src={POSITION_ICON_MAP[selectedChar.position]} alt={selectedChar.position} width={16} height={16} className="shrink-0" />
                     )}
                   </div>
                   <p className="text-xs text-text-muted">右のスロットをタップして配置</p>

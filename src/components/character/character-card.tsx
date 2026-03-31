@@ -31,7 +31,7 @@ export function CharacterCard({
         className
       )}
     >
-      <div className="relative">
+      <div className="relative bg-bg-tertiary">
         {imageUrl ? (
           <Image
             src={imageUrl}

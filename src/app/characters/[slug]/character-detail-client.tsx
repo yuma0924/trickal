@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { StaticIcon } from "@/components/ui/static-icon";
 import { CharacterCard } from "@/components/character/character-card";
 import { StarRatingDisplay } from "@/components/ui/star-rating";
 import { CommentForm } from "@/components/comment/comment-form";
@@ -70,7 +71,7 @@ function InfoChip({ label, labelIcon, badgeIcon, name, imageUrl, description, pa
   return (
     <div className="w-52 rounded-[10px] border border-border-primary bg-bg-card-alpha-light px-3 py-2.5">
       <p className="flex items-center gap-1 text-xs text-text-tertiary">
-        {labelIcon && <Image src={labelIcon} alt="" width={16} height={16} className="shrink-0" />}
+        {labelIcon && <StaticIcon src={labelIcon} alt="" width={16} height={16} className="shrink-0" />}
         {label}
       </p>
       <div className="mt-1.5 flex items-center gap-2.5">
@@ -78,7 +79,7 @@ function InfoChip({ label, labelIcon, badgeIcon, name, imageUrl, description, pa
           <div className="relative shrink-0">
             <Image src={imageUrl} alt={name} width={96} height={96} className="h-12 w-12 rounded-md" />
             {badgeIcon && (
-              <Image src={badgeIcon} alt="" width={16} height={16} className="absolute -left-1 -top-1" />
+              <StaticIcon src={badgeIcon} alt="" width={16} height={16} className="absolute -left-1 -top-1" />
             )}
           </div>
         )}
@@ -432,7 +433,7 @@ export function CharacterDetailClient({
               {character.name}
             </h1>
             {character.element && ELEMENT_ICON_MAP[character.element] && (
-              <Image src={ELEMENT_ICON_MAP[character.element]} alt={character.element} width={22} height={22} className="shrink-0 md:h-7 md:w-7" />
+              <StaticIcon src={ELEMENT_ICON_MAP[character.element]} alt={character.element} width={22} height={22} className="shrink-0 md:h-7 md:w-7" />
             )}
           </div>
 
@@ -440,19 +441,19 @@ export function CharacterDetailClient({
           <div className="mt-1.5 md:mt-3 flex flex-wrap items-center gap-1 md:gap-2">
             {character.role && ROLE_ICON_MAP[character.role] && (
               <span className="flex items-center gap-1 rounded-[4px] bg-bg-tertiary px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base text-text-tertiary">
-                <Image src={ROLE_ICON_MAP[character.role]} alt={character.role} width={15} height={15} className="md:h-5 md:w-5" />
+                <StaticIcon src={ROLE_ICON_MAP[character.role]} alt={character.role} width={15} height={15} className="md:h-5 md:w-5" />
                 {character.role}
               </span>
             )}
             {character.position && POSITION_ICON_MAP[character.position] && (
               <span className="flex items-center gap-1 rounded-[4px] bg-bg-tertiary px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base text-text-tertiary">
-                <Image src={POSITION_ICON_MAP[character.position]} alt={character.position} width={15} height={15} className="md:h-5 md:w-5" />
+                <StaticIcon src={POSITION_ICON_MAP[character.position]} alt={character.position} width={15} height={15} className="md:h-5 md:w-5" />
                 {character.position}
               </span>
             )}
             {character.attackType && ATTACK_TYPE_ICON_MAP[character.attackType] && (
               <span className="flex items-center gap-1 rounded-[4px] bg-bg-tertiary px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base text-text-tertiary">
-                <Image src={ATTACK_TYPE_ICON_MAP[character.attackType]} alt={character.attackType} width={15} height={15} className="md:h-5 md:w-5" />
+                <StaticIcon src={ATTACK_TYPE_ICON_MAP[character.attackType]} alt={character.attackType} width={15} height={15} className="md:h-5 md:w-5" />
                 {character.attackType}
               </span>
             )}
@@ -541,7 +542,7 @@ export function CharacterDetailClient({
                 )}
                 <div className="min-w-0">
                   <p className="flex items-center gap-1 text-xs text-text-tertiary">
-                    <Image src="/icons/favorite.png" alt="" width={20} height={20} className="shrink-0" />
+                    <StaticIcon src="/icons/favorite.png" alt="" width={20} height={20} className="shrink-0" />
                     大好物
                   </p>
                   <p className="mt-0.5 text-base font-bold leading-snug text-text-primary">{character.favoriteItem.name}</p>
@@ -560,7 +561,7 @@ export function CharacterDetailClient({
                         <div className="flex h-[52px] w-[52px] items-center justify-center rounded-md bg-[rgba(249,168,212,0.1)] text-[10px] text-text-muted">?</div>
                       )}
                       {i === 0 && (
-                        <Image src="/icons/good.png" alt="" width={16} height={16} className="absolute -left-1 -top-1" />
+                        <StaticIcon src="/icons/good.png" alt="" width={16} height={16} className="absolute -left-1 -top-1" />
                       )}
                       <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 hidden -translate-x-1/2 whitespace-nowrap rounded-md bg-bg-input px-2 py-1 text-[11px] text-text-tertiary shadow-lg group-hover:block">
                         {reward.name}
@@ -627,7 +628,7 @@ export function CharacterDetailClient({
             onClick={() => setItemsOpen(!itemsOpen)}
           >
             <span className="flex items-center gap-1">
-              <Image src="/icons/favorite.png" alt="" width={18} height={18} className="shrink-0" />
+              <StaticIcon src="/icons/favorite.png" alt="" width={18} height={18} className="shrink-0" />
               大好物・アルバイト報酬
             </span>
             <svg
@@ -642,7 +643,7 @@ export function CharacterDetailClient({
             {character.favoriteItem && (
               <div className="flex flex-1 flex-col justify-center rounded-[10px] border border-border-primary bg-bg-card-alpha-light px-2.5 py-2">
                 <p className="flex items-center gap-1 text-[10px] text-text-muted">
-                  <Image src="/icons/favorite.png" alt="" width={16} height={16} className="shrink-0" />
+                  <StaticIcon src="/icons/favorite.png" alt="" width={16} height={16} className="shrink-0" />
                   大好物
                 </p>
                 <div className="mt-1 flex items-center gap-2">
@@ -665,7 +666,7 @@ export function CharacterDetailClient({
                         <div className="flex h-9 w-9 items-center justify-center rounded bg-[rgba(249,168,212,0.1)] text-[10px] text-text-muted">?</div>
                       )}
                       {i === 0 && (
-                        <Image src="/icons/good.png" alt="" width={12} height={12} className="absolute -left-0.5 -top-0.5" />
+                        <StaticIcon src="/icons/good.png" alt="" width={12} height={12} className="absolute -left-0.5 -top-0.5" />
                       )}
                     </div>
                   ))}

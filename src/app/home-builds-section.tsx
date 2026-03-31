@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { StaticIcon } from "@/components/ui/static-icon";
 import { cn } from "@/lib/utils";
 
 const ELEMENT_ICONS: Record<string, string> = {
@@ -108,7 +109,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                 }}
                 title={elem}
               >
-                <Image
+                <StaticIcon
                   src={ELEMENT_ICONS[elem]}
                   alt={elem}
                   width={20}
@@ -151,7 +152,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                   <div className="flex shrink-0 items-center gap-1.5">
                     {uniqueElements.map((elem) => (
                       ELEMENT_ICONS[elem] ? (
-                        <Image
+                        <StaticIcon
                           key={elem}
                           src={ELEMENT_ICONS[elem]}
                           alt={elem}
@@ -190,9 +191,9 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                             )}>
                               {char ? (
                                 <>
-                                  <div className="h-12 w-12 overflow-hidden rounded-lg">
+                                  <div className="h-12 w-12 overflow-hidden rounded-lg bg-bg-tertiary">
                                     {char.imageUrl ? (
-                                      <Image src={char.imageUrl} alt={char.name} width={96} height={96} className="h-full w-full object-cover" loading="lazy" />
+                                      <Image src={char.imageUrl} alt={char.name} width={96} height={96} className="h-full w-full object-cover" loading="eager" />
                                     ) : (
                                       <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-xs text-text-muted">{char.name.charAt(0)}</div>
                                     )}

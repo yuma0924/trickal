@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { StaticIcon } from "@/components/ui/static-icon";
 import { Button } from "@/components/ui/button";
 import { CharacterIcon } from "@/components/character/character-icon";
 import { ThumbsUpDown } from "@/components/reaction/thumbs-up-down";
@@ -298,7 +298,7 @@ export function BuildsClient({ initialBuilds }: BuildsClientProps) {
                 }}
                 title={elem}
               >
-                <Image
+                <StaticIcon
                   src={ELEMENT_ICONS[elem]}
                   alt={elem}
                   width={20}
@@ -386,7 +386,7 @@ export function BuildsClient({ initialBuilds }: BuildsClientProps) {
                 }}
                 title={elem}
               >
-                <Image
+                <StaticIcon
                   src={ELEMENT_ICONS[elem]}
                   alt={elem}
                   width={20}
@@ -529,7 +529,7 @@ function BuildCard({
               .filter((e, i, arr) => e && arr.indexOf(e) === i)
               .map((el) => (
                 ELEMENT_ICONS[el as string] ? (
-                  <Image
+                  <StaticIcon
                     key={el}
                     src={ELEMENT_ICONS[el as string]}
                     alt={el as string}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { StaticIcon } from "@/components/ui/static-icon";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { BuildsClient } from "./builds-client";
 
@@ -236,7 +237,7 @@ export default async function BuildsPage() {
               >
                 {/* キャラ情報 */}
                 <div className="flex items-center gap-2.5 p-2.5">
-                  <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg">
+                  <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-bg-tertiary">
                     {char.imageUrl ? (
                       <Image
                         src={char.imageUrl}
@@ -244,7 +245,7 @@ export default async function BuildsPage() {
                         width={56}
                         height={56}
                         className="h-full w-full object-cover"
-                        loading="lazy"
+                        loading="eager"
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-sm text-text-muted">
@@ -258,7 +259,7 @@ export default async function BuildsPage() {
                         {char.name}
                       </p>
                       {char.element && ELEMENT_ICON_MAP[char.element] && (
-                        <Image src={ELEMENT_ICON_MAP[char.element]} alt={char.element} width={16} height={16} className="shrink-0" />
+                        <StaticIcon src={ELEMENT_ICON_MAP[char.element]} alt={char.element} width={16} height={16} className="shrink-0" />
                       )}
                     </div>
                     <div className="mt-1 flex items-center gap-1.5">

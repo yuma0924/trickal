@@ -29,7 +29,7 @@ export function CharacterIcon({
   return (
     <div
       className={cn(
-        "relative overflow-hidden",
+        "relative overflow-hidden bg-bg-tertiary",
         isHidden && "opacity-40 grayscale",
         container,
         className
