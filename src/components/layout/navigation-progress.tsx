@@ -52,6 +52,21 @@ export function NavigationProgress() {
     return () => document.removeEventListener("click", handleClick, true);
   }, [startProgress, pathname]);
 
+  // popstate（戻る/進む）時は即座に非表示
+  useEffect(() => {
+    const onPop = () => {
+      navigating.current = false;
+      if (slowTimer.current) {
+        clearTimeout(slowTimer.current);
+        slowTimer.current = null;
+      }
+      setVisible(false);
+      setProgress(0);
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+
   useEffect(() => {
     if (prevPathname.current !== pathname) {
       prevPathname.current = pathname;
