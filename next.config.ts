@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
       dynamic: 30,
       static: 300,
     },
+    viewTransition: true,
   },
 };
 

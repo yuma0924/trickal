@@ -235,6 +235,12 @@ body {
   display: none;
 }
 
+/* ページ遷移: スクリーンショット保持で暗転防止（アニメーションなし） */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
 /* テーマ切替トランジション（切替中のみ有効化） */
 [data-theme-transition] *,
 [data-theme-transition] *::before,
