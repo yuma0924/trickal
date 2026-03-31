@@ -1,10 +1,45 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { StaticIcon } from "@/components/ui/static-icon";
 import { cn, matchesName } from "@/lib/utils";
 import { ELEMENTS } from "@/lib/constants";
 import { CharacterCard } from "@/components/character/character-card";
+
+/** URLクエリパラメータからフィルター状態を復元 */
+function readFiltersFromURL() {
+  if (typeof window === "undefined") return null;
+  const params = new URLSearchParams(window.location.search);
+  return {
+    q: params.get("q") ?? "",
+    element: params.get("element")?.split(",").filter(Boolean) ?? [],
+    role: params.get("role")?.split(",").filter(Boolean) ?? [],
+    position: params.get("position")?.split(",").filter(Boolean) ?? [],
+    race: params.get("race")?.split(",").filter(Boolean) ?? [],
+    rarity: params.get("rarity")?.split(",").filter(Boolean) ?? [],
+  };
+}
+
+/** フィルター状態をURLクエリパラメータに書き込み（履歴を増やさない） */
+function writeFiltersToURL(
+  q: string,
+  element: Set<string>,
+  role: Set<string>,
+  position: Set<string>,
+  race: Set<string>,
+  rarity: Set<string>,
+) {
+  const params = new URLSearchParams();
+  if (q.trim()) params.set("q", q.trim());
+  if (element.size) params.set("element", [...element].join(","));
+  if (role.size) params.set("role", [...role].join(","));
+  if (position.size) params.set("position", [...position].join(","));
+  if (race.size) params.set("race", [...race].join(","));
+  if (rarity.size) params.set("rarity", [...rarity].join(","));
+  const qs = params.toString();
+  const url = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+  window.history.replaceState(null, "", url);
+}
 
 interface SearchCharacter {
   id: string;
@@ -50,6 +85,27 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
   const [positionFilters, setPositionFilters] = useState<Set<string>>(new Set());
   const [raceFilters, setRaceFilters] = useState<Set<string>>(new Set());
   const [rarityFilters, setRarityFilters] = useState<Set<string>>(new Set());
+
+  // URLからフィルター復元（初回マウント時）
+  useEffect(() => {
+    const saved = readFiltersFromURL();
+    if (!saved) return;
+    if (saved.q) setSearchQuery(saved.q);
+    if (saved.element.length) setElementFilters(new Set(saved.element));
+    if (saved.role.length) setTypeFilters(new Set(saved.role));
+    if (saved.position.length) setPositionFilters(new Set(saved.position));
+    if (saved.race.length) setRaceFilters(new Set(saved.race));
+    if (saved.rarity.length) setRarityFilters(new Set(saved.rarity));
+  }, []);
+
+  // フィルター変更時にURL更新
+  const syncURL = useCallback(() => {
+    writeFiltersToURL(searchQuery, elementFilters, typeFilters, positionFilters, raceFilters, rarityFilters);
+  }, [searchQuery, elementFilters, typeFilters, positionFilters, raceFilters, rarityFilters]);
+
+  useEffect(() => {
+    syncURL();
+  }, [syncURL]);
 
   const toggleFilter = (set: Set<string>, value: string, setter: (s: Set<string>) => void) => {
     const next = new Set(set);
