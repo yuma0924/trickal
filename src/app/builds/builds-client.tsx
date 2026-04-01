@@ -177,30 +177,46 @@ export function BuildsClient({ initialBuilds }: BuildsClientProps) {
     buildId: string,
     reaction: "up" | "down" | null
   ) => {
+    // 楽観的更新
+    const target = builds.find((b) => b.id === buildId);
+    if (!target) return;
+    const prevReaction = target.user_reaction;
+    setBuilds((prev) =>
+      prev.map((b) => {
+        if (b.id !== buildId) return b;
+        let { likes_count, dislikes_count } = b;
+        if (prevReaction === "up") likes_count--;
+        if (prevReaction === "down") dislikes_count--;
+        if (reaction === "up") likes_count++;
+        if (reaction === "down") dislikes_count++;
+        return { ...b, likes_count, dislikes_count, user_reaction: reaction };
+      })
+    );
+
     try {
       const res = await fetch(`/api/builds/${buildId}/reactions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reaction_type: reaction }),
       });
-
-      if (!res.ok) return;
-
-      const data = await res.json();
+      if (!res.ok) {
+        // ロールバック
+        setBuilds((prev) =>
+          prev.map((b) =>
+            b.id === buildId
+              ? { ...b, likes_count: target.likes_count, dislikes_count: target.dislikes_count, user_reaction: prevReaction }
+              : b
+          )
+        );
+      }
+    } catch {
       setBuilds((prev) =>
         prev.map((b) =>
           b.id === buildId
-            ? {
-                ...b,
-                likes_count: data.likes_count,
-                dislikes_count: data.dislikes_count,
-                user_reaction: data.user_reaction,
-              }
+            ? { ...b, likes_count: target.likes_count, dislikes_count: target.dislikes_count, user_reaction: prevReaction }
             : b
         )
       );
-    } catch {
-      // リアクションエラーは静かに失敗
     }
   };
 

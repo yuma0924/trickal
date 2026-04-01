@@ -342,8 +342,23 @@ export function CharacterDetailClient({
 
   // リアクション操作
   const handleReact = async (commentId: string, reaction: ReactionState) => {
-    // 楽観的更新
+    const prevReaction = userReactions[commentId] ?? null;
+
+    // 楽観的更新（リアクション状態 + カウント）
     setUserReactions((prev) => ({ ...prev, [commentId]: reaction }));
+    setComments((prev) =>
+      prev.map((c) => {
+        if (c.id !== commentId) return c;
+        let { thumbsUpCount, thumbsDownCount } = c;
+        // 旧リアクションを取り消し
+        if (prevReaction === "up") thumbsUpCount--;
+        if (prevReaction === "down") thumbsDownCount--;
+        // 新リアクションを加算
+        if (reaction === "up") thumbsUpCount++;
+        if (reaction === "down") thumbsDownCount++;
+        return { ...c, thumbsUpCount, thumbsDownCount };
+      })
+    );
 
     try {
       await fetch("/api/reactions", {
@@ -351,11 +366,20 @@ export function CharacterDetailClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ comment_id: commentId, reaction_type: reaction }),
       });
-      // カウントを正確に反映するためリロード
-      fetchComments(sortTab);
     } catch {
       // ロールバック
-      setUserReactions((prev) => ({ ...prev, [commentId]: null }));
+      setUserReactions((prev) => ({ ...prev, [commentId]: prevReaction }));
+      setComments((prev) =>
+        prev.map((c) => {
+          if (c.id !== commentId) return c;
+          let { thumbsUpCount, thumbsDownCount } = c;
+          if (reaction === "up") thumbsUpCount--;
+          if (reaction === "down") thumbsDownCount--;
+          if (prevReaction === "up") thumbsUpCount++;
+          if (prevReaction === "down") thumbsDownCount++;
+          return { ...c, thumbsUpCount, thumbsDownCount };
+        })
+      );
     }
   };
 

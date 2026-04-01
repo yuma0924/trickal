@@ -207,22 +207,30 @@ export function BuildDetailClient({
   }, [build.id]);
 
   const handleBuildReaction = async (reaction: "up" | "down" | null) => {
+    // 楽観的更新
+    const prevReaction = userReaction;
+    const prevBuild = { likes_count: build.likes_count, dislikes_count: build.dislikes_count };
+    let { likes_count, dislikes_count } = build;
+    if (prevReaction === "up") likes_count--;
+    if (prevReaction === "down") dislikes_count--;
+    if (reaction === "up") likes_count++;
+    if (reaction === "down") dislikes_count++;
+    setBuild((prev) => ({ ...prev, likes_count, dislikes_count }));
+    setUserReaction(reaction);
+
     try {
       const res = await fetch(`/api/builds/${build.id}/reactions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reaction_type: reaction }),
       });
-      if (!res.ok) return;
-      const data = await res.json();
-      setBuild((prev) => ({
-        ...prev,
-        likes_count: data.likes_count,
-        dislikes_count: data.dislikes_count,
-      }));
-      setUserReaction(data.user_reaction);
+      if (!res.ok) {
+        setBuild((prev) => ({ ...prev, ...prevBuild }));
+        setUserReaction(prevReaction);
+      }
     } catch {
-      // ignore
+      setBuild((prev) => ({ ...prev, ...prevBuild }));
+      setUserReaction(prevReaction);
     }
   };
 
@@ -230,6 +238,22 @@ export function BuildDetailClient({
     commentId: string,
     reaction: "up" | "down" | null
   ) => {
+    // 楽観的更新
+    const target = comments.find((c) => c.id === commentId);
+    if (!target) return;
+    const prevReaction = target.user_reaction;
+    setComments((prev) =>
+      prev.map((c) => {
+        if (c.id !== commentId) return c;
+        let { thumbs_up_count, thumbs_down_count } = c;
+        if (prevReaction === "up") thumbs_up_count--;
+        if (prevReaction === "down") thumbs_down_count--;
+        if (reaction === "up") thumbs_up_count++;
+        if (reaction === "down") thumbs_down_count++;
+        return { ...c, thumbs_up_count, thumbs_down_count, user_reaction: reaction };
+      })
+    );
+
     try {
       const res = await fetch(
         `/api/builds/${build.id}/comments/${commentId}/reactions`,
@@ -239,22 +263,23 @@ export function BuildDetailClient({
           body: JSON.stringify({ reaction_type: reaction }),
         }
       );
-      if (!res.ok) return;
-      const data = await res.json();
+      if (!res.ok) {
+        setComments((prev) =>
+          prev.map((c) =>
+            c.id === commentId
+              ? { ...c, thumbs_up_count: target.thumbs_up_count, thumbs_down_count: target.thumbs_down_count, user_reaction: prevReaction }
+              : c
+          )
+        );
+      }
+    } catch {
       setComments((prev) =>
         prev.map((c) =>
           c.id === commentId
-            ? {
-                ...c,
-                thumbs_up_count: data.thumbs_up_count,
-                thumbs_down_count: data.thumbs_down_count,
-                user_reaction: data.user_reaction,
-              }
+            ? { ...c, thumbs_up_count: target.thumbs_up_count, thumbs_down_count: target.thumbs_down_count, user_reaction: prevReaction }
             : c
         )
       );
-    } catch {
-      // ignore
     }
   };
 
