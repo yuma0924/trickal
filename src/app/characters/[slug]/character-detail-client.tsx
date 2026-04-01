@@ -418,6 +418,7 @@ export function CharacterDetailClient({
               width={224}
               height={224}
               className="h-full w-full object-cover"
+              priority
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-lg text-text-tertiary md:text-2xl">
