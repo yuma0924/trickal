@@ -487,11 +487,7 @@ export function CharacterDetailClient({
                 {character.race}
               </span>
             )}
-            {character.isProvisional && (
-              <span className="rounded-[4px] bg-bg-tertiary px-1.5 py-0.5 text-[13px] md:px-2.5 md:py-1 md:text-base font-bold text-[#facc15]">
-                暫定
-              </span>
-            )}
+
           </div>
 
           {/* 評価 */}

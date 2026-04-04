@@ -31,7 +31,6 @@ export interface Database {
           image_url: string | null;
           favorite_item_id: string | null;
 
-          is_provisional: boolean;
           is_hidden: boolean;
           created_at: string;
           updated_at: string;
@@ -52,7 +51,6 @@ export interface Database {
           image_url?: string | null;
           favorite_item_id?: string | null;
 
-          is_provisional?: boolean;
           is_hidden?: boolean;
           created_at?: string;
           updated_at?: string;
@@ -73,7 +71,6 @@ export interface Database {
           image_url?: string | null;
           favorite_item_id?: string | null;
 
-          is_provisional?: boolean;
           is_hidden?: boolean;
           created_at?: string;
           updated_at?: string;

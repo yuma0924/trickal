@@ -16,7 +16,7 @@ const getCharacter = cache(async (slug: string) => {
   const supabase = createAdminClient();
   const { data } = await supabase
     .from("characters")
-    .select("id, slug, name, rarity, element, role, race, position, attack_type, stats, skills, metadata, image_url, favorite_item_id, is_provisional, is_hidden, created_at, updated_at")
+    .select("id, slug, name, rarity, element, role, race, position, attack_type, stats, skills, metadata, image_url, favorite_item_id, is_hidden, created_at, updated_at")
     .eq("slug", slug)
     .eq("is_hidden", false)
     .returns<Character[]>()
@@ -64,7 +64,6 @@ export interface CharacterDetail {
   skills: unknown;
   metadata: unknown;
   imageUrl: string | null;
-  isProvisional: boolean;
   avgRating: number | null;
   validVotesCount: number;
   boardCommentsCount: number;
@@ -227,7 +226,6 @@ export default async function CharacterPage({ params }: Props) {
     skills: character.skills,
     metadata: character.metadata,
     imageUrl: character.image_url,
-    isProvisional: character.is_provisional,
     avgRating: ranking?.avg_rating ?? null,
     validVotesCount: ranking?.valid_votes_count ?? 0,
     boardCommentsCount: ranking?.board_comments_count ?? 0,

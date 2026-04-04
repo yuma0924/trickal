@@ -462,7 +462,6 @@ Rank-lab プロジェクト統合仕様書
   - metadata (jsonb) — 愛用カード情報（relic: { name: string, image_url: string | null, description: string, params: string }）
   - image_url (text) — キャラアイコン画像URL
   - favorite_item_id (UUID, FK → items.id, nullable) — 大好物アイテム
-  - is_provisional (boolean, default false) — 暫定値フラグ（サイト上に「⚠️」表示）
   - is_hidden (boolean, default false) — 非表示フラグ（サイト上に表示しないが、DB上のデータは維持）
     - is_hidden = true のキャラは全公開ページ（人気キャラランキング、キャラ検索、ホーム各セクション、character_rankings）から除外
     - builds の members に含まれている場合: アイコンをグレーアウト表示（編成自体は表示維持）

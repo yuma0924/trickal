@@ -28,7 +28,6 @@ const FIELDS: EditableField[] = [
   { key: "race", label: "種族", type: "select", options: ["妖精", "獣人", "エルフ", "精霊", "幽霊", "竜族", "魔女", "???"], width: "w-20" },
   { key: "position", label: "配置", type: "select", options: ["前列", "中列", "後列"], width: "w-16" },
   { key: "attack_type", label: "攻撃タイプ", type: "select", options: ["物理", "魔法"], width: "w-16" },
-  { key: "is_provisional", label: "暫定", type: "checkbox", width: "w-12" },
   { key: "is_hidden", label: "非表示", type: "checkbox", width: "w-12" },
 ];
 
@@ -160,7 +159,6 @@ export function CharacterEditor({
       metadata: {},
       image_url: null,
       favorite_item_id: null,
-      is_provisional: false,
       is_hidden: false,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
