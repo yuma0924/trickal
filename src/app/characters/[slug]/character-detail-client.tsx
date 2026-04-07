@@ -532,7 +532,7 @@ export function CharacterDetailClient({
               </button>
               {relicDetailOpen && (
                 <div
-                  className="absolute left-0 top-full z-10 mt-1 rounded-[12px] border border-border-primary bg-bg-input px-4 py-3 shadow-xl"
+                  className="absolute left-0 top-full z-10 mt-1 rounded-[12px] border border-accent-active/40 bg-bg-primary px-4 py-3 shadow-[0_12px_32px_rgba(0,0,0,0.6)] ring-1 ring-white/5"
                   style={{ width: relicBtnRef.current?.offsetWidth }}
                 >
                   {character.relic.params && (
@@ -623,7 +623,7 @@ export function CharacterDetailClient({
             </svg>
           </button>
           {relicDetailOpen && (
-            <div className="absolute left-0 right-0 top-full z-10 mt-1 rounded-[10px] border border-border-primary bg-bg-input px-3 py-2.5 shadow-xl">
+            <div className="absolute left-0 right-0 top-full z-10 mt-1 rounded-[10px] border border-accent-active/40 bg-bg-primary px-3 py-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.6)] ring-1 ring-white/5">
               {character.relic.params && (
                 <ul className="space-y-0.5 border-l-2 border-border-primary pl-2.5">
                   {character.relic.params.split("\n").filter(Boolean).map((line, i) => (
@@ -940,16 +940,13 @@ export function CharacterDetailClient({
             <button
               onClick={() => handleSortChange("thumbs_up")}
               className={cn(
-                "flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs md:text-sm md:px-3 md:py-1.5 font-medium transition-colors",
+                "rounded-full border px-2.5 py-1 text-xs md:text-sm md:px-3 md:py-1.5 font-medium transition-colors",
                 sortTab === "thumbs_up"
                   ? "border-accent-active/40 bg-accent-active/12 text-accent-active"
                   : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-text-tertiary"
               )}
             >
-              <svg className="h-3 w-3 text-accent-active" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M2 20h2c.55 0 1-.45 1-1v-9c0-.55-.45-1-1-1H2v11zm19.83-7.12c.11-.25.17-.52.17-.8V11c0-1.1-.9-2-2-2h-5.5l.92-4.65c.05-.22.02-.46-.08-.66-.23-.45-.52-.86-.88-1.22L14 2 7.59 8.41C7.21 8.79 7 9.3 7 9.83v7.84C7 18.95 8.05 20 9.34 20h8.11c.7 0 1.36-.37 1.72-.97l2.66-6.15z" />
-              </svg>
-              順
+              人気順
             </button>
           </div>
         </div>

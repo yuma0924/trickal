@@ -39,7 +39,7 @@ interface CommentListProps {
 
 const SORT_TABS = [
   { value: "newest" as const, label: "新着順" },
-  { value: "thumbs_up" as const, label: "👍順" },
+  { value: "thumbs_up" as const, label: "人気順" },
 ];
 
 export function CommentList({
