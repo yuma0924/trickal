@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { TIER_LABELS } from "@/lib/constants";
 import type { TierLabel } from "@/lib/constants";
@@ -141,6 +141,50 @@ export function TierDetailClient({
       setUserLiked(data.user_liked);
     } catch {
       // ignore
+    }
+  };
+
+  const [shareMenuOpen, setShareMenuOpen] = useState(false);
+  const shareMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!shareMenuOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        shareMenuRef.current &&
+        !shareMenuRef.current.contains(e.target as Node)
+      ) {
+        setShareMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [shareMenuOpen]);
+
+  const shareUrl = `https://rank-lab.com/tiers/${tier.id}`;
+  const shareText = `「${tier.title || "無題のティア"}」のティア表をチェック！`;
+
+  const handleShareX = () => {
+    setShareMenuOpen(false);
+    const params = new URLSearchParams({
+      text: shareText,
+      url: shareUrl,
+      hashtags: "トリッカルランキング",
+    });
+    const a = document.createElement("a");
+    a.href = `https://twitter.com/intent/tweet?${params.toString()}`;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.click();
+  };
+
+  const handleCopyUrl = async () => {
+    setShareMenuOpen(false);
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      showToast("URLをコピーしました");
+    } catch {
+      showToast("コピーに失敗しました");
     }
   };
 
@@ -386,11 +430,50 @@ export function TierDetailClient({
             {tier.display_name && <span>by {tier.display_name}</span>}
             <span>{formatDate(tier.created_at)}</span>
           </div>
-          <TierLikeButton
-            likesCount={tier.likes_count}
-            userLiked={userLiked}
-            onToggle={handleToggleLike}
-          />
+          <div className="flex items-center gap-2">
+            <div className="relative" ref={shareMenuRef}>
+              <button
+                type="button"
+                onClick={() => setShareMenuOpen((v) => !v)}
+                aria-label="共有"
+                className="flex items-center gap-1 rounded-lg border border-border-primary bg-bg-tertiary px-2.5 py-1 text-xs text-text-muted transition-colors hover:text-text-primary cursor-pointer"
+              >
+                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                </svg>
+                共有
+              </button>
+              {shareMenuOpen && (
+                <div className="absolute right-0 bottom-full z-20 mb-2 w-44 overflow-hidden rounded-xl border border-border-primary bg-bg-card shadow-[0_12px_32px_rgba(0,0,0,0.6)] ring-1 ring-white/5 dark:ring-white/10">
+                  <button
+                    type="button"
+                    onClick={handleShareX}
+                    className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-sm font-semibold text-text-primary transition-colors hover:bg-bg-card-hover cursor-pointer"
+                  >
+                    <svg className="h-4 w-4 text-text-primary" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                    Xで共有
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCopyUrl}
+                    className="flex w-full items-center gap-2.5 border-t border-border-primary px-4 py-3 text-left text-sm font-semibold text-text-primary transition-colors hover:bg-bg-card-hover cursor-pointer"
+                  >
+                    <svg className="h-4 w-4 text-text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    URLをコピー
+                  </button>
+                </div>
+              )}
+            </div>
+            <TierLikeButton
+              likesCount={tier.likes_count}
+              userLiked={userLiked}
+              onToggle={handleToggleLike}
+            />
+          </div>
         </div>
       </div>
 
@@ -571,10 +654,21 @@ export function TierDetailClient({
         )}
       </section>
 
+      {/* 自分もティアを作る */}
+      <Link
+        href="/tiers/new"
+        className="mt-10 flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#a855f7] to-[#ec4899] py-3 text-sm font-bold text-white shadow-md transition-opacity hover:opacity-90"
+      >
+        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+        ティア表を作成する
+      </Link>
+
       {/* ティア一覧へ戻る */}
       <Link
         href="/tiers"
-        className="mt-10 flex items-center justify-center gap-2 rounded-2xl border border-border-primary bg-bg-card py-3 text-sm font-medium text-text-primary transition-colors hover:bg-bg-card-hover"
+        className="flex items-center justify-center gap-2 rounded-2xl border border-border-primary bg-bg-card py-3 text-sm font-medium text-text-primary transition-colors hover:bg-bg-card-hover"
       >
         <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
           <rect x="0" y="0.5" width="3" height="3" rx="0.5" fill="#ef4444" />
