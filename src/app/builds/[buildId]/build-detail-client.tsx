@@ -613,7 +613,7 @@ export function BuildDetailClient({
                   <div className="flex items-start gap-2.5">
                     <div
                       className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full"
-                      style={{ backgroundColor: "#34d399" }}
+                      style={{ backgroundColor: "#22a870" }}
                     />
                     <div className="flex flex-col -mt-1">
                       <span className="text-base font-medium text-text-primary">

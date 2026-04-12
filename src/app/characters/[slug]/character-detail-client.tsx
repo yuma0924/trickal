@@ -534,7 +534,7 @@ export function CharacterDetailClient({
               </button>
               {relicDetailOpen && (
                 <div
-                  className="absolute left-0 top-full z-10 mt-1 rounded-[12px] border border-white/20 bg-bg-primary px-4 py-3 shadow-[0_12px_32px_rgba(0,0,0,0.6)] ring-1 ring-white/5"
+                  className="absolute left-0 top-full z-10 mt-1 rounded-[12px] border border-border-primary bg-bg-primary px-4 py-3 shadow-[0_12px_32px_rgba(0,0,0,0.4)]"
                   style={{ width: relicBtnRef.current?.offsetWidth }}
                 >
                   {character.relic.params && (
@@ -625,7 +625,7 @@ export function CharacterDetailClient({
             </svg>
           </button>
           {relicDetailOpen && (
-            <div className="absolute left-0 right-0 top-full z-10 mt-1 rounded-[10px] border border-white/20 bg-bg-primary px-3 py-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.6)] ring-1 ring-white/5">
+            <div className="absolute left-0 right-0 top-full z-10 mt-1 rounded-[10px] border border-border-primary bg-bg-primary px-3 py-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.4)]">
               {character.relic.params && (
                 <ul className="space-y-0.5 border-l-2 border-border-primary pl-2.5">
                   {character.relic.params.split("\n").filter(Boolean).map((line, i) => (
@@ -968,7 +968,7 @@ export function CharacterDetailClient({
           userReactions={userReactions}
           onReact={handleReact}
           onReport={handleReport}
-          accentColor="#34d399"
+          accentColor="#22a870"
           hideTab
         />
       </section>
