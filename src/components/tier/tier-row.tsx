@@ -31,7 +31,7 @@ export function TierRow({ label, characters, isDraggable = false, iconClassName 
         >
           {label}
         </div>
-        <div className="flex min-h-[68px] flex-1 flex-wrap items-center gap-1 px-2 py-1.5">
+        <div className="flex min-h-[72px] flex-1 flex-wrap items-center gap-1 px-2 py-1.5">
           {characters.map((char) => (
             <TierCharacterItem
               key={char.id}
@@ -78,7 +78,7 @@ function DroppableTierRow({
       </div>
       <div
         ref={setNodeRef}
-        className="flex min-h-[68px] flex-1 flex-wrap items-center gap-1 px-2 py-1.5"
+        className="flex min-h-[72px] flex-1 flex-wrap items-center gap-1 px-2 py-1"
       >
         <SortableContext items={characters.map((c) => c.id)} strategy={rectSortingStrategy}>
           {characters.map((char) => (
