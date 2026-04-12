@@ -81,11 +81,16 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
 
   // マウント時・バック時にURLからフィルター状態を復元
   useEffect(() => {
-    const restored = readBuildFiltersFromURL();
-    if (restored) {
-      setModeFilterState(restored.mode);
-      setElementFilterState(restored.element);
-    }
+    const restore = () => {
+      const restored = readBuildFiltersFromURL();
+      if (restored) {
+        setModeFilterState(restored.mode);
+        setElementFilterState(restored.element);
+      }
+    };
+    restore();
+    window.addEventListener("popstate", restore);
+    return () => window.removeEventListener("popstate", restore);
   }, []);
 
   const setModeFilter = useCallback((m: Mode) => {
