@@ -56,6 +56,10 @@ interface TierDetailClientProps {
     created_at: string;
   };
   characters: Record<string, CharacterData>;
+  initialComments?: {
+    comments: CommentItem[];
+    hasMore: boolean;
+  };
 }
 
 function formatDate(dateStr: string): string {
@@ -76,6 +80,7 @@ function formatDate(dateStr: string): string {
 export function TierDetailClient({
   tier: initialTier,
   characters,
+  initialComments,
 }: TierDetailClientProps) {
   const [tier, setTier] = useState(initialTier);
   const [userLiked, setUserLiked] = useState(false);
@@ -86,11 +91,11 @@ export function TierDetailClient({
   const [commentFormOpen, setCommentFormOpen] = useState(false);
 
   // コメント関連
-  const [comments, setComments] = useState<CommentItem[]>([]);
+  const [comments, setComments] = useState<CommentItem[]>(initialComments?.comments ?? []);
   const [commentsLoading, setCommentsLoading] = useState(false);
-  const [hasMoreComments, setHasMoreComments] = useState(false);
+  const [hasMoreComments, setHasMoreComments] = useState(initialComments?.hasMore ?? false);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
-  const [commentsLoaded, setCommentsLoaded] = useState(false);
+  const [commentsLoaded, setCommentsLoaded] = useState(!!initialComments);
 
   // コメント投稿フォーム
   const [commentBody, setCommentBody] = useState("");
@@ -242,8 +247,13 @@ export function TierDetailClient({
     [tier.id]
   );
 
-  // 初回のみ取得
+  // 初回のみ取得（initialCommentsがあればスキップ）
+  const initialFetchDone = useRef(!!initialComments);
   useEffect(() => {
+    if (initialFetchDone.current) {
+      initialFetchDone.current = false;
+      return;
+    }
     fetchComments();
   }, [fetchComments]);
 

@@ -105,6 +105,18 @@ export default async function TierDetailPage({
     }
   }
 
+  // コメントを事前取得
+  const { data: commentsRaw } = await supabase
+    .from("tier_comments")
+    .select("id, tier_id, display_name, body, thumbs_up_count, thumbs_down_count, created_at, is_deleted")
+    .eq("tier_id", id)
+    .eq("is_deleted", false)
+    .order("created_at", { ascending: false })
+    .limit(21);
+
+  const commentsData = (commentsRaw ?? []).slice(0, 20);
+  const hasMoreComments = (commentsRaw ?? []).length > 20;
+
   return (
     <TierDetailClient
       tier={{
@@ -116,6 +128,19 @@ export default async function TierDetailPage({
         created_at: tier.created_at,
       }}
       characters={characters}
+      initialComments={{
+        comments: commentsData.map((c) => ({
+          id: c.id,
+          tier_id: c.tier_id,
+          display_name: c.display_name,
+          body: c.body,
+          thumbs_up_count: c.thumbs_up_count,
+          thumbs_down_count: c.thumbs_down_count,
+          created_at: c.created_at,
+          user_reaction: null,
+        })),
+        hasMore: hasMoreComments,
+      }}
     />
   );
 }

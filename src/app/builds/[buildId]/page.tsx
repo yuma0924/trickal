@@ -189,6 +189,18 @@ export default async function BuildDetailPage({
     updated_at: sb.updated_at,
   }));
 
+  // コメントを事前取得
+  const { data: commentsRaw } = await supabase
+    .from("build_comments")
+    .select("id, build_id, display_name, body, thumbs_up_count, thumbs_down_count, created_at, is_deleted")
+    .eq("build_id", buildId)
+    .eq("is_deleted", false)
+    .order("created_at", { ascending: false })
+    .limit(21);
+
+  const commentsData = (commentsRaw ?? []).slice(0, 20);
+  const hasMoreComments = (commentsRaw ?? []).length > 20;
+
   return (
     <Suspense>
       <BuildDetailClient
@@ -208,6 +220,19 @@ export default async function BuildDetailPage({
           members_detail: membersDetail,
         }}
         similarBuilds={similarBuilds}
+        initialComments={{
+          comments: commentsData.map((c) => ({
+            id: c.id,
+            build_id: c.build_id,
+            display_name: c.display_name,
+            body: c.body,
+            thumbs_up_count: c.thumbs_up_count,
+            thumbs_down_count: c.thumbs_down_count,
+            created_at: c.created_at,
+            user_reaction: null,
+          })),
+          hasMore: hasMoreComments,
+        }}
       />
     </Suspense>
   );
