@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import Link from "next/link";
 import { TIER_LABELS } from "@/lib/constants";
 import type { TierLabel } from "@/lib/constants";
@@ -240,15 +240,29 @@ export function TierDetailClient({
         setCommentsLoaded(true);
       }
     },
-    [tier.id, sort]
+    [tier.id]
   );
 
-  // ソート変更時にリロード（旧データを維持したまま取得）
+  // 初回のみ取得
   useEffect(() => {
-    setNextCursor(null);
-    setHasMoreComments(false);
     fetchComments();
   }, [fetchComments]);
+
+  // クライアント側ソート
+  const sortedComments = useMemo(() => {
+    const sorted = [...comments];
+    if (sort === "thumbs_up") {
+      sorted.sort((a, b) => {
+        const netA = a.thumbs_up_count - a.thumbs_down_count;
+        const netB = b.thumbs_up_count - b.thumbs_down_count;
+        if (netB !== netA) return netB - netA;
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
+    } else {
+      sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    }
+    return sorted;
+  }, [comments, sort]);
 
   const handleCommentReaction = async (
     commentId: string,
@@ -593,7 +607,7 @@ export function TierDetailClient({
           </p>
         ) : (
           <div className="space-y-2">
-            {comments.map((c) => {
+            {sortedComments.map((c) => {
               const cKarma = getKarmaClass(c.thumbs_up_count, c.thumbs_down_count);
               return (
                 <div

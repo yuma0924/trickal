@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { StaticIcon } from "@/components/ui/static-icon";
@@ -178,15 +178,29 @@ export function BuildDetailClient({
         setCommentsLoaded(true);
       }
     },
-    [build.id, sort]
+    [build.id]
   );
 
-  // ソート変更時にリロード
+  // 初回のみ取得
   useEffect(() => {
-    setNextCursor(null);
-    setHasMoreComments(false);
     fetchComments();
   }, [fetchComments]);
+
+  // クライアント側ソート
+  const sortedComments = useMemo(() => {
+    const sorted = [...comments];
+    if (sort === "thumbs_up") {
+      sorted.sort((a, b) => {
+        const netA = a.thumbs_up_count - a.thumbs_down_count;
+        const netB = b.thumbs_up_count - b.thumbs_down_count;
+        if (netB !== netA) return netB - netA;
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
+    } else {
+      sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    }
+    return sorted;
+  }, [comments, sort]);
 
   // 初期リアクション状態を取得
   useEffect(() => {
@@ -598,7 +612,7 @@ export function BuildDetailClient({
           </p>
         ) : (
           <div className="space-y-2">
-            {comments.map((c) => {
+            {sortedComments.map((c) => {
               const cKarma = getKarmaClass(c.thumbs_up_count, c.thumbs_down_count);
               return (
                 <div

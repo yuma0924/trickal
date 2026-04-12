@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { StaticIcon } from "@/components/ui/static-icon";
@@ -302,13 +302,28 @@ export function CharacterDetailClient({
 
   const initialFetchDone = useRef(!!initialComments);
   useEffect(() => {
-    if (initialFetchDone.current && sortTab === "newest") {
+    if (initialFetchDone.current) {
       initialFetchDone.current = false;
       return;
     }
-    initialFetchDone.current = false;
-    fetchComments(sortTab);
-  }, [sortTab, fetchComments]);
+    fetchComments("newest");
+  }, [fetchComments]);
+
+  // クライアント側ソート
+  const sortedComments = useMemo(() => {
+    const sorted = [...comments];
+    if (sortTab === "thumbs_up") {
+      sorted.sort((a, b) => {
+        const netA = a.thumbsUpCount - a.thumbsDownCount;
+        const netB = b.thumbsUpCount - b.thumbsDownCount;
+        if (netB !== netA) return netB - netA;
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      });
+    } else {
+      sorted.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    }
+    return sorted;
+  }, [comments, sortTab]);
 
   // コメント投稿
   const handleSubmit = async (data: {
@@ -417,7 +432,7 @@ export function CharacterDetailClient({
 
   // もっと読む
   const handleLoadMore = () => {
-    fetchComments(sortTab, comments.length, true);
+    fetchComments("newest", comments.length, true);
   };
 
   // スキル情報
@@ -959,7 +974,7 @@ export function CharacterDetailClient({
           </div>
         </div>
         <CommentList
-          comments={comments}
+          comments={sortedComments}
           totalCount={totalCount}
           sortTab={sortTab}
           onSortChange={handleSortChange}

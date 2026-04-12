@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import { StaticIcon } from "@/components/ui/static-icon";
 import { Button } from "@/components/ui/button";
@@ -128,7 +128,7 @@ export function BuildsClient({ initialBuilds }: BuildsClientProps) {
       try {
         const params = new URLSearchParams({ mode });
         if (elementFilters.size > 0) params.set("element", [...elementFilters].join(","));
-        if (sortKey) params.set("sort", sortKey);
+        params.set("sort", "popular");
         if (cursorId) params.set("cursor", cursorId);
 
         const res = await fetch(`/api/builds?${params.toString()}`);
@@ -149,13 +149,13 @@ export function BuildsClient({ initialBuilds }: BuildsClientProps) {
         setInitialLoaded(true);
       }
     },
-    [mode, elementFilters, sortKey]
+    [mode, elementFilters]
   );
 
-  // mode や filter 変更時にリセット + 再取得
+  // mode や element filter 変更時にリセット + 再取得
   const initialSkip = useRef(!!initialBuilds);
   useEffect(() => {
-    if (initialSkip.current && mode === "general" && elementFilters.size === 0 && sortKey === "popular") {
+    if (initialSkip.current && mode === "general" && elementFilters.size === 0) {
       initialSkip.current = false;
       return;
     }
@@ -163,7 +163,23 @@ export function BuildsClient({ initialBuilds }: BuildsClientProps) {
     setNextCursor(null);
     setHasMore(false);
     fetchBuilds();
-  }, [fetchBuilds, initialBuilds, mode, elementFilters, sortKey]);
+  }, [fetchBuilds, initialBuilds, mode, elementFilters]);
+
+  // クライアント側ソート
+  const sortedBuilds = useMemo(() => {
+    const sorted = [...builds];
+    if (sortKey === "newest") {
+      sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    } else {
+      sorted.sort((a, b) => {
+        const netA = a.thumbs_up_count - a.thumbs_down_count;
+        const netB = b.thumbs_up_count - b.thumbs_down_count;
+        if (netB !== netA) return netB - netA;
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
+    }
+    return sorted;
+  }, [builds, sortKey]);
 
   const handleLoadMore = () => {
     if (nextCursor && !loading) {
@@ -447,7 +463,7 @@ export function BuildsClient({ initialBuilds }: BuildsClientProps) {
         <EmptyState />
       ) : (
         <div className="space-y-6 md:grid md:grid-cols-2 md:gap-5 md:space-y-0">
-          {builds.map((build, idx) => (
+          {sortedBuilds.map((build, idx) => (
             <BuildCard
               key={build.id}
               build={build}
