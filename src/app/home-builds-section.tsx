@@ -1,11 +1,28 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useSearchParams, useRouter } from "next/navigation";
 import { StaticIcon } from "@/components/ui/static-icon";
 import { cn } from "@/lib/utils";
+
+function readBuildFiltersFromURL() {
+  if (typeof window === "undefined") return null;
+  const params = new URLSearchParams(window.location.search);
+  return {
+    mode: (params.get("bmode") as Mode) || "general",
+    element: params.get("belement") || null,
+  };
+}
+
+function writeBuildFiltersToURL(mode: Mode, element: string | null) {
+  const params = new URLSearchParams(window.location.search);
+  if (mode === "general") params.delete("bmode"); else params.set("bmode", mode);
+  if (element) params.set("belement", element); else params.delete("belement");
+  const qs = params.toString();
+  const url = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+  window.history.replaceState(null, "", url);
+}
 
 const ELEMENT_ICONS: Record<string, string> = {
   純粋: "/icons/pure.png",
@@ -59,35 +76,20 @@ interface HomeuildsSectionProps {
 const PREVIEW_COUNT = 2;
 
 export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const modeFilter = (searchParams.get("bmode") as Mode) || "general";
-  const elementFilter = searchParams.get("belement") || null;
-
-  const updateParam = useCallback((key: string, value: string | null) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value === null || value === "") {
-      params.delete(key);
-    } else {
-      params.set(key, value);
-    }
-    if (params.get("bmode") === "general") params.delete("bmode");
-    const query = params.toString();
-    router.replace(query ? `?${query}` : "/", { scroll: false });
-  }, [searchParams, router]);
+  const initial = readBuildFiltersFromURL();
+  const [modeFilter, setModeFilterState] = useState<Mode>(initial?.mode ?? "general");
+  const [elementFilter, setElementFilterState] = useState<string | null>(initial?.element ?? null);
 
   const setModeFilter = useCallback((m: Mode) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (m === "general") params.delete("bmode"); else params.set("bmode", m);
-    params.delete("belement");
-    const query = params.toString();
-    router.replace(query ? `?${query}` : "/", { scroll: false });
-  }, [searchParams, router]);
+    setModeFilterState(m);
+    setElementFilterState(null);
+    writeBuildFiltersToURL(m, null);
+  }, []);
 
   const setElementFilter = useCallback((elem: string | null) => {
-    updateParam("belement", elem);
-  }, [updateParam]);
+    setElementFilterState(elem);
+    writeBuildFiltersToURL(modeFilter, elem);
+  }, [modeFilter]);
 
   const filtered = useMemo(() => {
     let result = builds.filter((b) => b.mode === modeFilter);
