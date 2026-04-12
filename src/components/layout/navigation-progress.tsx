@@ -70,7 +70,17 @@ export function NavigationProgress() {
   useEffect(() => {
     if (prevPathname.current !== pathname) {
       prevPathname.current = pathname;
-      completeProgress();
+      if (navigating.current) {
+        completeProgress();
+      } else {
+        // バック遷移等でプログレスバーが残っている場合はリセット
+        if (slowTimer.current) {
+          clearTimeout(slowTimer.current);
+          slowTimer.current = null;
+        }
+        setVisible(false);
+        setProgress(0);
+      }
     }
   }, [pathname, completeProgress]);
 
