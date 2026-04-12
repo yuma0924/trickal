@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { TierCard } from "@/components/tier/tier-card";
@@ -33,35 +33,17 @@ const PAGE_SIZE = 20;
 interface TiersClientProps {
   characters: Record<string, CharacterData>;
   allTiers: TierItem[];
+  initialLikedIds?: string[];
 }
 
-export function TiersClient({ characters, allTiers }: TiersClientProps) {
+export function TiersClient({ characters, allTiers, initialLikedIds }: TiersClientProps) {
   const [sort, setSort] = useState<SortType>("newest");
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
-  const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
+  const [likedIds, setLikedIds] = useState<Set<string>>(new Set(initialLikedIds ?? []));
   const [likeDelta, setLikeDelta] = useState<Record<string, number>>({});
 
-  // 描画前にlocalStorageから復元（ちらつき防止）
-  useLayoutEffect(() => {
-    try {
-      const saved = localStorage.getItem("tier_liked_ids");
-      if (saved) setLikedIds(new Set(JSON.parse(saved)));
-    } catch {
-      // ignore
-    }
-  }, []);
-
-  // localStorageに保存
-  useEffect(() => {
-    try {
-      localStorage.setItem("tier_liked_ids", JSON.stringify([...likedIds]));
-    } catch {
-      // ignore
-    }
-  }, [likedIds]);
-
-  // APIと同期（バックグラウンド）
-  const fetchedRef = useRef(false);
+  // APIと同期（バックグラウンド、initialLikedIdsがない場合のフォールバック）
+  const fetchedRef = useRef(!!initialLikedIds);
   useEffect(() => {
     if (fetchedRef.current) return;
     fetchedRef.current = true;
