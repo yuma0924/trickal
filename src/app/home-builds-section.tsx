@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { StaticIcon } from "@/components/ui/static-icon";
@@ -76,9 +76,17 @@ interface HomeuildsSectionProps {
 const PREVIEW_COUNT = 2;
 
 export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
-  const initial = readBuildFiltersFromURL();
-  const [modeFilter, setModeFilterState] = useState<Mode>(initial?.mode ?? "general");
-  const [elementFilter, setElementFilterState] = useState<string | null>(initial?.element ?? null);
+  const [modeFilter, setModeFilterState] = useState<Mode>("general");
+  const [elementFilter, setElementFilterState] = useState<string | null>(null);
+
+  // マウント時・バック時にURLからフィルター状態を復元
+  useEffect(() => {
+    const restored = readBuildFiltersFromURL();
+    if (restored) {
+      setModeFilterState(restored.mode);
+      setElementFilterState(restored.element);
+    }
+  }, []);
 
   const setModeFilter = useCallback((m: Mode) => {
     setModeFilterState(m);
