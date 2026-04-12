@@ -33,17 +33,16 @@ const PAGE_SIZE = 20;
 interface TiersClientProps {
   characters: Record<string, CharacterData>;
   allTiers: TierItem[];
-  initialLikedIds?: string[];
 }
 
-export function TiersClient({ characters, allTiers, initialLikedIds }: TiersClientProps) {
+export function TiersClient({ characters, allTiers }: TiersClientProps) {
   const [sort, setSort] = useState<SortType>("newest");
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
-  const [likedIds, setLikedIds] = useState<Set<string>>(new Set(initialLikedIds ?? []));
+  const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
   const [likeDelta, setLikeDelta] = useState<Record<string, number>>({});
 
-  // APIと同期（バックグラウンド、initialLikedIdsがない場合のフォールバック）
-  const fetchedRef = useRef(!!initialLikedIds);
+  // APIと同期
+  const fetchedRef = useRef(false);
   useEffect(() => {
     if (fetchedRef.current) return;
     fetchedRef.current = true;

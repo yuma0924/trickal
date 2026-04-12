@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getServerUserHash } from "@/lib/supabase/user-hash-server";
 import { TiersClient } from "./tiers-client";
 
 type CharacterInfo = {
@@ -54,18 +53,6 @@ export default async function TiersPage() {
     };
   });
 
-  // いいね状態をSSRで取得
-  const userHash = await getServerUserHash();
-  let likedTierIds: string[] = [];
-  if (userHash && tiersData.length > 0) {
-    const { data: reactions } = await supabase
-      .from("tier_reactions")
-      .select("tier_id")
-      .eq("user_hash", userHash)
-      .in("tier_id", tiersData.map((t) => t.id));
-    likedTierIds = (reactions ?? []).map((r) => r.tier_id);
-  }
-
   return (
     <div className="space-y-6">
       <div>
@@ -92,7 +79,7 @@ export default async function TiersPage() {
         </p>
       </div>
 
-      <TiersClient characters={characters} allTiers={tiersData} initialLikedIds={likedTierIds} />
+      <TiersClient characters={characters} allTiers={tiersData} />
     </div>
   );
 }
