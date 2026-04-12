@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo, memo } from "react";
 import Link from "next/link";
 import { TIER_LABELS } from "@/lib/constants";
 import type { TierLabel } from "@/lib/constants";
@@ -87,7 +87,6 @@ export function TierDetailClient({
 
   // コメント関連
   const [comments, setComments] = useState<CommentItem[]>([]);
-  const [sort, setSort] = useState<SortType>("newest");
   const [commentsLoading, setCommentsLoading] = useState(false);
   const [hasMoreComments, setHasMoreComments] = useState(false);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
@@ -248,21 +247,6 @@ export function TierDetailClient({
     fetchComments();
   }, [fetchComments]);
 
-  // クライアント側ソート
-  const sortedComments = useMemo(() => {
-    const sorted = [...comments];
-    if (sort === "thumbs_up") {
-      sorted.sort((a, b) => {
-        const netA = a.thumbs_up_count - a.thumbs_down_count;
-        const netB = b.thumbs_up_count - b.thumbs_down_count;
-        if (netB !== netA) return netB - netA;
-        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-      });
-    } else {
-      sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-    }
-    return sorted;
-  }, [comments, sort]);
 
   const handleCommentReaction = async (
     commentId: string,
@@ -339,11 +323,7 @@ export function TierDetailClient({
         return;
       }
 
-      if (sort === "newest") {
-        setComments((prev) => [data.comment, ...prev]);
-      } else {
-        fetchComments();
-      }
+      setComments((prev) => [data.comment, ...prev]);
       setCommentBody("");
       setCommentName("");
       showToast("コメントを投稿しました！");
@@ -573,103 +553,15 @@ export function TierDetailClient({
       </section>
 
       {/* コメント一覧 */}
-      <section>
-        <div className="mb-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <svg className="h-4 w-4 md:h-5 md:w-5 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-            <span className="text-sm md:text-base font-bold text-text-primary">
-              コメント ({comments.length})
-            </span>
-          </div>
-          <div className="flex items-center gap-1">
-            {SORT_TABS.map((tab) => (
-              <button
-                key={tab.value}
-                onClick={() => setSort(tab.value)}
-                className={cn(
-                  "flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs md:text-sm md:px-3 md:py-1.5 font-medium transition-colors cursor-pointer",
-                  sort === tab.value
-                    ? "border-accent-active/40 bg-accent-active/12 text-accent-active"
-                    : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-text-tertiary"
-                )}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {commentsLoaded && comments.length === 0 && !commentsLoading ? (
-          <p className="py-4 text-center text-sm text-text-tertiary">
-            まだコメントはありません
-          </p>
-        ) : (
-          <div className="space-y-2">
-            {sortedComments.map((c) => {
-              const cKarma = getKarmaClass(c.thumbs_up_count, c.thumbs_down_count);
-              return (
-                <div
-                  key={c.id}
-                  className={cn(
-                    "rounded-2xl bg-bg-card border border-border-primary px-4 pt-4 pb-3",
-                    cKarma
-                  )}
-                >
-                  <div className="flex items-start gap-2.5">
-                    <div
-                      className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full"
-                      style={{ backgroundColor: "#22a870" }}
-                    />
-                    <div className="flex flex-col -mt-1">
-                      <span className="text-base font-medium text-text-primary">
-                        {c.display_name || "名無しの教主"}
-                      </span>
-                      <span className="text-xs md:text-sm text-text-muted">{formatDate(c.created_at)}</span>
-                    </div>
-                  </div>
-                  <p className="mt-2.5 whitespace-pre-wrap text-base text-text-secondary leading-relaxed">
-                    {c.body}
-                  </p>
-                  <div className="mt-4 flex items-center gap-4 text-text-muted text-xs md:text-sm">
-                    <ThumbsUpDown
-                      thumbsUpCount={c.thumbs_up_count}
-                      thumbsDownCount={c.thumbs_down_count}
-                      userReaction={c.user_reaction}
-                      onReact={(reaction) =>
-                        handleCommentReaction(c.id, reaction)
-                      }
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setReportTarget({ type: "tier_comment", id: c.id })}
-                      className="ml-auto rounded-full border border-border-primary px-2.5 py-1 text-[10px] md:text-xs text-text-muted transition-colors hover:border-thumbs-down/20 hover:text-thumbs-down cursor-pointer"
-                    >
-                      通報
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {hasMoreComments && (
-          <div className="flex justify-center py-4">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => {
-                if (nextCursor) fetchComments(nextCursor);
-              }}
-              disabled={commentsLoading}
-            >
-              {commentsLoading ? "読み込み中..." : "もっと見る"}
-            </Button>
-          </div>
-        )}
-      </section>
+      <SortableCommentList
+        comments={comments}
+        commentsLoaded={commentsLoaded}
+        commentsLoading={commentsLoading}
+        hasMoreComments={hasMoreComments}
+        onLoadMore={() => { if (nextCursor) fetchComments(nextCursor); }}
+        onReact={handleCommentReaction}
+        onReport={(id) => setReportTarget({ type: "tier_comment", id })}
+      />
 
       {/* 自分もティアを作る */}
       <Link
@@ -789,3 +681,134 @@ export function TierDetailClient({
     </div>
   );
 }
+
+const SortableCommentList = memo(function SortableCommentList({
+  comments,
+  commentsLoaded,
+  commentsLoading,
+  hasMoreComments,
+  onLoadMore,
+  onReact,
+  onReport,
+}: {
+  comments: CommentItem[];
+  commentsLoaded: boolean;
+  commentsLoading: boolean;
+  hasMoreComments: boolean;
+  onLoadMore: () => void;
+  onReact: (commentId: string, reaction: "up" | "down" | null) => void;
+  onReport: (commentId: string) => void;
+}) {
+  const [sort, setSort] = useState<SortType>("newest");
+
+  const sortedComments = useMemo(() => {
+    const sorted = [...comments];
+    if (sort === "thumbs_up") {
+      sorted.sort((a, b) => {
+        const netA = a.thumbs_up_count - a.thumbs_down_count;
+        const netB = b.thumbs_up_count - b.thumbs_down_count;
+        if (netB !== netA) return netB - netA;
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
+    } else {
+      sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    }
+    return sorted;
+  }, [comments, sort]);
+
+  return (
+    <section>
+      <div className="mb-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <svg className="h-4 w-4 md:h-5 md:w-5 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+          <span className="text-sm md:text-base font-bold text-text-primary">
+            コメント ({comments.length})
+          </span>
+        </div>
+        <div className="flex items-center gap-1">
+          {SORT_TABS.map((tab) => (
+            <button
+              key={tab.value}
+              onClick={() => setSort(tab.value)}
+              className={cn(
+                "flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs md:text-sm md:px-3 md:py-1.5 font-medium transition-colors cursor-pointer",
+                sort === tab.value
+                  ? "border-accent-active/40 bg-accent-active/12 text-accent-active"
+                  : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-text-tertiary"
+              )}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {commentsLoaded && comments.length === 0 && !commentsLoading ? (
+        <p className="py-4 text-center text-sm text-text-tertiary">
+          まだコメントはありません
+        </p>
+      ) : (
+        <div className="space-y-2">
+          {sortedComments.map((c) => {
+            const cKarma = getKarmaClass(c.thumbs_up_count, c.thumbs_down_count);
+            return (
+              <div
+                key={c.id}
+                className={cn(
+                  "rounded-2xl bg-bg-card border border-border-primary px-4 pt-4 pb-3",
+                  cKarma
+                )}
+              >
+                <div className="flex items-start gap-2.5">
+                  <div
+                    className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full"
+                    style={{ backgroundColor: "#22a870" }}
+                  />
+                  <div className="flex flex-col -mt-1">
+                    <span className="text-base font-medium text-text-primary">
+                      {c.display_name || "名無しの教主"}
+                    </span>
+                    <span className="text-xs md:text-sm text-text-muted">{formatDate(c.created_at)}</span>
+                  </div>
+                </div>
+                <p className="mt-2.5 whitespace-pre-wrap text-base text-text-secondary leading-relaxed">
+                  {c.body}
+                </p>
+                <div className="mt-4 flex items-center gap-4 text-text-muted text-xs md:text-sm">
+                  <ThumbsUpDown
+                    thumbsUpCount={c.thumbs_up_count}
+                    thumbsDownCount={c.thumbs_down_count}
+                    userReaction={c.user_reaction}
+                    onReact={(reaction) => onReact(c.id, reaction)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => onReport(c.id)}
+                    className="ml-auto rounded-full border border-border-primary px-2.5 py-1 text-[10px] md:text-xs text-text-muted transition-colors hover:border-thumbs-down/20 hover:text-thumbs-down cursor-pointer"
+                  >
+                    通報
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {hasMoreComments && (
+        <div className="flex justify-center py-4">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={onLoadMore}
+            disabled={commentsLoading}
+          >
+            {commentsLoading ? "読み込み中..." : "もっと見る"}
+          </Button>
+        </div>
+      )}
+    </section>
+  );
+});

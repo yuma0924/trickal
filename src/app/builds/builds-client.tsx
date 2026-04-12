@@ -172,8 +172,8 @@ export function BuildsClient({ initialBuilds }: BuildsClientProps) {
       sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     } else {
       sorted.sort((a, b) => {
-        const netA = a.thumbs_up_count - a.thumbs_down_count;
-        const netB = b.thumbs_up_count - b.thumbs_down_count;
+        const netA = a.likes_count - a.dislikes_count;
+        const netB = b.likes_count - b.dislikes_count;
         if (netB !== netA) return netB - netA;
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       });

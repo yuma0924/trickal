@@ -321,13 +321,7 @@ export function BuildDetailClient({
         return;
       }
 
-      // 新着順の場合は先頭に追加
-      if (sort === "newest") {
-        setComments((prev) => [data.comment, ...prev]);
-      } else {
-        // ソート済みの場合は再取得
-        fetchComments();
-      }
+      setComments((prev) => [data.comment, ...prev]);
       setCommentBody("");
       setCommentName("");
       showToast("コメントを投稿しました！");
