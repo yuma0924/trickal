@@ -212,6 +212,20 @@ export function CharacterDetailClient({
     }));
   });
   const [totalCount, setTotalCount] = useState(initialComments?.comments.length ?? 0);
+
+  // アイテム画像をプリフェッチ（キャラアイコンと同等の表示速度にする）
+  useEffect(() => {
+    const urls: string[] = [];
+    if (character.relic?.imageUrl) urls.push(character.relic.imageUrl);
+    if (character.favoriteItem?.imageUrl) urls.push(character.favoriteItem.imageUrl);
+    character.partTimeRewards.forEach((r) => {
+      if (r.imageUrl) urls.push(r.imageUrl);
+    });
+    urls.forEach((url) => {
+      const img = new window.Image();
+      img.src = url;
+    });
+  }, [character.relic, character.favoriteItem, character.partTimeRewards]);
   const [commentsLoading, setCommentsLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [userReactions, setUserReactions] = useState<Record<string, ReactionState>>({});
