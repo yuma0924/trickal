@@ -212,7 +212,6 @@ export function CharacterDetailClient({
     }));
   });
   const [totalCount, setTotalCount] = useState(initialComments?.comments.length ?? 0);
-  const [sortTab, setSortTab] = useState<SortTab>("newest");
   const [commentsLoading, setCommentsLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [userReactions, setUserReactions] = useState<Record<string, ReactionState>>({});
@@ -309,21 +308,6 @@ export function CharacterDetailClient({
     fetchComments("newest");
   }, [fetchComments]);
 
-  // クライアント側ソート
-  const sortedComments = useMemo(() => {
-    const sorted = [...comments];
-    if (sortTab === "thumbs_up") {
-      sorted.sort((a, b) => {
-        const netA = a.thumbsUpCount - a.thumbsDownCount;
-        const netB = b.thumbsUpCount - b.thumbsDownCount;
-        if (netB !== netA) return netB - netA;
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-      });
-    } else {
-      sorted.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    }
-    return sorted;
-  }, [comments, sortTab]);
 
   // コメント投稿
   const handleSubmit = async (data: {
@@ -346,7 +330,23 @@ export function CharacterDetailClient({
       });
 
       if (res.ok) {
-        fetchComments(sortTab);
+        const resData = await res.json();
+        if (resData.comment) {
+          const newComment: CommentItem = {
+            id: resData.comment.id,
+            commentType: resData.comment.comment_type,
+            displayName: resData.comment.display_name ?? "名無しの教主",
+            body: resData.comment.body ?? "",
+            rating: resData.comment.rating,
+            thumbsUpCount: 0,
+            thumbsDownCount: 0,
+            createdAt: resData.comment.created_at,
+            isLatestVote: true,
+            isDeleted: false,
+          };
+          setComments((prev) => [newComment, ...prev]);
+          setTotalCount((prev) => prev + 1);
+        }
         setFormOpen(false);
         showToast("投稿しました！");
       }
@@ -426,10 +426,6 @@ export function CharacterDetailClient({
   };
 
   // ソートタブ変更
-  const handleSortChange = (tab: SortTab) => {
-    setSortTab(tab);
-  };
-
   // もっと読む
   const handleLoadMore = () => {
     fetchComments("newest", comments.length, true);
@@ -938,55 +934,15 @@ export function CharacterDetailClient({
       </section>
 
       {/* コメント一覧 */}
-      <section className="md:-mt-1">
-        <div className="mb-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <svg className="h-4 w-4 md:h-5 md:w-5 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-            <span className="text-sm md:text-base font-bold text-text-primary">
-              コメント ({totalCount})
-            </span>
-          </div>
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => handleSortChange("newest")}
-              className={cn(
-                "rounded-full border px-2.5 py-1 text-xs md:text-sm md:px-3 md:py-1.5 font-medium transition-colors",
-                sortTab === "newest"
-                  ? "border-accent-active/40 bg-accent-active/12 text-accent-active"
-                  : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-text-tertiary"
-              )}
-            >
-              新着順
-            </button>
-            <button
-              onClick={() => handleSortChange("thumbs_up")}
-              className={cn(
-                "rounded-full border px-2.5 py-1 text-xs md:text-sm md:px-3 md:py-1.5 font-medium transition-colors",
-                sortTab === "thumbs_up"
-                  ? "border-accent-active/40 bg-accent-active/12 text-accent-active"
-                  : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-text-tertiary"
-              )}
-            >
-              人気順
-            </button>
-          </div>
-        </div>
-        <CommentList
-          comments={sortedComments}
-          totalCount={totalCount}
-          sortTab={sortTab}
-          onSortChange={handleSortChange}
-          onLoadMore={handleLoadMore}
-          loading={commentsLoading}
-          userReactions={userReactions}
-          onReact={handleReact}
-          onReport={handleReport}
-          accentColor="#22a870"
-          hideTab
-        />
-      </section>
+      <SortableCharacterCommentList
+        comments={comments}
+        totalCount={totalCount}
+        commentsLoading={commentsLoading}
+        onLoadMore={handleLoadMore}
+        userReactions={userReactions}
+        onReact={handleReact}
+        onReport={handleReport}
+      />
 
       {/* 回遊エリア: 関連キャラ */}
       {relatedCharacters.length > 0 && (
@@ -1082,3 +1038,89 @@ export function CharacterDetailClient({
     </div>
   );
 }
+
+import { memo } from "react";
+
+const SORT_TABS_COMMENT = [
+  { value: "newest" as SortTab, label: "新着順" },
+  { value: "thumbs_up" as SortTab, label: "人気順" },
+];
+
+const SortableCharacterCommentList = memo(function SortableCharacterCommentList({
+  comments,
+  totalCount,
+  commentsLoading,
+  onLoadMore,
+  userReactions,
+  onReact,
+  onReport,
+}: {
+  comments: CommentItem[];
+  totalCount: number;
+  commentsLoading: boolean;
+  onLoadMore: () => void;
+  userReactions: Record<string, ReactionState>;
+  onReact: (commentId: string, reaction: ReactionState) => void;
+  onReport: (commentId: string) => void;
+}) {
+  const [sortTab, setSortTab] = useState<SortTab>("newest");
+
+  const sortedComments = useMemo(() => {
+    const sorted = [...comments];
+    if (sortTab === "thumbs_up") {
+      sorted.sort((a, b) => {
+        const netA = a.thumbsUpCount - a.thumbsDownCount;
+        const netB = b.thumbsUpCount - b.thumbsDownCount;
+        if (netB !== netA) return netB - netA;
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      });
+    } else {
+      sorted.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    }
+    return sorted;
+  }, [comments, sortTab]);
+
+  return (
+    <section className="md:-mt-1">
+      <div className="mb-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <svg className="h-4 w-4 md:h-5 md:w-5 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+          <span className="text-sm md:text-base font-bold text-text-primary">
+            コメント ({totalCount})
+          </span>
+        </div>
+        <div className="flex items-center gap-1">
+          {SORT_TABS_COMMENT.map((tab) => (
+            <button
+              key={tab.value}
+              onClick={() => setSortTab(tab.value)}
+              className={cn(
+                "rounded-full border px-2.5 py-1 text-xs md:text-sm md:px-3 md:py-1.5 font-medium transition-colors cursor-pointer",
+                sortTab === tab.value
+                  ? "border-accent-active/40 bg-accent-active/12 text-accent-active"
+                  : "border-[rgba(139,122,171,0.3)] text-text-muted hover:text-text-tertiary"
+              )}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <CommentList
+        comments={sortedComments}
+        totalCount={totalCount}
+        sortTab={sortTab}
+        onSortChange={setSortTab}
+        onLoadMore={onLoadMore}
+        loading={commentsLoading}
+        userReactions={userReactions}
+        onReact={onReact}
+        onReport={onReport}
+        accentColor="#22a870"
+        hideTab
+      />
+    </section>
+  );
+});
