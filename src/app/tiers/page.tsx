@@ -34,18 +34,24 @@ export default async function TiersPage() {
   // 全ティアデータを取得
   const { data: allTiers } = await supabase
     .from("tiers")
-    .select("id, title, display_name, data, likes_count, created_at")
+    .select("id, title, display_name, data, likes_count, created_at, tier_comments(count)")
     .eq("is_deleted", false)
     .order("created_at", { ascending: false });
 
-  const tiersData = (allTiers ?? []).map((t) => ({
-    id: t.id,
-    title: t.title as string | null,
-    display_name: t.display_name as string | null,
-    data: t.data as Record<string, string[]>,
-    likes_count: t.likes_count,
-    created_at: t.created_at,
-  }));
+  const tiersData = (allTiers ?? []).map((t) => {
+    const commentCount = Array.isArray(t.tier_comments) && t.tier_comments.length > 0
+      ? (t.tier_comments[0] as { count: number }).count
+      : 0;
+    return {
+      id: t.id,
+      title: t.title as string | null,
+      display_name: t.display_name as string | null,
+      data: t.data as Record<string, string[]>,
+      likes_count: t.likes_count,
+      created_at: t.created_at,
+      comment_count: commentCount,
+    };
+  });
 
   return (
     <div className="space-y-6">

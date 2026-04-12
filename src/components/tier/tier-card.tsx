@@ -20,6 +20,7 @@ interface TierCardProps {
   likesCount: number;
   userLiked: boolean;
   createdAt: string;
+  commentCount?: number;
   characters: Record<string, CharacterData>;
   onToggleLike: (tierId: string) => void;
 }
@@ -50,6 +51,7 @@ export function TierCard({
   likesCount,
   userLiked,
   createdAt,
+  commentCount,
   characters,
   onToggleLike,
 }: TierCardProps) {
@@ -126,11 +128,19 @@ export function TierCard({
 
       {/* フッター */}
       <div className="flex items-center justify-between px-3 pb-1.5 -mt-0.5">
-        <div className="flex items-center gap-2 text-xs text-text-muted">
+        <div className="flex items-center gap-3 text-xs text-text-muted">
           {(() => {
             const totalChars = Object.values(data).flat().length;
             return <span>{totalChars}キャラ配置</span>;
           })()}
+          {commentCount != null && commentCount > 0 && (
+            <span className="flex items-center gap-0.5">
+              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+              {commentCount}
+            </span>
+          )}
         </div>
         <TierLikeButton
           likesCount={likesCount}

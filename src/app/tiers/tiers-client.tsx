@@ -18,6 +18,7 @@ type TierItem = {
   data: Record<string, string[]>;
   likes_count: number;
   created_at: string;
+  comment_count: number;
 };
 
 type SortType = "popular" | "newest";
@@ -193,6 +194,7 @@ export function TiersClient({ characters, allTiers }: TiersClientProps) {
               likesCount={tier.likes_count + (likeDelta[tier.id] ?? 0)}
               userLiked={likedIds.has(tier.id)}
               createdAt={tier.created_at}
+              commentCount={tier.comment_count}
               characters={characters}
               onToggleLike={handleToggleLike}
             />
