@@ -248,8 +248,8 @@ export default async function CharacterPage({ params }: Props) {
 
   return (
     <>
-      {preloadImages.map((url, i) => (
-        <link key={url} rel="preload" as="image" href={url} fetchPriority={i === 0 ? "high" : "auto"} />
+      {preloadImages.map((url) => (
+        <link key={url} rel="preload" as="image" href={url} fetchPriority="high" />
       ))}
       <CharacterDetailClient
         character={characterDetail}
