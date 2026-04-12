@@ -217,7 +217,7 @@ export function TierDetailClient({
     async (cursorId?: string) => {
       setCommentsLoading(true);
       try {
-        const params = new URLSearchParams({ sort });
+        const params = new URLSearchParams();
         if (cursorId) params.set("cursor", cursorId);
 
         const res = await fetch(
