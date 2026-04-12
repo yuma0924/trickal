@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { createServerClient } from "@/lib/supabase/server";
 import { ELEMENTS, ELEMENT_COLORS } from "@/lib/constants";
 import type { Element } from "@/lib/constants";
 
@@ -20,19 +19,16 @@ type CharRow = {
   image_url: string | null;
 };
 
-export async function SidebarCharacters() {
-  const supabase = await createServerClient();
-  const { data: characters } = await supabase
-    .from("characters")
-    .select("id, slug, name, element, image_url")
-    .eq("is_hidden", false)
-    .order("name");
+interface SidebarCharactersProps {
+  characters: CharRow[];
+}
 
+export function SidebarCharacters({ characters }: SidebarCharactersProps) {
   const grouped = new Map<string, CharRow[]>();
   for (const elem of ELEMENTS) {
     grouped.set(elem, []);
   }
-  for (const c of characters ?? []) {
+  for (const c of characters) {
     if (c.element && grouped.has(c.element)) {
       grouped.get(c.element)!.push(c);
     }
@@ -80,7 +76,7 @@ export async function SidebarCharacters() {
                         alt={c.name}
                         width={48}
                         height={48}
-                        sizes="20px"
+                        sizes="28px"
                         loading="eager"
                         className="h-7 w-7 shrink-0 rounded-md object-cover"
                       />

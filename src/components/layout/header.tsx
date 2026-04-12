@@ -1,17 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
-import { HeaderSearch } from "@/components/layout/header-search";
-import { createServerClient } from "@/lib/supabase/server";
+import { HeaderSearch, type SearchCharacter } from "@/components/layout/header-search";
 
-export async function Header() {
-  const supabase = await createServerClient();
-  const { data: characters } = await supabase
-    .from("characters")
-    .select("id, slug, name, image_url")
-    .eq("is_hidden", false)
-    .order("name");
+interface HeaderProps {
+  characters: SearchCharacter[];
+}
 
+export function Header({ characters }: HeaderProps) {
   return (
     <header className="bg-bg-primary pt-[env(safe-area-inset-top)] shadow-lg shadow-black/10">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 md:px-8">
@@ -46,7 +42,7 @@ export async function Header() {
               ティア
             </Link>
           </div>
-          <HeaderSearch characters={characters ?? []} />
+          <HeaderSearch characters={characters} />
           <ThemeToggle />
         </nav>
       </div>
@@ -55,7 +51,7 @@ export async function Header() {
         className="h-px w-full"
         style={{
           backgroundImage:
-            "linear-gradient(90deg, transparent 0%, rgba(251,100,182,0.4) 30%, rgba(255,161,173,0.3) 70%, transparent 100%)",
+            "linear-gradient(90deg, transparent 0%, rgba(224,90,168,0.4) 30%, rgba(240,138,154,0.3) 70%, transparent 100%)",
         }}
       />
     </header>
