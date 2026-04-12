@@ -238,18 +238,18 @@ export default async function CharacterPage({ params }: Props) {
   const commentsData = (commentsResult.data ?? []).slice(0, 20);
   const hasMoreComments = (commentsResult.data ?? []).length > 20;
 
-  // アイテム画像のプリロードURL一覧
+  // アイテム画像のプリロードURL一覧（大好物を最優先）
   const preloadImages: string[] = [];
-  if (relic?.imageUrl) preloadImages.push(relic.imageUrl);
   if (favItem?.image_url) preloadImages.push(favItem.image_url);
+  if (relic?.imageUrl) preloadImages.push(relic.imageUrl);
   rewardItems.forEach((i) => {
     if (i.image_url) preloadImages.push(i.image_url);
   });
 
   return (
     <>
-      {preloadImages.map((url) => (
-        <link key={url} rel="preload" as="image" href={url} />
+      {preloadImages.map((url, i) => (
+        <link key={url} rel="preload" as="image" href={url} fetchPriority={i === 0 ? "high" : "auto"} />
       ))}
       <CharacterDetailClient
         character={characterDetail}
