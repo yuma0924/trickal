@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { TierCard } from "@/components/tier/tier-card";
@@ -38,17 +38,18 @@ interface TiersClientProps {
 export function TiersClient({ characters, allTiers }: TiersClientProps) {
   const [sort, setSort] = useState<SortType>("newest");
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
-  // localStorageから即座に復元 → APIで同期
-  const [likedIds, setLikedIds] = useState<Set<string>>(() => {
-    if (typeof window === "undefined") return new Set();
+  const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
+  const [likeDelta, setLikeDelta] = useState<Record<string, number>>({});
+
+  // 描画前にlocalStorageから復元（ちらつき防止）
+  useLayoutEffect(() => {
     try {
       const saved = localStorage.getItem("tier_liked_ids");
-      return saved ? new Set(JSON.parse(saved)) : new Set();
+      if (saved) setLikedIds(new Set(JSON.parse(saved)));
     } catch {
-      return new Set();
+      // ignore
     }
-  });
-  const [likeDelta, setLikeDelta] = useState<Record<string, number>>({});
+  }, []);
 
   // localStorageに保存
   useEffect(() => {
