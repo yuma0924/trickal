@@ -47,7 +47,7 @@ function StyledText({ text, className }: { text: string; className?: string }) {
     <span className={className}>
       {parts.map((part, i) =>
         part.startsWith("**") && part.endsWith("**") ? (
-          <span key={i} className="font-semibold text-[#e8b4d0]">{part.slice(2, -2)}</span>
+          <span key={i} className="font-semibold text-[#f0c8a0]">{part.slice(2, -2)}</span>
         ) : (
           <span key={i}>{part}</span>
         )
@@ -116,6 +116,8 @@ interface CommentItem {
   isLatestVote: boolean;
   isDeleted: boolean;
 }
+
+const SKILL_LABEL_COLOR = "#2d6bc4";
 
 const SKILL_CATEGORIES: { key: string; label: string; hasName?: boolean; hasCooltime?: boolean }[] = [
   { key: "low_grade", label: "低学年スキル", hasName: true },
@@ -532,7 +534,7 @@ export function CharacterDetailClient({
               </button>
               {relicDetailOpen && (
                 <div
-                  className="absolute left-0 top-full z-10 mt-1 rounded-[12px] border border-accent-active/40 bg-bg-primary px-4 py-3 shadow-[0_12px_32px_rgba(0,0,0,0.6)] ring-1 ring-white/5"
+                  className="absolute left-0 top-full z-10 mt-1 rounded-[12px] border border-white/20 bg-bg-primary px-4 py-3 shadow-[0_12px_32px_rgba(0,0,0,0.6)] ring-1 ring-white/5"
                   style={{ width: relicBtnRef.current?.offsetWidth }}
                 >
                   {character.relic.params && (
@@ -623,7 +625,7 @@ export function CharacterDetailClient({
             </svg>
           </button>
           {relicDetailOpen && (
-            <div className="absolute left-0 right-0 top-full z-10 mt-1 rounded-[10px] border border-accent-active/40 bg-bg-primary px-3 py-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.6)] ring-1 ring-white/5">
+            <div className="absolute left-0 right-0 top-full z-10 mt-1 rounded-[10px] border border-white/20 bg-bg-primary px-3 py-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.6)] ring-1 ring-white/5">
               {character.relic.params && (
                 <ul className="space-y-0.5 border-l-2 border-border-primary pl-2.5">
                   {character.relic.params.split("\n").filter(Boolean).map((line, i) => (
@@ -741,7 +743,10 @@ export function CharacterDetailClient({
                 if (!skillData) return (
                   <div key={cat.key} className="flex flex-col overflow-hidden rounded-[10px] border border-border-primary">
                     <div className="flex items-center gap-2 bg-bg-inset px-3 py-2">
-                      <span className="shrink-0 rounded border border-border-primary px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">{cat.label}</span>
+                      <span
+                        className="shrink-0 rounded px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-white shadow-sm"
+                        style={{ backgroundColor: SKILL_LABEL_COLOR }}
+                      >{cat.label}</span>
                       <span className="text-xs text-text-muted">—</span>
                     </div>
                     <div className="flex-1 bg-bg-card" />
@@ -750,12 +755,15 @@ export function CharacterDetailClient({
                 return (
                   <div key={cat.key} className="flex flex-col overflow-hidden rounded-[10px] border border-border-primary">
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 bg-bg-inset px-3 py-2">
-                      <span className="shrink-0 rounded border border-border-primary px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">{cat.label}</span>
+                      <span
+                        className="shrink-0 rounded px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-white shadow-sm"
+                        style={{ backgroundColor: SKILL_LABEL_COLOR }}
+                      >{cat.label}</span>
                       {cat.hasName && typeof skillData.name === "string" && (
                         <span className="text-sm font-bold text-text-primary">{skillData.name}</span>
                       )}
                       {cat.hasCooltime && typeof skillData.cooltime === "number" && (
-                        <span className="rounded bg-accent/10 px-1.5 py-0.5 text-[10px] font-medium text-text-tertiary">
+                        <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] md:text-xs font-bold text-text-secondary">
                           CT {skillData.cooltime}秒
                         </span>
                       )}
@@ -794,7 +802,7 @@ export function CharacterDetailClient({
                   return (
                     <div className="flex flex-col overflow-hidden rounded-[10px] border border-border-primary">
                       <div className="flex items-center gap-2 bg-bg-inset px-3 py-2">
-                        <span className="shrink-0 rounded border border-border-primary px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">普通攻撃</span>
+                        <span className="shrink-0 rounded px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-white shadow-sm" style={{ backgroundColor: SKILL_LABEL_COLOR }}>普通攻撃</span>
                         <span className="text-xs text-text-muted">—</span>
                       </div>
                       <div className="flex-1 bg-bg-card" />
@@ -820,7 +828,7 @@ export function CharacterDetailClient({
                 return (
                   <div className="flex flex-col overflow-hidden rounded-[10px] border border-border-primary">
                     <div className="flex items-center bg-bg-inset px-3 py-2">
-                      <span className="rounded border border-border-primary px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-text-tertiary">普通攻撃</span>
+                      <span className="rounded px-1.5 py-0.5 text-[11px] md:text-xs font-bold text-white shadow-sm" style={{ backgroundColor: SKILL_LABEL_COLOR }}>普通攻撃</span>
                     </div>
                     {/* 基本・強化を独立カラムで横並び、各カラム内で説明→パラメータの順 */}
                     <div className="flex-1 bg-bg-card">

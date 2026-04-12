@@ -118,21 +118,21 @@
 
 /* ライトテーマ */
 .light {
-  --bg-primary: #f8f5fc;
-  --bg-secondary: #f0eaf7;
-  --bg-tertiary: #f0eaf5;
+  --bg-primary: #f5f7fa;
+  --bg-secondary: #edf0f5;
+  --bg-tertiary: #e8ecf2;
   --bg-card: #ffffff;
-  --bg-card-hover: #faf7fd;
-  --bg-input: #eee6f5;
+  --bg-card-hover: #f8f9fb;
+  --bg-input: #e8ecf2;
 
-  --text-primary: #170b28;
-  --text-secondary: #28163e;
-  --text-tertiary: #352050;
-  --text-muted: #4e3968;
-  --text-inverse: #f5e6f0;
+  --text-primary: #0f1523;
+  --text-secondary: #1e2a3e;
+  --text-tertiary: #3d4d63;
+  --text-muted: #5c6b82;
+  --text-inverse: #f5f7fa;
 
-  --border-primary: rgba(60, 20, 100, 0.18);
-  --border-secondary: rgba(60, 20, 100, 0.10);
+  --border-primary: rgba(30, 42, 62, 0.15);
+  --border-secondary: rgba(30, 42, 62, 0.08);
 
   --accent: #c42d8a;
   --accent-hover: #a8236e;
@@ -153,7 +153,7 @@
   --bg-card-alpha-light: rgba(255, 255, 255, 0.85);
   --bg-card-alpha-lighter: rgba(255, 255, 255, 0.75);
   --bg-card-alpha-heavy: rgba(255, 255, 255, 0.98);
-  --bg-inset: #f0eaf5;
+  --bg-inset: #e8ecf2;
 
   --glow-accent: rgba(196, 45, 138, 0.08);
   --glow-gold: rgba(161, 98, 7, 0.1);
@@ -161,11 +161,11 @@
 
 /* ライトモード: カードに影を付与 */
 .light [class*="rounded"][class*="border"] {
-  box-shadow: 0 1px 3px rgba(80, 40, 120, 0.06), 0 1px 2px rgba(80, 40, 120, 0.04);
+  box-shadow: 0 1px 3px rgba(15, 21, 35, 0.06), 0 1px 2px rgba(15, 21, 35, 0.04);
 }
 
 .light header {
-  box-shadow: 0 1px 4px rgba(80, 40, 120, 0.08) !important;
+  box-shadow: 0 1px 4px rgba(15, 21, 35, 0.08) !important;
 }
 
 /* .dark クラスが明示的に付いた場合 */
@@ -226,9 +226,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ダークモードでは丸ゴシックが細く見えるため少し太くする */
+/* 丸ゴシックが細く見えるため少し太くする */
 .dark body {
   -webkit-text-stroke: 0.2px;
+}
+
+.light body {
+  -webkit-text-stroke: 0.1px;
 }
 
 /* スクロールバー非表示ユーティリティ */
