@@ -55,7 +55,7 @@ function getPartySize(mode: FormMode): number {
   return mode === "dimension" ? 9 : 6;
 }
 
-function getRowCount(mode: FormMode): number {
+function getRowCount(): number {
   return 3;
 }
 
@@ -152,7 +152,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
   }, [formMode]);
 
   const partySize = getPartySize(formMode);
-  const rowCount = getRowCount(formMode);
+  const rowCount = getRowCount();
 
   // 配置済みキャラIDセット
   const placedIds = useMemo(

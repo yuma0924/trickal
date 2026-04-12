@@ -173,7 +173,7 @@ export function ItemEditor({ initialItems }: { initialItems: Item[] }) {
   const favorites = filtered.filter((i) => i.item_type === "favorite");
   const rewards = filtered.filter((i) => i.item_type === "reward");
 
-  const renderItemCard = (item: ItemDraft, index: number) => {
+  const renderItemCard = (item: ItemDraft) => {
     const realIndex = items.indexOf(item);
     return (
       <div
@@ -303,7 +303,7 @@ export function ItemEditor({ initialItems }: { initialItems: Item[] }) {
           <h2 className="mb-2 text-sm font-bold text-text-primary">大好物</h2>
           {favorites.length > 0 ? (
             <div className="space-y-2">
-              {favorites.map((item, i) => renderItemCard(item, i))}
+              {favorites.map((item) => renderItemCard(item))}
             </div>
           ) : (
             <p className="rounded-lg border border-border-secondary bg-bg-secondary p-4 text-center text-sm text-text-tertiary">
@@ -319,7 +319,7 @@ export function ItemEditor({ initialItems }: { initialItems: Item[] }) {
           <h2 className="mb-2 text-sm font-bold text-text-primary">アルバイト報酬</h2>
           {rewards.length > 0 ? (
             <div className="space-y-2">
-              {rewards.map((item, i) => renderItemCard(item, i))}
+              {rewards.map((item) => renderItemCard(item))}
             </div>
           ) : (
             <p className="rounded-lg border border-border-secondary bg-bg-secondary p-4 text-center text-sm text-text-tertiary">

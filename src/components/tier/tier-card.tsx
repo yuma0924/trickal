@@ -1,6 +1,6 @@
 "use client";
 
-import { TIER_LABELS, TIER_COLORS } from "@/lib/constants";
+import { TIER_COLORS } from "@/lib/constants";
 import Link from "next/link";
 import type { TierLabel } from "@/lib/constants";
 import { CharacterIcon } from "@/components/character/character-icon";

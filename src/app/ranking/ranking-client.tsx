@@ -184,7 +184,6 @@ export function RankingClient({
                 imageUrl={char.imageUrl}
 
                 avgRating={char.avgRating}
-                validVotesCount={char.validVotesCount}
                 rank={char.rank}
               />
             ))}
@@ -228,7 +227,6 @@ export function RankingClient({
                 avgRating={
                   char.validVotesCount > 0 ? char.avgRating : null
                 }
-                validVotesCount={char.validVotesCount}
               />
             ))}
           </div>

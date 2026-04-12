@@ -7,7 +7,6 @@ interface CharacterCardProps {
   name: string;
   imageUrl: string | null;
   avgRating?: number | null;
-  validVotesCount?: number;
   rank?: number | null;
   className?: string;
 }
@@ -17,7 +16,6 @@ export function CharacterCard({
   name,
   imageUrl,
   avgRating,
-  validVotesCount = 0,
   rank,
   className,
 }: CharacterCardProps) {

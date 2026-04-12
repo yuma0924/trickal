@@ -55,14 +55,6 @@ const ATTACK_TYPE_ICON_MAP: Record<string, string> = {
   魔法: "/icons/magical.png",
 };
 
-const ELEMENT_COLORS: Record<string, { border: string; bg: string; text: string }> = {
-  純粋: { border: "rgba(74,222,128,0.6)", bg: "rgba(74,222,128,0.15)", text: "#34d399" },
-  冷静: { border: "rgba(56,189,248,0.6)", bg: "rgba(56,189,248,0.15)", text: "#38bdf8" },
-  狂気: { border: "rgba(251,113,133,0.6)", bg: "rgba(251,113,133,0.15)", text: "#fb7185" },
-  活発: { border: "rgba(255,210,48,0.6)", bg: "rgba(255,210,48,0.15)", text: "#fcd34d" },
-  憂鬱: { border: "rgba(166,132,255,0.6)", bg: "rgba(166,132,255,0.15)", text: "#a78bfa" },
-};
-
 interface TrendingChar {
   id: string;
   slug: string;
@@ -510,9 +502,8 @@ export default async function Home() {
           <>
             {/* ヒーロー表示 (1-3位) */}
             <div className="mt-3 space-y-3">
-              {rankedCharacters.slice(0, 3).map((char, idx) => {
+              {rankedCharacters.slice(0, 3).map((char) => {
                 const rank = char.rank as 1 | 2 | 3;
-                const elemStyle = char.element ? ELEMENT_COLORS[char.element] : null;
 
                 // 順位ごとのカラー設定
                 const rankConfig = {
@@ -696,7 +687,6 @@ export default async function Home() {
                   name={char.name}
                   imageUrl={char.imageUrl}
                   avgRating={char.avgRating}
-                  validVotesCount={char.validVotesCount}
                   rank={char.rank}
                 />
               ))}
@@ -896,7 +886,6 @@ export default async function Home() {
           </div>
           <div className="-mx-4 grid grid-cols-2 md:grid-cols-3 gap-2 px-2">
             {trendingCharacters.map((char) => {
-              const elemStyle = char.element ? ELEMENT_COLORS[char.element] : null;
               return (
                 <Link
                   key={char.id}

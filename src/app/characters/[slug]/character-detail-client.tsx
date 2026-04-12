@@ -56,51 +56,6 @@ function StyledText({ text, className }: { text: string; className?: string }) {
   );
 }
 
-/** PC版ヒーロー右側の追加情報チップ（画像+ラベル+名前） */
-function InfoChip({ label, labelIcon, badgeIcon, name, imageUrl, description, params }: {
-  label: string;
-  labelIcon?: string;
-  badgeIcon?: string;
-  name?: string;
-  imageUrl?: string | null;
-  description?: string;
-  params?: string;
-}) {
-  if (!name) return null;
-  const paramLines = params?.split("\n").filter(Boolean) ?? [];
-  return (
-    <div className="w-52 rounded-[10px] border border-border-primary bg-bg-card-alpha-light px-3 py-2.5">
-      <p className="flex items-center gap-1 text-xs text-text-tertiary">
-        {labelIcon && <StaticIcon src={labelIcon} alt="" width={16} height={16} className="shrink-0" />}
-        {label}
-      </p>
-      <div className="mt-1.5 flex items-center gap-2.5">
-        {imageUrl && (
-          <div className="relative shrink-0">
-            <Image src={imageUrl} alt={name} width={96} height={96} sizes="48px" loading="eager" unoptimized className="h-12 w-12 rounded-md" />
-            {badgeIcon && (
-              <StaticIcon src={badgeIcon} alt="" width={16} height={16} className="absolute -left-1 -top-1" />
-            )}
-          </div>
-        )}
-        <p className="text-base font-bold leading-snug text-text-primary">{name}</p>
-      </div>
-      {paramLines.length > 0 && (
-        <ul className="mt-2 space-y-0.5 border-l-2 border-border-primary pl-2">
-          {paramLines.map((line, i) => (
-            <li key={i} className="text-xs leading-relaxed text-text-tertiary">
-              <ParamLine text={line} />
-            </li>
-          ))}
-        </ul>
-      )}
-      {description && (
-        <p className="mt-2 text-xs leading-relaxed text-text-tertiary">{description}</p>
-      )}
-    </div>
-  );
-}
-
 type SortTab = "newest" | "thumbs_up";
 type ReactionState = "up" | "down" | null;
 
@@ -966,7 +921,6 @@ export function CharacterDetailClient({
                 name={c.name}
                 imageUrl={c.imageUrl}
                 avgRating={c.avgRating}
-                validVotesCount={c.validVotesCount}
               />
             ))}
           </div>

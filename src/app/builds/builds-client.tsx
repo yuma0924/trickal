@@ -625,7 +625,6 @@ function BuildCard({
           // 全スロットが空の行は非表示にする
           const hasContent = (rowIdx: number) =>
             [0, 1, 2].some((colIdx) => slots[colIdx * rowCount + rowIdx] !== null);
-          const visibleRows = Array.from({ length: rowCount }).filter((_, i) => hasContent(i));
 
           return (
             <div className="mb-2 overflow-hidden rounded-[14px] border border-border-primary">

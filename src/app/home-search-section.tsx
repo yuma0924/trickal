@@ -393,17 +393,6 @@ export function HomeSearchSection({ characters }: HomeSearchSectionProps) {
   );
 }
 
-function FilterRow({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="flex items-center gap-1.5">
-      <span className="w-8 shrink-0 text-[10px] font-bold text-text-muted">{label}</span>
-      <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
-        {children}
-      </div>
-    </div>
-  );
-}
-
 function ToggleButton({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
   return (
     <button

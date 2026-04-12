@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Tab } from "@/components/ui/tab";
 import { Pagination } from "@/components/ui/pagination";
 import { CommentCard } from "@/components/comment/comment-card";
