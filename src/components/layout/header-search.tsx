@@ -164,10 +164,10 @@ export function HeaderSearch({ characters }: HeaderSearchProps) {
                             height={96}
                             sizes="(max-width: 768px) 48px, 64px"
                             loading="eager"
-                            className="h-10 w-10 shrink-0 rounded-full object-cover"
+                            className="h-10 w-10 shrink-0 rounded-lg object-cover"
                           />
                         ) : (
-                          <div className="h-10 w-10 shrink-0 rounded-full bg-bg-tertiary" />
+                          <div className="h-10 w-10 shrink-0 rounded-lg bg-bg-tertiary" />
                         )}
                         <span className="text-sm font-bold text-text-primary">
                           {c.name}
