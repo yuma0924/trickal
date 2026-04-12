@@ -38,10 +38,28 @@ interface TiersClientProps {
 export function TiersClient({ characters, allTiers }: TiersClientProps) {
   const [sort, setSort] = useState<SortType>("newest");
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
-  const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
+  // localStorageから即座に復元 → APIで同期
+  const [likedIds, setLikedIds] = useState<Set<string>>(() => {
+    if (typeof window === "undefined") return new Set();
+    try {
+      const saved = localStorage.getItem("tier_liked_ids");
+      return saved ? new Set(JSON.parse(saved)) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
   const [likeDelta, setLikeDelta] = useState<Record<string, number>>({});
 
-  // 初回マウント時にユーザーのいいね状態を取得
+  // localStorageに保存
+  useEffect(() => {
+    try {
+      localStorage.setItem("tier_liked_ids", JSON.stringify([...likedIds]));
+    } catch {
+      // ignore
+    }
+  }, [likedIds]);
+
+  // APIと同期（バックグラウンド）
   const fetchedRef = useRef(false);
   useEffect(() => {
     if (fetchedRef.current) return;
