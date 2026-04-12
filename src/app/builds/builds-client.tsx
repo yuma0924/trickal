@@ -160,10 +160,8 @@ export function BuildsClient({ initialBuilds }: BuildsClientProps) {
       return;
     }
     initialSkip.current = false;
-    setBuilds([]);
     setNextCursor(null);
     setHasMore(false);
-    setInitialLoaded(false);
     fetchBuilds();
   }, [fetchBuilds, initialBuilds, mode, elementFilters, sortKey]);
 

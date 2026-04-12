@@ -31,27 +31,21 @@ export default async function TiersPage() {
     }
   }
 
-  // 初期ティアデータを取得（新着順）
-  const { data: initialTiers } = await supabase
+  // 全ティアデータを取得
+  const { data: allTiers } = await supabase
     .from("tiers")
     .select("id, title, display_name, data, likes_count, created_at")
     .eq("is_deleted", false)
-    .order("created_at", { ascending: false })
-    .limit(21);
+    .order("created_at", { ascending: false });
 
-  const initialData = {
-    tiers: (initialTiers ?? []).slice(0, 20).map((t) => ({
-      id: t.id,
-      title: t.title as string | null,
-      display_name: t.display_name as string | null,
-      data: t.data as Record<string, string[]>,
-      likes_count: t.likes_count,
-      user_liked: false,
-      created_at: t.created_at,
-    })),
-    hasMore: (initialTiers ?? []).length > 20,
-    nextCursor: (initialTiers ?? []).length > 20 ? (initialTiers ?? [])[19]?.id ?? null : null,
-  };
+  const tiersData = (allTiers ?? []).map((t) => ({
+    id: t.id,
+    title: t.title as string | null,
+    display_name: t.display_name as string | null,
+    data: t.data as Record<string, string[]>,
+    likes_count: t.likes_count,
+    created_at: t.created_at,
+  }));
 
   return (
     <div className="space-y-6">
@@ -79,7 +73,7 @@ export default async function TiersPage() {
         </p>
       </div>
 
-      <TiersClient characters={characters} initialData={initialData} />
+      <TiersClient characters={characters} allTiers={tiersData} />
     </div>
   );
 }

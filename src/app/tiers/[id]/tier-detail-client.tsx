@@ -127,20 +127,30 @@ export function TierDetailClient({
   }, [tier.id]);
 
   const handleToggleLike = async () => {
+    const prevLiked = userLiked;
+    const prevCount = tier.likes_count;
+    const newLiked = !prevLiked;
+    const newCount = newLiked ? prevCount + 1 : prevCount - 1;
+
+    // 楽観的更新
+    setUserLiked(newLiked);
+    setTier((prev) => ({ ...prev, likes_count: newCount }));
+
     try {
       const res = await fetch(`/api/tiers/${tier.id}/reactions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          reaction_type: userLiked ? null : "up",
+          reaction_type: newLiked ? "up" : null,
         }),
       });
-      if (!res.ok) return;
-      const data = await res.json();
-      setTier((prev) => ({ ...prev, likes_count: data.likes_count }));
-      setUserLiked(data.user_liked);
+      if (!res.ok) {
+        setUserLiked(prevLiked);
+        setTier((prev) => ({ ...prev, likes_count: prevCount }));
+      }
     } catch {
-      // ignore
+      setUserLiked(prevLiked);
+      setTier((prev) => ({ ...prev, likes_count: prevCount }));
     }
   };
 
@@ -233,12 +243,10 @@ export function TierDetailClient({
     [tier.id, sort]
   );
 
-  // ソート変更時にリロード
+  // ソート変更時にリロード（旧データを維持したまま取得）
   useEffect(() => {
-    setComments([]);
     setNextCursor(null);
     setHasMoreComments(false);
-    setCommentsLoaded(false);
     fetchComments();
   }, [fetchComments]);
 

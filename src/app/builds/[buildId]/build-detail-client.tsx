@@ -183,10 +183,8 @@ export function BuildDetailClient({
 
   // ソート変更時にリロード
   useEffect(() => {
-    setComments([]);
     setNextCursor(null);
     setHasMoreComments(false);
-    setCommentsLoaded(false);
     fetchComments();
   }, [fetchComments]);
 

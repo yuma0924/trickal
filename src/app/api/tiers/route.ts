@@ -26,6 +26,23 @@ type ReactionRow = { tier_id: string };
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = request.nextUrl;
+
+    // いいねチェック専用モード
+    const likedCheck = searchParams.get("liked_check");
+    if (likedCheck) {
+      const ids = likedCheck.split(",").filter(Boolean);
+      const { userHash } = getUserHash(request);
+      const supabase = createAdminClient();
+      const { data: reactions } = await supabase
+        .from("tier_reactions")
+        .select("tier_id")
+        .eq("user_hash", userHash)
+        .in("tier_id", ids);
+      return NextResponse.json({
+        liked_ids: (reactions as ReactionRow[] ?? []).map((r) => r.tier_id),
+      });
+    }
+
     const sortKey = searchParams.get("sort") || "popular";
     const cursor = searchParams.get("cursor");
     const limit = Math.min(

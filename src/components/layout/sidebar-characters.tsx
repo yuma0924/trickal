@@ -40,7 +40,7 @@ export async function SidebarCharacters() {
 
   return (
     <div className="rounded-2xl border border-border-primary bg-bg-card p-3">
-      <p className="mb-2 text-xs font-bold text-text-tertiary">キャラクター一覧</p>
+      <p className="mb-2 text-xs font-bold text-text-tertiary">キャラクター</p>
       <div className="space-y-3">
         {ELEMENTS.map((elem) => {
           const chars = grouped.get(elem) ?? [];

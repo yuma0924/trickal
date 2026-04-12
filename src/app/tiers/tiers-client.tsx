@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { TierCard } from "@/components/tier/tier-card";
-import { Button } from "@/components/ui/button";
 
 type CharacterData = {
   id: string;
@@ -18,7 +17,6 @@ type TierItem = {
   display_name: string | null;
   data: Record<string, string[]>;
   likes_count: number;
-  user_liked: boolean;
   created_at: string;
 };
 
@@ -29,88 +27,113 @@ const SORT_TABS: { value: SortType; label: string }[] = [
   { value: "popular", label: "人気順" },
 ];
 
+const PAGE_SIZE = 20;
+
 interface TiersClientProps {
   characters: Record<string, CharacterData>;
-  initialData?: {
-    tiers: TierItem[];
-    hasMore: boolean;
-    nextCursor: string | null;
-  };
+  allTiers: TierItem[];
 }
 
-export function TiersClient({ characters, initialData }: TiersClientProps) {
-  const [tiers, setTiers] = useState<TierItem[]>(initialData?.tiers ?? []);
+export function TiersClient({ characters, allTiers }: TiersClientProps) {
   const [sort, setSort] = useState<SortType>("newest");
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(initialData?.hasMore ?? false);
-  const [nextCursor, setNextCursor] = useState<string | null>(initialData?.nextCursor ?? null);
-  const [loaded, setLoaded] = useState(!!initialData);
+  const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
+  const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
+  const [likeDelta, setLikeDelta] = useState<Record<string, number>>({});
 
-  const fetchTiers = useCallback(
-    async (cursorId?: string) => {
-      setLoading(true);
+  // 初回マウント時にユーザーのいいね状態を取得
+  const fetchedRef = useRef(false);
+  useEffect(() => {
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
+    async function fetchLiked() {
       try {
-        const params = new URLSearchParams({ sort });
-        if (cursorId) params.set("cursor", cursorId);
-
-        const res = await fetch(`/api/tiers?${params.toString()}`);
+        const ids = allTiers.map((t) => t.id);
+        if (ids.length === 0) return;
+        const res = await fetch(`/api/tiers?liked_check=${ids.join(",")}`);
         if (!res.ok) return;
-
         const data = await res.json();
-        if (cursorId) {
-          setTiers((prev) => [...prev, ...data.tiers]);
-        } else {
-          setTiers(data.tiers);
+        if (data.liked_ids) {
+          setLikedIds(new Set(data.liked_ids));
         }
-        setNextCursor(data.next_cursor);
-        setHasMore(data.has_more);
       } catch {
         // ignore
-      } finally {
-        setLoading(false);
-        setLoaded(true);
       }
-    },
-    [sort]
-  );
-
-  const initialSortRef = useRef(true);
-  useEffect(() => {
-    if (initialSortRef.current && initialData && sort === "newest") {
-      initialSortRef.current = false;
-      return;
     }
-    initialSortRef.current = false;
-    setTiers([]);
-    setNextCursor(null);
-    setHasMore(false);
-    setLoaded(false);
-    fetchTiers();
-  }, [fetchTiers, initialData, sort]);
+    fetchLiked();
+  }, [allTiers]);
+
+  // クライアント側ソート
+  const sortedTiers = useMemo(() => {
+    const sorted = [...allTiers];
+    if (sort === "popular") {
+      sorted.sort((a, b) => {
+        const likeDiff = (b.likes_count + (likeDelta[b.id] ?? 0)) - (a.likes_count + (likeDelta[a.id] ?? 0));
+        if (likeDiff !== 0) return likeDiff;
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
+    } else {
+      sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    }
+    return sorted;
+  }, [allTiers, sort, likeDelta]);
+
+  const visibleTiers = sortedTiers.slice(0, displayCount);
+  const hasMore = displayCount < sortedTiers.length;
+
+  // ソート変更時に表示件数リセット
+  const handleSortChange = (newSort: SortType) => {
+    setSort(newSort);
+    setDisplayCount(PAGE_SIZE);
+  };
 
   const handleToggleLike = async (tierId: string) => {
-    const tier = tiers.find((t) => t.id === tierId);
-    if (!tier) return;
+    const prevLiked = likedIds.has(tierId);
+    const newLiked = !prevLiked;
+
+    // 楽観的更新
+    setLikedIds((prev) => {
+      const next = new Set(prev);
+      if (newLiked) next.add(tierId);
+      else next.delete(tierId);
+      return next;
+    });
+    setLikeDelta((prev) => ({
+      ...prev,
+      [tierId]: (prev[tierId] ?? 0) + (newLiked ? 1 : -1),
+    }));
 
     try {
       const res = await fetch(`/api/tiers/${tierId}/reactions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          reaction_type: tier.user_liked ? null : "up",
+          reaction_type: newLiked ? "up" : null,
         }),
       });
-      if (!res.ok) return;
-      const data = await res.json();
-      setTiers((prev) =>
-        prev.map((t) =>
-          t.id === tierId
-            ? { ...t, likes_count: data.likes_count, user_liked: data.user_liked }
-            : t
-        )
-      );
+      if (!res.ok) {
+        // ロールバック
+        setLikedIds((prev) => {
+          const next = new Set(prev);
+          if (prevLiked) next.add(tierId);
+          else next.delete(tierId);
+          return next;
+        });
+        setLikeDelta((prev) => ({
+          ...prev,
+          [tierId]: (prev[tierId] ?? 0) + (prevLiked ? 1 : -1),
+        }));
+      }
     } catch {
-      // ignore
+      setLikedIds((prev) => {
+        const next = new Set(prev);
+        if (prevLiked) next.add(tierId);
+        else next.delete(tierId);
+        return next;
+      });
+      setLikeDelta((prev) => ({
+        ...prev,
+        [tierId]: (prev[tierId] ?? 0) + (prevLiked ? 1 : -1),
+      }));
     }
   };
 
@@ -122,7 +145,7 @@ export function TiersClient({ characters, initialData }: TiersClientProps) {
           {SORT_TABS.map((tab) => (
             <button
               key={tab.value}
-              onClick={() => setSort(tab.value)}
+              onClick={() => handleSortChange(tab.value)}
               className={cn(
                 "rounded-full border px-2.5 py-1 text-xs md:text-sm font-medium transition-colors cursor-pointer",
                 sort === tab.value
@@ -146,7 +169,7 @@ export function TiersClient({ characters, initialData }: TiersClientProps) {
       </div>
 
       {/* ティア一覧 */}
-      {loaded && tiers.length === 0 && !loading ? (
+      {sortedTiers.length === 0 ? (
         <div className="py-12 text-center">
           <p className="text-sm text-text-tertiary">
             まだティアが投稿されていません
@@ -160,15 +183,15 @@ export function TiersClient({ characters, initialData }: TiersClientProps) {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          {tiers.map((tier) => (
+          {visibleTiers.map((tier) => (
             <TierCard
               key={tier.id}
               id={tier.id}
               title={tier.title}
               displayName={tier.display_name}
               data={tier.data}
-              likesCount={tier.likes_count}
-              userLiked={tier.user_liked}
+              likesCount={tier.likes_count + (likeDelta[tier.id] ?? 0)}
+              userLiked={likedIds.has(tier.id)}
               createdAt={tier.created_at}
               characters={characters}
               onToggleLike={handleToggleLike}
@@ -180,22 +203,12 @@ export function TiersClient({ characters, initialData }: TiersClientProps) {
       {/* もっと見る */}
       {hasMore && (
         <div className="flex justify-center py-4">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              if (nextCursor) fetchTiers(nextCursor);
-            }}
-            disabled={loading}
+          <button
+            onClick={() => setDisplayCount((prev) => prev + PAGE_SIZE)}
+            className="rounded-xl border border-border-primary bg-bg-tertiary px-6 py-2 text-sm font-medium text-text-primary transition-colors hover:bg-bg-card-hover cursor-pointer"
           >
-            {loading ? "読み込み中..." : "もっと見る"}
-          </Button>
-        </div>
-      )}
-
-      {loading && !loaded && (
-        <div className="flex justify-center py-8">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+            もっと見る
+          </button>
         </div>
       )}
 
