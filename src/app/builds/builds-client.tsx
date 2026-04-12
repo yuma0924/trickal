@@ -242,7 +242,7 @@ export function BuildsClient({ initialBuilds }: BuildsClientProps) {
         </div>
         <button
           onClick={() => setFormOpen(!formOpen)}
-          className="flex shrink-0 items-center gap-1.5 rounded-[14px] bg-gradient-to-r from-[#fb64b6] to-[#ff637e] px-5 py-2.5 text-sm font-bold text-white shadow-[0px_10px_15px_0px_rgba(246,51,154,0.2),0px_4px_6px_0px_rgba(246,51,154,0.2)] cursor-pointer"
+          className="flex shrink-0 items-center gap-1.5 rounded-[14px] bg-gradient-to-r from-[#e05aa8] to-[#e87080] px-5 py-2.5 text-sm font-bold text-white shadow-[0px_10px_15px_0px_rgba(224,90,168,0.12),0px_4px_6px_0px_rgba(224,90,168,0.12)] cursor-pointer"
         >
           <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -434,7 +434,7 @@ export function BuildsClient({ initialBuilds }: BuildsClientProps) {
           )}
           <button
             onClick={() => setFormOpen(!formOpen)}
-            className="flex shrink-0 items-center gap-1.5 rounded-[14px] bg-gradient-to-r from-[#fb64b6] to-[#ff637e] px-5 py-2 text-sm font-bold text-white shadow-[0px_10px_15px_0px_rgba(246,51,154,0.2),0px_4px_6px_0px_rgba(246,51,154,0.2)] cursor-pointer"
+            className="flex shrink-0 items-center gap-1.5 rounded-[14px] bg-gradient-to-r from-[#e05aa8] to-[#e87080] px-5 py-2 text-sm font-bold text-white shadow-[0px_10px_15px_0px_rgba(224,90,168,0.12),0px_4px_6px_0px_rgba(224,90,168,0.12)] cursor-pointer"
           >
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />

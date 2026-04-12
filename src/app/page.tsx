@@ -480,7 +480,7 @@ export default async function Home() {
           href="/ranking"
           linkLabel="もっと見る"
           gradientFrom="#ffb900"
-          gradientTo="#ff637e"
+          gradientTo="#e87080"
         />
 
         {topChar && (
@@ -705,8 +705,8 @@ export default async function Home() {
           <SectionFooterButton
             href="/ranking"
             label="キャラランキングをすべて見る"
-            gradientFrom="#fb64b6"
-            gradientTo="#ffa1ad"
+            gradientFrom="#e05aa8"
+            gradientTo="#f08a9a"
           />
         </div>
       </section>
@@ -730,8 +730,8 @@ export default async function Home() {
           subtitle="キャラクターをランク付けして共有しよう"
           href="/tiers"
           linkLabel="もっと見る"
-          gradientFrom="#a855f7"
-          gradientTo="#ec4899"
+          gradientFrom="#9048d4"
+          gradientTo="#d4408a"
         />
 
         {tiersData.length > 0 ? (
@@ -830,7 +830,7 @@ export default async function Home() {
             <p className="text-sm text-text-muted">まだティアが投稿されていません</p>
             <Link
               href="/tiers/new"
-              className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#a855f7] to-[#ec4899] px-5 py-2.5 text-sm font-bold text-white shadow-md transition-opacity hover:opacity-90"
+              className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#9048d4] to-[#d4408a] px-5 py-2.5 text-sm font-bold text-white shadow-md transition-opacity hover:opacity-90"
             >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -844,8 +844,8 @@ export default async function Home() {
         <SectionFooterButton
           href="/tiers"
           label="みんなのティア表を見る"
-          gradientFrom="#a855f7"
-          gradientTo="#ec4899"
+          gradientFrom="#9048d4"
+          gradientTo="#d4408a"
         />
         </div>
       </section>
@@ -875,7 +875,7 @@ export default async function Home() {
               <div className="flex items-center gap-2">
                 <span
                   className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[14px]"
-                  style={{ backgroundImage: "linear-gradient(135deg, #fb64b6, #ff8904)" }}
+                  style={{ backgroundImage: "linear-gradient(135deg, #e05aa8, #ff8904)" }}
                 >
                   <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />

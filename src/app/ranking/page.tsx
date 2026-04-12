@@ -201,7 +201,7 @@ export default async function RankingPage() {
           <div className="flex items-center gap-2.5">
             <span
               className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[14px]"
-              style={{ backgroundImage: "linear-gradient(135deg, #ffb900, #ff637e)" }}
+              style={{ backgroundImage: "linear-gradient(135deg, #ffb900, #e87080)" }}
             >
               <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />

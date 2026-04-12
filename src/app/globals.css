@@ -73,46 +73,46 @@
     sans-serif;
 }
 
-/* ダークテーマ（デフォルト） - パープル×ピンク */
+/* ダークテーマ（デフォルト） - ネイビー×ピンク */
 :root {
-  --bg-primary: #1c1728;
-  --bg-secondary: #211c2e;
-  --bg-tertiary: #272134;
-  --bg-card: #241e31;
-  --bg-card-hover: #2d263b;
-  --bg-input: #1e192b;
+  --bg-primary: #0f1523;
+  --bg-secondary: #141b2d;
+  --bg-tertiary: #1a2236;
+  --bg-card: #161d2e;
+  --bg-card-hover: #1e2740;
+  --bg-input: #111827;
 
   --text-primary: #fafafa;
   --text-secondary: #e5e5e5;
-  --text-tertiary: #d0c3dc;
-  --text-muted: #a99bbe;
-  --text-inverse: #0f0a1a;
+  --text-tertiary: #cdd6e2;
+  --text-muted: #a8b8cc;
+  --text-inverse: #0a0f1a;
 
-  --border-primary: rgba(249, 168, 212, 0.12);
-  --border-secondary: rgba(249, 168, 212, 0.06);
+  --border-primary: rgba(148, 163, 184, 0.12);
+  --border-secondary: rgba(148, 163, 184, 0.06);
 
-  --accent: #fb64b6;
-  --accent-hover: #ff8ac4;
+  --accent: #e05aa8;
+  --accent-hover: #e878b4;
   --accent-text: #ffffff;
-  --accent-secondary: #f9a8d4;
+  --accent-secondary: #e090b8;
 
   --star: #fbbf24;
-  --thumbs-up: #f9a8d4;
+  --thumbs-up: #e090b8;
   --thumbs-down: #60a5fa;
 
   --rank-gold: #fbbf24;
   --rank-silver: #94a3b8;
   --rank-bronze: #d97706;
-  --accent-active: #fb64b6;
-  --accent-muted: #f9a8d4;
+  --accent-active: #e05aa8;
+  --accent-muted: #e090b8;
 
-  --bg-card-alpha: rgba(36, 27, 53, 0.8);
-  --bg-card-alpha-light: rgba(36, 27, 53, 0.5);
-  --bg-card-alpha-lighter: rgba(36, 27, 53, 0.4);
-  --bg-card-alpha-heavy: rgba(36, 27, 53, 0.95);
-  --bg-inset: rgba(42, 33, 62, 0.8);
+  --bg-card-alpha: rgba(22, 29, 46, 0.8);
+  --bg-card-alpha-light: rgba(22, 29, 46, 0.5);
+  --bg-card-alpha-lighter: rgba(22, 29, 46, 0.4);
+  --bg-card-alpha-heavy: rgba(22, 29, 46, 0.95);
+  --bg-inset: rgba(26, 34, 54, 0.8);
 
-  --glow-accent: rgba(251, 100, 182, 0.15);
+  --glow-accent: rgba(251, 100, 182, 0.06);
   --glow-gold: rgba(251, 191, 36, 0.2);
 }
 
@@ -170,44 +170,44 @@
 
 /* .dark クラスが明示的に付いた場合 */
 .dark {
-  --bg-primary: #1c1728;
-  --bg-secondary: #211c2e;
-  --bg-tertiary: #272134;
-  --bg-card: #241e31;
-  --bg-card-hover: #2d263b;
-  --bg-input: #1e192b;
+  --bg-primary: #0f1523;
+  --bg-secondary: #141b2d;
+  --bg-tertiary: #1a2236;
+  --bg-card: #161d2e;
+  --bg-card-hover: #1e2740;
+  --bg-input: #111827;
 
   --text-primary: #fafafa;
   --text-secondary: #e5e5e5;
-  --text-tertiary: #d0c3dc;
-  --text-muted: #a99bbe;
-  --text-inverse: #0f0a1a;
+  --text-tertiary: #cdd6e2;
+  --text-muted: #a8b8cc;
+  --text-inverse: #0a0f1a;
 
-  --border-primary: rgba(249, 168, 212, 0.12);
-  --border-secondary: rgba(249, 168, 212, 0.06);
+  --border-primary: rgba(148, 163, 184, 0.12);
+  --border-secondary: rgba(148, 163, 184, 0.06);
 
-  --accent: #fb64b6;
-  --accent-hover: #ff8ac4;
+  --accent: #e05aa8;
+  --accent-hover: #e878b4;
   --accent-text: #ffffff;
-  --accent-secondary: #f9a8d4;
+  --accent-secondary: #e090b8;
 
   --star: #fbbf24;
-  --thumbs-up: #f9a8d4;
+  --thumbs-up: #e090b8;
   --thumbs-down: #60a5fa;
 
   --rank-gold: #fbbf24;
   --rank-silver: #94a3b8;
   --rank-bronze: #d97706;
-  --accent-active: #fb64b6;
-  --accent-muted: #f9a8d4;
+  --accent-active: #e05aa8;
+  --accent-muted: #e090b8;
 
-  --bg-card-alpha: rgba(36, 27, 53, 0.8);
-  --bg-card-alpha-light: rgba(36, 27, 53, 0.5);
-  --bg-card-alpha-lighter: rgba(36, 27, 53, 0.4);
-  --bg-card-alpha-heavy: rgba(36, 27, 53, 0.95);
-  --bg-inset: rgba(42, 33, 62, 0.8);
+  --bg-card-alpha: rgba(22, 29, 46, 0.8);
+  --bg-card-alpha-light: rgba(22, 29, 46, 0.5);
+  --bg-card-alpha-lighter: rgba(22, 29, 46, 0.4);
+  --bg-card-alpha-heavy: rgba(22, 29, 46, 0.95);
+  --bg-inset: rgba(26, 34, 54, 0.8);
 
-  --glow-accent: rgba(251, 100, 182, 0.15);
+  --glow-accent: rgba(251, 100, 182, 0.06);
   --glow-gold: rgba(251, 191, 36, 0.2);
 }
 
@@ -224,6 +224,11 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ダークモードでは丸ゴシックが細く見えるため少し太くする */
+.dark body {
+  -webkit-text-stroke: 0.2px;
 }
 
 /* スクロールバー非表示ユーティリティ */

@@ -53,7 +53,7 @@ export async function Header() {
         className="h-px w-full"
         style={{
           backgroundImage:
-            "linear-gradient(90deg, transparent 0%, #fb64b6 30%, #ffa1ad 70%, transparent 100%)",
+            "linear-gradient(90deg, transparent 0%, rgba(251,100,182,0.4) 30%, rgba(255,161,173,0.3) 70%, transparent 100%)",
         }}
       />
     </header>

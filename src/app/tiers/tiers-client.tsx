@@ -136,7 +136,7 @@ export function TiersClient({ characters, initialData }: TiersClientProps) {
         </div>
         <Link
           href="/tiers/new"
-          className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#a855f7] to-[#ec4899] px-4 py-2 text-xs font-bold text-white shadow-md transition-opacity hover:opacity-90"
+          className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#9048d4] to-[#d4408a] px-4 py-2 text-xs font-bold text-white shadow-md transition-opacity hover:opacity-90"
         >
           <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -153,7 +153,7 @@ export function TiersClient({ characters, initialData }: TiersClientProps) {
           </p>
           <Link
             href="/tiers/new"
-            className="mt-3 inline-block rounded-xl bg-gradient-to-r from-[#a855f7] to-[#ec4899] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-opacity hover:opacity-90"
+            className="mt-3 inline-block rounded-xl bg-gradient-to-r from-[#9048d4] to-[#d4408a] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-opacity hover:opacity-90"
           >
             最初のティアを作成する
           </Link>
@@ -208,7 +208,7 @@ export function TiersClient({ characters, initialData }: TiersClientProps) {
         >
           <span
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-            style={{ backgroundImage: "linear-gradient(135deg, #ffb900, #ff637e)" }}
+            style={{ backgroundImage: "linear-gradient(135deg, #ffb900, #e87080)" }}
           >
             <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />

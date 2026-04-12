@@ -104,7 +104,7 @@ export default function GuidelinesPage() {
       {/* タイトル */}
       <div className="mb-2">
         <div className="flex items-center gap-3">
-          <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#fb64b6] to-[#ffa1ad]" />
+          <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#e05aa8] to-[#f08a9a]" />
           <h1 className="text-3xl font-bold text-text-primary">
             ガイドライン
           </h1>

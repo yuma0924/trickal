@@ -9,7 +9,7 @@ export function Footer() {
         className="h-px w-full"
         style={{
           backgroundImage:
-            "linear-gradient(90deg, transparent 0%, #fb64b6 30%, #ffa1ad 70%, transparent 100%)",
+            "linear-gradient(90deg, transparent 0%, #e05aa8 30%, #f08a9a 70%, transparent 100%)",
         }}
       />
       <div className="mx-auto max-w-6xl px-4 pt-10 pb-4 md:px-8">

@@ -59,7 +59,7 @@ export default async function TiersPage() {
         <div className="flex items-center gap-2.5">
           <span
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[14px]"
-            style={{ backgroundImage: "linear-gradient(135deg, #a855f7, #ec4899)" }}
+            style={{ backgroundImage: "linear-gradient(135deg, #9048d4, #d4408a)" }}
           >
             <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
               <rect x="0" y="0.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />

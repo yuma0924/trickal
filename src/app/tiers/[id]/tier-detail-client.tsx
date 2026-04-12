@@ -495,7 +495,7 @@ export function TierDetailClient({
               </div>
               <button
                 onClick={() => setCommentFormOpen(true)}
-                className="flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#fb64b6] to-[#ff637e] px-5 py-3 text-xs font-bold text-white shadow-md transition-opacity hover:opacity-90"
+                className="flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#e05aa8] to-[#e87080] px-5 py-3 text-xs font-bold text-white shadow-md transition-opacity hover:opacity-90"
               >
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
@@ -652,7 +652,7 @@ export function TierDetailClient({
       {/* 自分もティアを作る */}
       <Link
         href="/tiers/new"
-        className="mt-10 flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#a855f7] to-[#ec4899] py-3 text-sm font-bold text-white shadow-md transition-opacity hover:opacity-90"
+        className="mt-10 flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#9048d4] to-[#d4408a] py-3 text-sm font-bold text-white shadow-md transition-opacity hover:opacity-90"
       >
         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -687,7 +687,7 @@ export function TierDetailClient({
         >
           <span
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-            style={{ backgroundImage: "linear-gradient(135deg, #ffb900, #ff637e)" }}
+            style={{ backgroundImage: "linear-gradient(135deg, #ffb900, #e87080)" }}
           >
             <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />

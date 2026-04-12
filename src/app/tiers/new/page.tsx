@@ -42,7 +42,7 @@ export default async function TierCreatePage() {
         <div className="flex items-center gap-2.5">
           <span
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[14px]"
-            style={{ backgroundImage: "linear-gradient(135deg, #a855f7, #ec4899)" }}
+            style={{ backgroundImage: "linear-gradient(135deg, #9048d4, #d4408a)" }}
           >
             <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />

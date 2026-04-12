@@ -510,7 +510,7 @@ export function BuildDetailClient({
               </div>
               <button
                 onClick={() => setCommentFormOpen(true)}
-                className="flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#fb64b6] to-[#ff637e] px-5 py-3 text-xs font-bold text-white shadow-md transition-opacity hover:opacity-90"
+                className="flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#e05aa8] to-[#e87080] px-5 py-3 text-xs font-bold text-white shadow-md transition-opacity hover:opacity-90"
               >
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
@@ -668,7 +668,7 @@ export function BuildDetailClient({
       {similarBuilds.length > 0 && (
         <section>
           <div className="mb-3 flex items-center gap-3">
-            <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#fb64b6] to-[#ffa1ad]" />
+            <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#e05aa8] to-[#f08a9a]" />
             <h2 className="text-xl font-bold text-text-primary">似ている編成</h2>
           </div>
           <div className="space-y-2 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
@@ -752,7 +752,7 @@ export function BuildDetailClient({
         >
           <span
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-            style={{ backgroundImage: "linear-gradient(135deg, #ffb900, #ff637e)" }}
+            style={{ backgroundImage: "linear-gradient(135deg, #ffb900, #e87080)" }}
           >
             <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />
@@ -768,11 +768,11 @@ export function BuildDetailClient({
         </Link>
         <Link
           href="/tiers"
-          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(168,85,247,0.15)] to-[rgba(236,72,153,0.15)] border border-[rgba(168,85,247,0.1)] px-4 py-3 transition-colors hover:from-[rgba(168,85,247,0.25)] hover:to-[rgba(236,72,153,0.25)] cursor-pointer"
+          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(144,72,212,0.15)] to-[rgba(212,64,138,0.15)] border border-[rgba(144,72,212,0.1)] px-4 py-3 transition-colors hover:from-[rgba(144,72,212,0.25)] hover:to-[rgba(212,64,138,0.25)] cursor-pointer"
         >
           <span
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-            style={{ backgroundImage: "linear-gradient(135deg, #a855f7, #ec4899)" }}
+            style={{ backgroundImage: "linear-gradient(135deg, #9048d4, #d4408a)" }}
           >
             <svg className="h-5 w-5 text-white" viewBox="0 0 16 16" fill="none">
               <rect x="0" y="0.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />

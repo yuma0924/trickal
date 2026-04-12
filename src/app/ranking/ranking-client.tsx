@@ -233,7 +233,7 @@ export function RankingClient({
               <div className="flex items-center gap-2">
                 <span
                   className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[14px]"
-                  style={{ backgroundImage: "linear-gradient(135deg, #fb64b6, #ff8904)" }}
+                  style={{ backgroundImage: "linear-gradient(135deg, #e05aa8, #ff8904)" }}
                 >
                   <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -350,11 +350,11 @@ export function RankingClient({
         </Link>
         <Link
           href="/tiers"
-          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(168,85,247,0.15)] to-[rgba(236,72,153,0.15)] border border-[rgba(168,85,247,0.1)] px-4 py-3 transition-colors hover:from-[rgba(168,85,247,0.25)] hover:to-[rgba(236,72,153,0.25)] cursor-pointer"
+          className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-[rgba(144,72,212,0.15)] to-[rgba(212,64,138,0.15)] border border-[rgba(144,72,212,0.1)] px-4 py-3 transition-colors hover:from-[rgba(144,72,212,0.25)] hover:to-[rgba(212,64,138,0.25)] cursor-pointer"
         >
           <span
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)]"
-            style={{ backgroundImage: "linear-gradient(135deg, #a855f7, #ec4899)" }}
+            style={{ backgroundImage: "linear-gradient(135deg, #9048d4, #d4408a)" }}
           >
             <svg className="h-5 w-5 text-white" viewBox="0 0 16 16" fill="none">
               <rect x="0" y="0.5" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
