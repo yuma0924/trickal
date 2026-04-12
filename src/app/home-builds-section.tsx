@@ -193,7 +193,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                                 <>
                                   <div className="h-12 w-12 overflow-hidden rounded-lg bg-bg-tertiary">
                                     {char.imageUrl ? (
-                                      <Image src={char.imageUrl} alt={char.name} width={96} height={96} className="h-full w-full object-cover" loading="eager" />
+                                      <Image src={char.imageUrl} alt={char.name} width={96} height={96} className="h-full w-full object-cover" loading="eager" unoptimized />
                                     ) : (
                                       <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-xs text-text-muted">{char.name.charAt(0)}</div>
                                     )}

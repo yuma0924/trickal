@@ -593,6 +593,7 @@ export default async function Home() {
                               height={96}
                               sizes="(max-width: 1024px) 80px, 96px"
                               loading="eager"
+                              unoptimized
                               className="h-full w-full object-cover"
                             />
                           ) : (
@@ -793,6 +794,7 @@ export default async function Home() {
                                         sizes="32px"
                                         className="pointer-events-none h-full w-full object-cover"
                                         loading="eager"
+                              unoptimized
                                       />
                                     ) : (
                                       <div className="flex h-full w-full items-center justify-center bg-bg-tertiary text-[10px] text-text-muted">

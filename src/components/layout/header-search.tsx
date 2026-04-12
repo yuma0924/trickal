@@ -164,6 +164,7 @@ export function HeaderSearch({ characters }: HeaderSearchProps) {
                             height={96}
                             sizes="(max-width: 768px) 48px, 64px"
                             loading="eager"
+                            unoptimized
                             className="h-10 w-10 shrink-0 rounded-lg object-cover"
                           />
                         ) : (

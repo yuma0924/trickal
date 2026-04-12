@@ -53,6 +53,7 @@ export function SidebarCharacters({ characters }: SidebarCharactersProps) {
                     height={16}
                     sizes="16px"
                     loading="eager"
+                    unoptimized
                     className="h-4 w-4"
                   />
                 )}
@@ -78,6 +79,7 @@ export function SidebarCharacters({ characters }: SidebarCharactersProps) {
                         height={48}
                         sizes="28px"
                         loading="eager"
+                    unoptimized
                         className="h-7 w-7 shrink-0 rounded-md object-cover"
                       />
                     ) : (
