@@ -29,7 +29,9 @@ function writeFiltersToURL(
   race: Set<string>,
   rarity: Set<string>,
 ) {
-  const params = new URLSearchParams();
+  const params = new URLSearchParams(window.location.search);
+  // 自分が管理するキーをクリアしてから設定（他コンポーネントのキーは維持）
+  ["q", "element", "role", "position", "race", "rarity"].forEach((k) => params.delete(k));
   if (q.trim()) params.set("q", q.trim());
   if (element.size) params.set("element", [...element].join(","));
   if (role.size) params.set("role", [...role].join(","));
