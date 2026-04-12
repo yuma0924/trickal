@@ -531,7 +531,7 @@ export function CharacterDetailClient({
                 onClick={() => setRelicDetailOpen(!relicDetailOpen)}
               >
                 {character.relic.imageUrl && (
-                  <Image src={character.relic.imageUrl} alt={character.relic.name} width={136} height={136} sizes="68px" loading="eager" unoptimized className="h-[68px] w-[68px] shrink-0 rounded-lg" />
+                  <Image src={character.relic.imageUrl} alt={character.relic.name} width={136} height={136} sizes="68px" priority unoptimized className="h-[68px] w-[68px] shrink-0 rounded-lg" />
                 )}
                 <div className="min-w-0 text-left">
                   <p className="text-sm text-text-tertiary">愛用カード</p>
@@ -573,7 +573,7 @@ export function CharacterDetailClient({
             {character.favoriteItem && (
               <div className="flex items-start gap-3 rounded-[12px] border border-border-primary bg-bg-card-alpha-lighter px-3 py-2.5">
                 {character.favoriteItem.imageUrl && (
-                  <Image src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={112} height={112} sizes="56px" loading="eager" unoptimized className="h-14 w-14 shrink-0 rounded-lg" />
+                  <Image src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={112} height={112} sizes="56px" priority unoptimized className="h-14 w-14 shrink-0 rounded-lg" />
                 )}
                 <div className="min-w-0">
                   <p className="flex items-center gap-1 text-xs text-text-tertiary">
@@ -591,7 +591,7 @@ export function CharacterDetailClient({
                   {character.partTimeRewards.map((reward, i) => (
                     <div key={i} className="group relative shrink-0">
                       {reward.imageUrl ? (
-                        <Image src={reward.imageUrl} alt={reward.name} width={104} height={104} sizes="52px" loading="eager" unoptimized className="h-[52px] w-[52px] rounded-md" />
+                        <Image src={reward.imageUrl} alt={reward.name} width={104} height={104} sizes="52px" priority unoptimized className="h-[52px] w-[52px] rounded-md" />
                       ) : (
                         <div className="flex h-[52px] w-[52px] items-center justify-center rounded-md bg-[rgba(249,168,212,0.1)] text-[10px] text-text-muted">?</div>
                       )}
