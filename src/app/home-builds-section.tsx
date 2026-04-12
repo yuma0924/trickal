@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSearchParams, useRouter } from "next/navigation";
 import { StaticIcon } from "@/components/ui/static-icon";
 import { cn } from "@/lib/utils";
 
@@ -58,8 +59,35 @@ interface HomeuildsSectionProps {
 const PREVIEW_COUNT = 2;
 
 export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
-  const [modeFilter, setModeFilter] = useState<Mode>("general");
-  const [elementFilter, setElementFilter] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const modeFilter = (searchParams.get("bmode") as Mode) || "general";
+  const elementFilter = searchParams.get("belement") || null;
+
+  const updateParam = useCallback((key: string, value: string | null) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value === null || value === "") {
+      params.delete(key);
+    } else {
+      params.set(key, value);
+    }
+    if (params.get("bmode") === "general") params.delete("bmode");
+    const query = params.toString();
+    router.replace(query ? `?${query}` : "/", { scroll: false });
+  }, [searchParams, router]);
+
+  const setModeFilter = useCallback((m: Mode) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (m === "general") params.delete("bmode"); else params.set("bmode", m);
+    params.delete("belement");
+    const query = params.toString();
+    router.replace(query ? `?${query}` : "/", { scroll: false });
+  }, [searchParams, router]);
+
+  const setElementFilter = useCallback((elem: string | null) => {
+    updateParam("belement", elem);
+  }, [updateParam]);
 
   const filtered = useMemo(() => {
     let result = builds.filter((b) => b.mode === modeFilter);
