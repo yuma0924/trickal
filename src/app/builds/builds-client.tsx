@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
 import { StaticIcon } from "@/components/ui/static-icon";
 import { Button } from "@/components/ui/button";
 import { CharacterIcon } from "@/components/character/character-icon";
@@ -111,9 +112,45 @@ interface BuildsClientProps {
 }
 
 export function BuildsClient({ initialBuilds }: BuildsClientProps) {
-  const [mode, setMode] = useState<Mode>("general");
-  const [elementFilters, setElementFilters] = useState<Set<string>>(new Set());
-  const [sortKey, setSortKey] = useState<SortKey>("popular");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // URLパラメータからフィルター状態を復元
+  const mode = (searchParams.get("mode") as Mode) || "general";
+  const elementFilters = useMemo(() => {
+    const param = searchParams.get("elements");
+    return param ? new Set(param.split(",")) : new Set<string>();
+  }, [searchParams]);
+  const sortKey = (searchParams.get("sort") as SortKey) || "popular";
+
+  const updateParams = useCallback((updates: Record<string, string | null>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    for (const [key, value] of Object.entries(updates)) {
+      if (value === null || value === "") {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+    }
+    // デフォルト値は削除
+    if (params.get("mode") === "general") params.delete("mode");
+    if (params.get("sort") === "popular") params.delete("sort");
+    const query = params.toString();
+    router.replace(query ? `?${query}` : "/builds", { scroll: false });
+  }, [searchParams, router]);
+
+  const setMode = useCallback((newMode: Mode) => {
+    updateParams({ mode: newMode, elements: null });
+  }, [updateParams]);
+
+  const setElementFilters = useCallback((updater: Set<string> | ((prev: Set<string>) => Set<string>)) => {
+    const next = typeof updater === "function" ? updater(elementFilters) : updater;
+    updateParams({ elements: next.size > 0 ? [...next].join(",") : null });
+  }, [updateParams, elementFilters]);
+
+  const setSortKey = useCallback((newSort: SortKey) => {
+    updateParams({ sort: newSort });
+  }, [updateParams]);
   const [builds, setBuilds] = useState<BuildItem[]>(initialBuilds?.builds ?? []);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialBuilds?.hasMore ?? false);
