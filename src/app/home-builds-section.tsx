@@ -1,11 +1,19 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
 import { StaticIcon } from "@/components/ui/static-icon";
 import { cn } from "@/lib/utils";
+
+function readBuildFiltersFromURL() {
+  if (typeof window === "undefined") return null;
+  const params = new URLSearchParams(window.location.search);
+  return {
+    mode: (params.get("bmode") as Mode) || "general",
+    element: params.get("belement") || null,
+  };
+}
 
 function writeBuildFiltersToURL(mode: Mode, element: string | null) {
   const params = new URLSearchParams(window.location.search);
@@ -68,35 +76,34 @@ interface HomeuildsSectionProps {
 const PREVIEW_COUNT = 2;
 
 export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
-  const searchParams = useSearchParams();
+  const [modeFilter, setModeFilterRaw] = useState<Mode>("general");
+  const [elementFilter, setElementFilterRaw] = useState<string | null>(null);
 
-  // useSearchParamsで初期値/バック復元（Next.jsが自動同期）
-  const urlMode = (searchParams.get("bmode") as Mode) || "general";
-  const urlElement = searchParams.get("belement") || null;
+  // URLからフィルター復元（初回マウント時）— HomeSearchSectionと同じパターン
+  useEffect(() => {
+    const saved = readBuildFiltersFromURL();
+    if (!saved) return;
+    setModeFilterRaw(saved.mode);
+    setElementFilterRaw(saved.element);
+  }, []);
 
-  // ローカルstateでUI即時反映（replaceStateはNext.jsに通知されないため）
-  const [modeFilter, setModeFilterState] = useState<Mode>(urlMode);
-  const [elementFilter, setElementFilterState] = useState<string | null>(urlElement);
+  // フィルター変更時にURL更新
+  const syncURL = useCallback(() => {
+    writeBuildFiltersToURL(modeFilter, elementFilter);
+  }, [modeFilter, elementFilter]);
 
-  // URLパラメータが変わったらstate同期（バック遷移時）
-  const prevUrl = useState({ mode: urlMode, element: urlElement })[0];
-  if (prevUrl.mode !== urlMode || prevUrl.element !== urlElement) {
-    prevUrl.mode = urlMode;
-    prevUrl.element = urlElement;
-    if (modeFilter !== urlMode) setModeFilterState(urlMode);
-    if (elementFilter !== urlElement) setElementFilterState(urlElement);
-  }
+  useEffect(() => {
+    syncURL();
+  }, [syncURL]);
 
   const setModeFilter = useCallback((m: Mode) => {
-    setModeFilterState(m);
-    setElementFilterState(null);
-    writeBuildFiltersToURL(m, null);
+    setModeFilterRaw(m);
+    setElementFilterRaw(null);
   }, []);
 
   const setElementFilter = useCallback((elem: string | null) => {
-    setElementFilterState(elem);
-    writeBuildFiltersToURL(modeFilter, elem);
-  }, [modeFilter]);
+    setElementFilterRaw(elem);
+  }, []);
 
   const filtered = useMemo(() => {
     let result = builds.filter((b) => b.mode === modeFilter);
