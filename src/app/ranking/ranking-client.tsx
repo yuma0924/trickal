@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSearchParams, useRouter } from "next/navigation";
 import { StaticIcon } from "@/components/ui/static-icon";
 import { CharacterCard } from "@/components/character/character-card";
 import { Button } from "@/components/ui/button";
@@ -40,7 +41,9 @@ export function RankingClient({
   unrankedCharacters,
   trendingCharacters,
 }: RankingClientProps) {
-  const [elementFilter, setElementFilter] = useState<string>("all");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const elementFilter = searchParams.get("element") || "all";
   const [showCount, setShowCount] = useState(INITIAL_SHOW_COUNT);
 
   // フィルター適用
@@ -58,11 +61,18 @@ export function RankingClient({
   const visibleRanked = filteredRanked.slice(0, showCount);
   const remaining = filteredRanked.length - showCount;
 
-  // フィルター変更時のリセット
-  const handleFilterChange = (value: string) => {
-    setElementFilter(value);
+  // フィルター変更時のリセット（URLパラメータで永続化）
+  const handleFilterChange = useCallback((value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value === "all") {
+      params.delete("element");
+    } else {
+      params.set("element", value);
+    }
+    const query = params.toString();
+    router.replace(query ? `?${query}` : "/ranking", { scroll: false });
     setShowCount(INITIAL_SHOW_COUNT);
-  };
+  }, [searchParams, router]);
 
   // 1位アナウンス
   const currentTop =
