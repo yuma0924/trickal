@@ -20,6 +20,8 @@ export function Footer() {
               alt="トリッカルランキング"
               width={28}
               height={28}
+              sizes="28px"
+              loading="eager"
               className="rounded-[10px]"
             />
             <span className="text-base md:text-lg font-bold text-text-primary">

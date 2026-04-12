@@ -55,6 +55,8 @@ export async function SidebarCharacters() {
                     alt={elem}
                     width={16}
                     height={16}
+                    sizes="16px"
+                    loading="eager"
                     className="h-4 w-4"
                   />
                 )}

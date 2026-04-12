@@ -21,6 +21,8 @@ export async function Header() {
             alt="トリッカルランキング"
             width={32}
             height={32}
+            sizes="32px"
+            loading="eager"
             className="rounded-[10px]"
           />
           <span className="flex flex-col gap-0.5">

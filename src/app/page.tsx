@@ -589,8 +589,10 @@ export default async function Home() {
                             <Image
                               src={char.imageUrl}
                               alt={char.name}
-                              width={84}
-                              height={84}
+                              width={96}
+                              height={96}
+                              sizes="(max-width: 1024px) 80px, 96px"
+                              loading="eager"
                               className="h-full w-full object-cover"
                             />
                           ) : (
@@ -788,6 +790,7 @@ export default async function Home() {
                                         alt={char.name}
                                         width={64}
                                         height={64}
+                                        sizes="32px"
                                         className="pointer-events-none h-full w-full object-cover"
                                         loading="eager"
                                       />
@@ -907,6 +910,7 @@ export default async function Home() {
                           alt={char.name}
                           width={56}
                           height={56}
+                          sizes="56px"
                           className="h-full w-full object-cover"
                           loading="eager"
                         />
