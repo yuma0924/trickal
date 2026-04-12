@@ -238,18 +238,31 @@ export default async function CharacterPage({ params }: Props) {
   const commentsData = (commentsResult.data ?? []).slice(0, 20);
   const hasMoreComments = (commentsResult.data ?? []).length > 20;
 
+  // アイテム画像のプリロードURL一覧
+  const preloadImages: string[] = [];
+  if (relic?.imageUrl) preloadImages.push(relic.imageUrl);
+  if (favItem?.image_url) preloadImages.push(favItem.image_url);
+  rewardItems.forEach((i) => {
+    if (i.image_url) preloadImages.push(i.image_url);
+  });
+
   return (
-    <CharacterDetailClient
-      character={characterDetail}
-      relatedCharacters={relatedCharacters}
-      initialComments={{
-        comments: commentsData.map((c) => ({
-          ...c,
-          user_reaction: null,
-        })),
-        hasMore: hasMoreComments,
-        nextCursor: hasMoreComments ? commentsData[commentsData.length - 1]?.id ?? null : null,
-      }}
-    />
+    <>
+      {preloadImages.map((url) => (
+        <link key={url} rel="preload" as="image" href={url} />
+      ))}
+      <CharacterDetailClient
+        character={characterDetail}
+        relatedCharacters={relatedCharacters}
+        initialComments={{
+          comments: commentsData.map((c) => ({
+            ...c,
+            user_reaction: null,
+          })),
+          hasMore: hasMoreComments,
+          nextCursor: hasMoreComments ? commentsData[commentsData.length - 1]?.id ?? null : null,
+        }}
+      />
+    </>
   );
 }
