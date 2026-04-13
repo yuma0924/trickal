@@ -684,8 +684,8 @@ export function CharacterDetailClient({
         <div className="relative">
           <div
             className={cn(
-              "overflow-hidden transition-[max-height] duration-300",
-              skillsOpen ? "max-h-[3000px] pb-3" : "max-h-0 md:max-h-28"
+              "overflow-hidden",
+              skillsOpen ? "max-h-none pb-3" : "max-h-0 md:max-h-28"
             )}
           >
             {/* PC: 2列グリッド / モバイル: 縦積み */}
