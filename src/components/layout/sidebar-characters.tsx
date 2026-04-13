@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ELEMENTS, ELEMENT_COLORS } from "@/lib/constants";
 import type { Element } from "@/lib/constants";
@@ -46,14 +45,12 @@ export function SidebarCharacters({ characters }: SidebarCharactersProps) {
             <div key={elem}>
               <div className="mb-1.5 flex items-center gap-1.5">
                 {ELEMENT_ICONS[elem] && (
-                  <Image
+                  <img
                     src={ELEMENT_ICONS[elem]}
                     alt={elem}
                     width={16}
                     height={16}
-                    sizes="16px"
-                    loading="eager"
-                    unoptimized
+                    decoding="async"
                     className="h-4 w-4"
                   />
                 )}
@@ -72,14 +69,13 @@ export function SidebarCharacters({ characters }: SidebarCharactersProps) {
                     className="flex items-center gap-1.5 rounded-lg px-1 py-1 transition-colors hover:bg-bg-card-hover"
                   >
                     {c.image_url ? (
-                      <Image
+                      <img
                         src={c.image_url}
                         alt={c.name}
                         width={48}
                         height={48}
-                        sizes="28px"
-                        loading="eager"
-                    unoptimized
+                        loading="lazy"
+                        decoding="async"
                         className="h-7 w-7 shrink-0 rounded-md object-cover"
                       />
                     ) : (
