@@ -9,6 +9,7 @@ interface CharacterCardProps {
   avgRating?: number | null;
   rank?: number | null;
   className?: string;
+  lazy?: boolean;
 }
 
 export function CharacterCard({
@@ -18,6 +19,7 @@ export function CharacterCard({
   avgRating,
   rank,
   className,
+  lazy = false,
 }: CharacterCardProps) {
   const rankDisplay = rank !== null && rank !== undefined;
 
@@ -31,16 +33,28 @@ export function CharacterCard({
     >
       <div className="relative bg-bg-tertiary">
         {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={name}
-            width={164}
-            height={164}
-            className="aspect-square w-full object-cover"
-            sizes="(max-width: 768px) 25vw, 14vw"
-            loading="eager"
-            unoptimized
-          />
+          lazy ? (
+            <img
+              src={imageUrl}
+              alt={name}
+              width={164}
+              height={164}
+              loading="lazy"
+              decoding="async"
+              className="aspect-square w-full object-cover"
+            />
+          ) : (
+            <Image
+              src={imageUrl}
+              alt={name}
+              width={164}
+              height={164}
+              className="aspect-square w-full object-cover"
+              sizes="(max-width: 768px) 25vw, 14vw"
+              loading="eager"
+              unoptimized
+            />
+          )
         ) : (
           <div className="flex aspect-square w-full items-center justify-center bg-bg-tertiary text-sm text-text-muted">
             {name.charAt(0)}

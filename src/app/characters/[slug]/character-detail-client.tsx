@@ -921,6 +921,7 @@ export function CharacterDetailClient({
                 name={c.name}
                 imageUrl={c.imageUrl}
                 avgRating={c.avgRating}
+                lazy
               />
             ))}
           </div>
