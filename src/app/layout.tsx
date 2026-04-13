@@ -14,6 +14,7 @@ const zenMaruGothic = Zen_Maru_Gothic({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-zen-maru-gothic",
+  preload: false,
 });
 
 export const viewport: Viewport = {
