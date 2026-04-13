@@ -144,7 +144,8 @@ export async function GET(request: NextRequest) {
     }
 
     if (queryError) {
-      return NextResponse.json({ error: queryError }, { status: 500 });
+      console.error("GET /api/builds query error:", queryError);
+      return NextResponse.json({ error: "サーバーエラーが発生しました" }, { status: 500 });
     }
 
     const hasMore = builds.length > limit;
@@ -432,8 +433,9 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (insertError) {
+      console.error("POST /api/builds insert error:", insertError.message);
       return NextResponse.json(
-        { error: insertError.message },
+        { error: "サーバーエラーが発生しました" },
         { status: 500 }
       );
     }

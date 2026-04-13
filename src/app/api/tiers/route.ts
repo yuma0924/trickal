@@ -84,7 +84,8 @@ export async function GET(request: NextRequest) {
 
         const { data, error } = await q.limit(limit + 1);
         if (error) {
-          return NextResponse.json({ error: error.message }, { status: 500 });
+          console.error("GET /api/tiers query error:", error.message);
+          return NextResponse.json({ error: "サーバーエラーが発生しました" }, { status: 500 });
         }
         tiers = (data as Tier[]) ?? [];
       }
@@ -104,7 +105,8 @@ export async function GET(request: NextRequest) {
 
       const { data, error } = await q.limit(limit + 1);
       if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        console.error("GET /api/tiers query error:", error.message);
+        return NextResponse.json({ error: "サーバーエラーが発生しました" }, { status: 500 });
       }
       tiers = (data as Tier[]) ?? [];
     }
@@ -279,8 +281,9 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (insertError) {
+      console.error("POST /api/tiers insert error:", insertError.message);
       return NextResponse.json(
-        { error: insertError.message },
+        { error: "サーバーエラーが発生しました" },
         { status: 500 }
       );
     }

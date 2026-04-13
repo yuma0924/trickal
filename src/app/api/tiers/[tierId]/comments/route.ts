@@ -138,7 +138,8 @@ export async function GET(
     }
 
     if (queryError) {
-      return NextResponse.json({ error: queryError }, { status: 500 });
+      console.error("GET /api/tiers/[tierId]/comments query error:", queryError);
+      return NextResponse.json({ error: "サーバーエラーが発生しました" }, { status: 500 });
     }
 
     const hasMore = items.length > limit;
@@ -289,8 +290,9 @@ export async function POST(
       .single();
 
     if (insertError) {
+      console.error("POST /api/tiers/[tierId]/comments insert error:", insertError.message);
       return NextResponse.json(
-        { error: insertError.message },
+        { error: "サーバーエラーが発生しました" },
         { status: 500 }
       );
     }
