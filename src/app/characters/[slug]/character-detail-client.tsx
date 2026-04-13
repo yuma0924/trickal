@@ -487,7 +487,7 @@ export function CharacterDetailClient({
                 onClick={() => setRelicDetailOpen(!relicDetailOpen)}
               >
                 {character.relic.imageUrl && (
-                  <img src={character.relic.imageUrl} alt={character.relic.name} width={136} height={136} fetchPriority="high" decoding="sync" className="h-[68px] w-[68px] shrink-0 rounded-lg" />
+                  <img src={character.relic.imageUrl} alt={character.relic.name} width={136} height={136} loading="eager" fetchPriority="high" decoding="sync" className="h-[68px] w-[68px] shrink-0 rounded-lg" />
                 )}
                 <div className="min-w-0 text-left">
                   <p className="text-sm text-text-tertiary">愛用カード</p>
@@ -529,7 +529,7 @@ export function CharacterDetailClient({
             {character.favoriteItem && (
               <div className="flex items-start gap-3 rounded-[12px] border border-border-primary bg-bg-card-alpha-lighter px-3 py-2.5">
                 {character.favoriteItem.imageUrl && (
-                  <img src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={112} height={112} fetchPriority="high" decoding="sync" className="h-14 w-14 shrink-0 rounded-lg" />
+                  <img src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={112} height={112} loading="eager" fetchPriority="high" decoding="sync" className="h-14 w-14 shrink-0 rounded-lg" />
                 )}
                 <div className="min-w-0">
                   <p className="flex items-center gap-1 text-xs text-text-tertiary">
@@ -547,7 +547,7 @@ export function CharacterDetailClient({
                   {character.partTimeRewards.map((reward, i) => (
                     <div key={i} className="group relative shrink-0">
                       {reward.imageUrl ? (
-                        <img src={reward.imageUrl} alt={reward.name} width={104} height={104} fetchPriority="high" decoding="sync" className="h-[52px] w-[52px] rounded-md" />
+                        <img src={reward.imageUrl} alt={reward.name} width={104} height={104} loading="eager" fetchPriority="high" decoding="sync" className="h-[52px] w-[52px] rounded-md" />
                       ) : (
                         <div className="flex h-[52px] w-[52px] items-center justify-center rounded-md bg-[rgba(249,168,212,0.1)] text-[10px] text-text-muted">?</div>
                       )}
@@ -579,7 +579,7 @@ export function CharacterDetailClient({
             onClick={() => setRelicDetailOpen(!relicDetailOpen)}
           >
             {character.relic.imageUrl && (
-              <img src={character.relic.imageUrl} alt={character.relic.name} width={104} height={104} decoding="sync" className="h-[52px] w-[52px] shrink-0 rounded-md" />
+              <img src={character.relic.imageUrl} alt={character.relic.name} width={104} height={104} loading="eager" fetchPriority="high" decoding="sync" className="h-[52px] w-[52px] shrink-0 rounded-md" />
             )}
             <div className="min-w-0 text-left flex-1">
               <p className="text-[10px] text-text-tertiary">愛用カード</p>
@@ -639,7 +639,7 @@ export function CharacterDetailClient({
                 </p>
                 <div className="mt-1 flex items-center gap-2">
                   {character.favoriteItem.imageUrl && (
-                    <img src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={72} height={72} decoding="sync" className="h-9 w-9 shrink-0 rounded-md" />
+                    <img src={character.favoriteItem.imageUrl} alt={character.favoriteItem.name} width={72} height={72} loading="eager" fetchPriority="high" decoding="sync" className="h-9 w-9 shrink-0 rounded-md" />
                   )}
                   <p className="text-xs font-bold leading-snug text-text-primary">{character.favoriteItem.name}</p>
                 </div>
@@ -652,7 +652,7 @@ export function CharacterDetailClient({
                   {character.partTimeRewards.map((reward, i) => (
                     <div key={i} className="relative shrink-0">
                       {reward.imageUrl ? (
-                        <img src={reward.imageUrl} alt={reward.name} width={72} height={72} decoding="sync" className="h-9 w-9 rounded" />
+                        <img src={reward.imageUrl} alt={reward.name} width={72} height={72} loading="eager" fetchPriority="high" decoding="sync" className="h-9 w-9 rounded" />
                       ) : (
                         <div className="flex h-9 w-9 items-center justify-center rounded bg-[rgba(249,168,212,0.1)] text-[10px] text-text-muted">?</div>
                       )}
