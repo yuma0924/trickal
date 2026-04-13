@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   title: "人気編成ランキング | みんなで決めるトリッカルランキング",
   description:
     "トリッカルの人気編成ランキング。コンテンツ別の人気編成をチェック",
+  alternates: {
+    canonical: "/builds",
+  },
 };
 
 export default async function BuildsPage() {

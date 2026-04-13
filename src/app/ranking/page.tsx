@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   title: "人気キャラランキング | みんなで決めるトリッカルランキング",
   description:
     "トリッカルの人気キャラランキング。みんなの投票と評価で順位が決まる",
+  alternates: {
+    canonical: "/ranking",
+  },
 };
 
 export interface RankedCharacter {

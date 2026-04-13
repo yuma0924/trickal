@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: `ガイドライン・利用規約 | ${SITE_NAME}`,
   description:
     "トリッカルランキングの利用規約・免責事項・プライバシーポリシーをご確認ください。",
+  alternates: {
+    canonical: "/guidelines",
+  },
   openGraph: {
     title: `ガイドライン・利用規約 | ${SITE_NAME}`,
     description:
