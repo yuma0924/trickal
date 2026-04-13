@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAdminAuth } from "../../_middleware";
+import sharp from "sharp";
 
 const BUCKET_NAME = "relic-icons";
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/webp"];
+const RESIZE_SIZE = 128;
 
 /**
  * 愛用カード画像アップロード API
@@ -50,14 +52,19 @@ export async function POST(request: NextRequest) {
 
     const supabase = createAdminClient();
 
-    const ext = file.name.split(".").pop() || "png";
-    const filePath = `${characterId}.${ext}`;
+    const filePath = `${characterId}.webp`;
 
+    // 128x128 WebP にリサイズ
     const arrayBuffer = await file.arrayBuffer();
+    const resized = await sharp(Buffer.from(arrayBuffer))
+      .resize(RESIZE_SIZE, RESIZE_SIZE, { fit: "cover" })
+      .webp({ quality: 80 })
+      .toBuffer();
+
     const { error: uploadError } = await supabase.storage
       .from(BUCKET_NAME)
-      .upload(filePath, arrayBuffer, {
-        contentType: file.type,
+      .upload(filePath, resized, {
+        contentType: "image/webp",
         upsert: true,
       });
 
