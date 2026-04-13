@@ -17,18 +17,12 @@ type CharacterInfo = {
   is_hidden: boolean;
 };
 
-type Mode = "general" | "arena" | "dimension" | "world_tree";
-
-const MODE_LABEL_MAP: Record<Mode, string> = {
-  general: "汎用編成",
-  arena: "PvP",
-  dimension: "次元の衝突",
-  world_tree: "世界樹採掘基地",
-};
+import { BUILD_MODE_LABEL_MAP } from "@/lib/constants";
+import type { BuildMode } from "@/lib/constants";
 
 type BuildData = {
   id: string;
-  mode: Mode;
+  mode: BuildMode;
   party_size: number;
   members: (string | null)[];
   element_label: string | null;
@@ -45,7 +39,7 @@ type BuildData = {
 
 type SimilarBuild = {
   id: string;
-  mode: Mode;
+  mode: BuildMode;
   title: string | null;
   display_name: string | null;
   comment: string;
@@ -79,7 +73,7 @@ export async function generateMetadata({
     };
   }
 
-  const modeLabel = MODE_LABEL_MAP[build.mode] ?? build.mode;
+  const modeLabel = BUILD_MODE_LABEL_MAP[build.mode] ?? build.mode;
   const title = build.title || `${build.element_label ?? ""}${modeLabel}`;
 
   return {

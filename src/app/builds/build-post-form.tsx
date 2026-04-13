@@ -6,9 +6,9 @@ import { CharacterIcon } from "@/components/character/character-icon";
 import { Button } from "@/components/ui/button";
 import { createBrowserClient } from "@/lib/supabase/client";
 import { cn, matchesName } from "@/lib/utils";
-import { ELEMENTS, ELEMENT_ICONS } from "@/lib/constants";
+import { ELEMENTS, ELEMENT_ICONS, BUILD_MODE_OPTIONS } from "@/lib/constants";
+import type { BuildMode } from "@/lib/constants";
 
-type FormMode = "general" | "arena" | "dimension" | "world_tree";
 
 type CharacterInfo = {
   id: string;
@@ -22,19 +22,13 @@ type CharacterInfo = {
 };
 
 interface BuildPostFormProps {
-  mode?: FormMode;
-  onModeChange?: (mode: FormMode) => void;
+  mode?: BuildMode;
+  onModeChange?: (mode: BuildMode) => void;
   onPosted: () => void;
   onClose?: () => void;
 }
 
 
-const MODE_OPTIONS: { value: FormMode; label: string }[] = [
-  { value: "general", label: "汎用編成" },
-  { value: "arena", label: "PvP" },
-  { value: "dimension", label: "次元の衝突" },
-  { value: "world_tree", label: "世界樹採掘基地" },
-];
 
 const POSITION_LABELS = ["後列", "中列", "前列"] as const;
 
@@ -44,7 +38,7 @@ const POSITION_ICON_MAP: Record<string, string> = {
   後列: "/icons/back.png",
 };
 
-function getPartySize(mode: FormMode): number {
+function getPartySize(mode: BuildMode): number {
   return mode === "dimension" ? 9 : 6;
 }
 
@@ -59,7 +53,7 @@ function getSlotColumn(slotIndex: number, rowCount: number): string {
 }
 
 export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onClose }: BuildPostFormProps) {
-  const [formMode, setFormMode] = useState<FormMode>(externalMode ?? "general");
+  const [formMode, setBuildMode] = useState<BuildMode>(externalMode ?? "general");
   const [elementFilter, setElementFilter] = useState<string>("");
   const [positionFilter, setPositionFilter] = useState<string>("");
   const [positionFilterManual, setPositionFilterManual] = useState(false);
@@ -72,7 +66,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
   // 外部のモード変更を同期
   useEffect(() => {
     if (externalMode && externalMode !== formMode) {
-      setFormMode(externalMode);
+      setBuildMode(externalMode);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [externalMode]);
@@ -370,13 +364,13 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
           <select
             value={formMode}
             onChange={(e) => {
-              const newMode = e.target.value as FormMode;
-              setFormMode(newMode);
+              const newMode = e.target.value as BuildMode;
+              setBuildMode(newMode);
               onModeChange?.(newMode);
             }}
             className="w-full appearance-none rounded-[14px] border border-border-primary bg-bg-card-alpha px-4 py-2.5 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-accent focus:outline-none"
           >
-            {MODE_OPTIONS.map((opt) => (
+            {BUILD_MODE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
               </option>
@@ -397,13 +391,13 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
               <select
                 value={formMode}
                 onChange={(e) => {
-                  const newMode = e.target.value as FormMode;
-                  setFormMode(newMode);
+                  const newMode = e.target.value as BuildMode;
+                  setBuildMode(newMode);
                   onModeChange?.(newMode);
                 }}
                 className="appearance-none rounded-[12px] border border-border-primary bg-bg-card-alpha px-4 py-2 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-accent focus:outline-none"
               >
-                {MODE_OPTIONS.map((opt) => (
+                {BUILD_MODE_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
                     {opt.label}
                   </option>
@@ -738,7 +732,7 @@ export function BuildPostForm({ mode: externalMode, onModeChange, onPosted, onCl
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder={MODE_OPTIONS.find((o) => o.value === formMode)?.label ?? ""}
+              placeholder={BUILD_MODE_OPTIONS.find((o) => o.value === formMode)?.label ?? ""}
               maxLength={100}
               className="min-w-0 flex-1 rounded-xl border border-border-primary bg-bg-input px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted/50 focus:border-accent focus:outline-none"
             />

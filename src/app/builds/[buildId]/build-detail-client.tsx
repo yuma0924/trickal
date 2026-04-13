@@ -9,7 +9,8 @@ import { Button } from "@/components/ui/button";
 import { CharacterIcon } from "@/components/character/character-icon";
 import { ThumbsUpDown } from "@/components/reaction/thumbs-up-down";
 import { cn } from "@/lib/utils";
-import { ELEMENT_ICONS } from "@/lib/constants";
+import { ELEMENT_ICONS, BUILD_MODE_LABEL_MAP } from "@/lib/constants";
+import type { BuildMode } from "@/lib/constants";
 import { useToast, Toast } from "@/components/ui/toast";
 
 type CharacterInfo = {
@@ -22,18 +23,10 @@ type CharacterInfo = {
   is_hidden: boolean;
 };
 
-type Mode = "general" | "arena" | "dimension" | "world_tree";
-
-const MODE_LABEL_MAP: Record<Mode, string> = {
-  general: "汎用編成",
-  arena: "PvP",
-  dimension: "次元の衝突",
-  world_tree: "世界樹採掘基地",
-};
 
 type BuildDetail = {
   id: string;
-  mode: Mode;
+  mode: BuildMode;
   party_size: number;
   element_label: string | null;
   title: string | null;
@@ -49,7 +42,7 @@ type BuildDetail = {
 
 type SimilarBuild = {
   id: string;
-  mode: Mode;
+  mode: BuildMode;
   title: string | null;
   display_name: string | null;
   comment: string;
@@ -375,7 +368,7 @@ export function BuildDetailClient({
         {/* タイトル + 属性アイコン + モード + 通報 */}
         <div className="mb-3 flex items-center justify-between gap-2">
           <h1 className="min-w-0 truncate text-sm font-bold text-text-primary">
-            {build.title || MODE_LABEL_MAP[build.mode]}
+            {build.title || BUILD_MODE_LABEL_MAP[build.mode]}
           </h1>
           <div className="flex shrink-0 items-center gap-1.5">
             {build.members_detail
@@ -394,7 +387,7 @@ export function BuildDetailClient({
                 ) : null
               ))}
             <span className="rounded-md bg-bg-card-alpha-light px-2 py-0.5 text-[10px] font-bold text-text-muted">
-              {MODE_LABEL_MAP[build.mode]}
+              {BUILD_MODE_LABEL_MAP[build.mode]}
             </span>
             <button
               onClick={() => setReportTarget({ type: "build", id: build.id })}
@@ -586,7 +579,7 @@ export function BuildDetailClient({
                 {/* タイトル + 性格アイコン + モード */}
                 <div className="mb-2 flex items-center justify-between gap-2">
                   <span className="min-w-0 truncate text-sm font-bold text-text-primary">
-                    {sb.title || MODE_LABEL_MAP[sb.mode]}
+                    {sb.title || BUILD_MODE_LABEL_MAP[sb.mode]}
                   </span>
                   <div className="flex shrink-0 items-center gap-1.5">
                     {sb.members_detail
@@ -605,7 +598,7 @@ export function BuildDetailClient({
                         ) : null
                       ))}
                     <span className="rounded-md bg-bg-card-alpha-light px-2 py-0.5 text-[10px] font-bold text-text-muted">
-                      {MODE_LABEL_MAP[sb.mode]}
+                      {BUILD_MODE_LABEL_MAP[sb.mode]}
                     </span>
                   </div>
                 </div>

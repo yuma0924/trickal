@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { CharacterIcon } from "@/components/character/character-icon";
 import { ThumbsUpDown } from "@/components/reaction/thumbs-up-down";
 import { cn } from "@/lib/utils";
-import { ELEMENTS, ELEMENT_ICONS } from "@/lib/constants";
+import { ELEMENTS, ELEMENT_ICONS, BUILD_MODE_OPTIONS, BUILD_MODE_LABEL_MAP } from "@/lib/constants";
+import type { BuildMode } from "@/lib/constants";
 import { useToast, Toast } from "@/components/ui/toast";
 import { BuildPostForm } from "./build-post-form";
 
@@ -42,21 +43,6 @@ type BuildItem = {
   comments_count: number;
 };
 
-type Mode = "general" | "arena" | "dimension" | "world_tree";
-
-const MODE_OPTIONS: { value: Mode; label: string }[] = [
-  { value: "general", label: "汎用編成" },
-  { value: "arena", label: "PvP" },
-  { value: "dimension", label: "次元の衝突" },
-  { value: "world_tree", label: "世界樹採掘基地" },
-];
-
-const MODE_LABEL_MAP: Record<Mode, string> = {
-  general: "汎用",
-  arena: "PvP",
-  dimension: "次元",
-  world_tree: "世界樹",
-};
 
 
 type SortKey = "popular" | "newest";
@@ -109,7 +95,7 @@ export function BuildsClient({ initialBuilds }: BuildsClientProps) {
   const router = useRouter();
 
   // URLパラメータからフィルター状態を復元
-  const mode = (searchParams.get("mode") as Mode) || "general";
+  const mode = (searchParams.get("mode") as BuildMode) || "general";
   const elementFilters = useMemo(() => {
     const param = searchParams.get("elements");
     return param ? new Set(param.split(",")) : new Set<string>();
@@ -132,7 +118,7 @@ export function BuildsClient({ initialBuilds }: BuildsClientProps) {
     router.replace(query ? `?${query}` : "/builds", { scroll: false });
   }, [searchParams, router]);
 
-  const setMode = useCallback((newMode: Mode) => {
+  const setMode = useCallback((newMode: BuildMode) => {
     updateParams({ mode: newMode, elements: null });
   }, [updateParams]);
 
@@ -271,10 +257,10 @@ export function BuildsClient({ initialBuilds }: BuildsClientProps) {
         <div className="relative">
           <select
             value={mode}
-            onChange={(e) => setMode(e.target.value as Mode)}
+            onChange={(e) => setMode(e.target.value as BuildMode)}
             className="w-44 appearance-none rounded-[14px] border border-border-primary bg-bg-card-alpha px-4 py-2.5 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-accent focus:outline-none"
           >
-            {MODE_OPTIONS.map((opt) => (
+            {BUILD_MODE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
               </option>
@@ -394,10 +380,10 @@ export function BuildsClient({ initialBuilds }: BuildsClientProps) {
         <div className="relative shrink-0">
           <select
             value={mode}
-            onChange={(e) => setMode(e.target.value as Mode)}
+            onChange={(e) => setMode(e.target.value as BuildMode)}
             className="appearance-none rounded-[14px] border border-border-primary bg-bg-card-alpha px-4 py-2 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-accent focus:outline-none"
           >
-            {MODE_OPTIONS.map((opt) => (
+            {BUILD_MODE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
               </option>
@@ -581,7 +567,7 @@ function BuildCard({
         {/* タイトル + 属性アイコン + モード */}
         <div className="mb-3 flex items-center justify-between gap-2">
           <span className="min-w-0 truncate text-sm md:text-base font-bold text-text-primary">
-            {build.title || MODE_LABEL_MAP[build.mode]}
+            {build.title || BUILD_MODE_LABEL_MAP[build.mode]}
           </span>
           <div className="flex shrink-0 items-center gap-1.5">
             {build.members_detail
@@ -600,7 +586,7 @@ function BuildCard({
                 ) : null
               ))}
             <span className="rounded-md bg-bg-card-alpha-light px-2 py-0.5 text-[10px] md:text-xs font-bold text-text-muted">
-              {MODE_LABEL_MAP[build.mode]}
+              {BUILD_MODE_LABEL_MAP[build.mode]}
             </span>
           </div>
         </div>

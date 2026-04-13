@@ -5,18 +5,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { StaticIcon } from "@/components/ui/static-icon";
 import { cn } from "@/lib/utils";
-import { ELEMENT_ICONS } from "@/lib/constants";
+import { ELEMENT_ICONS, BUILD_MODE_OPTIONS, BUILD_MODE_LABEL_MAP } from "@/lib/constants";
+import type { BuildMode } from "@/lib/constants";
 
 function readBuildFiltersFromURL() {
   if (typeof window === "undefined") return null;
   const params = new URLSearchParams(window.location.search);
   return {
-    mode: (params.get("bmode") as Mode) || "general",
+    mode: (params.get("bmode") as BuildMode) || "general",
     element: params.get("belement") || null,
   };
 }
 
-function writeBuildFiltersToURL(mode: Mode, element: string | null) {
+function writeBuildFiltersToURL(mode: BuildMode, element: string | null) {
   const params = new URLSearchParams(window.location.search);
   if (mode === "general") params.delete("bmode"); else params.set("bmode", mode);
   if (element) params.set("belement", element); else params.delete("belement");
@@ -26,21 +27,6 @@ function writeBuildFiltersToURL(mode: Mode, element: string | null) {
 }
 
 
-type Mode = "general" | "arena" | "dimension" | "world_tree";
-
-const MODE_OPTIONS: { value: Mode; label: string }[] = [
-  { value: "general", label: "汎用編成" },
-  { value: "arena", label: "PvP" },
-  { value: "dimension", label: "次元の衝突" },
-  { value: "world_tree", label: "世界樹採掘基地" },
-];
-
-const MODE_LABEL_MAP: Record<string, string> = {
-  general: "汎用",
-  arena: "PvP",
-  dimension: "次元",
-  world_tree: "世界樹",
-};
 
 interface CharInfo {
   name: string;
@@ -70,7 +56,7 @@ interface HomeuildsSectionProps {
 const PREVIEW_COUNT = 2;
 
 export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
-  const [modeFilter, setModeFilterRaw] = useState<Mode>("general");
+  const [modeFilter, setModeFilterRaw] = useState<BuildMode>("general");
   const [elementFilter, setElementFilterRaw] = useState<string | null>(null);
 
   // URLからフィルター復元（初回マウント時）— HomeSearchSectionと同じパターン
@@ -90,7 +76,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
     syncURL();
   }, [syncURL]);
 
-  const setModeFilter = useCallback((m: Mode) => {
+  const setModeFilter = useCallback((m: BuildMode) => {
     setModeFilterRaw(m);
     setElementFilterRaw(null);
   }, []);
@@ -114,10 +100,10 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
         <div className="relative shrink-0">
           <select
             value={modeFilter}
-            onChange={(e) => setModeFilter(e.target.value as Mode)}
+            onChange={(e) => setModeFilter(e.target.value as BuildMode)}
             className="appearance-none rounded-[14px] border border-border-primary bg-bg-card-alpha px-4 py-2.5 pr-9 text-sm font-bold text-text-primary cursor-pointer focus:border-accent focus:outline-none lg:w-48"
           >
-            {MODE_OPTIONS.map((opt) => (
+            {BUILD_MODE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
               </option>
@@ -185,7 +171,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                 {/* タイトル + 属性アイコン + モード */}
                 <div className="mb-3 flex items-center justify-between gap-2">
                   <span className="min-w-0 truncate text-sm font-bold text-text-primary">
-                    {build.title || (build.mode ? (MODE_LABEL_MAP[build.mode] ?? build.mode) : "")}
+                    {build.title || (build.mode ? (BUILD_MODE_LABEL_MAP[build.mode as BuildMode] ?? build.mode) : "")}
                   </span>
                   <div className="flex shrink-0 items-center gap-1.5">
                     {uniqueElements.map((elem) => (
@@ -202,7 +188,7 @@ export function HomeBuildsSection({ builds, charMap }: HomeuildsSectionProps) {
                     ))}
                     {build.mode && (
                       <span className="rounded-md bg-bg-card-alpha-light px-2 py-0.5 text-[10px] font-bold text-text-muted">
-                        {MODE_LABEL_MAP[build.mode] ?? build.mode}
+                        {BUILD_MODE_LABEL_MAP[build.mode as BuildMode] ?? build.mode}
                       </span>
                     )}
                   </div>

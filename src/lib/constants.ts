@@ -21,6 +21,23 @@ export const ELEMENT_ICONS: Record<string, string> = {
   憂鬱: "/icons/melancholy.png",
 };
 
+export const BUILD_MODES = ["general", "arena", "dimension", "world_tree"] as const;
+export type BuildMode = (typeof BUILD_MODES)[number];
+
+export const BUILD_MODE_OPTIONS: { value: BuildMode; label: string }[] = [
+  { value: "general", label: "汎用編成" },
+  { value: "arena", label: "PvP" },
+  { value: "dimension", label: "次元の衝突" },
+  { value: "world_tree", label: "世界樹採掘基地" },
+];
+
+export const BUILD_MODE_LABEL_MAP: Record<BuildMode, string> = {
+  general: "汎用",
+  arena: "PvP",
+  dimension: "次元",
+  world_tree: "世界樹",
+};
+
 export const TIER_LABELS = ["S", "A", "B", "C", "D", "E"] as const;
 export type TierLabel = (typeof TIER_LABELS)[number];
 
