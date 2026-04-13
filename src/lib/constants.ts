@@ -38,6 +38,23 @@ export const BUILD_MODE_LABEL_MAP: Record<BuildMode, string> = {
   world_tree: "世界樹",
 };
 
+export const ROLE_ICON_MAP: Record<string, string> = {
+  攻撃: "/icons/attack.png",
+  守備: "/icons/defense.png",
+  支援: "/icons/support.png",
+};
+
+export const POSITION_ICON_MAP: Record<string, string> = {
+  前列: "/icons/front.png",
+  中列: "/icons/middle.png",
+  後列: "/icons/back.png",
+};
+
+export const ATTACK_TYPE_ICON_MAP: Record<string, string> = {
+  物理: "/icons/physical.png",
+  魔法: "/icons/magical.png",
+};
+
 export const TIER_LABELS = ["S", "A", "B", "C", "D", "E"] as const;
 export type TierLabel = (typeof TIER_LABELS)[number];
 

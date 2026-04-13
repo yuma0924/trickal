@@ -6,7 +6,7 @@ import { CharacterIcon } from "@/components/character/character-icon";
 import { Button } from "@/components/ui/button";
 import { createBrowserClient } from "@/lib/supabase/client";
 import { cn, matchesName } from "@/lib/utils";
-import { ELEMENTS, ELEMENT_ICONS, BUILD_MODE_OPTIONS } from "@/lib/constants";
+import { ELEMENTS, ELEMENT_ICONS, BUILD_MODE_OPTIONS, POSITION_ICON_MAP } from "@/lib/constants";
 import type { BuildMode } from "@/lib/constants";
 
 
@@ -32,11 +32,6 @@ interface BuildPostFormProps {
 
 const POSITION_LABELS = ["後列", "中列", "前列"] as const;
 
-const POSITION_ICON_MAP: Record<string, string> = {
-  前列: "/icons/front.png",
-  中列: "/icons/middle.png",
-  後列: "/icons/back.png",
-};
 
 function getPartySize(mode: BuildMode): number {
   return mode === "dimension" ? 9 : 6;

@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { StarRatingDisplay } from "@/components/ui/star-rating";
 import { CharacterCard } from "@/components/character/character-card";
 import type { Element } from "@/lib/constants";
+import { ROLE_ICON_MAP, POSITION_ICON_MAP, ATTACK_TYPE_ICON_MAP } from "@/lib/constants";
 import { HomeSearchSection } from "./home-search-section";
 import { HomeBuildsSection } from "./home-builds-section";
 
@@ -38,22 +39,6 @@ const ELEMENT_ICON_MAP: Record<string, string> = {
   憂鬱: "/icons/melancholy.png",
 };
 
-const ROLE_ICON_MAP: Record<string, string> = {
-  攻撃: "/icons/attack.png",
-  守備: "/icons/defense.png",
-  支援: "/icons/support.png",
-};
-
-const POSITION_ICON_MAP: Record<string, string> = {
-  前列: "/icons/front.png",
-  中列: "/icons/middle.png",
-  後列: "/icons/back.png",
-};
-
-const ATTACK_TYPE_ICON_MAP: Record<string, string> = {
-  物理: "/icons/physical.png",
-  魔法: "/icons/magical.png",
-};
 
 interface TrendingChar {
   id: string;

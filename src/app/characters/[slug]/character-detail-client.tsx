@@ -9,6 +9,7 @@ import { StarRatingDisplay } from "@/components/ui/star-rating";
 import { CommentForm } from "@/components/comment/comment-form";
 import { CommentList } from "@/components/comment/comment-list";
 import { cn } from "@/lib/utils";
+import { ROLE_ICON_MAP, POSITION_ICON_MAP, ATTACK_TYPE_ICON_MAP } from "@/lib/constants";
 import { useToast, Toast } from "@/components/ui/toast";
 import type { CharacterDetail, RelatedCharacter } from "./page";
 
@@ -98,22 +99,6 @@ const ELEMENT_ICON_MAP: Record<string, string> = {
   憂鬱: "/icons/melancholy.png",
 };
 
-const ROLE_ICON_MAP: Record<string, string> = {
-  攻撃: "/icons/attack.png",
-  守備: "/icons/defense.png",
-  支援: "/icons/support.png",
-};
-
-const POSITION_ICON_MAP: Record<string, string> = {
-  前列: "/icons/front.png",
-  中列: "/icons/middle.png",
-  後列: "/icons/back.png",
-};
-
-const ATTACK_TYPE_ICON_MAP: Record<string, string> = {
-  物理: "/icons/physical.png",
-  魔法: "/icons/magical.png",
-};
 
 const SORT_MAP: Record<SortTab, string> = {
   newest: "new",
