@@ -25,9 +25,18 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://trickal.vercel.app"),
   title: "みんなで決めるトリッカルランキング",
   description:
     "トリッカル・もちもちほっぺ大作戦の全キャラクター性能を数値で比較し、プレイヤーの投票でリアルな順位を決定する非公式データベースです。",
+  openGraph: {
+    type: "website",
+    siteName: "みんなで決めるトリッカルランキング",
+    images: [{ url: "/og-default.png", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default async function RootLayout({

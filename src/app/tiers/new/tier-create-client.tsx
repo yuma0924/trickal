@@ -16,7 +16,7 @@ import {
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import { StaticIcon } from "@/components/ui/static-icon";
-import { TIER_LABELS, ELEMENTS } from "@/lib/constants";
+import { TIER_LABELS, ELEMENTS, ELEMENT_ICONS } from "@/lib/constants";
 import type { TierLabel } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { TierRow } from "@/components/tier/tier-row";
@@ -24,13 +24,6 @@ import { TierCharacterItem } from "@/components/tier/tier-character-item";
 import { CharacterIcon } from "@/components/character/character-icon";
 import { Button } from "@/components/ui/button";
 
-const ELEMENT_ICONS: Record<string, string> = {
-  純粋: "/icons/pure.png",
-  冷静: "/icons/calm.png",
-  狂気: "/icons/madness.png",
-  活発: "/icons/lively.png",
-  憂鬱: "/icons/melancholy.png",
-};
 
 type CharacterInfo = {
   id: string;

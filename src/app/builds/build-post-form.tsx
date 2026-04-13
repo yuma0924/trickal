@@ -6,7 +6,7 @@ import { CharacterIcon } from "@/components/character/character-icon";
 import { Button } from "@/components/ui/button";
 import { createBrowserClient } from "@/lib/supabase/client";
 import { cn, matchesName } from "@/lib/utils";
-import { ELEMENTS } from "@/lib/constants";
+import { ELEMENTS, ELEMENT_ICONS } from "@/lib/constants";
 
 type FormMode = "general" | "arena" | "dimension" | "world_tree";
 
@@ -28,13 +28,6 @@ interface BuildPostFormProps {
   onClose?: () => void;
 }
 
-const ELEMENT_ICONS: Record<string, string> = {
-  純粋: "/icons/pure.png",
-  冷静: "/icons/calm.png",
-  狂気: "/icons/madness.png",
-  活発: "/icons/lively.png",
-  憂鬱: "/icons/melancholy.png",
-};
 
 const MODE_OPTIONS: { value: FormMode; label: string }[] = [
   { value: "general", label: "汎用編成" },

@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { StaticIcon } from "@/components/ui/static-icon";
 import { cn } from "@/lib/utils";
+import { ELEMENT_ICONS } from "@/lib/constants";
 
 function readBuildFiltersFromURL() {
   if (typeof window === "undefined") return null;
@@ -24,13 +25,6 @@ function writeBuildFiltersToURL(mode: Mode, element: string | null) {
   window.history.replaceState(null, "", url);
 }
 
-const ELEMENT_ICONS: Record<string, string> = {
-  純粋: "/icons/pure.png",
-  冷静: "/icons/calm.png",
-  狂気: "/icons/madness.png",
-  活発: "/icons/lively.png",
-  憂鬱: "/icons/melancholy.png",
-};
 
 type Mode = "general" | "arena" | "dimension" | "world_tree";
 

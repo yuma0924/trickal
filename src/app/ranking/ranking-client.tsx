@@ -7,17 +7,9 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { StaticIcon } from "@/components/ui/static-icon";
 import { CharacterCard } from "@/components/character/character-card";
 import { Button } from "@/components/ui/button";
-import { ELEMENTS } from "@/lib/constants";
+import { ELEMENTS, ELEMENT_ICONS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import type { RankedCharacter, UnrankedCharacter, TrendingCharacter } from "./page";
-
-const ELEMENT_ICON_MAP: Record<string, string> = {
-  純粋: "/icons/pure.png",
-  冷静: "/icons/calm.png",
-  狂気: "/icons/madness.png",
-  活発: "/icons/lively.png",
-  憂鬱: "/icons/melancholy.png",
-};
 
 interface RankingClientProps {
   rankedCharacters: RankedCharacter[];
@@ -28,13 +20,6 @@ interface RankingClientProps {
 const INITIAL_SHOW_COUNT = 30;
 const LOAD_MORE_COUNT = 30;
 
-const ELEMENT_ICONS: Record<string, string> = {
-  純粋: "/icons/pure.png",
-  冷静: "/icons/calm.png",
-  狂気: "/icons/madness.png",
-  活発: "/icons/lively.png",
-  憂鬱: "/icons/melancholy.png",
-};
 
 export function RankingClient({
   rankedCharacters,
@@ -286,8 +271,8 @@ export function RankingClient({
                       <p className="truncate text-sm md:text-base font-bold text-text-primary">
                         {char.name}
                       </p>
-                      {char.element && ELEMENT_ICON_MAP[char.element] && (
-                        <StaticIcon src={ELEMENT_ICON_MAP[char.element]} alt={char.element} width={16} height={16} className="shrink-0" />
+                      {char.element && ELEMENT_ICONS[char.element] && (
+                        <StaticIcon src={ELEMENT_ICONS[char.element]} alt={char.element} width={16} height={16} className="shrink-0" />
                       )}
                     </div>
                     <div className="mt-1 flex items-center gap-1.5">

@@ -1,14 +1,7 @@
 import Link from "next/link";
-import { ELEMENTS, ELEMENT_COLORS } from "@/lib/constants";
+import { ELEMENTS, ELEMENT_COLORS, ELEMENT_ICONS } from "@/lib/constants";
 import type { Element } from "@/lib/constants";
 
-const ELEMENT_ICONS: Record<string, string> = {
-  純粋: "/icons/pure.png",
-  冷静: "/icons/calm.png",
-  狂気: "/icons/madness.png",
-  活発: "/icons/lively.png",
-  憂鬱: "/icons/melancholy.png",
-};
 
 type CharRow = {
   id: string;

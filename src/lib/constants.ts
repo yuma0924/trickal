@@ -13,6 +13,14 @@ export const ELEMENT_COLORS: Record<Element, string> = {
   憂鬱: "#a855f7",
 };
 
+export const ELEMENT_ICONS: Record<string, string> = {
+  純粋: "/icons/pure.png",
+  冷静: "/icons/calm.png",
+  狂気: "/icons/madness.png",
+  活発: "/icons/lively.png",
+  憂鬱: "/icons/melancholy.png",
+};
+
 export const TIER_LABELS = ["S", "A", "B", "C", "D", "E"] as const;
 export type TierLabel = (typeof TIER_LABELS)[number];
 

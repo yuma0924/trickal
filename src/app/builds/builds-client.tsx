@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { CharacterIcon } from "@/components/character/character-icon";
 import { ThumbsUpDown } from "@/components/reaction/thumbs-up-down";
 import { cn } from "@/lib/utils";
-import { ELEMENTS } from "@/lib/constants";
+import { ELEMENTS, ELEMENT_ICONS } from "@/lib/constants";
 import { useToast, Toast } from "@/components/ui/toast";
 import { BuildPostForm } from "./build-post-form";
 
@@ -58,13 +58,6 @@ const MODE_LABEL_MAP: Record<Mode, string> = {
   world_tree: "世界樹",
 };
 
-const ELEMENT_ICONS: Record<string, string> = {
-  純粋: "/icons/pure.png",
-  冷静: "/icons/calm.png",
-  狂気: "/icons/madness.png",
-  活発: "/icons/lively.png",
-  憂鬱: "/icons/melancholy.png",
-};
 
 type SortKey = "popular" | "newest";
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [

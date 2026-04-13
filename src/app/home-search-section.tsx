@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { StaticIcon } from "@/components/ui/static-icon";
 import { cn, matchesName } from "@/lib/utils";
-import { ELEMENTS } from "@/lib/constants";
+import { ELEMENTS, ELEMENT_ICONS } from "@/lib/constants";
 import { CharacterCard } from "@/components/character/character-card";
 
 /** URLクエリパラメータからフィルター状態を復元 */
@@ -55,13 +55,6 @@ interface SearchCharacter {
   imageUrl: string | null;
 }
 
-const ELEMENT_ICONS: Record<string, string> = {
-  純粋: "/icons/pure.png",
-  冷静: "/icons/calm.png",
-  狂気: "/icons/madness.png",
-  活発: "/icons/lively.png",
-  憂鬱: "/icons/melancholy.png",
-};
 
 const TYPES: { value: string; icon: string }[] = [
   { value: "支援", icon: "/icons/support.png" },
