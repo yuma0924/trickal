@@ -82,7 +82,7 @@ export function CommentCard({
         </div>
         {commentType === "vote" && rating !== null && rating !== undefined && (
           <div className="ml-auto">
-            <StarRatingDisplay rating={rating} size="md" showValue={false} />
+            <StarRatingDisplay rating={rating} size="md" />
           </div>
         )}
       </div>
