@@ -4,7 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import { TierDetailClient } from "./tier-detail-client";
 
-export const revalidate = 600;
+export const revalidate = 0;
 
 type CharacterInfo = {
   id: string;

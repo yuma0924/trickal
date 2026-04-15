@@ -9,7 +9,7 @@ import { ROLE_ICON_MAP, POSITION_ICON_MAP, ATTACK_TYPE_ICON_MAP } from "@/lib/co
 import { HomeSearchSection } from "./home-search-section";
 import { HomeBuildsSection } from "./home-builds-section";
 
-export const revalidate = 600;
+export const revalidate = 0;
 
 interface RankedChar {
   id: string;
