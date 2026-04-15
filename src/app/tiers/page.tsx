@@ -8,7 +8,7 @@ type CharacterInfo = {
   image_url: string | null;
 };
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "みんなのティア表 | みんなで決めるトリッカルランキング",

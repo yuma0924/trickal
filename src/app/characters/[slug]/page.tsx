@@ -6,7 +6,7 @@ import { CharacterDetailClient } from "./character-detail-client";
 import type { Element } from "@/lib/constants";
 import type { Character, Item } from "@/types/database";
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 interface Props {
   params: Promise<{ slug: string }>;

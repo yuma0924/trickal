@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { BuildDetailClient } from "./build-detail-client";
 
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 type CharacterInfo = {
   id: string;

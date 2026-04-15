@@ -3,7 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { RankingClient } from "./ranking-client";
 import type { Element } from "@/lib/constants";
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "人気キャラランキング | みんなで決めるトリッカルランキング",

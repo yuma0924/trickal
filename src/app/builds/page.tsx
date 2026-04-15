@@ -13,7 +13,7 @@ const ELEMENT_ICON_MAP: Record<string, string> = {
   憂鬱: "/icons/melancholy.png",
 };
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "人気編成ランキング | みんなで決めるトリッカルランキング",
