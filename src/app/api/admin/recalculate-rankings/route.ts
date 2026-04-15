@@ -55,12 +55,11 @@ export async function POST(request: Request) {
       });
     }
 
-    // 2. 有効投票を取得 (is_latest_vote=true, is_deleted=false, 365日以内)
+    // 2. 有効投票を取得 (is_deleted=false, 365日以内、全投票を対象)
     const { data: validVotes, error: votesError } = await supabase
       .from("comments")
       .select("character_id, rating, thumbs_up_count, thumbs_down_count")
       .eq("comment_type", "vote")
-      .eq("is_latest_vote", true)
       .eq("is_deleted", false)
       .gte("created_at", oneYearAgo.toISOString())
       .returns<VoteRow[]>();
